@@ -1,7 +1,7 @@
 # ComfyUI OpenRouter
 
 ComfyUI OpenRouter is a ComfyUI extension that runs any model on OpenRouter
-with your own OpenRouter API key. Its nodes cover six kinds of work:
+with your own API key. Its nodes cover six kinds of work:
 
 - **Chat** asks any chat model a question, with images, video, audio, and
   documents, and returns text, reasoning, images, or speech.
