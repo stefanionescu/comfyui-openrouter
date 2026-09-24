@@ -4,10 +4,44 @@ import { app } from '../../scripts/app.js';
 import { requestLocal } from '#web/http.ts';
 import { dynamicControlInputs } from '#web/nodes.ts';
 import { openSettings } from '#web/settings/dialog.ts';
-import type { Widget, CanvasNode } from '#web/contracts.ts';
 import { findWidget, chainCallback } from '#web/widgets.ts';
+import type { Widget, CanvasNode, NodeDefinition, DropdownOption } from '#web/contracts.ts';
 
 const controlRestorers = new WeakMap<CanvasNode, ((restore?: boolean) => void)[]>();
+const childLabels = new Map<string, Map<string, string>>();
+
+/**
+ * List the display names one dropdown option gives its inputs.
+ * @param name - The dropdown's input name.
+ * @param option - One option of the dropdown.
+ * @returns Pairs of option and widget name, and the display name.
+ */
+function listOptionLabels(name: string, option: DropdownOption): [string, string][] {
+  return Object.entries(option.inputs.required ?? {}).flatMap(([child, [, spec]]) =>
+    spec.display_name
+      ? [[`${option.key}/${name}.${child}`, spec.display_name] as [string, string]]
+      : [],
+  );
+}
+
+/**
+ * Keep the display names of each node's conditional inputs, keyed by option and widget name.
+ * Checked on frontend 1.49.6: the host labels a dynamic dropdown's child widgets with their input names.
+ * @param definitions - The node definitions from the server, keyed by node class.
+ */
+function readChildLabels(definitions: Record<string, NodeDefinition>): void {
+  for (const [nodeClass, definition] of Object.entries(definitions)) {
+    const controls = dynamicControlInputs.get(nodeClass) ?? [];
+    const labels = new Map(
+      Object.entries(definition.input?.required ?? {})
+        .filter(([name]) => controls.includes(name))
+        .flatMap(([name, [, spec]]) =>
+          (spec.options ?? []).flatMap((option) => listOptionLabels(name, option)),
+        ),
+    );
+    if (labels.size) childLabels.set(nodeClass, labels);
+  }
+}
 
 /**
  * Keep a node's conditional values across option changes.
@@ -41,7 +75,7 @@ function watchControl(canvasNode: CanvasNode, widget: Widget): (restore?: boolea
 }
 
 /**
- * Keep the values of hidden controls in the node's properties.
+ * Keep the values of hidden controls in the node's properties, and label each control with its display name.
  * Checked on frontend 1.49.6: the host resets a child widget to its default when its option returns.
  * @param canvasNode - Owner of the conditional widgets.
  * @param widget - ComfyUI's dynamic dropdown.
@@ -52,12 +86,15 @@ function preserveControlValues(
   widget: Widget,
 ): (restore?: boolean) => void {
   const restoredWidgets = new WeakSet<Widget>();
+  const labels = childLabels.get(canvasNode.comfyClass ?? '');
   const restoreValues = (restore = false): void => {
     const selected = widget.value as string;
     for (const child of canvasNode.widgets ?? []) {
       if (!child.name.startsWith(`${widget.name}.`) || restoredWidgets.has(child)) continue;
       restoredWidgets.add(child);
       const key = `${selected}/${child.name}`;
+      const label = labels?.get(key);
+      if (label) child.label = label;
       const saved = canvasNode.properties.conditionalValues;
       if (restore && saved && Object.hasOwn(saved, key))
         // eslint-disable-next-line security/detect-object-injection -- The key holds a slash and is checked as an own property.
@@ -85,7 +122,7 @@ function refreshGraph(): void {
 }
 
 app.registerExtension({
-  name: 'comfyui-openrouter',
+  name: 'openrouter',
   setup: () => {
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
@@ -96,6 +133,7 @@ app.registerExtension({
     }
     if (!stylesheets.has(stylesheet.href)) document.head.append(stylesheet);
   },
+  addCustomNodeDefs: readChildLabels,
   nodeCreated: addNodeControls,
   afterConfigureGraph: refreshGraph,
   commands: [

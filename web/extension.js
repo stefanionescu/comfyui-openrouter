@@ -43,8 +43,8 @@ var LIMIT_LABELS = /* @__PURE__ */ new Map([
   ["max_upload_megabytes", "maximum upload size (MiB)"],
   ["parallel_requests", "parallel requests"],
   ["request_timeout_seconds", "request timeout (seconds)"],
-  ["resubmit_hold_minutes", "resubmit hold (minutes)"],
-  ["video_poll_seconds", "video check interval (seconds)"],
+  ["video_check_interval_seconds", "video check interval (seconds)"],
+  ["video_retry_delay_minutes", "video retry delay (minutes)"],
   ["video_wait_minutes", "maximum video wait (minutes)"]
 ]);
 function message(key) {
@@ -582,7 +582,7 @@ var configurationDocumentSchema = object({
   credential: object({
     source: picklist(["missing", "saved", "environment"])
   }),
-  integer_settings: unknown(),
+  setting_ranges: unknown(),
   settings: unknownRecordSchema,
   credential_limit: unknown()
 });
@@ -605,7 +605,7 @@ function parseConfiguration(value) {
   const result = safeParse(configurationDocumentSchema, value);
   if (!result.success) throw new Error(message("settings.invalidResponse"));
   const document2 = result.output;
-  const definitions = parseDefinitions(document2.integer_settings);
+  const definitions = parseDefinitions(document2.setting_ranges);
   const credentialLimit = safeParse(credentialLimitSchema, document2.credential_limit);
   if (!credentialLimit.success) throw new Error(message("settings.invalidResponse"));
   const settings = new Map(Object.entries(document2.settings));
@@ -925,6 +925,23 @@ function chainCallback(widget, after) {
 
 // web/scripts/extension.ts
 var controlRestorers = /* @__PURE__ */ new WeakMap();
+var childLabels = /* @__PURE__ */ new Map();
+function listOptionLabels(name, option) {
+  return Object.entries(option.inputs.required ?? {}).flatMap(
+    ([child, [, spec]]) => spec.display_name ? [[`${option.key}/${name}.${child}`, spec.display_name]] : []
+  );
+}
+function readChildLabels(definitions) {
+  for (const [nodeClass, definition] of Object.entries(definitions)) {
+    const controls = dynamicControlInputs.get(nodeClass) ?? [];
+    const labels = new Map(
+      Object.entries(definition.input?.required ?? {}).filter(([name]) => controls.includes(name)).flatMap(
+        ([name, [, spec]]) => (spec.options ?? []).flatMap((option) => listOptionLabels(name, option))
+      )
+    );
+    if (labels.size) childLabels.set(nodeClass, labels);
+  }
+}
 function addNodeControls(canvasNode) {
   const restorers = [];
   for (const name of dynamicControlInputs.get(canvasNode.comfyClass ?? "") ?? []) {
@@ -944,12 +961,15 @@ function watchControl(canvasNode, widget) {
 }
 function preserveControlValues(canvasNode, widget) {
   const restoredWidgets = /* @__PURE__ */ new WeakSet();
+  const labels = childLabels.get(canvasNode.comfyClass ?? "");
   const restoreValues = (restore = false) => {
     const selected = widget.value;
     for (const child of canvasNode.widgets ?? []) {
       if (!child.name.startsWith(`${widget.name}.`) || restoredWidgets.has(child)) continue;
       restoredWidgets.add(child);
       const key = `${selected}/${child.name}`;
+      const label = labels?.get(key);
+      if (label) child.label = label;
       const saved = canvasNode.properties.conditionalValues;
       if (restore && saved && Object.hasOwn(saved, key))
         child.value = saved[key];
@@ -972,7 +992,7 @@ function refreshGraph() {
   }
 }
 app2.registerExtension({
-  name: "comfyui-openrouter",
+  name: "openrouter",
   setup: () => {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
@@ -983,6 +1003,7 @@ app2.registerExtension({
     }
     if (!stylesheets.has(stylesheet.href)) document.head.append(stylesheet);
   },
+  addCustomNodeDefs: readChildLabels,
   nodeCreated: addNodeControls,
   afterConfigureGraph: refreshGraph,
   commands: [

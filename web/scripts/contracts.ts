@@ -14,3 +14,14 @@ export type CanvasNode = {
     conditionalValues?: Record<string, Widget['value']>;
   };
 } & HostNode;
+
+/** One option of a dynamic dropdown, with the inputs it shows. */
+export type DropdownOption = { key: string; inputs: { required?: Record<string, InputSpec> } };
+
+/** An input as ComfyUI's node definition lists it: its type, then its options. */
+type InputSpec = [string, { display_name?: string; options?: DropdownOption[] }];
+
+/** The part of ComfyUI's node definition that names a node's inputs and their dropdown options. */
+export type NodeDefinition = {
+  input?: { required?: Record<string, InputSpec> };
+};

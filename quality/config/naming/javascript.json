@@ -392,9 +392,23 @@
             "reason": "ESLint rule identifiers use these kebab-case names."
         },
         {
+            "pathRegexes": ["^web/scripts/extension\\.ts$"],
+            "categories": ["properties"],
+            "names": ["addCustomNodeDefs"],
+            "allowedViolations": ["banned-term"],
+            "reason": "ComfyUI's extension API names this hook."
+        },
+        {
+            "pathRegexes": ["^web/scripts/contracts\\.ts$"],
+            "categories": ["properties"],
+            "names": ["display_name"],
+            "caseNames": ["snake"],
+            "reason": "ComfyUI's node definitions name this field display_name."
+        },
+        {
             "pathRegexes": ["^web/scripts/settings/schema\\.ts$"],
             "categories": ["properties"],
-            "names": ["credential_limit", "integer_settings", "mutation_allowed"],
+            "names": ["credential_limit", "setting_ranges", "mutation_allowed"],
             "caseNames": ["snake"],
             "reason": "These fields are deserialized from the local settings API and must keep their wire names."
         },
