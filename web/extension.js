@@ -180,7 +180,6 @@ function button(text, type = "button") {
 var browserLimits = {
   requestTimeoutMilliseconds: 1e4,
   discoveryTimeoutMilliseconds: 6e4,
-  minCalculatorSeconds: 0.1,
   maxCalculatorSeconds: 3600,
   maxCalculatorTokens: 1e8,
   maxTextCharacters: 200,
@@ -192,7 +191,6 @@ var browserLimits = {
 var browserPatterns = {
   revision: /^[a-f0-9]{64}$/,
   documentation: /^https:\/\/openrouter\.ai\/~?[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._:-]*$/,
-  nodeId: /^OpenRouter[A-Za-z]+$/,
   settingName: /^[a-z][a-z_]+$/
 };
 

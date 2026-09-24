@@ -52,8 +52,7 @@
   gap: 0.35rem;
   margin: 0.8rem 0;
 }
-.openrouter-dialog input,
-.openrouter-dialog textarea {
+.openrouter-dialog input {
   box-sizing: border-box;
   width: 100%;
   padding: 0.75rem;
@@ -119,7 +118,6 @@
 .openrouter-dialog > :where(footer) .openrouter-actions {
   margin-top: 0;
 }
-.openrouter-dialog .openrouter-primary,
 .openrouter-dialog > form button[type='submit'] {
   background: var(--primary-color, #2563eb);
   color: var(--primary-color-text, white);
@@ -127,10 +125,6 @@
 .openrouter-dialog button:not(:disabled):hover {
   filter: brightness(1.15);
 }
-.openrouter-dialog textarea:disabled {
-  opacity: 0.7;
-}
-
 .openrouter-dialog label:has(input[type='checkbox']) {
   display: flex;
   align-items: center;
