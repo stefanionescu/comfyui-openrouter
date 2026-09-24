@@ -21,6 +21,6 @@ Attach a PDF or text file from ComfyUI's input folder to **Chat: Ask**. Each nod
 1. Put the file in ComfyUI's input folder and press R so the list shows it.
 1. Choose it in **document** and connect **documents** to **Chat: Ask**.
 
-A PDF is sent as a file, and OpenRouter reads it for models without file input; **Chat: Ask**'s **PDF reader** chooses how. A text file is sent as text and must be UTF-8. Each file counts toward the maximum upload size in OpenRouter settings. An edited file is read again on the next run.
+A PDF is sent as a file, and OpenRouter reads it for models without file input; **Chat: Ask**'s **PDF engine** chooses how. A text file is sent as text and must be UTF-8. Each file counts toward the maximum upload size in OpenRouter settings. An edited file is read again on the next run.
 
 [OpenRouter PDF documentation](https://openrouter.ai/docs/guides/overview/multimodal/pdfs)

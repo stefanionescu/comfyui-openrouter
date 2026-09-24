@@ -111,7 +111,7 @@ def _define_controls(efforts: tuple[str, ...], default_effort: str, max_tokens: 
         controls.append(
             io.Int.Input(
                 "max_output_tokens",
-                display_name="max output tokens",
+                display_name="max tokens",
                 default=0,
                 min=0,
                 max=max_tokens,
@@ -141,7 +141,7 @@ def _define_sampling(parameters: frozenset[str]) -> list[io.Input]:
         controls.append(
             io.String.Input(
                 "answer_schema",
-                display_name="answer schema (JSON)",
+                display_name="answer schema",
                 default="",
                 multiline=True,
                 advanced=True,
@@ -243,7 +243,7 @@ class ChatAsk(PaidNode):
                 define_model_input("chat", DEFAULT_CHAT_MODEL, _define_children, _define_children(WRITTEN_MODEL)),
                 io.String.Input(
                     "system",
-                    display_name="system instructions",
+                    display_name="system prompt",
                     multiline=True,
                     default="",
                     optional=True,
@@ -260,7 +260,7 @@ class ChatAsk(PaidNode):
                 ),
                 io.Combo.Input(
                     "pdf_engine",
-                    display_name="PDF reader",
+                    display_name="PDF engine",
                     options=list(PDF_ENGINES),
                     default=MODEL_DEFAULT,
                     advanced=True,

@@ -45,7 +45,7 @@ def _define_children(choice: SpeechChoice | None) -> list[io.Input]:
     is_mp3_only = choice is not None and choice.id.startswith(MP3_ONLY_PREFIXES)
     audio_format = io.Combo.Input(
         "audio_format",
-        display_name="audio format",
+        display_name="format",
         options=list(SPEECH_FORMATS),
         default="mp3" if is_mp3_only else DEFAULT_SPEECH_FORMAT,
         tooltip="The format OpenRouter sends. Most models send both. If the model refuses one, choose the other.",
@@ -74,9 +74,7 @@ class AudioSpeak(PaidNode):
             category=AUDIO_MENU,
             description="Turn text into speech with any OpenRouter speech model.",
             inputs=[
-                io.String.Input(
-                    "text", display_name="text to speak", multiline=True, default="", tooltip="What to say."
-                ),
+                io.String.Input("text", multiline=True, default="", tooltip="What to say."),
                 define_model_input("speech", DEFAULT_SPEECH_MODEL, _define_children, _define_children(None)),
                 io.Float.Input(
                     "speed",
@@ -95,7 +93,7 @@ class AudioSpeak(PaidNode):
                 ),
                 io.String.Input(
                     "sample_transcript",
-                    display_name="what the sample says",
+                    display_name="sample transcript",
                     default="",
                     advanced=True,
                     tooltip="The words spoken in the voice sample.",

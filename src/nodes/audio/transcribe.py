@@ -45,9 +45,8 @@ class AudioTranscribe(PaidNode):
                 define_model_input("transcription", DEFAULT_TRANSCRIPTION_MODEL, lambda _choice: [], []),
                 io.String.Input(
                     "language",
-                    display_name="language (two letters)",
                     default="",
-                    tooltip="The spoken language, such as en; leave empty to let the model detect it.",
+                    tooltip="The spoken language as a two-letter code such as en; leave empty to detect it.",
                 ),
                 io.Combo.Input(
                     "timestamps",

@@ -36,7 +36,7 @@ FIELD_LABELS = {
     "aspect_ratio": "aspect ratio",
     "quality": "quality",
     "background": "background",
-    "output_format": "file format",
+    "output_format": "format",
 }
 
 __all__ = [

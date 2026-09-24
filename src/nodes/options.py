@@ -22,11 +22,11 @@ if TYPE_CHECKING:
 PROVIDER = re.compile(PROVIDER_SLUG_PATTERN)
 # The routing dropdowns: input, label, choices, and tooltip.
 ROUTING_CHOICES = (
-    ("sort", "provider order", SORT_CHOICES, "Prefer the cheapest, fastest, or quickest-to-answer provider."),
-    ("allow_fallbacks", "allow other providers", YES_NO_CHOICES, "Whether another provider may answer."),
+    ("sort", "sort", SORT_CHOICES, "Prefer the cheapest, fastest, or quickest-to-answer provider."),
+    ("allow_fallbacks", "allow fallbacks", YES_NO_CHOICES, "Whether another provider may answer."),
     (
         "data_collection",
-        "providers that store data",
+        "data collection",
         COLLECTION_CHOICES,
         "Deny to use only providers that do not store or train on requests.",
     ),
@@ -35,12 +35,18 @@ ROUTING_CHOICES = (
 JSON_FIELDS = (
     (
         "provider_options",
-        "provider options (JSON)",
-        "Fields for one provider, keyed by its slug. The model's page on OpenRouter lists them.",
+        "provider options",
+        "A JSON object of fields for one provider, keyed by its slug. The model's page on OpenRouter lists them.",
     ),
-    ("extra_fields", "extra fields (JSON)", "Request fields added to the body as they are written."),
+    ("extra_fields", "extra fields", "A JSON object of request fields, added to the body as they are written."),
 )
-SLUG_TOOLTIP = "Provider slugs such as google-vertex, separated by commas. The model's page on OpenRouter lists them."
+# The provider lists: input and tooltip.
+PROVIDER_LISTS = (
+    ("order", "Providers to try first, in this order."),
+    ("only", "Use only these providers."),
+    ("ignore", "Never use these providers."),
+)
+SLUG_TOOLTIP = "Slugs such as google-vertex, separated by commas. The model's page on OpenRouter lists them."
 
 
 def _read_providers(text: str) -> tuple[str, ...]:
@@ -73,12 +79,7 @@ class RequestOptions(io.ComfyNode):
     def define_schema(cls) -> io.Schema:
         """Offer every routing field, price cap, and passthrough field OpenRouter accepts."""
         providers = [
-            io.String.Input(name, display_name=label, default="", tooltip=SLUG_TOOLTIP)
-            for name, label in (
-                ("order", "providers to try first"),
-                ("only", "only these providers"),
-                ("ignore", "never these providers"),
-            )
+            io.String.Input(name, default="", tooltip=f"{tooltip} {SLUG_TOOLTIP}") for name, tooltip in PROVIDER_LISTS
         ]
         routing = [
             io.Combo.Input(name, display_name=label, options=list(choices), default=MODEL_DEFAULT, tooltip=tooltip)
@@ -87,15 +88,15 @@ class RequestOptions(io.ComfyNode):
         prices = [
             io.Float.Input(
                 name,
-                display_name=f"max {kind} price (USD per 1M tokens)",
+                display_name=f"max {kind} price",
                 default=0.0,
                 min=0.0,
                 max=1000.0,
                 step=0.01,
                 advanced=True,
-                tooltip="Skip providers above this price; 0 sets no cap.",
+                tooltip=f"Skip providers that charge more than this, in USD per 1M {kind} tokens; 0 sets no cap.",
             )
-            for name, kind in (("max_prompt_price", "input"), ("max_completion_price", "output"))
+            for name, kind in (("max_prompt_price", "prompt"), ("max_completion_price", "completion"))
         ]
         fields = [
             io.String.Input(name, display_name=label, multiline=True, default="", advanced=True, tooltip=tooltip)
@@ -103,7 +104,7 @@ class RequestOptions(io.ComfyNode):
         ]
         zdr = io.Boolean.Input(
             "zdr",
-            display_name="zero data retention only",
+            display_name="zero data retention",
             default=False,
             tooltip="Use only providers that keep no data. Video cannot use it.",
         )

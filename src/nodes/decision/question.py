@@ -85,19 +85,15 @@ class DecisionAddQuestion(io.ComfyNode):
             inputs=[
                 io.Custom(QUESTIONS_TYPE).Input(
                     "questions",
-                    display_name="earlier questions",
                     optional=True,
                     tooltip="Connect another Decision: Add Question to ask several questions at once.",
                 ),
                 io.String.Input(
                     "name",
-                    display_name="question name",
                     default="question",
                     tooltip="Lowercase letters, digits, and underscores; Decision: Read Answer finds the answer by it.",
                 ),
-                io.String.Input(
-                    "instructions", display_name="question", multiline=True, default="", tooltip="What to decide."
-                ),
+                io.String.Input("instructions", multiline=True, default="", tooltip="What to decide."),
                 io.DynamicCombo.Input(
                     ANSWER_TYPE_INPUT,
                     display_name="answer type",

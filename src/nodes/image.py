@@ -92,7 +92,7 @@ def _define_children(choice: ImageChoice | None) -> list[io.Input]:
     if count is not None and count.kind == "range" and (count.maximum or 1) > 1:
         low = count.minimum or 1
         children.append(
-            io.Int.Input("count", display_name="images to make", default=low, min=low, max=count.maximum or low)
+            io.Int.Input("count", default=low, min=low, max=count.maximum or low, tooltip="How many images to make.")
         )
     references = min(choice.max_references if choice else MAX_REFERENCE_SOCKETS, MAX_REFERENCE_SOCKETS)
     if references > 0:

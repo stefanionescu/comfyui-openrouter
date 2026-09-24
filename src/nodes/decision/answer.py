@@ -45,9 +45,7 @@ class DecisionReadAnswer(io.ComfyNode):
             description="Turn one decision answer into text, a yes flag, and numbers that switch nodes can use.",
             inputs=[
                 io.Custom(ANSWERS_TYPE).Input("answers", tooltip="Connect Decision: Ask."),
-                io.String.Input(
-                    "question", display_name="question name", default="question", tooltip="The name of the question."
-                ),
+                io.String.Input("question", default="question", tooltip="The name of the question to read."),
                 io.Float.Input(
                     "threshold",
                     default=DEFAULT_THRESHOLD,

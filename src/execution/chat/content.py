@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 def build_messages(request: ChatRequest) -> list[Json]:
-    """List the system instructions, the earlier turns, then the question with its media.
+    """List the system prompt, the earlier turns, then the question with its media.
 
     OpenRouter's image guide recommends the text first, then the images.
     """

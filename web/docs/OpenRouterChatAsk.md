@@ -45,7 +45,7 @@ Ask any OpenRouter chat model a question, with images, video, audio, and documen
 
 The controls under **model** change with the model: a model only shows the settings, sockets, and outputs it accepts. When a list, such as the images of **Load Image (from Folder)**, reaches an image socket, ComfyUI runs the node once per image, and each run is a paid request. To send several images in one request, connect each to its own socket; each keeps its own size.
 
-An answer that stops mid-sentence reached the output token limit; raise **max output tokens**. ComfyUI's cancel stops waiting, but tokens the model produced before a cancel are billed. **Chat: Ask** returns images without masks; for masks, use **Image: Generate**. ComfyUI reuses a cached answer when nothing changed; the seed changes after each run unless its control is **fixed**.
+An answer that stops mid-sentence reached the output token limit; raise **max tokens**. ComfyUI's cancel stops waiting, but tokens the model produced before a cancel are billed. **Chat: Ask** returns images without masks; for masks, use **Image: Generate**. ComfyUI reuses a cached answer when nothing changed; the seed changes after each run unless its control is **fixed**.
 
 Models can state wrong facts with confidence. Check an answer before you rely on it, and give the model the documents it should answer from.
 

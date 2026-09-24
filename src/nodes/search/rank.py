@@ -46,7 +46,7 @@ class SearchRank(PaidNode):
                 define_search_model("rerank", DEFAULT_RANK_MODEL),
                 io.Int.Input(
                     "top_n",
-                    display_name="keep best",
+                    display_name="top n",
                     default=0,
                     min=0,
                     max=MAX_SEARCH_ITEMS,

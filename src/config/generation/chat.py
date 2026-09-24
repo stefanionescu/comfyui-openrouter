@@ -1,4 +1,4 @@
-"""Chat ranges and choices: media sockets, temperature, token limits, PDF readers, outputs, and voice audio."""
+"""Chat ranges and choices: media sockets, temperature, token limits, PDF engines, outputs, and voice audio."""
 
 from .inputs import MODEL_DEFAULT
 

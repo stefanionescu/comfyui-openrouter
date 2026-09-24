@@ -49,7 +49,7 @@ did not make stops the nodes connected to it.
 
 What each node sends and returns:
 
-- **Chat: Ask** sends one chat completion. The message holds the prompt, then the media: images as PNG, videos as MP4, and audio clips as WAV, each encoded in the request. A PDF goes as a file for OpenRouter's PDF reader, and a text file as text. Earlier turns come from **conversation**. It returns the
+- **Chat: Ask** sends one chat completion. The message holds the prompt, then the media: images as PNG, videos as MP4, and audio clips as WAV, each encoded in the request. A PDF goes as a file for OpenRouter's PDF engine, and a text file as text. Earlier turns come from **conversation**. It returns the
   text, the reasoning when the model shares it, and any images the model drew.
   A spoken answer is streamed as 24 kHz mono PCM audio.
 - **Chat: Attach Document** reads one file from ComfyUI's input folder and
@@ -234,7 +234,7 @@ Read the error and the node's native **Info** before trying again.
 **Video: Generate** records each job privately as soon as OpenRouter accepts it,
 before it starts waiting. ComfyUI's cancel stops waiting but not the job, which
 OpenRouter keeps making and billing, because OpenRouter has no way to cancel a
-video job. Add **Video: Download**, choose the job in **unfinished job**, and
+video job. Add **Video: Download**, choose the job in **job**, and
 select **Run** to collect it; press R to list jobs recorded after the node
 definitions were read. Running the identical request again on **Video:
 Generate** resumes the recorded job instead of paying for a second one.

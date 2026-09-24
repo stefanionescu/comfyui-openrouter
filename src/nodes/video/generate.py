@@ -86,7 +86,7 @@ def _define_children(choice: VideoChoice) -> list[io.Input]:
         durations = [str(duration) for duration in sorted(choice.durations)]
         # Video is priced per second, so the shortest duration comes first.
         children.append(
-            io.Combo.Input("duration", display_name="duration (seconds)", options=durations, default=durations[0])
+            io.Combo.Input("duration", options=durations, default=durations[0], tooltip="The length in seconds.")
         )
     for field, values in (("resolution", choice.resolutions), ("aspect_ratio", choice.aspect_ratios)):
         if len(values) > 1:
@@ -96,7 +96,7 @@ def _define_children(choice: VideoChoice) -> list[io.Input]:
             )
     if choice.generate_audio is not None:
         children.append(
-            io.Boolean.Input("generate_audio", display_name="generate sound", default=choice.generate_audio)
+            io.Boolean.Input("generate_audio", display_name="generate audio", default=choice.generate_audio)
         )
     return [
         *children,
@@ -144,18 +144,17 @@ class VideoGenerate(PaidNode):
         written = [
             io.Int.Input(
                 "duration",
-                display_name="duration (seconds)",
                 default=DEFAULT_DURATION,
                 min=0,
                 max=DURATION_RANGE[1],
-                tooltip="0 leaves the duration to the model.",
+                tooltip="The length in seconds; 0 leaves it to the model.",
             ),
             io.Combo.Input("resolution", options=list(ALL_RESOLUTIONS), default=MODEL_DEFAULT),
             io.Combo.Input(
                 "aspect_ratio", display_name="aspect ratio", options=list(ALL_ASPECT_RATIOS), default=MODEL_DEFAULT
             ),
             io.Combo.Input(
-                "generate_audio", display_name="generate sound", options=list(AUDIO_CHOICES), default=MODEL_DEFAULT
+                "generate_audio", display_name="generate audio", options=list(AUDIO_CHOICES), default=MODEL_DEFAULT
             ),
             *_define_media(("first_frame", "last_frame"), frozenset({"image", "video", "audio"})),
         ]

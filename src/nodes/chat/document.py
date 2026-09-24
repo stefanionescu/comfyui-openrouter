@@ -39,7 +39,6 @@ class ChatAttachDocument(io.ComfyNode):
                 ),
                 io.Custom(DOCUMENTS_TYPE).Input(
                     "documents",
-                    display_name="earlier documents",
                     optional=True,
                     tooltip="Connect another Chat: Attach Document to send several documents.",
                 ),

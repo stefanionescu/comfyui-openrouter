@@ -1,6 +1,6 @@
 # Request Options
 
-Choose providers, price caps, and extra request fields once, for any number of OpenRouter nodes. Connect **options** to the **request options** socket of a paid node. It sends nothing itself.
+Choose providers, price caps, and extra request fields once, for any number of OpenRouter nodes. Connect **options** to the **options** socket of a paid node. It sends nothing itself.
 
 ## Inputs
 
@@ -20,15 +20,15 @@ Choose providers, price caps, and extra request fields once, for any number of O
 
 ## Outputs
 
-| Output    | What it carries                                  |
-| --------- | ------------------------------------------------ |
-| `options` | The options, for the **request options** socket. |
+| Output    | What it carries                          |
+| --------- | ---------------------------------------- |
+| `options` | The options, for the **options** socket. |
 
 ## Run
 
 1. To start from a finished workflow, open **chat-01-write-a-product-listing** from **Browse Templates → comfyui-openrouter**.
 1. Fill in the fields you need and leave the rest at their defaults.
-1. Connect **options** to the **request options** socket of one or more paid nodes.
+1. Connect **options** to the **options** socket of one or more paid nodes.
 
 Each endpoint accepts only some fields, and a paid node refuses a field its endpoint does not accept before it sends anything:
 

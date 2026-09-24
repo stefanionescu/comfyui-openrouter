@@ -79,7 +79,7 @@ def read_model[C: Choice](endpoint: Endpoint, model: Mapping[str, object], kind:
 
 
 def define_request_inputs(*, has_seed: bool) -> list[io.Input]:
-    """Build the seed, run number, and request options inputs that follow a paid node's own inputs."""
+    """Build the seed, run number, and options inputs that follow a paid node's own inputs."""
     seed = io.Int.Input(
         SEED_INPUT,
         display_name="seed",
@@ -99,7 +99,6 @@ def define_request_inputs(*, has_seed: bool) -> list[io.Input]:
     )
     options = io.Custom(OPTIONS_TYPE).Input(
         OPTIONS_INPUT,
-        display_name="request options",
         optional=True,
         tooltip="Connect Request Options to choose providers or pass extra fields.",
     )

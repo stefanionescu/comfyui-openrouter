@@ -40,7 +40,6 @@ class VideoDownload(io.ComfyNode):
             inputs=[
                 io.Combo.Input(
                     "job",
-                    display_name="unfinished job",
                     options=labels,
                     tooltip="A video job recorded on this server. Press R to list jobs recorded later.",
                 )
