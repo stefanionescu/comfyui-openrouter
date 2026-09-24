@@ -441,10 +441,10 @@ src.config
 
 The README's images are in `docs/images/`:
 
-- The banner, badges, group tags, and node map are SVG files; edit them as text.
-  Update the counts when a node or workflow is added.
-- `example-results.jpg` holds outputs of image-01, image-02, image-04, search-02,
-  and video-01, cropped to 192-pixel squares.
+- `banner.svg` and `node-map.svg` are SVG files; edit them as text. They use two
+  palettes: ComfyUI's ink `#211927`, panels `#312C34`, text `#C2BFB9`, and yellow
+  `#F0FF41`, and OpenRouter's indigo `#6366F1`. In the node map, a paid node has
+  an indigo bar and a free one a grey bar, and links are yellow.
 - `workflow-choose-group.png` is the **Choose** group of image-01 at 100% zoom.
 
 Keep each image under 100 KB, and give it alt text in the README.
