@@ -191,8 +191,8 @@ WORKFLOW_TEXTS = {
         "using": (
             "**Four Candidates** draws four images in one request. **Rank the Images** scores each against the "
             "brief with a vision reranker and keeps the best.\n\n"
-            "**Describe the Winner** writes what the winning image shows, and Jev decides in **Hero Ready** whether "
-            "it works as a homepage hero: clear subject, room for a headline, and no defects.\n\n"
+            "**Describe the Winner** writes what the winning image shows. Jev then decides in **Hero Ready** whether "
+            "it works as a homepage hero: a clear subject, room for a headline, and no defects.\n\n"
             "Four paid requests per run. " + PRICES
         ),
     },
