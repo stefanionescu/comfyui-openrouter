@@ -67,7 +67,7 @@ def _build_media_sockets() -> list[io.Input]:
 # The controls a chat model may take, then what it makes besides text; each left at its default sends nothing.
 CONTROLS = (
     io.Combo.Input(
-        "reasoning",
+        "reasoning_effort",
         display_name="reasoning effort",
         options=list(EFFORTS),
         default=MODEL_DEFAULT,
@@ -75,7 +75,7 @@ CONTROLS = (
         tooltip="How much the model thinks before answering.",
     ),
     io.Int.Input(
-        "max_output_tokens",
+        "max_tokens",
         display_name="max tokens",
         default=0,
         min=0,
@@ -91,14 +91,6 @@ CONTROLS = (
         step=TEMPERATURE_STEP,
         advanced=True,
         tooltip="Higher values vary the answer more. Sent only to models that take a temperature.",
-    ),
-    io.String.Input(
-        "answer_schema",
-        display_name="answer schema",
-        default="",
-        multiline=True,
-        advanced=True,
-        tooltip="A JSON schema the answer must follow; leave empty for free text.",
     ),
     io.Combo.Input(
         "outputs",
@@ -169,19 +161,7 @@ class ChatAsk(PaidNode):
                 "Ask any OpenRouter chat model, with images, video, audio, or documents when the model accepts them."
             ),
             inputs=[
-                io.String.Input(
-                    "prompt", multiline=True, default="", placeholder="prompt", tooltip="The question or instruction."
-                ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_CHAT_MODEL, tooltip=MODEL_TOOLTIP),
-                io.String.Input(
-                    "system",
-                    display_name="system prompt",
-                    multiline=True,
-                    default="",
-                    optional=True,
-                    advanced=True,
-                    tooltip="Instructions the model follows for the whole answer.",
-                ),
                 io.Custom(CONVERSATION_TYPE).Input(
                     "conversation", optional=True, tooltip="Connect a previous Chat: Ask to continue its conversation."
                 ),
@@ -201,6 +181,28 @@ class ChatAsk(PaidNode):
                     tooltip="How OpenRouter reads attached PDFs.",
                 ),
                 *build_request_inputs(has_seed=True),
+                io.String.Input(
+                    "answer_schema",
+                    display_name="answer schema",
+                    placeholder="answer schema",
+                    default="",
+                    multiline=True,
+                    advanced=True,
+                    tooltip="A JSON schema the answer must follow; leave empty for free text.",
+                ),
+                io.String.Input(
+                    "prompt", multiline=True, default="", placeholder="prompt", tooltip="The question or instruction."
+                ),
+                io.String.Input(
+                    "system_prompt",
+                    display_name="system prompt",
+                    placeholder="system prompt",
+                    multiline=True,
+                    default="",
+                    optional=True,
+                    advanced=True,
+                    tooltip="Instructions the model follows for the whole answer.",
+                ),
             ],
             outputs=[
                 io.String.Output("text", display_name="text"),
@@ -218,15 +220,15 @@ class ChatAsk(PaidNode):
         prompt: str,
         model: str,
         seed: int,
-        reasoning: str = MODEL_DEFAULT,
-        max_output_tokens: int = 0,
+        reasoning_effort: str = MODEL_DEFAULT,
+        max_tokens: int = 0,
         temperature: float = DEFAULT_TEMPERATURE,
         answer_schema: str = "",
         outputs: str = "text",
         aspect_ratio: str = MODEL_DEFAULT,
         voice: str = DEFAULT_VOICE,
         pdf_engine: str = MODEL_DEFAULT,
-        system: str = "",
+        system_prompt: str = "",
         conversation: Conversation | None = None,
         documents: tuple[Document, ...] | None = None,
         images: dict[str, object] | None = None,
@@ -237,8 +239,8 @@ class ChatAsk(PaidNode):
         """Encode the connected media inside the owned task, send, and decode what the model made."""
         history = conversation or Conversation(())
         settings = ChatSettings(
-            effort=reasoning if reasoning != MODEL_DEFAULT else None,
-            max_output_tokens=max_output_tokens,
+            effort=reasoning_effort if reasoning_effort != MODEL_DEFAULT else None,
+            max_tokens=max_tokens,
             temperature=temperature,
             answer_schema=_read_schema(answer_schema),
             outputs=frozenset(OUTPUTS[outputs]),
@@ -253,7 +255,7 @@ class ChatAsk(PaidNode):
             image_urls, video_urls, clips = await wait_for_thread(lambda: _encode_media(sockets))
             request = ChatRequest(
                 model_id=model.strip(),
-                system=system,
+                system_prompt=system_prompt,
                 prompt=prompt,
                 conversation=history,
                 image_urls=image_urls,

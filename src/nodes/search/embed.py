@@ -54,9 +54,6 @@ class SearchEmbed(PaidNode):
             category=SEARCH_MENU,
             description="Turn text and images into embedding vectors and compare each item with the first.",
             inputs=[
-                io.String.Input(
-                    "texts", multiline=True, default="", tooltip="One item per line; blank lines are skipped."
-                ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_EMBEDDING_MODEL, tooltip=MODEL_TOOLTIP),
                 build_image_sockets(),
                 io.Int.Input(
@@ -76,6 +73,9 @@ class SearchEmbed(PaidNode):
                     tooltip="A hint for models that embed queries and documents differently.",
                 ),
                 *build_request_inputs(has_seed=False),
+                io.String.Input(
+                    "texts", multiline=True, default="", tooltip="One item per line; blank lines are skipped."
+                ),
             ],
             outputs=[
                 io.String.Output("vectors", display_name="vectors"),

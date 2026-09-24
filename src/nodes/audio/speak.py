@@ -50,7 +50,6 @@ class AudioSpeak(PaidNode):
             category=AUDIO_MENU,
             description="Turn text into speech with any OpenRouter speech model.",
             inputs=[
-                io.String.Input("text", multiline=True, default="", tooltip="What to say."),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_SPEECH_MODEL, tooltip=MODEL_TOOLTIP),
                 io.String.Input(
                     "voice",
@@ -71,7 +70,7 @@ class AudioSpeak(PaidNode):
                     max=MAX_SPEED,
                     step=SPEED_STEP,
                     advanced=True,
-                    tooltip="Some providers ignore the speed.",
+                    tooltip="How fast the voice speaks, 1 being normal. Some providers ignore it.",
                 ),
                 io.Audio.Input(
                     "voice_sample",
@@ -87,6 +86,7 @@ class AudioSpeak(PaidNode):
                     tooltip="The words spoken in the voice sample.",
                 ),
                 *build_request_inputs(has_seed=False),
+                io.String.Input("text", multiline=True, default="", tooltip="What to say."),
             ],
             outputs=[io.Audio.Output("audio", display_name="audio")],
         )

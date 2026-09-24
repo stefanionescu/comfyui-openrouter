@@ -93,7 +93,6 @@ class DecisionAddQuestion(io.ComfyNode):
                     default="question",
                     tooltip="Lowercase letters, digits, and underscores; Decision: Read Answer finds the answer by it.",
                 ),
-                io.String.Input("instructions", multiline=True, default="", tooltip="What to decide."),
                 io.DynamicCombo.Input(
                     ANSWER_TYPE_INPUT,
                     display_name="answer type",
@@ -127,6 +126,7 @@ class DecisionAddQuestion(io.ComfyNode):
                     ],
                     tooltip="Yes or no gives a probability, one choice picks an option, and score places it on levels.",
                 ),
+                io.String.Input("instructions", multiline=True, default="", tooltip="What to decide."),
             ],
             outputs=[io.Custom(QUESTIONS_TYPE).Output("questions", display_name="questions")],
         )

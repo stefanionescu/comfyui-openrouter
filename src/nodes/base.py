@@ -5,7 +5,7 @@ from typing import ClassVar
 from comfy_api.latest import io
 from ..comfy.runtime import get_runtime
 from collections.abc import Callable, Awaitable
-from ..config.generation.inputs import VARIATION_INPUT
+from ..config.generation.inputs import RUN_NUMBER_INPUT
 
 
 class PaidNode(io.ComfyNode):
@@ -27,7 +27,7 @@ class PaidNode(io.ComfyNode):
     @classmethod
     async def execute(cls, **inputs: object) -> io.NodeOutput:  # pyright: ignore[reportIncompatibleMethodOverride] -- reason: ComfyUI awaits an async execute.
         """Drop the run number, which ComfyUI uses to invalidate its cache, and send."""
-        inputs.pop(VARIATION_INPUT, None)
+        inputs.pop(RUN_NUMBER_INPUT, None)
         return await cls.send(**inputs)
 
 

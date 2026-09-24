@@ -9,11 +9,11 @@ from ..config.generation.inputs import (
     MAX_SEED,
     SEED_INPUT,
     DEFAULT_SEED,
-    MAX_VARIATION,
-    MIN_VARIATION,
     OPTIONS_INPUT,
-    VARIATION_INPUT,
-    DEFAULT_VARIATION,
+    MAX_RUN_NUMBER,
+    MIN_RUN_NUMBER,
+    RUN_NUMBER_INPUT,
+    DEFAULT_RUN_NUMBER,
 )
 
 if TYPE_CHECKING:
@@ -31,20 +31,20 @@ def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
         max=MAX_SEED,
         control_after_generate=True,
     )
-    variation = io.Int.Input(
-        VARIATION_INPUT,
+    run_number = io.Int.Input(
+        RUN_NUMBER_INPUT,
         display_name="run number",
-        tooltip="Change this number to send the same request again. The seed stays as it is.",
-        default=DEFAULT_VARIATION,
-        min=MIN_VARIATION,
-        max=MAX_VARIATION,
+        tooltip="Change this number to send the same request again" + (" with the same seed." if has_seed else "."),
+        default=DEFAULT_RUN_NUMBER,
+        min=MIN_RUN_NUMBER,
+        max=MAX_RUN_NUMBER,
     )
     options = io.Custom(OPTIONS_TYPE).Input(
         OPTIONS_INPUT,
         optional=True,
         tooltip="Connect Request Options to choose providers or pass extra fields.",
     )
-    return [seed, variation, options] if has_seed else [variation, options]
+    return [seed, run_number, options] if has_seed else [run_number, options]
 
 
 def read_sockets(slots: Mapping[str, object] | None) -> list[object]:

@@ -16,7 +16,7 @@ def _build_messages(request: ChatRequest) -> list[Json]:
 
     OpenRouter's image guide recommends the text first, then the images.
     """
-    system: list[Json] = [{"role": "system", "content": request.system}] if request.system.strip() else []
+    system: list[Json] = [{"role": "system", "content": request.system_prompt}] if request.system_prompt.strip() else []
     turns: list[Json] = [{"role": turn.role, "content": turn.text} for turn in request.conversation.turns]
     images: list[Json] = [{"type": "image_url", "image_url": {"url": url}} for url in request.image_urls]
     videos: list[Json] = [{"type": "video_url", "video_url": {"url": url}} for url in request.video_urls]
@@ -55,9 +55,9 @@ def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Js
     body: dict[str, Json] = {"model": request.model_id, "messages": _build_messages(request)}
     if settings.effort is not None:
         body["reasoning"] = {"effort": settings.effort}
-    if settings.max_output_tokens > 0:
+    if settings.max_tokens > 0:
         field = "max_tokens" if "max_completion_tokens" not in parameters else "max_completion_tokens"
-        body[field] = settings.max_output_tokens
+        body[field] = settings.max_tokens
     if "temperature" in parameters:
         body["temperature"] = settings.temperature
     if "seed" in parameters:

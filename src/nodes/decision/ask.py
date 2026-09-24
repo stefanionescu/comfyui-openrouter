@@ -68,15 +68,15 @@ class DecisionAsk(PaidNode):
                 "Jev. Each answer comes with its probabilities."
             ),
             inputs=[
+                io.Custom(QUESTIONS_TYPE).Input("questions", tooltip="Connect Decision: Add Question."),
+                io.String.Input(MODEL_INPUT, default=DEFAULT_DECISION_MODEL, tooltip=MODEL_TOOLTIP),
+                *build_request_inputs(has_seed=False),
                 io.String.Input(
                     "situation",
                     multiline=True,
                     default="",
                     tooltip="What to decide on, as text or as a JSON object or array.",
                 ),
-                io.Custom(QUESTIONS_TYPE).Input("questions", tooltip="Connect Decision: Add Question."),
-                io.String.Input(MODEL_INPUT, default=DEFAULT_DECISION_MODEL, tooltip=MODEL_TOOLTIP),
-                *build_request_inputs(has_seed=False),
             ],
             outputs=[
                 io.Custom(ANSWERS_TYPE).Output("answers", display_name="answers"),

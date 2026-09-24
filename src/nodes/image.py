@@ -75,12 +75,12 @@ class ImageGenerate(PaidNode):
             category=IMAGE_MENU,
             description="Generate or edit images with any OpenRouter image model.",
             inputs=[
-                io.String.Input(
-                    "prompt", multiline=True, default="", placeholder="prompt", tooltip="What to draw or change."
-                ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_IMAGE_MODEL, tooltip=MODEL_TOOLTIP),
                 *FIELDS,
                 *build_request_inputs(has_seed=True),
+                io.String.Input(
+                    "prompt", multiline=True, default="", placeholder="prompt", tooltip="What to draw or change."
+                ),
             ],
             outputs=[
                 io.Image.Output("images", display_name="images", is_output_list=True),

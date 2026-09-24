@@ -65,7 +65,7 @@ class AudioTranscribe(PaidNode):
                     max=MAX_TRANSCRIPTION_TEMPERATURE,
                     step=TRANSCRIPTION_TEMPERATURE_STEP,
                     advanced=True,
-                    tooltip="0 leaves it to the model.",
+                    tooltip="Higher values vary the transcript more; 0 leaves it to the model.",
                 ),
                 *build_request_inputs(has_seed=False),
             ],

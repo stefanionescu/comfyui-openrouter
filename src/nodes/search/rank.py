@@ -37,10 +37,6 @@ class SearchRank(PaidNode):
             category=SEARCH_MENU,
             description="Order text and images by how well they match a query.",
             inputs=[
-                io.String.Input("query", multiline=True, default="", tooltip="What the documents are ranked against."),
-                io.String.Input(
-                    "documents", multiline=True, default="", tooltip="One document per line; blank lines are skipped."
-                ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_RANK_MODEL, tooltip=MODEL_TOOLTIP),
                 build_image_sockets(),
                 io.Int.Input(
@@ -52,6 +48,10 @@ class SearchRank(PaidNode):
                     tooltip="How many documents to keep; 0 keeps all.",
                 ),
                 *build_request_inputs(has_seed=False),
+                io.String.Input("query", multiline=True, default="", tooltip="What the documents are ranked against."),
+                io.String.Input(
+                    "documents", multiline=True, default="", tooltip="One document per line; blank lines are skipped."
+                ),
             ],
             outputs=[
                 io.String.Output("texts", display_name="texts"),

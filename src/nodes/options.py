@@ -108,7 +108,9 @@ class RequestOptions(io.ComfyNode):
             for name, kind in (("max_prompt_price", "prompt"), ("max_completion_price", "completion"))
         ]
         fields = [
-            io.String.Input(name, display_name=label, multiline=True, default="", advanced=True, tooltip=tooltip)
+            io.String.Input(
+                name, display_name=label, placeholder=label, multiline=True, default="", advanced=True, tooltip=tooltip
+            )
             for name, label, tooltip in JSON_FIELDS
         ]
         zdr = io.Boolean.Input(

@@ -42,8 +42,10 @@ if TYPE_CHECKING:
 def _build_media_sockets() -> list[io.Input]:
     """Offer the first and last frame, and one growing row of reference sockets for each kind."""
     media: list[io.Input] = [
-        io.Image.Input(frame, display_name=frame.replace("_", " "), optional=True, tooltip="One image.")
-        for frame in ("first_frame", "last_frame")
+        io.Image.Input(
+            frame, display_name=frame.replace("_", " "), optional=True, tooltip=f"The image the video {end}."
+        )
+        for frame, end in (("first_frame", "starts from"), ("last_frame", "ends on"))
     ]
     for kind, template, count in (
         ("image", io.Image.Input("image"), MAX_REFERENCE_IMAGES),
@@ -69,7 +71,7 @@ CONTROLS = (
         default=0,
         min=0,
         max=MAX_DURATION,
-        tooltip="The length in seconds; 0 leaves it to the model. Video is priced per second.",
+        tooltip="The length in seconds; 0 leaves it to the model.",
     ),
     io.Combo.Input("resolution", options=list(RESOLUTIONS), default=MODEL_DEFAULT),
     io.Combo.Input("aspect_ratio", display_name="aspect ratio", options=list(ASPECT_RATIOS), default=MODEL_DEFAULT),
@@ -134,6 +136,10 @@ class VideoGenerate(PaidNode):
             category=VIDEO_MENU,
             description="Make a video with any OpenRouter video model, from text, frames, or references.",
             inputs=[
+                io.String.Input(MODEL_INPUT, default=DEFAULT_VIDEO_MODEL, tooltip=MODEL_TOOLTIP),
+                *CONTROLS,
+                *_build_media_sockets(),
+                *build_request_inputs(has_seed=True),
                 io.String.Input(
                     "prompt",
                     multiline=True,
@@ -141,10 +147,6 @@ class VideoGenerate(PaidNode):
                     placeholder="prompt",
                     tooltip="What the video shows. It may be empty when a first frame is connected.",
                 ),
-                io.String.Input(MODEL_INPUT, default=DEFAULT_VIDEO_MODEL, tooltip=MODEL_TOOLTIP),
-                *CONTROLS,
-                *_build_media_sockets(),
-                *build_request_inputs(has_seed=True),
             ],
             outputs=[io.Video.Output("video", display_name="video")],
         )
