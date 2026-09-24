@@ -2,22 +2,21 @@
 
 from __future__ import annotations
 
-import torch
 import asyncio
 import io as memory
 from ..base import PaidNode
-from typing import cast, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from ...comfy.media import encode_images
 from ...comfy.runtime import get_runtime
 from ...types.videos import VideoRequest
+from ...config.media import WAV_URL_PREFIX
+from comfy_api.latest import io, InputImpl
 from ...config.messages.videos import IMAGE_BATCH
-from comfy_api.latest import Input, InputImpl, io
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
-from ..inputs import read_sockets, build_request_inputs
+from ..inputs import encode_media, build_request_inputs
 from ...openrouter.videos.operation import VideoOperation
-from ...config.media import MP4_URL_PREFIX, WAV_URL_PREFIX
 from ...config.generation.models import DEFAULT_VIDEO_MODEL
-from ...comfy.media import encode_audio, encode_video, encode_images
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.videos import (
@@ -29,39 +28,43 @@ from ...config.generation.videos import (
     MAX_CREATIVITY,
     CREATIVITY_STEP,
     MAX_UPSCALE_FACTOR,
-    MAX_REFERENCE_AUDIO,
-    MAX_REFERENCE_IMAGES,
-    MAX_REFERENCE_VIDEOS,
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    import torch
+    from comfy_api.latest import Input
     from ...types.options import Options
+    from collections.abc import Mapping, Sequence
 
 
-def _build_media_sockets() -> list[io.Input]:
-    """Offer the first and last frame, and one growing row of reference sockets for each kind."""
-    media: list[io.Input] = [
+# The first and last frame take one image each; each reference socket takes one item, a batch, or a list, and
+# everything connected goes in one request.
+MEDIA = (
+    *(
         io.Image.Input(
             frame, display_name=frame.replace("_", " "), optional=True, tooltip=f"The image the video {end}."
         )
         for frame, end in (("first_frame", "starts from"), ("last_frame", "ends on"))
-    ]
-    for kind, template, count in (
-        ("image", io.Image.Input("image"), MAX_REFERENCE_IMAGES),
-        ("video", io.Video.Input("video"), MAX_REFERENCE_VIDEOS),
-        ("audio", io.Audio.Input("audio"), MAX_REFERENCE_AUDIO),
-    ):
-        socket = "reference_audio" if kind == "audio" else f"reference_{kind}s"
-        names = [f"reference_{kind}_{number}" for number in range(1, count + 1)]
-        media.append(
-            io.Autogrow.Input(
-                socket,
-                template=io.Autogrow.TemplateNames(template, names=names, min=0),
-                tooltip=f"The {kind} references the video follows; leave the frames empty to use them.",
-            )
-        )
-    return media
+    ),
+    io.Image.Input(
+        "reference_images",
+        display_name="reference images",
+        optional=True,
+        tooltip="Images the video follows: one, a batch, or a list. Leave the frames empty to use references.",
+    ),
+    io.Video.Input(
+        "reference_videos",
+        display_name="reference videos",
+        optional=True,
+        tooltip="Videos the video follows. Create List joins several.",
+    ),
+    io.Audio.Input(
+        "reference_audio",
+        display_name="reference audio",
+        optional=True,
+        tooltip="Audio the video follows. Create List joins several.",
+    ),
+)
 
 
 # The duration, size, and sound, then the upscale settings of an upscaling model; 0 and model default send nothing.
@@ -98,34 +101,22 @@ CONTROLS = (
 )
 
 
-def _encode_frames(frames: Mapping[str, object]) -> dict[str, str]:
-    """Encode each connected frame, refusing a batch, since a frame is one image."""
+def _encode_frames(frames: Mapping[str, Sequence[torch.Tensor] | None]) -> dict[str, str]:
+    """Encode each connected frame, refusing more than one image, since a frame is one image."""
     encoded: dict[str, str] = {}
-    for frame, image in frames.items():
-        if not isinstance(image, torch.Tensor):
-            continue
-        if image.shape[0] != 1:
+    for frame, batches in frames.items():
+        images = list(batches or ())
+        if sum(batch.shape[0] for batch in images) > 1:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_BATCH)
-        encoded[frame] = encode_images(image)[0]
+        if images:
+            encoded[frame] = encode_images(images[0])[0]
     return encoded
-
-
-def _encode_references(sockets: Mapping[str, Mapping[str, object] | None]) -> tuple[tuple[str, str], ...]:
-    """Encode every connected reference image, video, and audio clip as a (kind, data URL) pair."""
-    references: list[tuple[str, str]] = []
-    for kind, slots in sockets.items():
-        for value in read_sockets(slots):
-            if isinstance(value, torch.Tensor):
-                references += [(kind, url) for url in encode_images(value)]
-            elif isinstance(value, Input.Video):
-                references.append((kind, MP4_URL_PREFIX + encode_video(value)))
-            else:
-                references.append((kind, WAV_URL_PREFIX + encode_audio(cast("Input.Audio", value))))
-    return tuple(references)
 
 
 class VideoGenerate(PaidNode):
     """Submit one video job, record it, wait for it, and return the video."""
+
+    list_inputs = frozenset({"first_frame", "last_frame", "reference_images", "reference_videos", "reference_audio"})
 
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -138,7 +129,7 @@ class VideoGenerate(PaidNode):
             inputs=[
                 io.String.Input(MODEL_INPUT, default=DEFAULT_VIDEO_MODEL, tooltip=MODEL_TOOLTIP),
                 *CONTROLS,
-                *_build_media_sockets(),
+                *MEDIA,
                 *build_request_inputs(has_seed=True),
                 io.String.Input(
                     "prompt",
@@ -149,6 +140,7 @@ class VideoGenerate(PaidNode):
                 ),
             ],
             outputs=[io.Video.Output("video", display_name="video")],
+            is_input_list=True,
         )
 
     @classmethod
@@ -164,21 +156,25 @@ class VideoGenerate(PaidNode):
         generate_audio: str = MODEL_DEFAULT,
         upscale_factor: float = 0.0,
         creativity: float = 0.0,
-        first_frame: torch.Tensor | None = None,
-        last_frame: torch.Tensor | None = None,
-        reference_images: dict[str, object] | None = None,
-        reference_videos: dict[str, object] | None = None,
-        reference_audio: dict[str, object] | None = None,
+        first_frame: list[torch.Tensor] | None = None,
+        last_frame: list[torch.Tensor] | None = None,
+        reference_images: list[torch.Tensor] | None = None,
+        reference_videos: list[Input.Video] | None = None,
+        reference_audio: list[Input.Audio] | None = None,
         options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the frames and references inside the owned task, then submit, record, and wait."""
         frames = {"first_frame": first_frame, "last_frame": last_frame}
-        sockets = {"image": reference_images, "video": reference_videos, "audio": reference_audio}
 
         async def send_encoded() -> io.NodeOutput:
             """Encode the media inside the owned task, then send the request."""
-            frame_urls, references = await wait_for_thread(
-                lambda: (_encode_frames(frames), _encode_references(sockets))
+            frame_urls, (image_urls, video_urls, clips) = await wait_for_thread(
+                lambda: (_encode_frames(frames), encode_media(reference_images, reference_videos, reference_audio))
+            )
+            references = (
+                *(("image", url) for url in image_urls),
+                *(("video", url) for url in video_urls),
+                *(("audio", WAV_URL_PREFIX + clip) for clip in clips),
             )
             # A control left at 0 or at the model's default sends nothing.
             request = VideoRequest(

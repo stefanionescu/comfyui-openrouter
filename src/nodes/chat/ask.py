@@ -2,25 +2,22 @@
 
 from __future__ import annotations
 
-import torch
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
-from comfy_api.latest import Input
-from typing import cast, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from ...types.parsing import parse_json
-from ...config.media import MP4_URL_PREFIX
 from comfy_execution.graph import ExecutionBlocker
 from ...openrouter.chat.operation import ChatOperation
 from ...types.errors import ErrorCode, OpenRouterError
-from ..inputs import read_sockets, build_request_inputs
+from ..inputs import encode_media, build_request_inputs
 from ...config.generation.models import DEFAULT_CHAT_MODEL
 from ...config.messages.inputs import ANSWER_SCHEMA_INVALID
+from ...comfy.media import decode_pcm, decode_audio, decode_image
 from ...types.chat import Turn, ChatRequest, ChatSettings, Conversation
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE, CONVERSATION_TYPE
-from ...comfy.media import decode_pcm, decode_audio, decode_image, encode_audio, encode_video, encode_images
 from ...config.generation.chat import (
     EFFORTS,
     OUTPUTS,
@@ -31,40 +28,33 @@ from ...config.generation.chat import (
     AUDIO_CHANNELS,
     MAX_TEMPERATURE,
     TEMPERATURE_STEP,
-    MAX_AUDIO_SOCKETS,
-    MAX_IMAGE_SOCKETS,
     MAX_OUTPUT_TOKENS,
-    MAX_VIDEO_SOCKETS,
     DEFAULT_TEMPERATURE,
 )
 
 if TYPE_CHECKING:
+    import torch
     from ...types import Json
+    from comfy_api.latest import Input
     from collections.abc import Mapping
     from ...types.options import Options
     from ...types.chat import Document, ChatResult
 
 
-def _build_media_sockets() -> list[io.Input]:
-    """Offer one growing row of sockets for each kind of media a model can read."""
-    media: list[io.Input] = []
-    for kind, template, count, items in (
-        ("image", io.Image.Input("image"), MAX_IMAGE_SOCKETS, "Images"),
-        ("video", io.Video.Input("video"), MAX_VIDEO_SOCKETS, "Videos"),
-        ("audio", io.Audio.Input("audio"), MAX_AUDIO_SOCKETS, "Audio clips"),
-    ):
-        names = [f"{kind}_{number}" for number in range(1, count + 1)]
-        media.append(
-            io.Autogrow.Input(
-                "audio" if kind == "audio" else f"{kind}s",
-                template=io.Autogrow.TemplateNames(template, names=names, min=0),
-                tooltip=f"{items} for the model to read, one per socket; all go in one request.",
-            )
-        )
-    return media
+# One socket for each kind of media; everything connected goes in one request, each item at its own size.
+MEDIA = (
+    io.Image.Input(
+        "images",
+        optional=True,
+        tooltip="Images for the model to read: one, a batch, or a list. Create List joins several Load Image nodes.",
+    ),
+    io.Video.Input("videos", optional=True, tooltip="Videos for the model to read. Create List joins several."),
+    io.Audio.Input("audio", optional=True, tooltip="Audio clips for the model to read. Create List joins several."),
+)
 
 
-# The controls a chat model may take, then what it makes besides text; each left at its default sends nothing.
+# The controls a chat model may take, what it makes besides text, and how it reads PDFs; each left at its default
+# sends nothing.
 CONTROLS = (
     io.Combo.Input(
         "reasoning_effort",
@@ -110,6 +100,14 @@ CONTROLS = (
         default=DEFAULT_VOICE,
         tooltip="Voice for spoken replies, such as alloy. Leave blank for music models.",
     ),
+    io.Combo.Input(
+        "pdf_engine",
+        display_name="PDF engine",
+        options=list(PDF_ENGINES),
+        default=MODEL_DEFAULT,
+        advanced=True,
+        tooltip="How OpenRouter reads attached PDFs.",
+    ),
 )
 
 
@@ -121,20 +119,6 @@ def _read_schema(text: str) -> Mapping[str, Json] | None:
     if not isinstance(schema, dict):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, ANSWER_SCHEMA_INVALID)
     return schema
-
-
-def _encode_media(
-    sockets: Mapping[str, Mapping[str, object] | None],
-) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
-    """Encode every connected image, video, and audio clip; every image of a batch is sent."""
-    images = [image for image in read_sockets(sockets.get("images")) if isinstance(image, torch.Tensor)]
-    videos = [video for video in read_sockets(sockets.get("videos")) if isinstance(video, Input.Video)]
-    clips = cast("list[Input.Audio]", read_sockets(sockets.get("audio")))
-    return (
-        tuple(url for image in images for url in encode_images(image)),
-        tuple(MP4_URL_PREFIX + encode_video(video) for video in videos),
-        tuple(encode_audio(clip) for clip in clips),
-    )
 
 
 def _build_outputs(result: ChatResult, history: Conversation, prompt: str) -> io.NodeOutput:
@@ -149,6 +133,8 @@ def _build_outputs(result: ChatResult, history: Conversation, prompt: str) -> io
 
 class ChatAsk(PaidNode):
     """Send one chat completion and return every output the model fills."""
+
+    list_inputs = frozenset({"images", "videos", "audio"})
 
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -170,16 +156,8 @@ class ChatAsk(PaidNode):
                     optional=True,
                     tooltip="Connect Chat: Attach Document. OpenRouter converts PDFs for models that read only text.",
                 ),
-                *_build_media_sockets(),
+                *MEDIA,
                 *CONTROLS,
-                io.Combo.Input(
-                    "pdf_engine",
-                    display_name="PDF engine",
-                    options=list(PDF_ENGINES),
-                    default=MODEL_DEFAULT,
-                    advanced=True,
-                    tooltip="How OpenRouter reads attached PDFs.",
-                ),
                 *build_request_inputs(has_seed=True),
                 io.String.Input(
                     "answer_schema",
@@ -211,6 +189,7 @@ class ChatAsk(PaidNode):
                 io.Audio.Output("audio", display_name="audio"),
                 io.Custom(CONVERSATION_TYPE).Output("conversation", display_name="conversation"),
             ],
+            is_input_list=True,
         )
 
     @classmethod
@@ -231,9 +210,9 @@ class ChatAsk(PaidNode):
         system_prompt: str = "",
         conversation: Conversation | None = None,
         documents: tuple[Document, ...] | None = None,
-        images: dict[str, object] | None = None,
-        videos: dict[str, object] | None = None,
-        audio: dict[str, object] | None = None,
+        images: list[torch.Tensor] | None = None,
+        videos: list[Input.Video] | None = None,
+        audio: list[Input.Audio] | None = None,
         options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the connected media inside the owned task, send, and decode what the model made."""
@@ -248,11 +227,10 @@ class ChatAsk(PaidNode):
             voice=voice.strip() or None,
             pdf_engine=pdf_engine if pdf_engine != MODEL_DEFAULT else None,
         )
-        sockets = {"images": images, "videos": videos, "audio": audio}
 
         async def send_encoded() -> io.NodeOutput:
             """Encode the media inside the owned task, then send the request."""
-            image_urls, video_urls, clips = await wait_for_thread(lambda: _encode_media(sockets))
+            image_urls, video_urls, clips = await wait_for_thread(lambda: encode_media(images, videos, audio))
             request = ChatRequest(
                 model_id=model.strip(),
                 system_prompt=system_prompt,

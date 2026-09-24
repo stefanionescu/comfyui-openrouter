@@ -1,10 +1,7 @@
-"""Chat ranges and choices: media sockets, temperature, token limits, PDF engines, outputs, and voice audio."""
+"""Chat ranges and choices: documents, temperature, token limits, PDF engines, outputs, and voice audio."""
 
 from .inputs import MODEL_DEFAULT
 
-MAX_IMAGE_SOCKETS = 16
-MAX_VIDEO_SOCKETS = 4
-MAX_AUDIO_SOCKETS = 4
 MAX_DOCUMENTS = 8
 DEFAULT_TEMPERATURE = 1.0
 MAX_TEMPERATURE = 2.0
@@ -43,14 +40,11 @@ __all__ = [
     "DEFAULT_VOICE",
     "DOCUMENT_TYPES",
     "EFFORTS",
-    "MAX_AUDIO_SOCKETS",
     "MAX_CONVERSATION_TURNS",
     "MAX_DOCUMENTS",
-    "MAX_IMAGE_SOCKETS",
     "MAX_OUTPUT_TOKENS",
     "MAX_PROMPT_CHARACTERS",
     "MAX_TEMPERATURE",
-    "MAX_VIDEO_SOCKETS",
     "OUTPUTS",
     "PDF_ENGINES",
     "PDF_MEDIA_TYPE",

@@ -1,6 +1,5 @@
-"""Image fields, counts, and reference sockets."""
+"""Image fields and counts."""
 
-MAX_REFERENCE_SOCKETS = 16
 DEFAULT_COMPRESSION = 90
 MAX_COMPRESSION = 100
 COMPRESSED_FORMATS = ("jpeg", "webp")
@@ -47,5 +46,4 @@ __all__ = [
     "FIELD_VALUES",
     "MAX_COMPRESSION",
     "MAX_IMAGES",
-    "MAX_REFERENCE_SOCKETS",
 ]

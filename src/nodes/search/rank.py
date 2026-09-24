@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import asyncio
+from .embed import IMAGES
 from ..base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
@@ -12,7 +13,6 @@ from ...comfy.media import encode_images
 from ..inputs import build_request_inputs
 from ...openrouter.rerank import RankOperation
 from comfy_execution.graph import ExecutionBlocker
-from .embed import read_images, build_image_sockets
 from ...config.generation.search import MAX_SEARCH_ITEMS
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ...config.generation.models import DEFAULT_RANK_MODEL
@@ -28,6 +28,8 @@ if TYPE_CHECKING:
 class SearchRank(PaidNode):
     """Send every document in one rank request, gathering the lists that reach the node."""
 
+    list_inputs = frozenset({"images", "documents"})
+
     @classmethod
     def define_schema(cls) -> io.Schema:
         """Take input lists, so the images of one Image: Generate run are ranked in one request."""
@@ -38,7 +40,7 @@ class SearchRank(PaidNode):
             description="Order text and images by how well they match a query.",
             inputs=[
                 io.String.Input(MODEL_INPUT, default=DEFAULT_RANK_MODEL, tooltip=MODEL_TOOLTIP),
-                build_image_sockets(),
+                IMAGES,
                 io.Int.Input(
                     "top_n",
                     display_name="top n",
@@ -65,15 +67,15 @@ class SearchRank(PaidNode):
     async def send(  # noqa: PLR0913 -- reason: ComfyUI requires one named argument for each saved node input.
         cls,
         *,
-        query: list[str],
+        query: str,
         documents: list[str],
-        model: list[str],
-        top_n: list[int],
-        images: dict[str, list[torch.Tensor]] | None = None,
-        options: list[Options] | None = None,
+        model: str,
+        top_n: int,
+        images: list[torch.Tensor] | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode every image inside the owned task, send all documents at once, and return them best first."""
-        pictures = read_images(images)
+        pictures = [batch[index : index + 1] for batch in images or () for index in range(batch.shape[0])]
         lines = tuple(line.strip() for text in documents for line in text.splitlines() if line.strip())
 
         def build_outputs(result: RankResult) -> io.NodeOutput:
@@ -90,12 +92,12 @@ class SearchRank(PaidNode):
             """Encode the images inside the owned task, then send the request."""
             urls = await wait_for_thread(lambda: tuple(url for image in pictures for url in encode_images(image)))
             request = RankRequest(
-                model_id=model[0].strip(),
-                query=query[0],
+                model_id=model.strip(),
+                query=query,
                 texts=lines,
                 image_urls=urls,
-                top_n=top_n[0],
-                options=options[0] if options else None,
+                top_n=top_n,
+                options=options,
             )
             return await send_request(RankOperation(request), build_outputs)
 

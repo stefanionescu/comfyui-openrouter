@@ -1,10 +1,12 @@
-"""Build and read the inputs the paid nodes share: the seed, the run number, the options, and socket rows."""
+"""Build the inputs the paid nodes share, the seed, the run number, and the options, and encode their media lists."""
 
 from __future__ import annotations
 
-from comfy_api.latest import io
 from typing import TYPE_CHECKING
+from comfy_api.latest import io, Input
+from ..config.media import MP4_URL_PREFIX
 from ..config.namespace import OPTIONS_TYPE
+from ..comfy.media import encode_audio, encode_video, encode_images
 from ..config.generation.inputs import (
     MAX_SEED,
     SEED_INPUT,
@@ -17,7 +19,8 @@ from ..config.generation.inputs import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    import torch
+    from collections.abc import Sequence
 
 
 def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
@@ -47,11 +50,22 @@ def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
     return [seed, run_number, options] if has_seed else [run_number, options]
 
 
-def read_sockets(slots: Mapping[str, object] | None) -> list[object]:
-    """List the connected sockets of a growing row, such as image_1 and image_2, in socket order."""
-    values = slots or {}
-    ordered = sorted(values.items(), key=lambda item: int(item[0].rsplit("_", 1)[1]))
-    return [value for _name, value in ordered if value is not None]
+def encode_media(
+    images: Sequence[torch.Tensor] | None, videos: Sequence[Input.Video] | None, audio: Sequence[Input.Audio] | None
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    """Encode every image, video, and audio clip that reached the list sockets, in order.
+
+    Every image of a batch becomes a PNG data URL and every clip of an audio batch a base64 WAV; videos are MP4 data
+    URLs.
+    """
+    clips = [
+        Input.Audio(waveform=clip["waveform"][index : index + 1], sample_rate=clip["sample_rate"])
+        for clip in audio or ()
+        for index in range(clip["waveform"].shape[0])
+    ]
+    image_urls = tuple(url for batch in images or () for url in encode_images(batch))
+    video_urls = tuple(MP4_URL_PREFIX + encode_video(video) for video in videos or ())
+    return image_urls, video_urls, tuple(encode_audio(clip) for clip in clips)
 
 
-__all__ = ["build_request_inputs", "read_sockets"]
+__all__ = ["build_request_inputs", "encode_media"]

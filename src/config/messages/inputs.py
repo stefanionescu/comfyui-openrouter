@@ -32,6 +32,7 @@ QUESTION_UNKNOWN = "There is no question named {name}. The questions are: {names
 SCORE_LEVELS = "List {minimum} to {maximum} levels, one per line, from lowest to highest."
 SEARCH_ITEMS_EMPTY = "Enter at least one line of text or connect an image."
 SEARCH_ITEMS_LIMIT = "Send at most {maximum} items at once."
+SINGLE_VALUE = "Connect one value to {name}, not a list."
 SITUATION_EMPTY = "Describe the situation to decide on."
 SITUATION_LENGTH = "Describe the situation in at most {maximum} characters."
 SPEECH_TEXT_EMPTY = "Write the text to speak."
@@ -69,6 +70,7 @@ __all__ = [
     "SCORE_LEVELS",
     "SEARCH_ITEMS_EMPTY",
     "SEARCH_ITEMS_LIMIT",
+    "SINGLE_VALUE",
     "SITUATION_EMPTY",
     "SITUATION_LENGTH",
     "SPEECH_TEXT_EMPTY",

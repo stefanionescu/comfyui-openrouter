@@ -6,44 +6,34 @@ import json
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
-from typing import cast, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from ...comfy.media import encode_images
+from ..inputs import build_request_inputs
 from ...types.search import EmbeddingRequest
 from ...openrouter.embeddings import EmbeddingOperation
-from ..inputs import read_sockets, build_request_inputs
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ...config.generation.models import DEFAULT_EMBEDDING_MODEL
+from ...config.generation.search import INPUT_TYPES, MAX_DIMENSIONS
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
-from ...config.generation.search import INPUT_TYPES, MAX_DIMENSIONS, MAX_SEARCH_IMAGES
 
 if TYPE_CHECKING:
     import torch
     from ...types.options import Options
 
 
-def build_image_sockets() -> io.Autogrow.Input:
-    """Build a search node's growing row of image sockets; each socket can carry a list or a batch."""
-    names = [f"image_{number}" for number in range(1, MAX_SEARCH_IMAGES + 1)]
-    template = io.Autogrow.TemplateNames(io.Image.Input("image"), names=names, min=0)
-    return io.Autogrow.Input(
-        "images",
-        template=template,
-        tooltip="Images to compare or rank, for models that read images; each image in a list or batch is one item.",
-    )
-
-
-def read_images(images: dict[str, list[torch.Tensor]] | None) -> tuple[torch.Tensor, ...]:
-    """Split the images of a list node's sockets, whose every value is a list of batches, into single images."""
-    singles: list[torch.Tensor] = []
-    for batches in read_sockets(images):
-        for batch in cast("list[torch.Tensor]", batches):
-            singles += [batch[index : index + 1] for index in range(batch.shape[0])]
-    return tuple(singles)
+# Every image of a batch or list is one item, compared or ranked with the texts in one request.
+IMAGES = io.Image.Input(
+    "images",
+    optional=True,
+    tooltip="Images to compare or rank, for models that read images: one, a batch, or a list.",
+)
 
 
 class SearchEmbed(PaidNode):
     """Send every item in one embedding request, gathering the lists that reach the node."""
+
+    list_inputs = frozenset({"images", "texts"})
 
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -55,7 +45,7 @@ class SearchEmbed(PaidNode):
             description="Turn text and images into embedding vectors and compare each item with the first.",
             inputs=[
                 io.String.Input(MODEL_INPUT, default=DEFAULT_EMBEDDING_MODEL, tooltip=MODEL_TOOLTIP),
-                build_image_sockets(),
+                IMAGES,
                 io.Int.Input(
                     "dimensions",
                     default=0,
@@ -89,26 +79,26 @@ class SearchEmbed(PaidNode):
         cls,
         *,
         texts: list[str],
-        model: list[str],
-        dimensions: list[int],
-        input_type: list[str],
-        images: dict[str, list[torch.Tensor]] | None = None,
-        options: list[Options] | None = None,
+        model: str,
+        dimensions: int,
+        input_type: str,
+        images: list[torch.Tensor] | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode every image inside the owned task, then send all items at once."""
-        pictures = read_images(images)
+        pictures = [batch[index : index + 1] for batch in images or () for index in range(batch.shape[0])]
         lines = tuple(line.strip() for text in texts for line in text.splitlines() if line.strip())
 
         async def send_encoded() -> io.NodeOutput:
             """Encode the images inside the owned task, then send the request."""
             urls = await wait_for_thread(lambda: tuple(url for image in pictures for url in encode_images(image)))
             request = EmbeddingRequest(
-                model_id=model[0].strip(),
+                model_id=model.strip(),
                 texts=lines,
                 image_urls=urls,
-                dimensions=dimensions[0],
-                input_type=input_type[0] if input_type[0] != MODEL_DEFAULT else None,
-                options=options[0] if options else None,
+                dimensions=dimensions,
+                input_type=input_type if input_type != MODEL_DEFAULT else None,
+                options=options,
             )
             return await send_request(
                 EmbeddingOperation(request),
@@ -120,4 +110,4 @@ class SearchEmbed(PaidNode):
         return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
-__all__ = ["SearchEmbed", "build_image_sockets", "read_images"]
+__all__ = ["IMAGES", "SearchEmbed"]
