@@ -48,10 +48,10 @@ if TYPE_CHECKING:
 def _define_media(inputs: frozenset[str]) -> list[io.Input]:
     """Offer one growing row of sockets for each kind of media the model reads."""
     media: list[io.Input] = []
-    for kind, template, count in (
-        ("image", io.Image.Input("image"), MAX_IMAGE_SOCKETS),
-        ("video", io.Video.Input("video"), MAX_VIDEO_SOCKETS),
-        ("audio", io.Audio.Input("audio"), MAX_AUDIO_SOCKETS),
+    for kind, template, count, items in (
+        ("image", io.Image.Input("image"), MAX_IMAGE_SOCKETS, "Images"),
+        ("video", io.Video.Input("video"), MAX_VIDEO_SOCKETS, "Videos"),
+        ("audio", io.Audio.Input("audio"), MAX_AUDIO_SOCKETS, "Audio clips"),
     ):
         if kind in inputs:
             names = [f"{kind}_{number}" for number in range(1, count + 1)]
@@ -59,7 +59,7 @@ def _define_media(inputs: frozenset[str]) -> list[io.Input]:
                 io.Autogrow.Input(
                     "audio" if kind == "audio" else f"{kind}s",
                     template=io.Autogrow.TemplateNames(template, names=names, min=0),
-                    tooltip=f"The {kind} for the model to read, one per socket; all go in one request.",
+                    tooltip=f"{items} for the model to read, one per socket; all go in one request.",
                 )
             )
     return media

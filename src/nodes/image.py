@@ -59,8 +59,9 @@ WRITTEN_PARAMETERS = MappingProxyType(
 def _define_children(choice: ImageChoice | None) -> list[io.Input]:
     """Show only the fields, count, and reference sockets this model accepts, or every one for a written ID.
 
-    Each field starts at the model's default, which sends nothing. A reference socket can carry a batch,
-    and every image in it is sent.
+    Each field starts at the model's default, which sends nothing; a field with one value, or a count that
+    cannot go above 1, offers no choice and is left out. A reference socket can carry a batch, and every image
+    in it is sent.
     """
     parameters = choice.parameters if choice else WRITTEN_PARAMETERS
     children: list[io.Input] = [
@@ -71,7 +72,7 @@ def _define_children(choice: ImageChoice | None) -> list[io.Input]:
             default=MODEL_DEFAULT,
         )
         for field in ENUM_FIELDS
-        if field in parameters and parameters[field].kind == "enum"
+        if field in parameters and parameters[field].kind == "enum" and len(parameters[field].values) > 1
     ]
     compression = parameters.get("output_compression")
     if compression is not None and compression.kind == "range":
@@ -88,7 +89,7 @@ def _define_children(choice: ImageChoice | None) -> list[io.Input]:
             )
         )
     count = parameters.get("n")
-    if count is not None and count.kind == "range":
+    if count is not None and count.kind == "range" and (count.maximum or 1) > 1:
         low = count.minimum or 1
         children.append(
             io.Int.Input("count", display_name="images to make", default=low, min=low, max=count.maximum or low)

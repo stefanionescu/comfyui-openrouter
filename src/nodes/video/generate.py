@@ -77,16 +77,19 @@ def _define_upscale(
 
 
 def _define_children(choice: VideoChoice) -> list[io.Input]:
-    """Show only the durations, sizes, sound, frames, and references this model accepts."""
+    """Show only the durations, sizes, sound, frames, and references this model accepts.
+
+    A list with one value offers no choice, so it is left out and the model uses that value.
+    """
     children: list[io.Input] = []
-    if choice.durations:
+    if len(choice.durations) > 1:
         durations = [str(duration) for duration in sorted(choice.durations)]
         # Video is priced per second, so the shortest duration comes first.
         children.append(
             io.Combo.Input("duration", display_name="duration (seconds)", options=durations, default=durations[0])
         )
     for field, values in (("resolution", choice.resolutions), ("aspect_ratio", choice.aspect_ratios)):
-        if values:
+        if len(values) > 1:
             options = [MODEL_DEFAULT, *values]
             children.append(
                 io.Combo.Input(field, display_name=field.replace("_", " "), options=options, default=MODEL_DEFAULT)
