@@ -1,0 +1,169 @@
+/* Shared dialogs */
+
+.openrouter-dialog {
+  box-sizing: border-box;
+  width: min(38rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  border: 1px solid var(--border-color, GrayText);
+  border-radius: 0.9rem;
+  padding: 1.25rem;
+  color: var(--fg-color, CanvasText);
+  background: var(--comfy-menu-bg, Canvas);
+  font: inherit;
+  box-shadow: 0 1.5rem 5rem #0006;
+}
+.openrouter-dialog::backdrop {
+  background: #0008;
+}
+.openrouter-dialog > header {
+  position: sticky;
+  top: -1.25rem;
+  z-index: 2;
+  padding: 0.75rem 0;
+  background: var(--comfy-menu-bg, Canvas);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.openrouter-dialog h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.openrouter-dialog p {
+  line-height: 1.5;
+}
+.openrouter-dialog form {
+  margin-top: 1.5rem;
+}
+.openrouter-dialog fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.openrouter-dialog legend {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.openrouter-dialog label {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.8rem 0;
+}
+.openrouter-dialog input,
+.openrouter-dialog textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color, GrayText);
+  border-radius: 0.45rem;
+  color: var(--input-text, CanvasText);
+  background: var(--comfy-input-bg, Field);
+  font: inherit;
+}
+.openrouter-dialog button {
+  font: inherit;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border-color, GrayText);
+  border-radius: 0.45rem;
+  color: var(--input-text, ButtonText);
+  background: var(--comfy-input-bg, ButtonFace);
+  cursor: pointer;
+}
+.openrouter-dialog input[type='checkbox'] {
+  width: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.openrouter-dialog button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.openrouter-dialog :focus-visible {
+  outline: 2px solid Highlight;
+  outline-offset: 3px;
+}
+.openrouter-dialog .openrouter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+.openrouter-dialog [role='status'] {
+  font-size: 0.875rem;
+  min-height: 1.5em;
+}
+.openrouter-dialog summary {
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+.openrouter-dialog > footer {
+  position: sticky;
+  bottom: -1.25rem;
+  z-index: 1;
+  margin-top: 0.5rem;
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--comfy-menu-bg, Canvas);
+}
+.openrouter-dialog > :where(footer) [role='status'] {
+  flex: 1 1 9rem;
+}
+.openrouter-dialog > :where(footer) .openrouter-actions {
+  margin-top: 0;
+}
+.openrouter-dialog .openrouter-primary,
+.openrouter-dialog > form button[type='submit'] {
+  background: var(--primary-color, #2563eb);
+  color: var(--primary-color-text, white);
+}
+.openrouter-dialog button:not(:disabled):hover {
+  filter: brightness(1.15);
+}
+.openrouter-dialog textarea:disabled {
+  opacity: 0.7;
+}
+
+.openrouter-dialog label:has(input[type='checkbox']) {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.openrouter-dialog [role='status']:empty {
+  display: none;
+}
+
+/* Model list */
+
+.openrouter-models {
+  width: min(54rem, calc(100vw - 2rem));
+}
+.openrouter-models ul {
+  list-style: none;
+  padding: 0;
+}
+.openrouter-models li {
+  border-top: 1px solid var(--border-color, GrayText);
+  padding: 1rem 0;
+}
+.openrouter-models h3 {
+  margin: 0 0 0.4rem;
+}
+.openrouter-models code {
+  overflow-wrap: anywhere;
+}
+.openrouter-models details {
+  margin: 0.75rem 0;
+}
+
+.openrouter-models :where(li) p {
+  margin: 0.35rem 0;
+}
