@@ -7,7 +7,6 @@ import re
 import sys
 import json
 import asyncio
-import argparse
 from pathlib import Path
 from typing import cast, TYPE_CHECKING
 from scripts.paths import HELP_DIR, REPO_ROOT, SCHEMA_SCRIPT_PATH
@@ -89,15 +88,8 @@ def read_schemas() -> dict[str, object]:
 
 
 def main() -> int:
-    """Check the help pages and menus, or print the schemas."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--export", action="store_true", help="Print the node descriptions instead of checking.")
-    arguments = parser.parse_args()
-    export = read_schemas()
-    if arguments.export:
-        sys.stdout.write(json.dumps(export, indent=2) + "\n")
-        return 0
-    schemas = cast("dict[str, Schema]", export["nodes"])
+    """Check the help pages and menus against the registered nodes."""
+    schemas = cast("dict[str, Schema]", read_schemas()["nodes"])
     problems = _list_help_problems(schemas)
     problems += [
         f"Put {node_id} in an OpenRouter menu."

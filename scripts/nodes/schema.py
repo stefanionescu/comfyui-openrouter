@@ -19,7 +19,8 @@ from src.nodes import NODE_TYPES
 from src.nodes.base import PaidNode
 from scripts.nodes.host import HostNode
 from src.comfy.runtime import create_runtime
-from src.config.generation.inputs import VARIATION_INPUT
+from src.config.storage import STATE_DIRECTORY_VARIABLE
+from src.config.generation.inputs import RUN_NUMBER_INPUT
 
 
 def _build_node_schema(schema: io.Schema) -> dict[str, object]:
@@ -85,7 +86,7 @@ def _build_registered_schemas() -> dict[str, dict[str, object]]:
             message = f"Register {schema.node_id} once."
             raise ValueError(message)
         if issubclass(node_type, PaidNode):
-            parameters = {VARIATION_INPUT, *inspect.signature(node_type.send).parameters}
+            parameters = {RUN_NUMBER_INPUT, *inspect.signature(node_type.send).parameters}
         else:
             parameters = set(inspect.signature(node_type.execute).parameters)  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType] -- reason: The host leaves execute untyped.
         if parameters != {item.id for item in schema.inputs}:
@@ -102,8 +103,8 @@ def main() -> None:
     same on every machine.
     """
     asyncio.run(host.init_extra_nodes(init_custom_nodes=False))  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType] -- reason: The host loader is untyped.
-    with tempfile.TemporaryDirectory(prefix="comfyui-openrouter-schema-") as choose_state_directory:
-        os.environ["OPENROUTER_COMFY_STATE_DIRECTORY"] = choose_state_directory
+    with tempfile.TemporaryDirectory(prefix="comfyui-openrouter-schema-") as state_directory:
+        os.environ[STATE_DIRECTORY_VARIABLE] = state_directory
         create_runtime()
         export: dict[str, object] = {
             "nodes": _build_registered_schemas(),
