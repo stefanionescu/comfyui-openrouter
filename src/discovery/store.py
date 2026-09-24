@@ -74,7 +74,9 @@ class ModelStore:
         return {
             "revision": current.revision,
             "retrieved_at": current.retrieved_at,
-            "is_bundled": current.revision == self._bundled.revision,
+            # A refresh that finds the same lists still saves a newer reading, which is no longer the bundled one.
+            "is_bundled": (current.revision, current.retrieved_at)
+            == (self._bundled.revision, self._bundled.retrieved_at),
             "is_damaged": is_damaged,
             "can_rollback": can_rollback,
             "models": build_model_views(current),
