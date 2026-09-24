@@ -5,9 +5,9 @@ from __future__ import annotations
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
+from typing import TYPE_CHECKING
 from ...state.parsing import parse_json
 from ..inputs import define_request_inputs
-from typing import ClassVar, TYPE_CHECKING
 from ...errors import ErrorCode, ConnectorError
 from ...openrouter.decisions import DecisionOperation
 from ...comfy.execution import run_request, wait_for_execution
@@ -37,7 +37,7 @@ def _read_state(situation: str) -> Json:
     return state if isinstance(state, (dict, list)) else situation
 
 
-def summarize(answers: AnswerSet) -> str:
+def _summarize(answers: AnswerSet) -> str:
     """Write one line per answer, with numbers to two decimals."""
     lines: list[str] = []
     for answer in answers.answers:
@@ -55,8 +55,6 @@ def summarize(answers: AnswerSet) -> str:
 
 class DecisionAsk(PaidNode):
     """Send the situation and the questions in one request, and return the answers."""
-
-    contract: ClassVar[str] = "decision-ask-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -103,9 +101,9 @@ class DecisionAsk(PaidNode):
             options=options,
         )
         task = asyncio.create_task(
-            run_request(DecisionOperation(request), lambda answers: io.NodeOutput(answers, summarize(answers)))
+            run_request(DecisionOperation(request), lambda answers: io.NodeOutput(answers, _summarize(answers)))
         )
         return await wait_for_execution(task)
 
 
-__all__ = ["DecisionAsk", "summarize"]
+__all__ = ["DecisionAsk"]

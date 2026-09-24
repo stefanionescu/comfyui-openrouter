@@ -12,19 +12,17 @@ class PaidNode(io.ComfyNode):
     """Own the cache key and the run-number input every paid node shares.
 
     Attributes:
-        contract: Request revision in the cache key; it changes when the body changes for the same inputs.
         send: Typed entry point that receives every saved input except the run number.
 
     """
 
-    contract: ClassVar[str]
     send: ClassVar[Callable[..., Awaitable[io.NodeOutput]]]
 
     @classmethod
     async def fingerprint_inputs(cls, **_inputs: object) -> str:
-        """Include the request revision and the private configuration token in the cache key."""
+        """Add the key's token to the cache key, so a new key runs the node again."""
         snapshot = await asyncio.to_thread(get_runtime().configuration.execution_snapshot)
-        return f"{cls.contract}:{snapshot.generation}"
+        return snapshot.generation
 
     @classmethod
     async def execute(cls, **inputs: object) -> io.NodeOutput:  # pyright: ignore[reportIncompatibleMethodOverride] -- reason: ComfyUI awaits an async execute.

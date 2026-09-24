@@ -6,9 +6,9 @@ import json
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
+from typing import cast, TYPE_CHECKING
 from ...comfy.media import encode_images
 from ...state.search import EmbeddingRequest
-from typing import cast, ClassVar, TYPE_CHECKING
 from ...openrouter.embeddings import EmbeddingOperation
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ..inputs import read_sockets, define_request_inputs
@@ -44,8 +44,6 @@ def read_images(images: dict[str, list[torch.Tensor]] | None) -> tuple[torch.Ten
 
 class SearchEmbed(PaidNode):
     """Send every item in one embedding request, gathering the lists that reach the node."""
-
-    contract: ClassVar[str] = "search-embed-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

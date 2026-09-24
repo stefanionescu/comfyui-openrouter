@@ -7,9 +7,9 @@ import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
 from comfy_api.latest import Input
+from typing import cast, TYPE_CHECKING
 from ...state.parsing import parse_json
 from ...errors import ErrorCode, ConnectorError
-from typing import cast, ClassVar, TYPE_CHECKING
 from comfy_execution.graph import ExecutionBlocker
 from ...openrouter.chat.operation import ChatOperation
 from ..inputs import read_sockets, define_request_inputs
@@ -154,8 +154,6 @@ def _build_outputs(result: ChatResult, history: Conversation, prompt: str) -> io
 
 class ChatAsk(PaidNode):
     """Send one chat completion and return every output the model fills."""
-
-    contract: ClassVar[str] = "chat-ask-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

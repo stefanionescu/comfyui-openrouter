@@ -7,9 +7,9 @@ import asyncio
 import io as memory
 from .base import PaidNode
 from comfy_api.latest import io
+from typing import TYPE_CHECKING
 from ..state.images import ImageRequest
 from ..config.media import SVG_MEDIA_TYPE
-from typing import ClassVar, TYPE_CHECKING
 from ..openrouter.images import ImageOperation
 from comfy_execution.graph import ExecutionBlocker
 from ..comfy.media import decode_image, encode_images
@@ -64,8 +64,6 @@ FIELDS = (
 
 class ImageGenerate(PaidNode):
     """Send one image request and return its raster images, their masks, and any SVG files."""
-
-    contract: ClassVar[str] = "image-generate-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

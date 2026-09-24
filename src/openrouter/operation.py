@@ -17,7 +17,7 @@ class Operation[Result](Protocol):
     """One paid OpenRouter request, validated before it is sent."""
 
     def validate(self, settings: Settings) -> None:
-        """Refuse inputs the model or the settings do not allow, before any cost."""
+        """Refuse inputs the settings or the endpoint do not allow, before anything is sent."""
         raise NotImplementedError(settings)
 
     async def send(self, configuration: ExecutionConfiguration) -> Result:

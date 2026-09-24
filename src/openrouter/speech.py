@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ..state.settings import Settings, ExecutionConfiguration
 
 
-def read_pcm_format(media_type: str) -> PcmFormat | None:
+def _read_pcm_format(media_type: str) -> PcmFormat | None:
     """Read the rate and channels of raw PCM from the reply's Content-Type, or None for an encoded file.
 
     The reply decides the format, not the request, because a provider can answer a PCM request with MP3.
@@ -75,7 +75,7 @@ class SpeechOperation:
                 references.append({"type": "text", "text": request.sample_transcript})
             body["input_references"] = references
         audio = await post_audio(SPEECH_URL, apply_options(body, request.options, "speech"), configuration)
-        return SpeechResult(audio, read_pcm_format(audio.media_type))
+        return SpeechResult(audio, _read_pcm_format(audio.media_type))
 
 
-__all__ = ["SpeechOperation", "read_pcm_format"]
+__all__ = ["SpeechOperation"]

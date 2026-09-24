@@ -1,4 +1,4 @@
-"""Bound JSON before it enters the extension's contracts."""
+"""Parse JSON within size and depth limits, refusing duplicate keys and values JSON cannot hold."""
 
 import json
 import math
@@ -15,7 +15,7 @@ def parse_json(text: str, *, max_bytes: int = MAX_JSON_BYTES, max_depth: int = M
         raise ConnectorError(ErrorCode.INVALID_INPUT, JSON_SIZE)
     try:
         value = cast("object", json.loads(text, object_pairs_hook=_unique_fields))
-        return validate_json(value, max_depth=max_depth)
+        return _validate_json(value, max_depth=max_depth)
     except (ValueError, RecursionError) as error:
         raise ConnectorError(ErrorCode.INVALID_INPUT, JSON_SYNTAX) from error
 
@@ -31,7 +31,7 @@ def _unique_fields(pairs: list[tuple[str, Json]]) -> dict[str, Json]:
     return result
 
 
-def validate_json(value: object, *, max_depth: int = MAX_JSON_DEPTH) -> Json:
+def _validate_json(value: object, *, max_depth: int = MAX_JSON_DEPTH) -> Json:
     """Copy JSON values within the nesting limit; reject other Python objects."""
     if max_depth < 0:
         raise ConnectorError(ErrorCode.INVALID_INPUT, JSON_DEPTH)
@@ -41,11 +41,11 @@ def validate_json(value: object, *, max_depth: int = MAX_JSON_DEPTH) -> Json:
         return value
     if isinstance(value, list):
         items = cast("list[object]", value)
-        return [validate_json(item, max_depth=max_depth - 1) for item in items]
+        return [_validate_json(item, max_depth=max_depth - 1) for item in items]
     if isinstance(value, dict):
         entries = cast("dict[object, object]", value)
         if all(isinstance(key, str) for key in entries):
-            return {cast("str", key): validate_json(item, max_depth=max_depth - 1) for key, item in entries.items()}
+            return {cast("str", key): _validate_json(item, max_depth=max_depth - 1) for key, item in entries.items()}
     raise ConnectorError(ErrorCode.INVALID_INPUT, JSON_VALUES)
 
 
@@ -56,4 +56,4 @@ def mapping_value(value: Json) -> dict[str, Json]:
     return value
 
 
-__all__ = ["mapping_value", "parse_json", "validate_json"]
+__all__ = ["mapping_value", "parse_json"]

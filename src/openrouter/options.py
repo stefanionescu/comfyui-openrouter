@@ -8,8 +8,7 @@ from ..config.messages.inputs import OPTION_UNSUPPORTED, OPTION_RESERVED_FIELD
 from ..config.openrouter import ENDPOINT_LABELS, ROUTING_FIELDS, RESERVED_FIELDS
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state import Endpoint
+    from ..state import Json, Endpoint
     from collections.abc import Mapping
     from ..state.options import RequestOptions
 

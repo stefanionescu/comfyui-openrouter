@@ -7,9 +7,9 @@ import asyncio
 import io as memory
 from ..base import PaidNode
 from ...runtime import get_runtime
+from typing import cast, TYPE_CHECKING
 from ...state.videos import VideoRequest
 from ...errors import ErrorCode, ConnectorError
-from typing import cast, ClassVar, TYPE_CHECKING
 from ...config.messages.videos import IMAGE_BATCH
 from comfy_api.latest import Input, InputImpl, io
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
@@ -120,8 +120,6 @@ def _encode_references(sockets: Mapping[str, object]) -> tuple[tuple[str, str], 
 
 class VideoGenerate(PaidNode):
     """Submit one video job, record it, wait for it, and return the video."""
-
-    contract: ClassVar[str] = "video-generate-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

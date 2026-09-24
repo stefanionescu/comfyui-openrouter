@@ -6,10 +6,10 @@ import json
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
+from typing import TYPE_CHECKING
 from ...state.search import RankRequest
 from ...comfy.media import encode_images
 from ..inputs import define_request_inputs
-from typing import ClassVar, TYPE_CHECKING
 from .embed import read_images, define_images
 from ...openrouter.rerank import RankOperation
 from comfy_execution.graph import ExecutionBlocker
@@ -27,8 +27,6 @@ if TYPE_CHECKING:
 
 class SearchRank(PaidNode):
     """Send every document in one rank request, gathering the lists that reach the node."""
-
-    contract: ClassVar[str] = "search-rank-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

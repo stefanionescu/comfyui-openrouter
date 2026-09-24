@@ -72,7 +72,7 @@ def _build_question(name: str, instructions: str, answer_type: Mapping[str, obje
 
 
 class DecisionAddQuestion(io.ComfyNode):
-    """Append one question to the question list, the way plan-builder nodes chain."""
+    """Append one question to the question list; chain several to ask more."""
 
     @classmethod
     def define_schema(cls) -> io.Schema:

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from ...state.chat import ChatRequest, ChatSettings
 
 
-def build_messages(request: ChatRequest) -> list[Json]:
+def _build_messages(request: ChatRequest) -> list[Json]:
     """List the system prompt, the earlier turns, then the question with its media.
 
     OpenRouter's image guide recommends the text first, then the images.
@@ -37,7 +37,7 @@ def build_messages(request: ChatRequest) -> list[Json]:
 def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Json]:
     """Add each control that is set; the temperature and the seed go only to a model that takes them."""
     settings = request.settings
-    body: dict[str, Json] = {"model": request.model_id, "messages": build_messages(request)}
+    body: dict[str, Json] = {"model": request.model_id, "messages": _build_messages(request)}
     if settings.effort is not None:
         body["reasoning"] = {"effort": settings.effort}
     if settings.max_output_tokens > 0:
@@ -70,4 +70,4 @@ def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
     return fields
 
 
-__all__ = ["build_body", "build_messages"]
+__all__ = ["build_body"]

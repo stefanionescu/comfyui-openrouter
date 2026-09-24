@@ -7,9 +7,9 @@ import asyncio
 from ..base import PaidNode
 from dataclasses import asdict
 from comfy_api.latest import io
+from typing import TYPE_CHECKING
 from ...comfy.media import encode_audio
 from ..inputs import define_request_inputs
-from typing import ClassVar, TYPE_CHECKING
 from ...state.audio import TranscriptionRequest
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
@@ -25,8 +25,6 @@ if TYPE_CHECKING:
 
 class AudioTranscribe(PaidNode):
     """Send one audio clip for transcription and return the text, segments, subtitles, and words."""
-
-    contract: ClassVar[str] = "audio-transcribe-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

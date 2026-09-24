@@ -5,9 +5,9 @@ from __future__ import annotations
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
+from typing import TYPE_CHECKING
 from ...state.audio import SpeechRequest
 from ..inputs import define_request_inputs
-from typing import ClassVar, TYPE_CHECKING
 from ...openrouter.speech import SpeechOperation
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.models import DEFAULT_SPEECH_MODEL
@@ -38,8 +38,6 @@ def _build_outputs(result: SpeechResult) -> io.NodeOutput:
 
 class AudioSpeak(PaidNode):
     """Send one text-to-speech request and return the audio."""
-
-    contract: ClassVar[str] = "audio-speak-v1"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

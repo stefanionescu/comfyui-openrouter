@@ -12,7 +12,7 @@ from ..config.messages.settings import SETTINGS_RANGE, SETTING_UNKNOWN, SETTINGS
 DEFAULT_SETTINGS = Settings(**{name: definition["default"] for name, definition in INTEGER_SETTINGS.items()})
 
 
-def validate_settings(settings: Settings) -> None:
+def _validate_settings(settings: Settings) -> None:
     """Keep every limit in its range."""
     for name, definition in INTEGER_SETTINGS.items():
         value: int = getattr(settings, name)
@@ -32,8 +32,8 @@ def parse_settings(document: dict[str, Json]) -> Settings:
             raise ConnectorError(ErrorCode.CONFIGURATION, SETTINGS_WHOLE_NUMBERS)
         integers[name] = value
     settings = Settings(**integers)
-    validate_settings(settings)
+    _validate_settings(settings)
     return settings
 
 
-__all__ = ["DEFAULT_SETTINGS", "parse_settings", "validate_settings"]
+__all__ = ["DEFAULT_SETTINGS", "parse_settings"]

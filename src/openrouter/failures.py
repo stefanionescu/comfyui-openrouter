@@ -50,7 +50,7 @@ def read_failure(status: int, body: bytes) -> ConnectorError:
     if status in EXPLAINED_FAILURES:
         code, message = EXPLAINED_FAILURES[status]
         try:
-            reason = clean_reason(read_reason(ErrorReply.model_validate_json(body)))
+            reason = clean_reason(_read_reason(ErrorReply.model_validate_json(body)))
         except ValidationError:
             reason = NO_REASON
         return ConnectorError(code, message.format(reason=reason))
@@ -58,7 +58,7 @@ def read_failure(status: int, body: bytes) -> ConnectorError:
     return ConnectorError(code, message.format(status=status))
 
 
-def read_reason(reply: ErrorReply) -> str:
+def _read_reason(reply: ErrorReply) -> str:
     """Choose the text that names the problem.
 
     When the provider rejects a request, OpenRouter's message is only "Provider returned error", and the
@@ -85,4 +85,4 @@ def clean_reason(message: str) -> str:
     return text or NO_REASON
 
 
-__all__ = ["clean_reason", "read_failure", "read_reason"]
+__all__ = ["clean_reason", "read_failure"]
