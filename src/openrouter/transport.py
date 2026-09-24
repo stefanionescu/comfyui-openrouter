@@ -13,7 +13,7 @@ from .streams import read_events
 from typing import TYPE_CHECKING
 from .failures import read_failure
 from ..state.audio import AudioReply
-from ..serialization import parse_json
+from ..state.parsing import parse_json
 from contextlib import asynccontextmanager
 from ..errors import ErrorCode, ConnectorError
 from ..config.messages.media import DOWNLOAD_LIMIT

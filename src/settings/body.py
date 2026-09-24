@@ -3,7 +3,7 @@
 import asyncio
 from aiohttp import web
 from ..state import Json
-from ..serialization import parse_json, mapping_value
+from ..state.parsing import parse_json, mapping_value
 from ..config.messages.requests import JSON_SIZE, JSON_TYPE, JSON_SYNTAX, REQUEST_TIMEOUT
 from ..config.settings import MAX_SETTINGS_BYTES, REQUEST_CHUNK_BYTES, SETTINGS_TIMEOUT_SECONDS
 

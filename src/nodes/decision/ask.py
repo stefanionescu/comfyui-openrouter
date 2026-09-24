@@ -5,11 +5,11 @@ from __future__ import annotations
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
-from ...serialization import parse_json
+from ...state.parsing import parse_json
 from ..inputs import define_request_inputs
 from typing import ClassVar, TYPE_CHECKING
 from ...errors import ErrorCode, ConnectorError
-from ...execution.decisions import DecisionOperation
+from ...openrouter.decisions import DecisionOperation
 from ...comfy.execution import run_request, wait_for_execution
 from ...config.generation.models import DEFAULT_DECISION_MODEL
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP

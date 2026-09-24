@@ -2,11 +2,11 @@
 
 import os
 from pathlib import Path
-from .storage import read_private
-from .state.credentials import Credential
-from .errors import ErrorCode, ConnectorError
-from .config.security import MAX_CREDENTIAL_CHARACTERS
-from .config.messages.settings import KEY_EMPTY, KEY_REQUIRED, KEY_UNREADABLE, KEY_WHITESPACE
+from .files import read_private
+from ..state.credentials import Credential
+from ..errors import ErrorCode, ConnectorError
+from ..config.security import MAX_CREDENTIAL_CHARACTERS
+from ..config.messages.settings import KEY_EMPTY, KEY_REQUIRED, KEY_UNREADABLE, KEY_WHITESPACE
 
 
 def parse_credential(value: str) -> Credential:

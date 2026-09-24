@@ -15,7 +15,7 @@ from pydantic import ValidationError
 from ...config.patterns import JOB_ID_PATTERN
 from ...errors import ErrorCode, ConnectorError
 from ...config.messages.videos import JOB_UNKNOWN
-from ...storage import atomic_write, read_private
+from ...storage.files import atomic_write, read_private
 from ...config.generation.videos import MAX_LISTED_JOBS, SECONDS_PER_MINUTE, MAX_JOB_FILE_BYTES
 
 if TYPE_CHECKING:

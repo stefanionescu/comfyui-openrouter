@@ -5,15 +5,15 @@ import threading
 from ..state import Json
 from pathlib import Path
 from dataclasses import asdict, fields
+from .snapshot import ConfigurationGeneration
 from ..errors import ErrorCode, ConnectorError
-from .execution import ConfigurationGeneration
-from ..storage import atomic_write, read_private
 from .schema import DEFAULT_SETTINGS, parse_settings
-from ..serialization import parse_json, mapping_value
+from ..state.parsing import parse_json, mapping_value
+from ..storage.files import atomic_write, read_private
 from ..config.security import MAX_CREDENTIAL_CHARACTERS
 from ..state.settings import Settings, ExecutionConfiguration
 from ..config.settings import INTEGER_SETTINGS, MAX_SETTINGS_FILE_BYTES
-from ..credentials import parse_credential, read_credential, credential_source
+from ..storage.credentials import parse_credential, read_credential, credential_source
 from ..config.messages.settings import SETTINGS_CHANGED, SETTING_READ_ONLY, SETTINGS_UNREADABLE
 
 EDITABLE_SETTINGS = frozenset(item.name for item in fields(Settings))

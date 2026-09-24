@@ -5,20 +5,19 @@ from __future__ import annotations
 import json
 import asyncio
 from ..base import PaidNode
-from ...tasks import owned_io
 from comfy_api.latest import io
 from ...state.search import RankRequest
 from ...comfy.media import encode_images
 from ..inputs import define_request_inputs
 from typing import ClassVar, TYPE_CHECKING
-from ...execution.rerank import RankOperation
 from .embed import read_images, define_images
+from ...openrouter.rerank import RankOperation
 from comfy_execution.graph import ExecutionBlocker
 from ...config.generation.search import MAX_SEARCH_ITEMS
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ...config.generation.models import DEFAULT_RANK_MODEL
-from ...comfy.execution import run_request, wait_for_execution
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
+from ...comfy.execution import owned_io, run_request, wait_for_execution
 
 if TYPE_CHECKING:
     import torch

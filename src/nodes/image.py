@@ -6,18 +6,17 @@ import torch
 import asyncio
 import io as memory
 from .base import PaidNode
-from ..tasks import owned_io
 from comfy_api.latest import io
 from ..state.images import ImageRequest
 from ..config.media import SVG_MEDIA_TYPE
 from typing import ClassVar, TYPE_CHECKING
-from ..execution.images import ImageOperation
+from ..openrouter.images import ImageOperation
 from comfy_execution.graph import ExecutionBlocker
 from ..comfy.media import decode_image, encode_images
 from ..config.namespace import IMAGE_MENU, NODE_PREFIX
 from .inputs import read_sockets, define_request_inputs
 from ..config.generation.models import DEFAULT_IMAGE_MODEL
-from ..comfy.execution import run_request, wait_for_execution
+from ..comfy.execution import owned_io, run_request, wait_for_execution
 from ..config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ..config.generation.images import (
     MAX_IMAGES,

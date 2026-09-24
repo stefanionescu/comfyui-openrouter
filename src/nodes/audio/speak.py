@@ -4,17 +4,16 @@ from __future__ import annotations
 
 import asyncio
 from ..base import PaidNode
-from ...tasks import owned_io
 from comfy_api.latest import io
 from ...state.audio import SpeechRequest
 from ..inputs import define_request_inputs
 from typing import ClassVar, TYPE_CHECKING
-from ...execution.speech import SpeechOperation
+from ...openrouter.speech import SpeechOperation
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.models import DEFAULT_SPEECH_MODEL
-from ...comfy.execution import run_request, wait_for_execution
 from ...comfy.media import decode_pcm, decode_audio, encode_audio
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
+from ...comfy.execution import owned_io, run_request, wait_for_execution
 from ...config.generation.audio import (
     MAX_SPEED,
     MIN_SPEED,

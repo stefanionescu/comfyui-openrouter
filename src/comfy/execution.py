@@ -1,10 +1,9 @@
-"""Run one paid request with ComfyUI's progress bar, its cancel, and the parallel request limit."""
+"""Run paid requests with ComfyUI's progress bar, its cancel, and the parallel request limit."""
 
 from __future__ import annotations
 
 import asyncio
 import weakref
-from ..tasks import owned_io
 from typing import TYPE_CHECKING
 from ..runtime import get_runtime
 from comfy_api.latest import ComfyAPI
@@ -16,10 +15,32 @@ from comfy.model_management import InterruptProcessingException, throw_exception
 if TYPE_CHECKING:
     from comfy_api.latest import io
     from collections.abc import Callable
-    from ..execution.operation import Operation
+    from ..openrouter.operation import Operation
 
 # One call limit per event loop, shared by every node.
 _LIMITS: weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore] = weakref.WeakKeyDictionary()
+
+
+async def _wait_shielded[T](task: asyncio.Task[T]) -> bool:
+    """Wait until the task settles despite cancellation, and report whether cancellation arrived."""
+    cancelled = False
+    while not task.done():
+        try:
+            await asyncio.shield(task)
+        except asyncio.CancelledError:
+            cancelled = True
+        except Exception:  # noqa: BLE001 -- reason: The caller reads the settled task's failure after resolving cancellation.
+            break
+    return cancelled
+
+
+async def owned_io[T](operation: Callable[[], T]) -> T:
+    """Finish blocking work already handed to a thread before letting a cancel through."""
+    task = asyncio.create_task(asyncio.to_thread(operation))
+    if await _wait_shielded(task):
+        task.exception()
+        raise asyncio.CancelledError
+    return task.result()
 
 
 async def wait_for_execution[T](task: asyncio.Task[T]) -> T:
@@ -75,4 +96,4 @@ async def run_request[Result](
     return outputs
 
 
-__all__ = ["run_request", "wait_for_execution"]
+__all__ = ["owned_io", "run_request", "wait_for_execution"]

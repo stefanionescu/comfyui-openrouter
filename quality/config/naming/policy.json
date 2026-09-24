@@ -122,7 +122,7 @@
             "reason": "ComfyUI calls this extension hook by name."
         },
         {
-            "path_regexes": ["^src/(config|state|execution|nodes)/.*\\.py$"],
+            "path_regexes": ["^src/(config|state|openrouter|nodes)/.*\\.py$"],
             "languages": ["python"],
             "categories": ["variables", "constants", "attributes", "parameters"],
             "names": ["resolution", "RESOLUTIONS"],
@@ -138,7 +138,7 @@
             "reason": "OpenRouter names this image and video request field; the extension keeps its spelling."
         },
         {
-            "path_regexes": ["^src/(state|execution|nodes)/options\\.py$"],
+            "path_regexes": ["^src/(state|openrouter|nodes)/options\\.py$"],
             "languages": ["python"],
             "categories": ["attributes", "parameters", "variables"],
             "names": ["data_collection"],

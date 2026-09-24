@@ -5,19 +5,18 @@ from __future__ import annotations
 import torch
 import asyncio
 from ..base import PaidNode
-from ...tasks import owned_io
 from comfy_api.latest import io
 from comfy_api.latest import Input
-from ...serialization import parse_json
+from ...state.parsing import parse_json
 from ...errors import ErrorCode, ConnectorError
 from typing import cast, ClassVar, TYPE_CHECKING
 from comfy_execution.graph import ExecutionBlocker
-from ...execution.chat.operation import ChatOperation
+from ...openrouter.chat.operation import ChatOperation
 from ..inputs import read_sockets, define_request_inputs
 from ...config.generation.models import DEFAULT_CHAT_MODEL
 from ...config.messages.inputs import ANSWER_SCHEMA_INVALID
-from ...comfy.execution import run_request, wait_for_execution
 from ...state.chat import Turn, ChatRequest, ChatSettings, Conversation
+from ...comfy.execution import owned_io, run_request, wait_for_execution
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE, CONVERSATION_TYPE
 from ...comfy.media import decode_pcm, decode_audio, decode_image, encode_audio, encode_video, encode_images

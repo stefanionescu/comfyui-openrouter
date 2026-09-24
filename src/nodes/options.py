@@ -6,7 +6,7 @@ import re
 from decimal import Decimal
 from comfy_api.latest import io
 from types import MappingProxyType
-from ..serialization import parse_json
+from ..state.parsing import parse_json
 from typing import override, TYPE_CHECKING
 from ..errors import ErrorCode, ConnectorError
 from ..config.patterns import PROVIDER_SLUG_PATTERN

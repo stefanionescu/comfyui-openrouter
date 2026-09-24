@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import asyncio
 from ..base import PaidNode
-from ...tasks import owned_io
 from dataclasses import asdict
 from comfy_api.latest import io
 from ...comfy.media import encode_audio
@@ -13,10 +12,10 @@ from ..inputs import define_request_inputs
 from typing import ClassVar, TYPE_CHECKING
 from ...state.audio import TranscriptionRequest
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
-from ...comfy.execution import run_request, wait_for_execution
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.generation.models import DEFAULT_TRANSCRIPTION_MODEL
-from ...execution.transcription import TranscriptionOperation, format_subtitles
+from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...openrouter.transcription import TranscriptionOperation, format_subtitles
 from ...config.generation.audio import TIMESTAMP_CHOICES, MAX_TRANSCRIPTION_TEMPERATURE
 
 if TYPE_CHECKING:

@@ -1,9 +1,14 @@
-"""Restrict private configuration routes to the local ComfyUI origin."""
+"""Serve the private settings routes only to the local ComfyUI page, with safe errors and private headers."""
 
 import ipaddress
 from aiohttp import web
 from typing import cast
+from ..state import Json
+from ..config.security import PRIVATE_HEADERS
+from ..errors import ErrorCode, ConnectorError
 from urllib.parse import SplitResult, urlsplit
+from collections.abc import Callable, Awaitable
+from ..config.messages.settings import STATE_UNREADABLE
 from ..config.messages.requests import LOCAL_CONNECTION_REQUIRED
 
 
@@ -44,7 +49,7 @@ def _is_same_origin(origin: str, target: SplitResult, port: int) -> bool:
     )
 
 
-def require_local_request(request: web.Request, *, is_mutation: bool, is_multi_user: bool) -> None:
+def _require_local_request(request: web.Request, *, is_mutation: bool, is_multi_user: bool) -> None:
     """Reject remote peers, rebinding hosts, cross-origin requests, and unsafe writes."""
     forbidden = web.HTTPForbidden(text=LOCAL_CONNECTION_REQUIRED)
     try:
@@ -69,4 +74,29 @@ def require_local_request(request: web.Request, *, is_mutation: bool, is_multi_u
         raise forbidden from None
 
 
-__all__ = ["require_local_request"]
+def local_route(
+    callback: Callable[[web.Request], Awaitable[dict[str, Json]]],
+    *,
+    is_mutation: bool,
+    is_multi_user: bool,
+) -> Callable[[web.Request], Awaitable[web.Response]]:
+    """Wrap a route with local-owner checks, safe errors, and private response headers."""
+
+    async def respond(request: web.Request) -> web.Response:
+        """Authorize the request and return only the route's public result or safe error."""
+        try:
+            _require_local_request(request, is_mutation=is_mutation, is_multi_user=is_multi_user)
+            return web.json_response(await callback(request), headers=PRIVATE_HEADERS)
+        except ConnectorError as error:
+            # A stale revision is a conflict the page resolves by reloading; every other failure is a bad request.
+            message, status = str(error), 409 if error.code is ErrorCode.CONFLICT else 400
+        except web.HTTPException as error:
+            message, status = error.text, error.status
+        except (OSError, UnicodeError):
+            message, status = STATE_UNREADABLE, 500
+        return web.json_response({"error": message}, status=status, headers=PRIVATE_HEADERS)
+
+    return respond
+
+
+__all__ = ["local_route"]

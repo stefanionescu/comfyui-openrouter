@@ -13,7 +13,7 @@ from ...errors import ErrorCode, ConnectorError
 from ...config.messages.videos import JOB_UNKNOWN
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ...comfy.execution import run_request, wait_for_execution
-from ...execution.videos.operation import VideoDownloadOperation
+from ...openrouter.videos.operation import VideoDownloadOperation
 
 JOB_ID = re.compile(JOB_ID_PATTERN)
 

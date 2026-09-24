@@ -1,7 +1,7 @@
 """Create the shared stores when ComfyUI loads the extension."""
 
-from .storage import state_directory
-from .execution.videos.jobs import JobStore
+from .storage.files import state_directory
+from .openrouter.videos.jobs import JobStore
 from .errors import ErrorCode, ConnectorError
 from .settings.store import ConfigurationStore
 from .config.generation.videos import JOB_FOLDER_NAME

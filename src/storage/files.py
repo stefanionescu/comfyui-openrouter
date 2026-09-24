@@ -4,8 +4,8 @@ import os
 import sys
 import tempfile
 from pathlib import Path
-from .errors import ErrorCode, ConnectorError
-from .config.messages.settings import STATE_FILE_SIZE, STATE_DIRECTORY_ABSOLUTE
+from ..errors import ErrorCode, ConnectorError
+from ..config.messages.settings import STATE_FILE_SIZE, STATE_DIRECTORY_ABSOLUTE
 
 
 def state_directory() -> Path:

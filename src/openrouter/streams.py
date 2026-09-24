@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from .failures import read_failure
-from ..serialization import parse_json
+from ..state.parsing import parse_json
 from ..errors import ErrorCode, ConnectorError
 from ..config.messages.media import DOWNLOAD_LIMIT
 from ..config.messages.run import REPLY_UNREADABLE

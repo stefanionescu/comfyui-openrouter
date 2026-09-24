@@ -6,7 +6,6 @@ import torch
 import asyncio
 import io as memory
 from ..base import PaidNode
-from ...tasks import owned_io
 from ...runtime import get_runtime
 from ...state.videos import VideoRequest
 from ...errors import ErrorCode, ConnectorError
@@ -14,11 +13,11 @@ from typing import cast, ClassVar, TYPE_CHECKING
 from ...config.messages.videos import IMAGE_BATCH
 from comfy_api.latest import Input, InputImpl, io
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
-from ...execution.videos.operation import VideoOperation
 from ..inputs import read_sockets, define_request_inputs
+from ...openrouter.videos.operation import VideoOperation
 from ...config.generation.models import DEFAULT_VIDEO_MODEL
-from ...comfy.execution import run_request, wait_for_execution
 from ...comfy.media import encode_audio, encode_video, encode_images
+from ...comfy.execution import owned_io, run_request, wait_for_execution
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.videos import (
     RESOLUTIONS,

@@ -2,11 +2,11 @@
 
 import json
 import math
-from .state import Json
+from . import Json
 from typing import cast
-from .errors import ErrorCode, ConnectorError
-from .config.security import MAX_JSON_BYTES, MAX_JSON_DEPTH
-from .config.messages.requests import JSON_SIZE, JSON_DEPTH, JSON_MAPPING, JSON_SYNTAX, JSON_VALUES, JSON_DUPLICATE_KEY
+from ..errors import ErrorCode, ConnectorError
+from ..config.security import MAX_JSON_BYTES, MAX_JSON_DEPTH
+from ..config.messages.requests import JSON_SIZE, JSON_DEPTH, JSON_MAPPING, JSON_SYNTAX, JSON_VALUES, JSON_DUPLICATE_KEY
 
 
 def parse_json(text: str, *, max_bytes: int = MAX_JSON_BYTES, max_depth: int = MAX_JSON_DEPTH) -> Json:
