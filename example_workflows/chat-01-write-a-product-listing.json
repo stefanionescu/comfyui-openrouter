@@ -390,12 +390,12 @@
       "inputs": [
         {
           "name": "front",
-          "type": "IMAGE",
+          "type": "*",
           "link": 1
         },
         {
           "name": "detail",
-          "type": "IMAGE",
+          "type": "*",
           "link": 2
         },
         {
@@ -799,8 +799,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 0,
-          "lastNodeId": 102,
-          "lastLinkId": 7,
+          "lastNodeId": 103,
+          "lastLinkId": 8,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -818,7 +818,7 @@
         "outputNode": {
           "id": -20,
           "bounding": [
-            1010,
+            1390,
             140,
             120,
             40
@@ -828,9 +828,9 @@
           {
             "id": "2891d7a1-8faa-5b8d-81b8-1558365a3aa6",
             "name": "front",
-            "type": "IMAGE",
+            "type": "*",
             "linkIds": [
-              1
+              2
             ],
             "pos": [
               110,
@@ -840,9 +840,9 @@
           {
             "id": "dd043bfa-d296-557d-b114-3cf88bc65d3a",
             "name": "detail",
-            "type": "IMAGE",
+            "type": "*",
             "linkIds": [
-              2
+              3
             ],
             "pos": [
               110,
@@ -854,8 +854,8 @@
             "name": "documents",
             "type": "CHAT_DOCUMENTS",
             "linkIds": [
-              3,
-              4
+              4,
+              5
             ],
             "pos": [
               110,
@@ -867,7 +867,7 @@
             "name": "options",
             "type": "REQUEST_OPTIONS",
             "linkIds": [
-              5
+              6
             ],
             "pos": [
               110,
@@ -881,10 +881,10 @@
             "name": "listing",
             "type": "STRING",
             "linkIds": [
-              6
+              7
             ],
             "pos": [
-              1010,
+              1390,
               140
             ]
           },
@@ -893,10 +893,10 @@
             "name": "facts",
             "type": "STRING",
             "linkIds": [
-              7
+              8
             ],
             "pos": [
-              1010,
+              1390,
               160
             ]
           }
@@ -905,229 +905,55 @@
         "nodes": [
           {
             "id": 101,
-            "type": "OpenRouterChatAsk",
+            "type": "CreateList",
             "pos": [
               200,
               140
             ],
             "size": [
               340,
-              660
+              86
             ],
             "flags": {},
             "order": 100,
             "mode": 0,
             "inputs": [
               {
-                "name": "model",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "model"
-                }
-              },
-              {
-                "name": "conversation",
-                "type": "CHAT_CONVERSATION",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "documents",
-                "type": "CHAT_DOCUMENTS",
-                "link": 3,
-                "shape": 7
-              },
-              {
-                "label": "image_1",
-                "name": "images.image_1",
-                "type": "IMAGE",
-                "link": 1,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
+                "label": "input0",
+                "name": "inputs.input0",
+                "type": "*",
                 "link": 2,
                 "shape": 7
               },
               {
-                "label": "image_3",
-                "name": "images.image_3",
-                "type": "IMAGE",
-                "link": null,
+                "label": "input1",
+                "name": "inputs.input1",
+                "type": "*",
+                "link": 3,
                 "shape": 7
               },
               {
-                "label": "video_1",
-                "name": "videos.video_1",
-                "type": "VIDEO",
+                "label": "input2",
+                "name": "inputs.input2",
+                "type": "*",
                 "link": null,
                 "shape": 7
-              },
-              {
-                "label": "audio_1",
-                "name": "audio.audio_1",
-                "type": "AUDIO",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "reasoning_effort",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "reasoning_effort"
-                }
-              },
-              {
-                "name": "max_tokens",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "max_tokens"
-                }
-              },
-              {
-                "name": "temperature",
-                "type": "FLOAT",
-                "link": null,
-                "widget": {
-                  "name": "temperature"
-                }
-              },
-              {
-                "name": "outputs",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "outputs"
-                }
-              },
-              {
-                "name": "aspect_ratio",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "aspect_ratio"
-                }
-              },
-              {
-                "name": "voice",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "voice"
-                }
-              },
-              {
-                "name": "pdf_engine",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "pdf_engine"
-                }
-              },
-              {
-                "name": "seed",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "seed"
-                }
-              },
-              {
-                "name": "run_number",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "run_number"
-                }
-              },
-              {
-                "name": "options",
-                "type": "REQUEST_OPTIONS",
-                "link": 5,
-                "shape": 7
-              },
-              {
-                "name": "answer_schema",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "answer_schema"
-                }
-              },
-              {
-                "name": "prompt",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
-              {
-                "name": "system_prompt",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "system_prompt"
-                }
               }
             ],
             "outputs": [
               {
-                "name": "text",
-                "type": "STRING",
-                "links": [
-                  6
-                ]
-              },
-              {
-                "name": "reasoning",
-                "type": "STRING",
-                "links": []
-              },
-              {
-                "name": "images",
-                "type": "IMAGE",
+                "name": "list",
+                "type": "*",
                 "shape": 6,
-                "links": []
-              },
-              {
-                "name": "audio",
-                "type": "AUDIO",
-                "links": []
-              },
-              {
-                "name": "conversation",
-                "type": "CHAT_CONVERSATION",
-                "links": []
+                "links": [
+                  1
+                ]
               }
             ],
             "properties": {
-              "Node name for S&R": "OpenRouterChatAsk"
+              "Node name for S&R": "CreateList"
             },
-            "widgets_values": [
-              "openai/gpt-6-sol",
-              "model default",
-              0,
-              1.0,
-              "text",
-              "model default",
-              "alloy",
-              "model default",
-              42,
-              "fixed",
-              0,
-              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"bullets\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"title\",\n    \"bullets\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
-              "Write a marketplace listing for this product from the photos and the spec sheet. Use only facts you can see or read. Keep the title under 80 characters and write five bullet points.",
-              ""
-            ],
-            "title": "Listing",
-            "color": "#432",
-            "bgcolor": "#653"
+            "widgets_values": []
           },
           {
             "id": 102,
@@ -1138,7 +964,7 @@
             ],
             "size": [
               340,
-              620
+              560
             ],
             "flags": {},
             "order": 101,
@@ -1165,22 +991,19 @@
                 "shape": 7
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
-                "link": null,
+                "link": 1,
                 "shape": 7
               },
               {
-                "label": "video_1",
-                "name": "videos.video_1",
+                "name": "videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "audio_1",
-                "name": "audio.audio_1",
+                "name": "audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7
@@ -1260,7 +1083,7 @@
               {
                 "name": "options",
                 "type": "REQUEST_OPTIONS",
-                "link": null,
+                "link": 6,
                 "shape": 7
               },
               {
@@ -1322,6 +1145,215 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
+              "openai/gpt-6-sol",
+              "model default",
+              0,
+              1.0,
+              "text",
+              "model default",
+              "alloy",
+              "model default",
+              42,
+              "fixed",
+              0,
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"bullets\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"title\",\n    \"bullets\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
+              "Write a marketplace listing for this product from the photos and the spec sheet. Use only facts you can see or read. Keep the title under 80 characters and write five bullet points.",
+              ""
+            ],
+            "title": "Listing",
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              560
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "CHAT_DOCUMENTS",
+                "link": 5,
+                "shape": 7
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "videos",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning_effort",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning_effort"
+                }
+              },
+              {
+                "name": "max_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  8
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
               "openai/gpt-6-luna",
               "model default",
               0,
@@ -1346,27 +1378,27 @@
         "links": [
           {
             "id": 1,
-            "origin_id": -10,
+            "origin_id": 101,
             "origin_slot": 0,
-            "target_id": 101,
+            "target_id": 102,
             "target_slot": 3,
-            "type": "IMAGE"
+            "type": "*"
           },
           {
             "id": 2,
             "origin_id": -10,
-            "origin_slot": 1,
+            "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 4,
-            "type": "IMAGE"
+            "target_slot": 0,
+            "type": "*"
           },
           {
             "id": 3,
             "origin_id": -10,
-            "origin_slot": 2,
+            "origin_slot": 1,
             "target_id": 101,
-            "target_slot": 2,
-            "type": "CHAT_DOCUMENTS"
+            "target_slot": 1,
+            "type": "*"
           },
           {
             "id": 4,
@@ -1379,22 +1411,30 @@
           {
             "id": 5,
             "origin_id": -10,
-            "origin_slot": 3,
-            "target_id": 101,
-            "target_slot": 17,
-            "type": "REQUEST_OPTIONS"
+            "origin_slot": 2,
+            "target_id": 103,
+            "target_slot": 2,
+            "type": "CHAT_DOCUMENTS"
           },
           {
             "id": 6,
-            "origin_id": 101,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 102,
+            "target_slot": 15,
+            "type": "REQUEST_OPTIONS"
+          },
+          {
+            "id": 7,
+            "origin_id": 102,
             "origin_slot": 0,
             "target_id": -20,
             "target_slot": 0,
             "type": "STRING"
           },
           {
-            "id": 7,
-            "origin_id": 102,
+            "id": 8,
+            "origin_id": 103,
             "origin_slot": 0,
             "target_id": -20,
             "target_slot": 1,

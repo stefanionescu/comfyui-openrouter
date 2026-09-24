@@ -44,7 +44,7 @@ MOVE = Subgraph(
     columns=(("moves",), ("situation", "decide"), ("best", "move")),
     inputs=(
         ("brief", "situation.values.a"),
-        ("image", "moves.images.image_1"),
+        ("image", "moves.images"),
         ("questions", "decide.questions"),
     ),
     outputs=(("move", "move.STRING"), ("summary", "decide.summary")),

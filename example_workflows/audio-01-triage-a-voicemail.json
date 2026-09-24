@@ -1332,7 +1332,7 @@
             ],
             "size": [
               340,
-              620
+              560
             ],
             "flags": {},
             "order": 301,
@@ -1359,22 +1359,19 @@
                 "shape": 7
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "video_1",
-                "name": "videos.video_1",
+                "name": "videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "audio_1",
-                "name": "audio.audio_1",
+                "name": "audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7

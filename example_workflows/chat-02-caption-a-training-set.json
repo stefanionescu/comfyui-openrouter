@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. In **Load Image (from Folder)**, choose a folder of images in ComfyUI's input folder.\n3. Press **Run**. Each image and its caption are saved to `output/captions`."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. In **Load Image (from Folder)**, choose a folder of images in ComfyUI's input folder.\n3. Press **Run**. The captions are saved in `output/captions` as one JSON file, in image order."
       ],
       "title": "Start Here"
     },
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Luna writes one sentence per image that names only what is visible: the subject, setting, lighting, and style. Each image is saved with its caption as a training pair.\n\nOpen **Caption** to change the instructions."
+        "GPT-6 Luna reads every image in one request and writes one sentence for each that names only what is visible: the subject, setting, lighting, and style.\n\nOpen **Caption** to change the instructions."
       ],
       "title": "Note"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev, TypeSafe's decision model, reads each caption and answers **valid**: is it one sentence about visible content, without opinions or guesses?\n\n**Summary** lists one verdict per image, so you can fix the captions that fail before training."
+        "Jev, TypeSafe's decision model, reads the captions and answers **valid**: is every caption one sentence about visible content, without opinions or guesses?\n\n**Summary** gives the verdict, so you can fix the captions before training."
       ],
       "title": "Note"
     },
@@ -241,7 +241,7 @@
         "yes or no",
         "",
         "",
-        "Is the caption one sentence that describes only visible content, without opinions or guesses?"
+        "Is every caption one sentence that describes only visible content, without opinions or guesses?"
       ]
     },
     {
@@ -449,7 +449,7 @@
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 4,
+          "lastLinkId": 3,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -479,8 +479,7 @@
             "name": "images",
             "type": "IMAGE",
             "linkIds": [
-              2,
-              3
+              2
             ],
             "pos": [
               110,
@@ -494,7 +493,7 @@
             "name": "captions",
             "type": "STRING",
             "linkIds": [
-              4
+              3
             ],
             "pos": [
               1010,
@@ -513,7 +512,7 @@
             ],
             "size": [
               340,
-              640
+              560
             ],
             "flags": {},
             "order": 100,
@@ -540,29 +539,19 @@
                 "shape": 7
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 2,
                 "shape": 7
               },
               {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "label": "video_1",
-                "name": "videos.video_1",
+                "name": "videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "audio_1",
-                "name": "audio.audio_1",
+                "name": "audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7
@@ -676,7 +665,7 @@
                 "type": "STRING",
                 "links": [
                   1,
-                  4
+                  3
                 ]
               },
               {
@@ -716,8 +705,8 @@
               42,
               "fixed",
               0,
-              "",
-              "Write a one-sentence training caption for this image. Name only what is visible: subject, setting, lighting, and style. No opinions.",
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"captions\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\n    \"captions\"\n  ],\n  \"additionalProperties\": false\n}",
+              "Write one training caption for each image, in the order given. Each caption is one sentence that names only what is visible: subject, setting, lighting, and style. No opinions.",
               ""
             ],
             "color": "#432",
@@ -725,37 +714,23 @@
           },
           {
             "id": 102,
-            "type": "SaveImageTextDataSetToFolder",
+            "type": "SaveText",
             "pos": [
               580,
               140
             ],
             "size": [
               340,
-              126
+              170
             ],
             "flags": {},
             "order": 101,
             "mode": 0,
             "inputs": [
               {
-                "name": "images",
-                "type": "IMAGE",
-                "link": 3
-              },
-              {
-                "name": "texts",
+                "name": "text",
                 "type": "STRING",
-                "link": 1,
-                "shape": 7
-              },
-              {
-                "name": "folder_name",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "folder_name"
-                }
+                "link": 1
               },
               {
                 "name": "filename_prefix",
@@ -766,22 +741,27 @@
                 }
               },
               {
-                "name": "mode",
+                "name": "format",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "mode"
+                  "name": "format"
                 }
               }
             ],
-            "outputs": [],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": []
+              }
+            ],
             "properties": {
-              "Node name for S&R": "SaveImageTextDataSetToFolder"
+              "Node name for S&R": "SaveText"
             },
             "widgets_values": [
-              "captions",
-              "image",
-              "overwrite"
+              "captions/captions",
+              "json"
             ]
           }
         ],
@@ -792,7 +772,7 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "STRING"
           },
           {
@@ -805,14 +785,6 @@
           },
           {
             "id": 3,
-            "origin_id": -10,
-            "origin_slot": 0,
-            "target_id": 102,
-            "target_slot": 0,
-            "type": "IMAGE"
-          },
-          {
-            "id": 4,
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": -20,
@@ -821,7 +793,7 @@
           }
         ],
         "extra": {
-          "description": "Writes one caption per image and saves each image with its caption."
+          "description": "Writes one caption per image in one request and saves them as one JSON file."
         }
       }
     ]

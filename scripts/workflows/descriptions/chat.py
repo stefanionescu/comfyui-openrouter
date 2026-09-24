@@ -29,12 +29,22 @@ LISTING_SCHEMA = json.dumps(
     },
     indent=2,
 )
+CAPTIONS_SCHEMA = json.dumps(
+    {
+        "type": "object",
+        "properties": {"captions": {"type": "array", "items": {"type": "string"}}},
+        "required": ["captions"],
+        "additionalProperties": False,
+    },
+    indent=2,
+)
 LISTING_TEXTS = WORKFLOW_TEXTS["chat-01-write-a-product-listing"]
 CAPTION_TEXTS = WORKFLOW_TEXTS["chat-02-caption-a-training-set"]
 
 WRITE = Subgraph(
     name=SHARED_TEXTS["write"],
     nodes=(
+        Node("photos", HostNode.CREATE_LIST),
         Node(
             "listing",
             ASK,
@@ -57,11 +67,11 @@ WRITE = Subgraph(
             is_paid=True,
         ),
     ),
-    links=(),
-    columns=(("listing",), ("facts",)),
+    links=(("photos.list", "listing.images"),),
+    columns=(("photos",), ("listing",), ("facts",)),
     inputs=(
-        ("front", "listing.images.image_1"),
-        ("detail", "listing.images.image_2"),
+        ("front", "photos.inputs.input0"),
+        ("detail", "photos.inputs.input1"),
         ("documents", "listing.documents"),
         ("documents", "facts.documents"),
         ("options", "listing.options"),
@@ -168,18 +178,19 @@ CAPTION = Subgraph(
             ASK,
             {
                 "model": READER,
+                "answer_schema": CAPTIONS_SCHEMA,
                 "prompt": (
-                    "Write a one-sentence training caption for this image. Name only what is visible: subject, "
-                    "setting, lighting, and style. No opinions."
+                    "Write one training caption for each image, in the order given. Each caption is one sentence "
+                    "that names only what is visible: subject, setting, lighting, and style. No opinions."
                 ),
             },
             is_paid=True,
         ),
-        Node("save", HostNode.SAVE_CAPTIONS, {"folder_name": "captions"}),
+        Node("save", HostNode.SAVE_TEXT, {"filename_prefix": "captions/captions", "format": "json"}),
     ),
-    links=(("caption.text", "save.texts"),),
+    links=(("caption.text", "save.text"),),
     columns=(("caption",), ("save",)),
-    inputs=(("images", "caption.images.image_1"), ("images", "save.images")),
+    inputs=(("images", "caption.images"),),
     outputs=(("captions", "caption.text"),),
     description=CAPTION_TEXTS["caption_description"],
 )
@@ -195,7 +206,7 @@ CAPTION_SET = Workflow(
             {
                 "name": "valid",
                 "instructions": (
-                    "Is the caption one sentence that describes only visible content, without opinions or guesses?"
+                    "Is every caption one sentence that describes only visible content, without opinions or guesses?"
                 ),
             },
         ),

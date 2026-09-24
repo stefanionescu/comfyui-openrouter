@@ -259,8 +259,7 @@
           }
         },
         {
-          "label": "reference_1",
-          "name": "references.reference_1",
+          "name": "references",
           "type": "IMAGE",
           "link": null,
           "shape": 7
@@ -888,7 +887,7 @@
             ],
             "size": [
               340,
-              244
+              204
             ],
             "flags": {},
             "order": 101,
@@ -903,17 +902,9 @@
                 }
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 3,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
                 "shape": 7
               },
               {
@@ -992,7 +983,7 @@
             ],
             "size": [
               340,
-              244
+              204
             ],
             "flags": {},
             "order": 102,
@@ -1007,17 +998,9 @@
                 }
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 4,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
                 "shape": 7
               },
               {
@@ -1096,7 +1079,7 @@
             ],
             "size": [
               340,
-              640
+              560
             ],
             "flags": {},
             "order": 103,
@@ -1123,29 +1106,19 @@
                 "shape": 7
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 5,
                 "shape": 7
               },
               {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "label": "video_1",
-                "name": "videos.video_1",
+                "name": "videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "audio_1",
-                "name": "audio.audio_1",
+                "name": "audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7
@@ -1313,7 +1286,7 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 7,
+            "target_slot": 6,
             "type": "STRING"
           },
           {

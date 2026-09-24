@@ -626,8 +626,7 @@
                 }
               },
               {
-                "label": "reference_1",
-                "name": "references.reference_1",
+                "name": "references",
                 "type": "IMAGE",
                 "link": null,
                 "shape": 7
@@ -713,7 +712,7 @@
             ],
             "size": [
               340,
-              274
+              254
             ],
             "flags": {},
             "order": 101,
@@ -728,17 +727,9 @@
                 }
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 1,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
                 "shape": 7
               },
               {
@@ -839,7 +830,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 6,
+            "target_slot": 5,
             "type": "STRING"
           },
           {
@@ -993,7 +984,7 @@
             ],
             "size": [
               340,
-              640
+              560
             ],
             "flags": {},
             "order": 200,
@@ -1020,29 +1011,19 @@
                 "shape": 7
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 9,
                 "shape": 7
               },
               {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "label": "video_1",
-                "name": "videos.video_1",
+                "name": "videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "audio_1",
-                "name": "audio.audio_1",
+                "name": "audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7

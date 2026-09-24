@@ -37,7 +37,7 @@ IDEAS = Subgraph(
     ),
     links=(("request.STRING", "ideas.prompt"),),
     columns=(("request",), ("ideas",)),
-    inputs=(("image", "ideas.images.image_1"), ("campaign", "request.values.a")),
+    inputs=(("image", "ideas.images"), ("campaign", "request.values.a")),
     outputs=(("ideas", "ideas.text"),),
     description=EDIT_TEXTS["ideas_description"],
 )
@@ -85,7 +85,7 @@ EDIT = Subgraph(
     ),
     columns=(("edit",), ("approved", "review", "folder"), ("save",)),
     inputs=(
-        ("image", "edit.references.reference_1"),
+        ("image", "edit.references"),
         ("idea", "edit.prompt"),
         ("on_brief", "folder.switch"),
         ("approved", "approved.value"),

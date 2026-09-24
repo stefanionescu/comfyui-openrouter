@@ -11,7 +11,7 @@ class HostNode(StrEnum):
     TEXT = "PrimitiveString"
     TEXT_BLOCK = "PrimitiveStringMultiline"
     FOLDER_IMAGES = "LoadImageDataSetFromFolder"
-    SAVE_CAPTIONS = "SaveImageTextDataSetToFolder"
+    CREATE_LIST = "CreateList"
     SAVE_IMAGE = "SaveImage"
     SAVE_TEXT = "SaveText"
     SAVE_SVG = "SaveSVGNode"

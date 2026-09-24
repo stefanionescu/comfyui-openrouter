@@ -258,8 +258,7 @@
           }
         },
         {
-          "label": "reference_1",
-          "name": "references.reference_1",
+          "name": "references",
           "type": "IMAGE",
           "link": null,
           "shape": 7
@@ -840,7 +839,7 @@
             ],
             "size": [
               340,
-              640
+              560
             ],
             "flags": {},
             "order": 100,
@@ -867,29 +866,19 @@
                 "shape": 7
               },
               {
-                "label": "image_1",
-                "name": "images.image_1",
+                "name": "images",
                 "type": "IMAGE",
                 "link": 7,
                 "shape": 7
               },
               {
-                "label": "image_2",
-                "name": "images.image_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "label": "video_1",
-                "name": "videos.video_1",
+                "name": "videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "audio_1",
-                "name": "audio.audio_1",
+                "name": "audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7
@@ -1473,7 +1462,7 @@
             ],
             "size": [
               340,
-              488
+              428
             ],
             "flags": {},
             "order": 200,
@@ -1548,22 +1537,19 @@
                 "shape": 7
               },
               {
-                "label": "reference_image_1",
-                "name": "reference_images.reference_image_1",
+                "name": "reference_images",
                 "type": "IMAGE",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "reference_video_1",
-                "name": "reference_videos.reference_video_1",
+                "name": "reference_videos",
                 "type": "VIDEO",
                 "link": null,
                 "shape": 7
               },
               {
-                "label": "reference_audio_1",
-                "name": "reference_audio.reference_audio_1",
+                "name": "reference_audio",
                 "type": "AUDIO",
                 "link": null,
                 "shape": 7

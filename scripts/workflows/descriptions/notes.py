@@ -28,18 +28,18 @@ WORKFLOW_TEXTS = {
     "chat-02-caption-a-training-set": {
         "input": (
             KEY_STEP + "2. In **Load Image (from Folder)**, choose a folder of images in ComfyUI's input folder.\n"
-            "3. Press **Run**. Each image and its caption are saved to `output/captions`."
+            "3. Press **Run**. The captions are saved in `output/captions` as one JSON file, in image order."
         ),
         "caption": (
-            "GPT-6 Luna writes one sentence per image that names only what is visible: the subject, setting, "
-            "lighting, and style. Each image is saved with its caption as a training pair.\n\n"
+            "GPT-6 Luna reads every image in one request and writes one sentence for each that names only what "
+            "is visible: the subject, setting, lighting, and style.\n\n"
             "Open **Caption** to change the instructions."
         ),
-        "caption_description": "Writes one caption per image and saves each image with its caption.",
+        "caption_description": "Writes one caption per image in one request and saves them as one JSON file.",
         "check": (
-            "Jev, TypeSafe's decision model, reads each caption and answers **valid**: is it one sentence about "
-            "visible content, without opinions or guesses?\n\n"
-            "**Summary** lists one verdict per image, so you can fix the captions that fail before training."
+            "Jev, TypeSafe's decision model, reads the captions and answers **valid**: is every caption one "
+            "sentence about visible content, without opinions or guesses?\n\n"
+            "**Summary** gives the verdict, so you can fix the captions before training."
         ),
     },
     "image-01-pick-the-best-image-for-an-occasion": {
