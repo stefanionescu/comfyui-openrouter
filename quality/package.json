@@ -1,0 +1,17 @@
+{
+    "name": "comfyui-openrouter-quality",
+    "private": true,
+    "type": "module",
+    "imports": {
+        "#config/*.js": "./config/*.js",
+        "#config/*.mjs": "./config/*.mjs",
+        "#config/*.json": "./config/*.json",
+        "#web/*.js": "./web/*.js",
+        "#web/*.mjs": "./web/*.mjs",
+        "#shared/*.js": "./shared/*.js",
+        "#shared/*.mjs": "./shared/*.mjs",
+        "#repository/*.js": "./repository/*.js",
+        "#repository/*.mjs": "./repository/*.mjs"
+    },
+    "packageManager": "bun@1.3.11"
+}

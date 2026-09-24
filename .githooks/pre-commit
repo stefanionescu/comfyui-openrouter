@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Check the staged change without rewriting it.
+# Runtime: Bash 3.2+, macOS and Linux.
+set -euo pipefail
+
+# main - Check the staged change without rewriting it.
+main() {
+  TASK_ROOT="$(git rev-parse --show-toplevel)"
+  readonly TASK_ROOT
+  cd "${TASK_ROOT}" || exit 1
+  exec mise run repo:hook:pre-commit
+}
+
+main "$@"

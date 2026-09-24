@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# Check the quality tools and their configuration.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check the quality tools and their configuration."
+set -euo pipefail
+
+# main - Check the quality tools and their configuration.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  bun --bun node_modules/jscpd/bin/jscpd --config quality/config/duplication/python.json
+  bun --bun node_modules/jscpd/bin/jscpd --config quality/config/duplication/bash.json
+  bun --bun node_modules/eslint/bin/eslint.js --config quality/config/eslint/index.js quality
+  bun quality/repository/naming/check.js --scope quality
+  bun quality/repository/integrity/declarations.js
+  bun quality/repository/integrity/allowlists.js
+  uv run --no-sync python -m quality.repository.integrity.gitleaks
+  uv run --no-sync validate-pyproject pyproject.toml
+}
+
+main "$@"

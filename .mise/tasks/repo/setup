@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Install development tools and configure this repository’s hooks.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Install development tools and configure this repository’s hooks."
+set -euo pipefail
+
+# main - Install development tools and configure this repository’s hooks.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  mise install
+  mise run repo:deps
+  mise run repo:security:rules
+  uv run --no-sync python -m quality.repository.hooks.setup
+}
+
+main "$@"

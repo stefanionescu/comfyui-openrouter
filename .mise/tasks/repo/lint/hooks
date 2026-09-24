@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Check hooks syntax and formatting.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check hooks syntax and formatting."
+set -euo pipefail
+
+# main - Check hooks syntax and formatting.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  uv run --no-sync python -m quality.shell.syntax --scope hooks "$@"
+  uv run --no-sync python -m quality.shell.tools --scope hooks "$@"
+}
+
+main "$@"

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Build the shipped workflows from their descriptions.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Build the shipped workflows from their descriptions."
+set -euo pipefail
+
+# main - Build the shipped workflows from their descriptions.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+  exec uv run --no-sync python -m scripts.workflows.build "$@"
+}
+main "$@"

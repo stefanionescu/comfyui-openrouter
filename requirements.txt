@@ -1,0 +1,2 @@
+# Generated from pyproject.toml by mise run repo:deps:export.
+pydantic>=2.10,<3

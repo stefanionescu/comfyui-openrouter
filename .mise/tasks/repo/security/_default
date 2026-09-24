@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Scan public source, history, and dependencies for security issues.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Scan public source, history, and dependencies for security issues."
+set -euo pipefail
+
+# main - Scan public source, history, and dependencies for security issues.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  bash quality/security/gitleaks/run.sh all
+  bash quality/security/bearer/run.sh
+  bash quality/security/bandit/run.sh
+  mise run repo:audit:python
+  mise run repo:audit:frontend
+  bash quality/security/semgrep/run.sh
+  uv run --no-sync python -m quality.security.codeql.python.paths
+  bash quality/security/codeql/python/scan.sh
+  bash quality/security/codeql/frontend/run.sh
+}
+
+main "$@"

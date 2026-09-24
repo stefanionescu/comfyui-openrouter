@@ -1,0 +1,5 @@
+125c4ea3c56e298d6f091e0de57688680f913082326067a2c825fa5cbebf976d  .artifacts/security/semgrep/rules/python.json
+ad6698ede72c57f7c6ffbd90f4aecec6a35cf76194eb8e8f49c0b056784e2add  .artifacts/security/semgrep/rules/bandit.json
+0f50211d8330068d9b18063e273ccdba853862783e6eb25f4f4aa5095a46cea9  .artifacts/security/semgrep/rules/owasp-top-ten.json
+4f7a744fea088b0fefb6d5b06cc81b790e9ee9f444df8d715169578f9c46fbf9  .artifacts/security/semgrep/rules/secrets.json
+9a701f72ad046707b18aaa014821203f376d054eba334b8f07142f49cbe33d9c  .artifacts/security/semgrep/rules/bash.json

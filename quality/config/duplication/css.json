@@ -1,0 +1,10 @@
+{
+    "threshold": 4,
+    "reporters": ["console"],
+    "format": ["css"],
+    "ignore": ["**/node_modules/**", "**/dist/**", "**/.artifacts/**"],
+    "minLines": 6,
+    "minTokens": 40,
+    "mode": "strict",
+    "output": ".artifacts/cpd/css"
+}

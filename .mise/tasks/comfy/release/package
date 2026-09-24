@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Run local and network checks, then pack and inspect the official node.zip.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Run local and network checks, then pack and inspect the official node.zip."
+set -euo pipefail
+
+# main - Run local and network checks, then pack and inspect the official node.zip.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  mise run repo:check
+  comfy node pack "$@"
+  unzip -l node.zip
+  gitleaks dir node.zip \
+    --config quality/config/security/gitleaks/config.toml \
+    --max-archive-depth 3 \
+    --no-banner \
+    --redact \
+    --ignore-gitleaks-allow
+}
+
+main "$@"

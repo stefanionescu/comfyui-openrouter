@@ -1,0 +1,36 @@
+{
+    "version": 1,
+    "python": {
+        "max_trivial_statements": 2,
+        "allowlist": [
+            {
+                "path": "__init__.py",
+                "names": ["comfy_entrypoint"],
+                "reason": "ComfyUI calls this hook itself."
+            },
+            {
+                "path": "src/extension.py",
+                "names": ["OpenRouterExtension.on_load", "OpenRouterExtension.get_node_list"],
+                "reason": "ComfyUI calls these extension hooks itself."
+            },
+            {
+                "path": "src/state/credentials.py",
+                "names": ["Credential.reveal"],
+                "reason": "Revealing the key is an explicit call at the OpenRouter boundary, so no caller reads it by accident."
+            },
+            {
+                "path": "src/settings/routes.py",
+                "names": ["ConfigurationRoutes.status"],
+                "reason": "aiohttp calls this route handler itself."
+            },
+            {
+                "path": "src/discovery/routes.py",
+                "names": ["ModelRoutes.status", "ModelRoutes.refresh"],
+                "reason": "aiohttp calls these route handlers itself."
+            }
+        ]
+    },
+    "shell": {
+        "max_trivial_statements": 2
+    }
+}

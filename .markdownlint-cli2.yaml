@@ -1,0 +1,13 @@
+globs:
+    - '**/*.md'
+config:
+    MD007:
+        indent: 4
+    MD013: false
+    MD060: false
+ignores:
+    - '.git/**'
+    - '.artifacts/**'
+    - '.venv/**'
+    - 'node_modules/**'
+    - 'rules/DOCUMENTATION.md'

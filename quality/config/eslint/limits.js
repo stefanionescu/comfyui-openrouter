@@ -1,0 +1,6 @@
+export const MAX_FILE_LINES = 300;
+export const MAX_FUNCTION_LINES = 60;
+export const BARREL_REEXPORTS_MAX = 20;
+export const COGNITIVE_COMPLEXITY_THRESHOLD = 8;
+export const IDENTICAL_FUNCTIONS_THRESHOLD = 3;
+export const PREFIXED_FILES_THRESHOLD = 2;

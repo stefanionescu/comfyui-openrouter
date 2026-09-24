@@ -1,0 +1,40 @@
+{
+    "$schema": "https://unpkg.com/knip@6/schema.json",
+    "workspaces": {
+        ".": {
+            "entry": ["web/scripts/extension.ts"],
+            "project": ["web/scripts/**/*.ts"],
+            "ignoreDependencies": [
+                "@commitlint/cli",
+                "esbuild",
+                "jscpd",
+                "license-checker",
+                "madge",
+                "markdownlint-cli2",
+                "prettier"
+            ],
+            "ignoreUnresolved": ["../../scripts/app.js", "../../scripts/api.js"],
+            "eslint": {
+                "config": ["quality/config/eslint/index.js"]
+            },
+            "commitlint": {
+                "config": ["quality/config/repository/commitlint.json"]
+            }
+        },
+        "quality": {
+            "entry": [
+                "repository/naming/check.js",
+                "repository/package-json/json.js",
+                "repository/package-json/dependencies.js",
+                "repository/integrity/declarations.js",
+                "security/codeql/frontend/paths.js",
+                "security/codeql/frontend/sarif.js",
+                "repository/links.mjs",
+                "config/imports/madge.cjs",
+                "repository/integrity/allowlists.js",
+                "repository/licenses/javascript.js"
+            ],
+            "project": ["**/*.js", "**/*.mjs", "**/*.cjs"]
+        }
+    }
+}

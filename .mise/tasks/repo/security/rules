@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Install the pinned Semgrep rule packs in ignored local storage.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Install the pinned Semgrep rule packs in ignored local storage."
+set -euo pipefail
+
+# main - Install the pinned Semgrep rule packs in ignored local storage.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+  uv run --no-sync python -m quality.security.semgrep.install
+}
+
+main "$@"

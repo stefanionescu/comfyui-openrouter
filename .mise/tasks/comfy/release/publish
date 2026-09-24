@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Check and package the connector, then publish through the official Comfy CLI.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check, package, and publish a new Comfy Registry version."
+set -euo pipefail
+
+# main - Check the archive and publish with the Registry key entered privately.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  mise run comfy:release:package
+  exec comfy node publish "$@"
+}
+
+main "$@"

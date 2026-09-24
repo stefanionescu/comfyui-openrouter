@@ -1,0 +1,16 @@
+name: OpenRouter JavaScript and TypeScript
+
+disable-default-queries: true
+packs:
+    - codeql/javascript-queries@2.4.3
+paths:
+    - web
+    - quality
+
+paths-ignore:
+    - node_modules
+    - .artifacts
+    - .venv
+    - '**/*.md'
+    # The bundle is generated from web/scripts, which is scanned; its bundled libraries are checked by the audits.
+    - web/extension.js

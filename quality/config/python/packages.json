@@ -1,0 +1,7 @@
+{
+    "version": 1,
+    "max_package_exports": 20,
+    "allow_package_api_imports": [],
+    "allow_export_only_files": ["__init__.py"],
+    "are_constant_aliases_banned": true
+}

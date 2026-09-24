@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# Audit Bun dependencies using public advisories.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Audit Bun dependencies using public advisories."
+set -euo pipefail
+
+# main - Audit Bun dependencies using public advisories.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  bun audit
+  bash quality/security/osv/run.sh frontend
+}
+
+main "$@"

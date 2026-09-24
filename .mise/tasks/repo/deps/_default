@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Install locked development dependencies.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Install locked development dependencies."
+set -euo pipefail
+
+# main - Install locked development dependencies.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  project_python="$(mise which python)"
+  readonly project_python
+  uv sync --python "${project_python}" --frozen --group dev
+  bun install --frozen-lockfile --ignore-scripts
+}
+
+main "$@"

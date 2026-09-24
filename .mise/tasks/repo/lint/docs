@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Check documentation spelling, Markdown, local links, and native node help.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check documentation spelling, Markdown, local links, and native node help."
+set -euo pipefail
+
+# main - Check documentation spelling, Markdown, local links, and native node help.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  bun --bun node_modules/markdownlint-cli2/markdownlint-cli2-bin.mjs --no-globs '**/*.md'
+  typos .
+  bun quality/repository/links.mjs --local
+}
+
+main "$@"

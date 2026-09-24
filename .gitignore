@@ -1,0 +1,27 @@
+# Build plans stay local
+/plans/
+
+# Local dependencies
+.venv/
+node_modules/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.ruff_cache/
+
+# Build output and check artifacts
+/dist/
+/.cache/
+.artifacts/
+.import_linter_cache/
+node.zip
+
+# Private settings and credentials
+.env
+.env.*
+.mise.local.toml
+
+# Logs and operating system files
+*.log
+.DS_Store

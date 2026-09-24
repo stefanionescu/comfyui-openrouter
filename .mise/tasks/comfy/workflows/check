@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Check that the shipped workflows match their descriptions.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check that the shipped workflows match their descriptions."
+set -euo pipefail
+
+# main - Check that the shipped workflows match their descriptions.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+  exec uv run --no-sync python -m scripts.workflows.build --check "$@"
+}
+main "$@"

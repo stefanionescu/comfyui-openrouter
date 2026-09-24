@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Run repository checks before pushing.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Run repository checks before pushing."
+set -euo pipefail
+
+# main - Run repository checks before pushing.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  # shellcheck source=../../../../quality/repository/hooks/steps.sh
+  source "${REPO_ROOT}/quality/repository/hooks/steps.sh"
+
+  if [[ ${SKIP_HOOKS:-0} == "1" ]]; then
+    printf '%s\n' '[hook] skipped pre-push checks (SKIP_HOOKS=1)'
+    exit 0
+  fi
+  hook_run_step "complete checks" "" mise run repo:check
+  printf '%s\n' '[hook] push checks passed'
+}
+
+main "$@"

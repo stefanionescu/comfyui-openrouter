@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# Run the source and documentation checks.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Run the source and documentation checks."
+set -euo pipefail
+
+# main - Run the source and documentation checks.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  mise run repo:lint:policy
+  mise run repo:lint:python
+  mise run repo:lint:frontend
+  mise run repo:lint:shell
+  mise run repo:lint:hooks
+  mise run repo:lint:mise
+  mise run repo:lint:docs
+  mise run repo:lint:quality
+}
+
+main "$@"

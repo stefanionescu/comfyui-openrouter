@@ -1,0 +1,16 @@
+{
+    "extends": "stylelint-config-standard",
+    "ignoreFiles": ["**/node_modules/**"],
+    "rules": {
+        "alpha-value-notation": null,
+        "color-function-alias-notation": null,
+        "color-function-notation": null,
+        "color-hex-length": null,
+        "comment-empty-line-before": null,
+        "declaration-block-single-line-max-declarations": null,
+        "keyframes-name-pattern": null,
+        "media-feature-range-notation": null,
+        "no-descending-specificity": true,
+        "rule-empty-line-before": null
+    }
+}

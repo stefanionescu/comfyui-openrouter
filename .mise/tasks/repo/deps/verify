@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# Check dependency metadata, locks, and the local environment.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check dependency metadata, locks, and the local environment."
+set -euo pipefail
+
+# main - Check dependency metadata, locks, and the local environment.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  uv lock --check --offline
+  uv run --no-sync python -m quality.repository.environment
+  CI=1 bun install --frozen-lockfile --dry-run --ignore-scripts --silent
+  uv run --no-sync python -m quality.repository.dependencies
+  bun quality/repository/package-json/json.js
+  bun quality/repository/package-json/dependencies.js
+  uv run --no-sync python -m scripts.dependencies --check
+}
+
+main "$@"

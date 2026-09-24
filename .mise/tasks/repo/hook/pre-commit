@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# Check repository sources and staged secrets without changing the index.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check repository sources and staged secrets without changing the index."
+set -euo pipefail
+
+# main - Check repository sources and staged secrets without changing the index.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  # shellcheck source=../../../../quality/repository/hooks/steps.sh
+  source "${REPO_ROOT}/quality/repository/hooks/steps.sh"
+
+  if [[ ${SKIP_HOOKS:-0} == "1" ]]; then
+    printf '%s\n' '[hook] skipped pre-commit checks (SKIP_HOOKS=1)'
+    exit 0
+  fi
+
+  uv run --no-sync python -m quality.repository.hooks.staged
+  hook_run_step "staged secrets" "" bash quality/security/gitleaks/run.sh staged
+  hook_run_step "source checks" SKIP_LINT mise run repo:lint
+  hook_run_step "formatting" SKIP_LINT mise run repo:format:check
+  hook_run_step "Python types" SKIP_LINT mise run repo:type:python
+  hook_run_step "frontend types" SKIP_LINT mise run repo:type:frontend
+  hook_run_step "frontend output" SKIP_LINT mise run comfy:frontend:check
+}
+
+main "$@"

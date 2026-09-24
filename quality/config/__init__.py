@@ -1,0 +1,1 @@
+"""Quality configuration package."""

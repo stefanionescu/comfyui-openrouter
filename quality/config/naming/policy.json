@@ -1,0 +1,161 @@
+{
+    "version": 1,
+    "global_policy": {
+        "are_digits_banned": true,
+        "banned_term_exemptions": ["__all__", "__init__", "__main__"]
+    },
+    "languages": {
+        "python": {
+            "max_characters": 35,
+            "max_words": 4,
+            "files": ["snake"],
+            "directories": ["snake"],
+            "modules": ["snake"],
+            "packages": ["snake"],
+            "classes": ["pascal"],
+            "exceptions": ["pascal"],
+            "functions": ["snake"],
+            "methods": ["snake"],
+            "parameters": ["snake"],
+            "variables": ["snake", "upper-snake"],
+            "constants": ["upper-snake"],
+            "attributes": ["snake", "upper-snake"],
+            "type_aliases": ["pascal"]
+        },
+        "shell": {
+            "max_characters": 35,
+            "max_words": 4,
+            "files": ["kebab", "snake"],
+            "directories": ["kebab", "snake"],
+            "functions": ["snake"],
+            "variables": ["snake", "upper-snake"]
+        }
+    },
+    "name_rules": [
+        {
+            "path_regexes": ["^(\\.githooks/|\\.mise/tasks/).*"],
+            "languages": ["shell"],
+            "categories": ["directories"],
+            "names": [".githooks", ".mise"],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": [".*"],
+            "languages": ["python"],
+            "categories": ["methods"],
+            "names": [
+                "visit_ClassDef",
+                "visit_FunctionDef",
+                "visit_AsyncFunctionDef",
+                "visit_Import",
+                "visit_ImportFrom",
+                "visit_Assign",
+                "visit_AnnAssign",
+                "visit_If",
+                "visit_Name",
+                "visit_Attribute"
+            ],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": ["^quality/security/codeql/python/scan\\.sh$"],
+            "languages": ["shell"],
+            "categories": ["variables"],
+            "names": [
+                "CODEQL_EXTRACTOR_PYTHON_ANALYSIS_VERSION",
+                "CODEQL_EXTRACTOR_PYTHON_OPTION_PYTHON_EXECUTABLE_NAME"
+            ],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": [".*"],
+            "categories": [
+                "variables",
+                "constants",
+                "classes",
+                "exceptions",
+                "type_aliases",
+                "attributes",
+                "parameters"
+            ],
+            "names": ["_"],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": [".*"],
+            "categories": [
+                "variables",
+                "constants",
+                "classes",
+                "exceptions",
+                "type_aliases",
+                "attributes",
+                "parameters"
+            ],
+            "structural_prefix_regexes": ["^_+"]
+        },
+        {
+            "path_regexes": [".*"],
+            "names": ["i", "j", "k", "x", "y"],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": [".*"],
+            "languages": ["python"],
+            "categories": ["files"],
+            "names": ["__init__", "__main__"],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": ["^quality/repository/naming/extractors/python\\.py$"],
+            "languages": ["python"],
+            "categories": ["methods"],
+            "names": ["generic_visit"],
+            "is_excluded": true
+        },
+        {
+            "path_regexes": ["^src/extension\\.py$"],
+            "languages": ["python"],
+            "categories": ["methods"],
+            "names": ["on_load"],
+            "allowed_banned_terms": ["load"],
+            "reason": "ComfyUI calls this extension hook by name."
+        },
+        {
+            "path_regexes": ["^src/(config|state|discovery|execution|nodes)/.*\\.py$"],
+            "languages": ["python"],
+            "categories": ["variables", "constants", "attributes", "parameters"],
+            "names": ["resolution", "resolutions", "ALL_RESOLUTIONS"],
+            "allowed_banned_terms": ["resolution"],
+            "reason": "OpenRouter names this image and video request field; the extension keeps its spelling."
+        },
+        {
+            "path_regexes": ["^scripts/workflows/.*\\.py$"],
+            "languages": ["python"],
+            "categories": ["variables", "constants", "attributes", "parameters"],
+            "names": ["resolution", "resolutions", "ALL_RESOLUTIONS"],
+            "allowed_banned_terms": ["resolution"],
+            "reason": "OpenRouter names this image and video request field; the extension keeps its spelling."
+        },
+        {
+            "path_regexes": ["^src/(state|execution|nodes)/options\\.py$"],
+            "languages": ["python"],
+            "categories": ["attributes", "parameters", "variables"],
+            "names": ["data_collection"],
+            "allowed_banned_terms": ["data"],
+            "reason": "OpenRouter names this provider routing field; the extension keeps its spelling."
+        }
+    ],
+    "excluded_paths": [
+        "/.artifacts/",
+        "/.git/",
+        "/.cache/",
+        "/.ruff_cache/",
+        "/.venv/",
+        "/__pycache__/",
+        "/build/",
+        "/dist/",
+        "/node_modules/"
+    ],
+    "excluded_basenames": ["uv.lock", "bun.lock"]
+}

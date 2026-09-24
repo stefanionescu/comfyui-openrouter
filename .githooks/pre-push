@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Check the pushed revision, dependencies, and public documentation links.
+# Runtime: Bash 3.2+, macOS and Linux.
+set -euo pipefail
+
+# main - Check the pushed revision, dependencies, and public documentation links.
+main() {
+  TASK_ROOT="$(git rev-parse --show-toplevel)"
+  readonly TASK_ROOT
+  cd "${TASK_ROOT}" || exit 1
+  exec mise run repo:hook:pre-push -- "$@"
+}
+
+main "$@"

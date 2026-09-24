@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Validate the supplied message without rewriting it.
+# Runtime: Bash 3.2+, macOS and Linux.
+set -euo pipefail
+
+# main - Validate the supplied message without rewriting it.
+main() {
+  TASK_ROOT="$(git rev-parse --show-toplevel)"
+  readonly TASK_ROOT
+  cd "${TASK_ROOT}" || exit 1
+  exec mise run repo:hook:commit-msg -- "$@"
+}
+
+main "$@"

@@ -1,0 +1,53 @@
+{
+    "allowed_licenses": [
+        "MIT",
+        "ISC",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "Apache-2.0",
+        "MPL-2.0",
+        "0BSD",
+        "CC0-1.0",
+        "CC-BY-3.0",
+        "CC-BY-4.0",
+        "Unlicense",
+        "BlueOak-1.0.0",
+        "Python-2.0",
+        "Apache*",
+        "MIT*",
+        "(WTFPL OR MIT)",
+        "LGPL-3.0-only"
+    ],
+    "package_exemptions": [
+        {
+            "package": "@comfyorg/comfyui-frontend-types",
+            "licenses": ["GPL-3.0-only"],
+            "reason": "Development type declarations for the ComfyUI frontend. Browser source uses type-only imports, so esbuild copies nothing from this package into web/extension.js."
+        },
+        {
+            "package": "@csstools/css-syntax-patches-for-csstree",
+            "licenses": ["MIT-0"],
+            "reason": "The package uses the MIT No Attribution license."
+        },
+        {
+            "package": "@csstools/selector-resolve-nested",
+            "licenses": ["MIT-0"],
+            "reason": "The package uses the MIT No Attribution license."
+        },
+        {
+            "package": "@csstools/selector-specificity",
+            "licenses": ["MIT-0"],
+            "reason": "The package uses the MIT No Attribution license."
+        },
+        {
+            "package": "rc",
+            "licenses": ["(BSD-2-Clause OR MIT OR Apache-2.0)"],
+            "reason": "The package offers MIT and Apache-2.0 licensing alternatives."
+        },
+        {
+            "package": "spdx-ranges",
+            "licenses": ["(MIT AND CC-BY-3.0)"],
+            "reason": "The package combines MIT code and SPDX reference data under CC BY 3.0."
+        }
+    ]
+}

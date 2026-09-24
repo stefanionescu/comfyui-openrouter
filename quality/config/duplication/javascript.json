@@ -1,0 +1,10 @@
+{
+    "threshold": 4,
+    "reporters": ["console"],
+    "format": ["javascript", "typescript"],
+    "ignore": ["**/node_modules/**", "**/dist/**", "**/.artifacts/**"],
+    "minLines": 8,
+    "minTokens": 40,
+    "mode": "strict",
+    "output": ".artifacts/cpd/js"
+}

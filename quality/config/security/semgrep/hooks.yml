@@ -1,0 +1,25 @@
+rules:
+    - id: hooks-no-curl-pipe-shell
+      pattern-either:
+          - pattern: curl ... | bash
+          - pattern: curl ... | sh
+          - pattern: wget ... | bash
+          - pattern: wget ... | sh
+      message: >
+          Piping remote scripts directly to a shell is dangerous. Download, verify,
+          and execute explicitly.
+      languages: [bash]
+      severity: ERROR
+      metadata:
+          cwe: ['CWE-494']
+          category: security
+
+    - id: hooks-no-eval
+      pattern: eval ...
+      message: >
+          eval in hook scripts can execute unexpected input and should be avoided.
+      languages: [bash]
+      severity: ERROR
+      metadata:
+          cwe: ['CWE-94']
+          category: security

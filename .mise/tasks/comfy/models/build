@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Build the bundled model list from OpenRouter's public model lists.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Build the bundled model list from OpenRouter's public model lists."
+set -euo pipefail
+
+# main - Build the bundled model list from OpenRouter's public model lists.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+  exec uv run --no-sync python -m scripts.snapshot "$@"
+}
+main "$@"

@@ -1,0 +1,49 @@
+# Browser source; the built bundle ships
+/web/scripts/
+/web/styles/
+
+# Development tools and instructions
+/scripts/
+/quality/
+/.mise/
+/.githooks/
+/rules/
+/plans/
+/AGENTS.md
+/CLAUDE.md
+
+# Development dependencies and configuration
+/package.json
+/bun.lock
+/bunfig.toml
+/tsconfig.json
+/pyrightconfig.json
+/uv.lock
+/mise.toml
+/.gitignore
+/.gitattributes
+/.prettierignore
+/.prettierrc*
+/.markdownlint*
+/.stylelintrc*
+/.typos.toml
+/.comfyignore
+
+# Local dependencies and generated artifacts
+/.git/
+/.venv/
+/node_modules/
+/.artifacts/
+/.ruff_cache/
+/.import_linter_cache/
+/node.zip
+
+# Python caches
+**/__pycache__/
+**/*.py[cod]
+
+# Private settings, logs and operating system files
+**/.env
+**/.env.*
+**/*.log
+**/.DS_Store

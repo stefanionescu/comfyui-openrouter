@@ -1,0 +1,9 @@
+{
+    "pythonVersion": "3.12",
+    "typeCheckingMode": "strict",
+    "include": ["__init__.py", "src", "scripts", "quality"],
+    "venvPath": ".",
+    "venv": ".venv",
+    "extraPaths": ["."],
+    "exclude": [".artifacts", ".ruff_cache", ".venv", "__pycache__"]
+}

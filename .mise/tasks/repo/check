@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#
+# Check source, generated files, dependencies, security, licenses, and links.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check source, generated files, dependencies, security, licenses, and links."
+set -euo pipefail
+
+# main - Check source, generated files, dependencies, security, licenses, and links.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  mise run repo:deps:verify
+  mise run repo:format:check
+  mise run repo:lint
+  mise run repo:type:python
+  mise run repo:type:frontend
+  mise run comfy:frontend:check
+  mise run comfy:nodes:check
+  mise run comfy:workflows:check
+  mise run repo:security
+  mise run repo:licenses
+  mise run repo:links:external
+}
+
+main "$@"

@@ -1,0 +1,38 @@
+{
+    "allowed_licenses": [
+        "Apache-2.0",
+        "ISC",
+        "MIT",
+        "Python-2.0",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "MPL-2.0",
+        "MIT-CMU",
+        "Apache-2.0 AND MIT",
+        "Apache-2.0 OR BSD-2-Clause",
+        "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+        "MPL-2.0 and MIT and BSD-3-Clause"
+    ],
+    "package_exemptions": [
+        {
+            "package": "colorama",
+            "licenses": ["BSD"],
+            "reason": "The installed 0.4.6 distribution includes the BSD-3-Clause license; its legacy metadata reports only BSD. Development dependency; not bundled in the connector."
+        },
+        {
+            "package": "fastjsonschema",
+            "licenses": ["BSD"],
+            "reason": "The installed 2.22.2 distribution includes the BSD-3-Clause license; its legacy metadata reports only BSD. Development dependency; not bundled in the connector."
+        },
+        {
+            "package": "grimp",
+            "licenses": ["BSD"],
+            "reason": "The installed 3.17 distribution includes the BSD-2-Clause license; its legacy metadata reports only BSD. Development dependency; not bundled in the connector."
+        },
+        {
+            "package": "import-linter",
+            "licenses": ["BSD"],
+            "reason": "The installed 2.15 distribution includes the BSD-2-Clause license; its legacy metadata reports only BSD. Development dependency; not bundled in the connector."
+        }
+    ]
+}

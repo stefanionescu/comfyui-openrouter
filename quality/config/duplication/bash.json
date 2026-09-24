@@ -1,0 +1,14 @@
+{
+    "threshold": 4,
+    "reporters": ["console"],
+    "format": ["bash"],
+    "ignore": ["**/.artifacts/**", "**/.venv/**"],
+    "path": ["../../../.githooks/", "../../../.mise/tasks/", "../../"],
+    "minLines": 8,
+    "minTokens": 40,
+    "mode": "strict",
+    "output": ".artifacts/cpd/bash",
+    "formatsExts": {
+        "bash": ["sh", ""]
+    }
+}

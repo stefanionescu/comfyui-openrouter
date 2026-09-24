@@ -1,0 +1,74 @@
+rules:
+    - id: openrouter-no-eval
+      pattern-either:
+          - pattern: eval(...)
+          - pattern: new Function(...)
+          - pattern: setTimeout("...", ...)
+          - pattern: setInterval("...", ...)
+      message: Code injection risk. Use static code paths instead of eval, Function, or string timers.
+      languages: [javascript, typescript]
+      severity: ERROR
+      metadata:
+          cwe: ['CWE-94']
+          category: security
+
+    - id: openrouter-no-child-process-exec
+      pattern-either:
+          - pattern: exec(...)
+          - pattern: execSync(...)
+      message: Command injection risk. Use execFile or spawn with argument arrays.
+      languages: [javascript, typescript]
+      severity: ERROR
+      paths:
+          include:
+              - '/quality/**'
+              - '/scripts/**'
+      metadata:
+          cwe: ['CWE-78']
+          category: security
+
+    - id: openrouter-no-dynamic-require-or-import
+      patterns:
+          - pattern-either:
+                - pattern: require($VAR)
+                - pattern: import($VAR)
+          - pattern-not: require("...")
+          - pattern-not: import("...")
+      message: Dynamic require/import risks loading unintended modules. Use static imports.
+      languages: [javascript, typescript]
+      severity: ERROR
+      metadata:
+          cwe: ['CWE-94']
+          category: security
+
+    - id: openrouter-no-secret-env-log
+      patterns:
+          - pattern-either:
+                - pattern: console.log(process.env.$VAR)
+                - pattern: console.info(process.env.$VAR)
+                - pattern: console.warn(process.env.$VAR)
+                - pattern: console.error(process.env.$VAR)
+                - pattern: console.debug(process.env.$VAR)
+          - metavariable-regex:
+                metavariable: $VAR
+                regex: '.*(KEY|SECRET|PASSWORD|TOKEN|CREDENTIAL).*'
+      message: Sensitive environment variable logged. Remove or mask it before logging.
+      languages: [javascript, typescript]
+      severity: ERROR
+      metadata:
+          cwe: ['CWE-532']
+          category: security
+
+    - id: openrouter-no-dom-html-sinks
+      pattern-either:
+          - pattern: $ELEMENT.innerHTML = $VALUE
+          - pattern: $ELEMENT.outerHTML = $VALUE
+          - pattern: $ELEMENT.insertAdjacentHTML($POSITION, $VALUE)
+          - pattern: document.write($VALUE)
+      message: DOM XSS risk. Use textContent, DOM node creation, or trusted static markup.
+      languages: [javascript, typescript]
+      severity: ERROR
+      paths:
+          include:
+              - '/web/scripts/**'
+              - '/web/**'

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# Check TypeScript, styles, naming, unused code, imports, and duplication.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check TypeScript, styles, naming, unused code, imports, and duplication."
+set -euo pipefail
+
+# main - Check TypeScript, styles, naming, unused code, imports, and duplication.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  bun --bun node_modules/eslint/bin/eslint.js --config quality/config/eslint/index.js web/scripts
+  bun quality/repository/naming/check.js --scope frontend
+  bun --bun node_modules/stylelint/bin/stylelint.mjs 'web/styles/**/*.css'
+  bun --bun node_modules/knip/bin/knip.js --config quality/config/imports/knip.json
+  bun --bun node_modules/madge/bin/cli.js --circular --extensions ts --webpack-config quality/config/imports/madge.cjs web/scripts
+  bun --bun node_modules/jscpd/bin/jscpd --config quality/config/duplication/javascript.json web/scripts quality
+  bun --bun node_modules/jscpd/bin/jscpd --config quality/config/duplication/css.json web/styles
+}
+
+main "$@"

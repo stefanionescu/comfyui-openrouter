@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# Check frontend types.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check frontend types."
+set -euo pipefail
+
+# main - Check frontend types.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  exec bun --bun node_modules/typescript/bin/tsc --noEmit "$@"
+}
+
+main "$@"

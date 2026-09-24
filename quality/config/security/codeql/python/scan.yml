@@ -1,0 +1,14 @@
+name: Repository Python CodeQL configuration
+disable-default-queries: true
+packs:
+    - codeql/python-queries@1.8.9
+paths:
+    - .
+paths-ignore:
+    - .git
+    - dist
+    - .artifacts
+    - .cache
+    - .venv
+    - '**/__pycache__/**'
+    - node_modules

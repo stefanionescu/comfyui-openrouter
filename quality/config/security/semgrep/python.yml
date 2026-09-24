@@ -1,0 +1,78 @@
+rules:
+    - id: openrouter-no-runtime-package-install
+      message: Declare dependencies in pyproject.toml. Do not install packages from running nodes.
+      severity: ERROR
+      languages: [python]
+      paths:
+          include: ['/src/**', '/config/**', '/__init__.py']
+      patterns:
+          - pattern-either:
+                - pattern: subprocess.$CALL($COMMAND, ...)
+                - pattern: subprocess.$CALL(args=$COMMAND, ...)
+                - pattern: asyncio.create_subprocess_shell($COMMAND, ...)
+                - pattern: os.system($COMMAND)
+                - pattern: os.popen($COMMAND, ...)
+          - metavariable-pattern:
+                metavariable: $COMMAND
+                pattern-either:
+                    - patterns:
+                          - pattern: '[$PROGRAM, ..., "install", ...]'
+                          - metavariable-regex:
+                                metavariable: $PROGRAM
+                                regex: '^[''"](?:[^''"]*/)?pip[0-9.]*[''"]$'
+                    - pattern: '[$PYTHON, "-m", "pip", ..., "install", ...]'
+                    - pattern: '["uv", "pip", ..., "install", ...]'
+                    - pattern: '["uv", "sync", ...]'
+                    - pattern: '[$PYTHON, "-m", "ensurepip", ...]'
+                    - patterns:
+                          - pattern: '"$SHELL"'
+                          - metavariable-regex:
+                                metavariable: $SHELL
+                                regex: '^\s*(?:\S*/)?(?:pip[0-9.]*\s+.*\binstall\b|python[0-9.]*\s+-m\s+pip\s+.*\binstall\b|uv\s+(?:pip\s+.*\binstall\b|sync\b)|python[0-9.]*\s+-m\s+ensurepip\b)'
+    - id: openrouter-no-async-package-install
+      message: Declare dependencies in pyproject.toml. Do not install packages from running nodes.
+      severity: ERROR
+      languages: [python]
+      paths:
+          include: ['/src/**', '/config/**', '/__init__.py']
+      pattern-either:
+          - patterns:
+                - pattern: asyncio.create_subprocess_exec($PROGRAM, ..., "install", ...)
+                - metavariable-regex:
+                      metavariable: $PROGRAM
+                      regex: '^[''"](?:[^''"]*/)?pip[0-9.]*[''"]$'
+          - pattern: asyncio.create_subprocess_exec($PYTHON, "-m", "pip", ..., "install", ...)
+          - pattern: asyncio.create_subprocess_exec("uv", "pip", ..., "install", ...)
+          - pattern: asyncio.create_subprocess_exec("uv", "sync", ...)
+          - pattern: asyncio.create_subprocess_exec($PYTHON, "-m", "ensurepip", ...)
+    - id: openrouter-torch-no-jit-script
+      message: Do not compile Torch scripts in the connector.
+      severity: ERROR
+      languages:
+          - python
+      pattern: torch.jit.script(...)
+    - id: openrouter-torch-no-load
+      message: Do not deserialize model files with torch.load in the connector.
+      severity: ERROR
+      languages:
+          - python
+      pattern-either:
+          - pattern: torch.load(...)
+          - pattern: from torch import load
+    - id: openrouter-torch-no-lstm-cell
+      message: Do not call torch.lstm_cell in the connector.
+      severity: ERROR
+      languages:
+          - python
+      pattern-either:
+          - pattern: torch.lstm_cell(...)
+          - pattern: from torch import lstm_cell
+    - id: openrouter-python-no-diskcache-direct-use
+      message: Do not import or use DiskCache in the connector.
+      severity: ERROR
+      languages:
+          - python
+      pattern-either:
+          - pattern: import diskcache
+          - pattern: from diskcache import $NAME
+          - pattern: diskcache.Cache(...)

@@ -1,0 +1,21 @@
+[files]
+extend-exclude = [
+    "node_modules",
+    ".venv",
+    ".artifacts",
+    # Registry version identifiers are opaque, checksum-pinned upstream data.
+    "quality/config/security/semgrep/packs.json",
+    # Model names and descriptions are OpenRouter's text, not ours.
+    "resources/models/snapshot.json",
+]
+
+[default.extend-words]
+certifi = "certifi"
+# Jev's yes-or-no question type is named "noul".
+noul = "noul"
+
+# ComfyUI's Windows portable distribution uses this exact directory name.
+[default.extend-identifiers]
+python_embeded = "python_embeded"
+# ESLint uses this exact option for immediately invoked function expressions.
+IIFEs = "IIFEs"

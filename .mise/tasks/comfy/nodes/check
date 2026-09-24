@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# Check the help pages and menus against the registered nodes.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Check the help pages and menus against the registered nodes."
+set -euo pipefail
+
+# main - Check the help pages and menus against the registered nodes.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+  exec uv run --no-sync python -m scripts.nodes.check "$@"
+}
+main "$@"

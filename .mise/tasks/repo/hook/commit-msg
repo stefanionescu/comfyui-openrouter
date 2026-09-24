@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+# Validate the supplied commit message with commitlint.
+# Runtime: Bash 3.2+, macOS and Linux.
+#MISE description="Validate the supplied commit message with commitlint."
+set -euo pipefail
+
+# main - Validate the supplied commit message with commitlint.
+main() {
+  REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+  cd "${REPO_ROOT}" || exit 1
+
+  if [[ ${SKIP_HOOKS:-0} == "1" || ${SKIP_COMMITLINT:-0} == "1" ]]; then
+    printf '%s\n' '[hook] skipped commit message check (SKIP_HOOKS or SKIP_COMMITLINT)'
+    exit 0
+  fi
+  if (($# != 1)); then
+    printf '%s\n' 'error: provide the commit message file' >&2
+    exit 2
+  fi
+  exec bun --bun node_modules/@commitlint/cli/cli.js --config quality/config/repository/commitlint.json --edit "$1"
+}
+
+main "$@"
