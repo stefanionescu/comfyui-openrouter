@@ -63,7 +63,8 @@ outputs. Media are converted in a worker thread, so ComfyUI stays responsive.
 - **Search: Rank** sends the query and every text line and image in one request.
   It returns them in order, with their scores.
 - **Decision: Ask** sends the situation and the questions to OpenRouter's alpha
-  decisions API, which serves decision models such as TypeSafe's Jev. **Decision: Read Answer** reads one answer locally.
+  decisions API, which serves decision models such as TypeSafe's Jev.
+  **Decision: Read Answer** reads one answer locally.
 - **Request Options** holds settings that each connected paid node adds to its
   request. A node stops with an error on a setting its request type rejects.
 
@@ -457,6 +458,18 @@ src.config
 - Node names, descriptions, and tooltips are in each node's `io.Schema` call.
 - Every other message is a constant in `src/config/messages/`, or in
   `web/scripts/text.ts` for the dialogs.
+
+### README images
+
+The README's images are in `docs/images/`:
+
+- The banner, badges, group tags, and node map are SVG files; edit them as text.
+  Update the counts when a node or workflow is added.
+- `example-results.jpg` holds outputs of image-01, image-02, image-04, search-02,
+  and video-01, cropped to 192-pixel squares.
+- `workflow-choose-group.png` is the **Choose** group of image-01 at 100% zoom.
+
+Keep each image under 100 KB, and give it alt text in the README.
 
 ### Change text
 

@@ -1,23 +1,46 @@
 # ComfyUI OpenRouter
 
-This is a ComfyUI extension that runs any model on OpenRouter with your own API
-key. It has six kinds of nodes:
+![ComfyUI OpenRouter: chat, image, video, audio, search, and decision models as ComfyUI nodes. Node groups: Chat 2, Image 1, Video 2, Audio 2, Search 2, Decision 3, Request Options 1.](docs/images/banner.svg)
 
-- **Chat**: ask a model a question, with images, video, audio, or documents.
-  Get back text, images, or speech.
-- **Image**: generate and edit images, including masks and SVG files.
-- **Video**: make a video from a prompt, frames, or reference media.
-- **Audio**: turn text into speech, optionally in a cloned voice, and speech
-  into text with timestamps and subtitles.
-- **Search**: turn text and images into embeddings (lists of numbers that
-  place similar items close together), and rank them against a query.
-- **Decisions**: ask a decision model, such as TypeSafe's Jev, typed questions.
-  It answers with probabilities, so a workflow can branch on the answers.
+[![ComfyUI 0.34.6 or later](docs/images/badge-comfyui.svg)](#requirements)
+[![Python 3.12 or later](docs/images/badge-python.svg)](#requirements)
+[![13 nodes](docs/images/badge-nodes.svg)](#nodes)
+[![13 example workflows](docs/images/badge-workflows.svg)](#example-workflows)
+[![MIT license](docs/images/badge-license.svg)](LICENSE.md)
+
+**Run any model on OpenRouter from ComfyUI, with your own API key.**
+
+The extension adds 13 nodes. Twelve cover six kinds of model, and **Request
+Options** sets provider choices for the eight paid ones:
+
+- ![Chat](docs/images/tag-chat.svg) Ask a model a question, with images, video,
+  audio, or documents. Get back text, images, or speech.
+- ![Image](docs/images/tag-image.svg) Generate and edit images, including masks
+  and SVG files.
+- ![Video](docs/images/tag-video.svg) Make a video from a prompt, frames, or
+  reference media.
+- ![Audio](docs/images/tag-audio.svg) Turn text into speech, optionally in a
+  cloned voice, and speech into text with timestamps and subtitles.
+- ![Search](docs/images/tag-search.svg) Turn text and images into embeddings
+  (lists of numbers that place similar items close together), and rank them
+  against a query.
+- ![Decision](docs/images/tag-decision.svg) Ask a decision model, such as
+  TypeSafe's Jev, typed questions. It answers with probabilities, so a workflow
+  can branch on the answers.
+- ![Request Options](docs/images/tag-options.svg) Choose providers, price
+  limits, and extra request fields for any paid node.
+
+![Five results from the example workflows: a dinosaur party invitation, a violinist draft that Jev rejected as distorted, the Fernwood leaf logo, a hiker on a ridge for a homepage hero, and an espresso machine from a product teaser.](docs/images/example-results.jpg)
+
+From left: an invitation cover picked by Jev from three models (image-01), a
+draft Jev rejected as distorted (image-02), a logo drawn as SVG and as a sticker
+(image-04), the best of four hero images (search-02), and a frame of a product
+teaser video (video-01).
 
 Requests go from your ComfyUI server to OpenRouter, which passes them to the
 model's provider (the company that runs the model) and bills your OpenRouter
-account. Every run of a paid node is
-billed, so check the model's price in **OpenRouter models** before you run it.
+account. Every run of a paid node is billed, so check the model's price in
+**OpenRouter models** before you run it.
 
 ## Contents
 
@@ -116,8 +139,8 @@ openrouter.ai/activity.
 
 ## Example workflows
 
-There are 13 example workflows, and together they use every node. Most of them
-have Jev decide something: which image to keep, whether a draft is distorted,
+There are 13 example workflows, and together they use every node. In 12 of
+them, Jev decides something: which image to keep, whether a draft is distorted,
 or whether an answer is backed by its sources.
 
 Open one from **Browse Templates → comfyui-openrouter**, or drag its file onto
@@ -125,6 +148,8 @@ ComfyUI. Each group has a note that says what it does; start with **Start
 Here**. Each step after the inputs is a subgraph: select the icon at its
 top-right corner to open it. Media inputs start empty, so add your own image,
 audio, or document.
+
+![Screenshot of the Choose group in image-01: a note explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/workflow-choose-group.png)
 
 Some workflows use ComfyUI's **If/Else Switch** (beta). It runs only the branch
 it picks, so you pay only for the paid nodes on that branch.
@@ -168,7 +193,7 @@ After an update, open the examples in a new tab to get the new versions.
 | [Search: Answer from Help Articles](example_workflows/search-01-answer-from-help-articles.json) | A question and help articles | [Search: Rank](web/docs/OpenRouterSearchRank.md) |
 | [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)             | A brief                      | [Search: Rank](web/docs/OpenRouterSearchRank.md) |
 
-### Decisions
+### Decision
 
 | Workflow                                                                                                  | Input                | Node guide                                         |
 | --------------------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------------------- |
@@ -179,24 +204,28 @@ listing away from providers that store data.
 
 ## Nodes
 
-The nodes are in the **OpenRouter** menu, under Chat, Image, Video, Audio,
-Search, and Decision. ComfyUI's node help opens each node's guide.
+The nodes are in ComfyUI's node menu under **OpenRouter**: 12 in the groups
+Chat, Image, Video, Audio, Search, and Decision, and **Request Options** at the
+top. Eight nodes send a paid request each time they run; the other five prepare
+or read data and are free. ComfyUI's node help opens each node's guide.
 
-| Node                                                                | What it does                                                               |
-| ------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [Chat: Ask](web/docs/OpenRouterChatAsk.md)                          | Asks a model a question, with images, video, audio, or documents.          |
-| [Chat: Attach Document](web/docs/OpenRouterChatAttachDocument.md)   | Attaches a PDF or text file from ComfyUI's input folder.                   |
-| [Image: Generate](web/docs/OpenRouterImageGenerate.md)              | Generates or edits images.                                                 |
-| [Video: Generate](web/docs/OpenRouterVideoGenerate.md)              | Makes a video from a prompt, frames, or reference media.                   |
-| [Video: Download](web/docs/OpenRouterVideoDownload.md)              | Downloads a video that OpenRouter kept making after a run stopped.         |
-| [Audio: Speak](web/docs/OpenRouterAudioSpeak.md)                    | Turns text into speech, optionally in a cloned voice.                      |
-| [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turns speech into text, with timed segments, words, and subtitles.         |
-| [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turns text and images into embeddings and compares them.                   |
-| [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Ranks text and images by how well they match a query.                      |
-| [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, questions about a situation.           |
-| [Decision: Add Question](web/docs/OpenRouterDecisionAddQuestion.md) | Adds a yes-or-no, one-choice, or score question.                           |
-| [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                         |
-| [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for the paid nodes. |
+![Node map. Chat: Attach Document feeds Chat: Ask. Video: Download collects a job that Video: Generate left running. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Image: Generate, Audio: Transcribe, Audio: Speak, Search: Embed, and Search: Rank work on their own.](docs/images/node-map.svg)
+
+| Group                                           | Node                                                                | What it does                                                           | Paid |
+| ----------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
+| ![Chat](docs/images/tag-chat.svg)               | [Chat: Ask](web/docs/OpenRouterChatAsk.md)                          | Asks a model a question, with images, video, audio, or documents.      | Yes  |
+| ![Chat](docs/images/tag-chat.svg)               | [Chat: Attach Document](web/docs/OpenRouterChatAttachDocument.md)   | Attaches a PDF or text file from ComfyUI's input folder.               | No   |
+| ![Image](docs/images/tag-image.svg)             | [Image: Generate](web/docs/OpenRouterImageGenerate.md)              | Generates or edits images, with masks and SVG files.                   | Yes  |
+| ![Video](docs/images/tag-video.svg)             | [Video: Generate](web/docs/OpenRouterVideoGenerate.md)              | Makes a video from a prompt, frames, or reference media.               | Yes  |
+| ![Video](docs/images/tag-video.svg)             | [Video: Download](web/docs/OpenRouterVideoDownload.md)              | Downloads a video that OpenRouter kept making after a run stopped.     | No   |
+| ![Audio](docs/images/tag-audio.svg)             | [Audio: Speak](web/docs/OpenRouterAudioSpeak.md)                    | Turns text into speech, optionally in a cloned voice.                  | Yes  |
+| ![Audio](docs/images/tag-audio.svg)             | [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turns speech into text, with timed segments, words, and subtitles.     | Yes  |
+| ![Search](docs/images/tag-search.svg)           | [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turns text and images into embeddings and compares them.               | Yes  |
+| ![Search](docs/images/tag-search.svg)           | [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Ranks text and images by how well they match a query.                  | Yes  |
+| ![Decision](docs/images/tag-decision.svg)       | [Decision: Add Question](web/docs/OpenRouterDecisionAddQuestion.md) | Adds a yes-or-no, one-choice, or score question.                       | No   |
+| ![Decision](docs/images/tag-decision.svg)       | [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, the questions about a situation.   | Yes  |
+| ![Decision](docs/images/tag-decision.svg)       | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                     | No   |
+| ![Request Options](docs/images/tag-options.svg) | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for paid nodes. | No   |
 
 The decision nodes use OpenRouter's alpha decisions API
 (`/api/alpha/decisions`), which OpenRouter may still change.
