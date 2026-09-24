@@ -404,8 +404,9 @@ mise run comfy:nodes:schema        # Print the node descriptions the workflow bu
 ```
 
 The workflows are built, not hand-saved. `scripts/workflows/descriptions/`
-says what each one holds, one module per category, and `texts.py` holds the
-**Start Here** and **Using This Workflow** notes and the group names. The build
+says what each one holds, one module per category. `notes.py` holds each
+group's note and the subgraph descriptions, and `texts.py` the titles. Each step
+after the inputs is a subgraph, whose ID comes from its workflow and name. The build
 reads the node schemas through the ComfyUI interpreter, with the bundled model
 list; it needs no running ComfyUI server and sends no request. Node heights
 follow the sum ComfyUI's page computes, so a workflow keeps its layout when it
@@ -547,8 +548,9 @@ src.config
   `src/nodes/`, then its help page in `web/docs/`.
 - To change the dialogs' text, edit `web/scripts/text.ts`, then rebuild the
   browser files.
-- To change a workflow's notes or group names, edit
-  `scripts/workflows/descriptions/texts.py`. To change its nodes, models, or
+- To change a workflow's group notes or subgraph descriptions, edit
+  `scripts/workflows/descriptions/notes.py`; for titles, edit `texts.py` in the
+  same folder. To change its nodes, models, or
   prompts, edit its module in the same folder. Then rebuild the workflows.
 - To change a node's default model, edit `src/config/generation/models.py`.
   The default must be in the bundled model list, which `mise run
