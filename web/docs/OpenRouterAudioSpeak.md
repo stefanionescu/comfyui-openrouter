@@ -1,20 +1,22 @@
 # Audio: Speak
 
-Turn text into speech with any OpenRouter speech model. Connect **audio** to **Save Audio (Advanced)** or **Preview Audio**. Each run sends one paid OpenRouter request with your OpenRouter key.
+Turns text into speech with any speech model on OpenRouter. Some models can
+copy a voice from a sample. Each run is one paid request, priced per character;
+prices are in **OpenRouter models**.
 
 ## Inputs
 
-| Input                | What it takes                                                                                                              |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `text`               | What to say, up to 100,000 characters.                                                                                     |
-| `model`              | Every OpenRouter speech model; by default `google/gemini-3.1-flash-tts-preview`. Choose **other model ID** to type any ID. |
-| `model.voice`        | The voice, from the voices the model lists. A model without a list uses its provider's default voice.                      |
-| `model.audio_format` | The format OpenRouter sends: `pcm` or `mp3`. Most models send both; if the model refuses one, choose the other.            |
-| `speed`              | Speaking speed; some providers ignore it.                                                                                  |
-| `voice_sample`       | A short clip of the voice to copy. Only models that clone voices use it; at most 15 MiB.                                   |
-| `sample_transcript`  | What the sample says.                                                                                                      |
-| `variation`          | The **run number**. Change this number to send the request again with unchanged inputs. Each run is billed.                |
-| `options`            | From **Request Options**, to pass provider options.                                                                        |
+| Input                | What it takes                                                                                                    |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `text`               | What to say, up to 100,000 characters.                                                                           |
+| `model`              | Any speech model; the default is `google/gemini-3.1-flash-tts-preview`. Choose **other model ID** to type an ID. |
+| `model.voice`        | The voice, from the model's voice list; otherwise the model's default voice.                                     |
+| `model.audio_format` | `pcm` or `mp3`. If the model refuses one, choose the other.                                                      |
+| `speed`              | Speaking speed. Some providers ignore it.                                                                        |
+| `voice_sample`       | A short clip of the voice to copy, up to 15 MiB, for models that clone voices.                                   |
+| `sample_transcript`  | The words spoken in the sample.                                                                                  |
+| `variation`          | **run number**: change it to send the same request again.                                                        |
+| `options`            | Settings from **Request Options**.                                                                               |
 
 ## Outputs
 
@@ -22,17 +24,14 @@ Turn text into speech with any OpenRouter speech model. Connect **audio** to **S
 | ------- | --------------- |
 | `audio` | The speech.     |
 
-## Run
+## Use
 
-1. To start from a finished workflow, open **audio-01-triage-a-voicemail** or **audio-02-dub-a-clip** from **Browse Templates → comfyui-openrouter**.
-1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
-1. Write the text and choose the model and voice.
-1. Select **Run**.
+1. Write the text, and choose the model and voice.
+2. Connect **audio** to **Save Audio (Advanced)** or **Preview Audio**.
+3. Select **Run**.
 
-Speech is priced per character. Only some models clone voices; the others ignore **voice sample**. Gemini voices send only PCM, and MiniMax voices only MP3, which is their default here.
-
-Copy only a voice you own or have permission to use.
-
-For current prices, open **Extensions → OpenRouter → OpenRouter models**.
+Examples: **audio-01-triage-a-voicemail** and **audio-02-dub-a-clip**. Gemini
+voices send only PCM, and MiniMax voices only MP3, which is their default here.
+Clone a voice only with the owner's permission.
 
 [OpenRouter text-to-speech documentation](https://openrouter.ai/docs/guides/overview/multimodal/tts)

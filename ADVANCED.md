@@ -1,167 +1,136 @@
 # ComfyUI OpenRouter Advanced Guide
 
-This guide is for people who already run the workflows described in the
-[README](README.md). It defines what each node sends, decides, and returns,
-lists the settings, limits, and defaults, and covers recovery, development,
-and troubleshooting. Each node's native **Info** explains its inputs and
-model-specific limits.
-
-The extension keeps five fixed boundaries:
-
-- Every paid request goes from the ComfyUI server to OpenRouter with your key.
-  OpenRouter passes it to the model's provider, which receives your prompts,
-  media, and documents.
-- Model-list refreshes and automatic checks read OpenRouter's public lists and
-  send no key.
-- The extension saves four things in its private state folder: the key, the
-  settings, the model lists, and the video job records. ComfyUI's save nodes
-  write every output. The extension keeps no logs and no copy of prompts or
-  outputs.
-- A paid request is never retried, because it may have reached OpenRouter
-  before its connection failed.
-- Every message, label, and workflow note is in English.
+This guide builds on the [README](README.md). It covers what each node sends,
+the settings and limits, model updates, caching, video recovery, development,
+and what each message means.
 
 ## Contents
 
-- [Run architecture](#run-architecture)
+- [Data and storage](#data-and-storage)
+- [What each node sends](#what-each-node-sends)
 - [Keys and access](#keys-and-access)
-- [Request limits](#request-limits)
+- [Settings](#settings)
 - [Prices](#prices)
 - [Model updates](#model-updates)
 - [Caching and reruns](#caching-and-reruns)
-- [Recovery](#recovery)
-- [Limits and defaults](#limits-and-defaults)
-- [When a run stops](#when-a-run-stops)
+- [Recover a video](#recover-a-video)
+- [Limits](#limits)
+- [When a node stops](#when-a-node-stops)
 - [Update or remove](#update-or-remove)
-- [Language](#language)
-- [Developer workflow](#developer-workflow)
-- [Official packaging and publishing](#official-packaging-and-publishing)
+- [Development](#development)
+- [Package and publish](#package-and-publish)
 - [Troubleshooting](#troubleshooting)
 
-## Run architecture
+## Data and storage
 
-Each paid node follows the same steps. It reads its inputs and the chosen
-model's entry in the saved model list, and refuses what the model cannot take.
-It waits for one of the **parallel requests** slots, sends one request to
-OpenRouter, and turns the reply into ComfyUI outputs. Media are encoded and
-decoded in a worker thread, so ComfyUI stays responsive. An output the model
-did not make stops the nodes connected to it.
+- Paid requests go from the ComfyUI server to OpenRouter with your key. The
+  model's provider receives the prompts, media, and documents.
+- Model-list refreshes and checks call OpenRouter's public list endpoints,
+  unauthenticated.
+- The private folder holds the key, the settings, the model lists, and the
+  video job records. ComfyUI's save nodes write the outputs.
+- Paid requests are sent exactly once, since a dropped connection may already
+  have reached OpenRouter.
 
-What each node sends and returns:
+## What each node sends
 
-- **Chat: Ask** sends one chat completion. The message holds the prompt, then the media: images as PNG, videos as MP4, and audio clips as WAV, each encoded in the request. A PDF goes as a file for OpenRouter's PDF engine, and a text file as text. Earlier turns come from **conversation**. It returns the
-  text, the reasoning when the model shares it, and any images the model drew.
-  A spoken answer is streamed as 24 kHz mono PCM audio.
+Each paid node checks its inputs against the chosen model, waits for one of the
+**parallel requests** slots, sends one request, and turns the reply into ComfyUI
+outputs. Media are converted in a worker thread, so ComfyUI stays responsive.
+
+- **Chat: Ask** sends the prompt and the media: images as PNG, videos as MP4,
+  and audio as WAV. PDFs go to OpenRouter's PDF engine; text files go as text.
+  Earlier turns come from **conversation**. It returns the text, the reasoning
+  when the model shares it, and any images the model made. Speech comes back
+  as 24 kHz mono PCM.
 - **Chat: Attach Document** reads one file from ComfyUI's input folder and
-  sends nothing itself.
-- **Image: Generate** sends one image request with the prompt, the chosen
-  fields, the count, and each reference as a PNG data URL. It returns raster
-  images with their masks, where white marks the transparent area, and SVG
-  files separately.
-- **Video: Generate** sends one video job with the prompt, the chosen fields,
-  and the frames or references. It records the job as soon as OpenRouter
-  accepts it, checks its status every **video check interval**, and downloads
-  the MP4 from openrouter.ai when it is ready.
-- **Video: Download** checks the status of one recorded job and downloads its
-  video. It sends no paid request.
+  passes it to **Chat: Ask**.
+- **Image: Generate** sends the prompt, the chosen settings, the count, and each
+  reference image as PNG. It returns images, their masks (white is
+  transparent), and SVG files.
+- **Video: Generate** sends the prompt, the chosen settings, and the frames or
+  references. It records the job as soon as OpenRouter accepts it, checks it
+  every **video check interval**, and downloads the MP4 when it is ready.
+- **Video: Download** checks one recorded job and downloads its video. Status
+  checks and downloads are free.
 - **Audio: Speak** sends the text, the voice, the speed, and the voice sample as
-  WAV when it is connected. It returns the audio OpenRouter sends, raw PCM or
-  MP3.
+  WAV when one is connected. It returns the audio as PCM or MP3.
 - **Audio: Transcribe** sends the clip as WAV, with the language and the
-  timestamps asked for. It returns the text, the segments, SRT subtitles, and
+  timestamps you ask for. It returns the text, the segments, SRT subtitles, and
   the timed words.
-- **Search: Embed** sends every text line and image in one request. The
-  similarities are worked out on your computer, by comparing each vector with
-  the first.
-- **Search: Rank** sends the query and every text line and image in one
-  request, and returns them in order of relevance with their scores.
-- **Decision: Ask** sends the situation and the questions from **Decision: Add
-  Question** to OpenRouter's alpha decisions API. **Decision: Read Answer**
-  reads one answer locally and sends nothing.
-- **Request Options** sends nothing itself. A paid node adds its provider
-  choices and extra fields to its own request, and refuses a field its request
-  type does not accept.
+- **Search: Embed** sends every text line and image in one request. It compares
+  each embedding with the first one locally.
+- **Search: Rank** sends the query and every text line and image in one request.
+  It returns them in order, with their scores.
+- **Decision: Ask** sends the situation and the questions to OpenRouter's alpha
+  decisions API. **Decision: Read Answer** reads one answer locally.
+- **Request Options** holds settings that each connected paid node adds to its
+  request. A node stops with an error on a setting its request type rejects.
 
 ## Keys and access
 
-Open **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**. Saving a
-key clears the entry field and stores the value in the private server state
-folder. The saved value is never returned to the window or written into a
-workflow. Saving a key does not check it with OpenRouter; the next request shows
-OpenRouter's answer if the key is wrong.
+Save the key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
+settings**. The key is stored in the private folder and used only by the
+server. The first request that uses it validates it.
 
-`OPENROUTER_API_KEY` in the ComfyUI server environment takes precedence over a
-saved key. **Clear Saved Key** removes only the saved value; it does not revoke
-the key at OpenRouter. Change an environment key where ComfyUI is launched,
-then restart ComfyUI.
+`OPENROUTER_API_KEY`, set where ComfyUI starts, takes precedence over a saved
+key. **Clear Saved Key** deletes the saved copy; revoke keys at openrouter.ai.
 
-Changing settings or the key requires a local, single-user connection. Open the
-ComfyUI window on the computer running its server and connect directly to the
-local address. Remote connections, reverse proxies, and multi-user mode cannot
-change them; set the server environment key for those setups.
+The key and settings can be changed only over a direct local connection to the
+ComfyUI server. For remote access, a reverse proxy, or multi-user mode, set
+`OPENROUTER_API_KEY` instead.
 
-The default state folders are:
+The private folder is:
 
-| Platform | Folder                                               |
-| -------- | ---------------------------------------------------- |
-| macOS    | `~/Library/Application Support/OpenRouterComfyUI`    |
-| Linux    | `${XDG_STATE_HOME:-~/.local/state}/openrouter-comfy` |
-| Windows  | `%LOCALAPPDATA%\OpenRouterComfyUI`                   |
+| System  | Folder                                               |
+| ------- | ---------------------------------------------------- |
+| macOS   | `~/Library/Application Support/OpenRouterComfyUI`    |
+| Linux   | `${XDG_STATE_HOME:-~/.local/state}/openrouter-comfy` |
+| Windows | `%LOCALAPPDATA%\OpenRouterComfyUI`                   |
 
-`OPENROUTER_COMFY_STATE_DIRECTORY` can select another absolute private path. It
-must be outside the extension, ComfyUI's folder, and its input, output,
-temporary, and user folders. The folder holds the saved key, the settings, the
-saved model lists, and the video job records. Files use owner-only permissions
-where supported. They are not encrypted; other code running as the same
-operating-system user can read them.
+To use another folder, set `OPENROUTER_COMFY_STATE_DIRECTORY` to an absolute
+path outside the extension, ComfyUI, and ComfyUI's input, output, temporary,
+and user folders. Files are stored unencrypted, with owner-only permissions
+where the system supports them.
 
-## Request limits
+## Settings
 
-**request timeout (seconds)** limits each request to OpenRouter. **maximum video
-wait (minutes)** limits how long one run waits for a video job. **Advanced
-limits** holds the upload and download sizes, the parallel request count, the
-video check interval, and the resubmit hold. One MiB is 1,048,576 bytes.
+Change these in **OpenRouter settings**. New requests use the saved values; a
+running request keeps its own. One MiB is 1,048,576 bytes.
 
-New requests use saved settings; a running request keeps its own. If another
-window saves settings first, reload before making your changes again. Invalid
-settings leave the previous file intact.
-
-| Setting                        | Default | Range      | Effect                                                       |
+| Setting                        | Default | Range      | What it limits                                               |
 | ------------------------------ | ------- | ---------- | ------------------------------------------------------------ |
-| request timeout (seconds)      | 600     | 10 to 3600 | The total time one paid request may take.                    |
-| maximum upload size (MiB)      | 64      | 1 to 512   | The encoded media and documents in one request.              |
+| request timeout (seconds)      | 600     | 10 to 3600 | How long one paid request may take.                          |
+| maximum upload size (MiB)      | 64      | 1 to 512   | The media and documents in one request.                      |
 | maximum download size (MiB)    | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.          |
-| parallel requests              | 4       | 1 to 16    | Requests in flight at once in one ComfyUI run.               |
+| parallel requests              | 4       | 1 to 16    | Requests running at once in one ComfyUI run.                 |
 | video check interval (seconds) | 15      | 5 to 120   | The time between video status checks.                        |
-| maximum video wait (minutes)   | 30      | 1 to 240   | How long one run waits for a video job.                      |
+| maximum video wait (minutes)   | 30      | 1 to 240   | How long one run waits for a video.                          |
 | resubmit hold (minutes)        | 30      | 0 to 1440  | How long an uncertain video request blocks an identical one. |
 | check interval (hours)         | 24      | 1 to 8760  | The time between automatic model-list checks.                |
 
+If another window saved the settings after you opened them, reload and make
+your change again. Invalid values are refused, and the saved settings are kept.
+
 ## Prices
 
-Open **ComfyUI menu → Extensions → OpenRouter → OpenRouter models** for each
-model's prices. Token and character prices are shown per million; video prices
-per second of video. Expand **Calculate a price** and enter input tokens, output
-tokens, or video seconds to multiply the listed prices. Token prices add up. A
-video model lists one price per choice of sound and resolution, so its estimate
-is a range from the cheapest choice to the dearest. The estimate is not a
-quote; OpenRouter decides each charge. A model without a listed price, or with
-prices the dialog cannot estimate, shows none.
+**OpenRouter models** lists each model's prices: tokens and characters per
+million, video per second. **Calculate a price** multiplies them by the tokens
+or seconds you enter. A video model has one price per resolution and sound
+choice, so its estimate is a range.
 
-Nodes show no usage or cost. Each request's charge is listed at
-openrouter.ai/activity. To cap spending, set a credit limit on the key at
-openrouter.ai. Refresh the model list for current prices.
+Each request's charge is listed at openrouter.ai/activity. To cap spending, set
+a credit limit on the key at openrouter.ai.
 
 ## Model updates
 
-Open **ComfyUI menu → Extensions → OpenRouter → OpenRouter models** to search
-the list that came with this version or your last saved list. Opening the
-dialog reads local information. Each entry shows the nodes that list the model,
-its prices, and a link to its page on OpenRouter.
+**OpenRouter models** shows the list that came with the extension, or your last
+refreshed list. Each entry shows the nodes that can use the model, its prices,
+and a link to its OpenRouter page.
 
-**Refresh Models** reads OpenRouter's three public model lists: every model, the
-image models, and the video models. It saves the result privately and the node
-dropdowns reload to show it. The default models of the nodes are:
+**Refresh Models** reads OpenRouter's three public lists (all models, image
+models, and video models), saves the result, and reloads the node dropdowns.
+The default model of each node is:
 
 | Node              | Default model                         |
 | ----------------- | ------------------------------------- |
@@ -174,209 +143,170 @@ dropdowns reload to show it. The default models of the nodes are:
 | Search: Rank      | `cohere/rerank-v3.5`                  |
 | Decision: Ask     | `typesafe/jev-1.13`                   |
 
-A model OpenRouter no longer lists stays in the saved list, so saved workflows
-that use it still load; its prices show a warning, and running it shows
-OpenRouter's own reason. To use a model the list does not hold, choose **other
-model ID** in the node's dropdown and type its ID. A written ID is sent
-unchanged, with every control the node offers.
+Models that OpenRouter removes stay in your saved list, so workflows that use
+them still load; their prices show a warning, and a run shows OpenRouter's
+error. To use a model outside the list, choose **other model ID** and type its
+ID. It is sent as written, and the node offers every setting.
 
-A failed refresh leaves the current list intact. A refresh that lists far more
-or far fewer models than the saved list is refused, so a broken reply cannot
-replace a good list. **Restore Previous List** restores the list saved before
-the latest refresh. Only the local ComfyUI user can change the list. When the
-saved list cannot be read, the nodes show the list that came with this version
-until a refresh replaces it.
+A failed refresh keeps the current list. A refresh that returns far more or far
+fewer models than the saved list is rejected as a bad reply. **Restore Previous List** brings
+back the list from before the last refresh. If the saved list cannot be read,
+the nodes use the list that came with the extension until the next refresh.
 
 ### Automatic checks
 
-Under **OpenRouter settings → Model updates**, enable checks and choose an
-interval in hours. Checks are on by default and run every 24 hours while
-ComfyUI runs. Changes take effect within one minute.
-
-Checks read the same public lists as a refresh. They report changes without
-replacing the saved list. Expand **Model sources and automatic checks** in the
-models dialog, then select **Refresh Models** to save the checked list. Failed
-checks keep the list and retry at the configured interval. Closing ComfyUI stops
-checking.
+Automatic checks are on by default and run every 24 hours while ComfyUI runs.
+Turn them off or change the interval under **OpenRouter settings → Model
+updates**. A check only reports changes; select **Refresh Models** to apply
+them. A failed check tries again at the next
+interval.
 
 ## Caching and reruns
 
-- ComfyUI reuses a cached result while a node's inputs are unchanged. Change
-  **run number** to send the same request again; each run is billed.
-- The **seed** of a paid node changes after each run unless its control is
-  **fixed**, so queuing again sends a new request. The examples ship with the
-  seed control on **fixed**.
-- Saving a different key starts a new cache, so no result made with another
-  key is reused. Changing settings keeps the cache.
-- By default, ComfyUI keeps only the most recent run's results, so running
-  another workflow in between sends the requests again.
-- Paid requests are never retried. Requests that bill nothing, such as model
-  lists, video status checks, and video downloads, are retried up to three
-  times after a busy reply or a dropped connection.
-- ComfyUI's cancel stops waiting during every request. A chat model bills the
-  tokens it produced before the cancel, and a video job keeps running and
-  billing.
+- ComfyUI reuses a node's result while its inputs are unchanged. Change **run
+  number** to send the same request again. Each request is billed.
+- A paid node's **seed** changes after each run unless its control is **fixed**,
+  so running again sends a new request. The examples use **fixed**.
+- Saving a different key invalidates the cached results. Changing settings
+  keeps them.
+- ComfyUI keeps only the last run's results by default, so running another
+  workflow in between sends the requests again.
+- Free requests, such as model lists, video checks, and video downloads, are
+  retried up to three times after a busy reply or a dropped connection. Paid
+  requests are sent exactly once.
+- ComfyUI's cancel stops the wait. A chat model still bills the tokens it
+  produced, and a video job keeps running and is billed.
 
-## Recovery
+## Recover a video
 
-Read the error and the node's native **Info** before trying again.
+**Video: Generate** records each job as soon as OpenRouter accepts it. A video
+job always runs to completion at OpenRouter and is billed, even when you cancel
+the run, ComfyUI restarts, or **maximum video wait** passes.
 
-| Problem                 | Next step                                                                                            |
-| ----------------------- | ---------------------------------------------------------------------------------------------------- |
-| Missing or rejected key | Check OpenRouter settings and any server environment key, which takes precedence.                    |
-| Refused input           | Read OpenRouter's reason in the message; it names the value to change, such as a supported duration. |
-| Unavailable model       | Choose another model, or refresh the model list.                                                     |
-| Video not ready in time | Collect it with **Video: Download**; OpenRouter keeps making it.                                     |
-| Uncertain request       | Check openrouter.ai/activity before running again; the request may have been billed.                 |
+To get the video, add **Video: Download**, choose the job in **job**, and
+select **Run**. Press R to list jobs started after the page loaded. Running the
+identical request again on **Video: Generate** also picks up the recorded job.
 
-### Recover a video job
-
-**Video: Generate** records each job privately as soon as OpenRouter accepts it,
-before it starts waiting. ComfyUI's cancel stops waiting but not the job, which
-OpenRouter keeps making and billing, because OpenRouter has no way to cancel a
-video job. Add **Video: Download**, choose the job in **job**, and
-select **Run** to collect it; press R to list jobs recorded after the node
-definitions were read. Running the identical request again on **Video:
-Generate** resumes the recorded job instead of paying for a second one.
-
-When the connection closes before OpenRouter confirms a video request, the
-request may be running and billed. The extension records it as uncertain and
-refuses the identical request for the **resubmit hold (minutes)** setting; check
-openrouter.ai/activity in the meantime. A job's record is removed after its
-video downloads, or when OpenRouter reports that it failed, was cancelled, or
+If the connection closes before OpenRouter confirms a video request, the video
+may be running and billed. The extension records the request as uncertain and
+refuses an identical one for **resubmit hold (minutes)**; check
+openrouter.ai/activity meanwhile. A job is removed from the list once its video
+is downloaded, or when OpenRouter reports that it failed, was cancelled, or
 expired.
 
-## Limits and defaults
+## Limits
 
-| Value                          | Limit or default                                       |
-| ------------------------------ | ------------------------------------------------------ |
-| Chat image sockets             | 16; every image of a batch is sent.                    |
-| Chat video and audio sockets   | 4 each.                                                |
-| Documents in one chat request  | 8.                                                     |
-| Chat prompt                    | 1,000,000 characters.                                  |
-| Conversation                   | 200 turns.                                             |
-| Output tokens                  | The model's limit; 0 leaves it to the model.           |
-| Image side                     | 8192 pixels; larger images are refused, never resized. |
-| Images from one image request  | The model's range, up to 10.                           |
-| Image reference sockets        | The model's limit, up to 16.                           |
-| Video reference sockets        | 8 images, 2 videos, 2 audio clips.                     |
-| Written video duration         | 1 to 60 seconds; 0 leaves it to the model.             |
-| Speech text                    | 100,000 characters.                                    |
-| Voice sample                   | 15 MiB.                                                |
-| Search items in one request    | 256; image sockets 16.                                 |
-| Embedding dimensions           | Up to 8192; 0 leaves them to the model.                |
-| Decision questions             | 32; 2 to 32 options; 2 to 11 levels.                   |
-| Decision situation             | 200,000 characters.                                    |
-| Answer threshold               | 0.5.                                                   |
-| Provider slugs in one list     | 32.                                                    |
-| Provider options, extra fields | 64 KB each.                                            |
-| Upload and download size       | 64 MiB and 512 MiB, from OpenRouter settings.          |
+| Item                              | Limit                                                          |
+| --------------------------------- | -------------------------------------------------------------- |
+| Chat image sockets                | 16; every image in a batch is sent.                            |
+| Chat video and audio sockets      | 4 each.                                                        |
+| Documents in one chat request     | 8.                                                             |
+| Chat prompt                       | 1,000,000 characters.                                          |
+| Conversation                      | 200 turns.                                                     |
+| Output tokens                     | The model's limit; 0 leaves it to the model.                   |
+| Image side                        | 8192 pixels; larger images are refused.                        |
+| Images from one request           | The model's range, up to 10.                                   |
+| Image reference sockets           | The model's limit, up to 16.                                   |
+| Video reference sockets           | 8 images, 2 videos, 2 audio clips.                             |
+| Typed video duration              | 1 to 60 seconds; 0 leaves it to the model.                     |
+| Speech text                       | 100,000 characters.                                            |
+| Voice sample                      | 15 MiB.                                                        |
+| Search items in one request       | 256, with up to 16 image sockets.                              |
+| Embedding dimensions              | Up to 8192; 0 leaves it to the model.                          |
+| Decision questions                | 32; 2 to 32 options; 2 to 11 levels.                           |
+| Decision situation                | 200,000 characters.                                            |
+| Answer threshold                  | 0.5 by default.                                                |
+| Providers in one list             | 32.                                                            |
+| Provider options and extra fields | 64 KB each.                                                    |
+| Upload and download size          | 64 MiB and 512 MiB by default, set in **OpenRouter settings**. |
 
-## When a run stops
+## When a node stops
 
-A paid node checks its inputs against the chosen model before it sends
-anything, so a refused input costs nothing.
+Paid nodes check these conditions before sending, so a refused input is free.
 
-**Chat: Ask** stops before sending when:
+**Chat: Ask** stops when:
 
 - The prompt is empty or too long, or the conversation is too long.
-- The media is above the upload limit.
-- A connected image, video, or audio clip is a kind the model does not read.
+- The media are over the upload limit.
+- A connected image, video, or audio clip is a kind the model cannot read.
 - The output token limit is above the model's.
 - The answer schema is not a JSON object.
 
 **Chat: Attach Document** stops when:
 
 - No file is chosen, or the file is outside the input folder.
-- The file is not a PDF or text file, is above the upload limit, or is not
-  UTF-8 text.
+- The file is not a PDF or text file, is over the upload limit, or is not UTF-8
+  text.
 - More than 8 documents are chained.
 
-**Image: Generate** stops before sending when:
+**Image: Generate** stops when:
 
 - The prompt is empty.
 - The image count or the number of references is outside the model's range.
-- A transparent background is asked of a JPEG.
+- A transparent background is asked for with JPEG.
 
-**Video: Generate** stops before sending when:
+**Video: Generate** stops when:
 
-- There is neither a prompt nor a first frame.
+- There is no prompt and no first frame.
 - Frames and references are both connected, or a frame is a batch.
 - The model does not take a last frame or that kind of reference.
 - An identical request is on hold after an uncertain submission.
 
-**Audio: Speak** stops before sending when the text is empty or too long, or
-the voice sample is too large. **Audio: Transcribe** stops when the language is
-not a two-letter code or the clip is a batch.
+**Audio: Speak** stops when the text is empty or too long, or the voice sample
+is too large. **Audio: Transcribe** stops when the language is not a two-letter
+code, or the clip is a batch.
 
-**Search: Embed** and **Search: Rank** stop when:
+**Search: Embed** and **Search: Rank** stop when there are no items or more than
+256, or images go to a model that cannot read them. **Search: Rank** also stops
+when the query is empty.
 
-- There are no items, or more than 256.
-- Images reach a model that does not read them.
-- For **Search: Rank**, the query is empty.
-
-**Decision: Add Question** stops when:
-
-- The name is not valid or is used twice.
-- The question is empty, or the list already holds 32 questions.
-- The answer type's fields are incomplete.
+**Decision: Add Question** stops when the name is invalid or used twice, the
+question is empty, the list already has 32 questions, or the answer type's
+fields are incomplete.
 
 **Decision: Ask** stops when the situation is empty or too long. **Decision:
 Read Answer** stops when no question has the name.
 
 **Request Options** stops when a provider list or a JSON field cannot be read.
-A paid node stops when the options hold a field its request type does not
+A paid node stops when the options include a setting its request does not
 accept.
 
-After sending, OpenRouter's answer decides:
+Once a request is sent, OpenRouter's answer decides:
 
 | Status   | Meaning                                                               |
 | -------- | --------------------------------------------------------------------- |
-| 400      | OpenRouter refused the request; the message gives its reason.         |
+| 400      | OpenRouter refused the request; the message gives the reason.         |
 | 401      | The key is missing or invalid.                                        |
-| 402      | The account or key has no credit left.                                |
-| 403      | The model's provider refused the input; the message gives its reason. |
-| 404      | OpenRouter could not serve the model; the message gives its reason.   |
+| 402      | The account or key is out of credit.                                  |
+| 403      | The model's provider refused the input; the message gives the reason. |
+| 404      | OpenRouter cannot serve the model; the message gives the reason.      |
 | 408, 524 | The provider took too long.                                           |
 | 413      | The request is too large.                                             |
 | 429      | OpenRouter is limiting requests.                                      |
-| 502      | The provider failed. A failed image request is not billed.            |
-| 503, 529 | No provider can serve the model now.                                  |
+| 502      | The provider failed. Failed image requests are free.                  |
+| 503, 529 | No provider can serve the model right now.                            |
 
 ## Update or remove
 
-Finish or cancel active work, then stop ComfyUI before changing the extension.
+Stop ComfyUI before changing the extension.
 
 To update, replace the whole `custom_nodes/comfyui-openrouter` folder with the
-new version, install its runtime requirements using ComfyUI's Python, and
-restart. Refresh the ComfyUI window.
+new version, install its `requirements.txt` with ComfyUI's Python, restart
+ComfyUI, and reload its window. Keep only one copy in `custom_nodes`. Open the
+updated examples in a new tab; saved graphs keep their own notes and layout.
 
-Keep only one installed copy in `custom_nodes` to avoid duplicate nodes and menus.
+To remove the extension, move its folder out of `custom_nodes` and restart.
+Leave shared Python packages, since other extensions may use them. The private
+folder stays after an update or removal. To delete the saved key, settings,
+model lists, and job records, delete the [private folder](#keys-and-access).
 
-Open an updated example in a new workflow tab. Existing tabs and saved graphs
-keep their own notes, prompts, and layout.
-
-To remove the extension, move its folder outside `custom_nodes` and restart.
-Keep shared Python dependencies that other packs may use. Removing or updating
-the extension keeps its private state folder. To remove the saved key, settings,
-model lists, and job records too, delete only its
-[state folder](#keys-and-access). Deleting a saved key does not revoke it at
-OpenRouter.
-
-## Language
-
-The extension's text is English, and ComfyUI's language setting does not change
-it. Dropdowns show the values OpenRouter receives, such as model IDs and `1:1`;
-the node guides explain them. Workflow notes and node titles are saved in the
-graph in English.
-
-## Developer workflow
+## Development
 
 ### Setup
 
-Development needs **Git** and **mise**. If mise is not installed, install it
-first with `curl https://mise.run | sh`. Use a repository checkout, and set the
-ComfyUI installation used for schema and type checks in `.mise.local.toml`:
+Development needs Git and mise. To install mise, run
+`curl https://mise.run | sh`. Tell the checks where ComfyUI is, in
+`.mise.local.toml`:
 
 ```toml
 [env]
@@ -384,13 +314,11 @@ COMFYUI_PATH = "/path/to/ComfyUI"
 COMFYUI_PYTHON = "/path/to/ComfyUI/.venv/bin/python"
 ```
 
-`mise.toml` sets no default. Do not commit machine paths or credentials.
-
-Install the toolchain, the locked dependencies, the Semgrep rule packs, and the
-Git hooks:
+`.mise.local.toml` is ignored by Git. Then install the tools, the locked
+dependencies, the Semgrep rules, and the Git hooks:
 
 ```shell
-mise trust && mise run repo:setup   # Install tools, dependencies, rules, and hooks
+mise trust && mise run repo:setup
 ```
 
 ### Generated files
@@ -398,52 +326,42 @@ mise trust && mise run repo:setup   # Install tools, dependencies, rules, and ho
 ```shell
 mise run repo:deps:export          # Regenerate requirements.txt from pyproject.toml
 mise run comfy:models:build        # Rebuild the bundled model list from OpenRouter's public lists
-mise run comfy:frontend:build      # Compile the browser files
-mise run comfy:workflows:build     # Rebuild the 13 workflows from their descriptions
+mise run comfy:frontend:build      # Build the browser files
+mise run comfy:workflows:build     # Build the 13 example workflows
 mise run comfy:nodes:schema        # Print the node descriptions the workflow build reads
 ```
 
-The workflows are built, not hand-saved. `scripts/workflows/descriptions/`
-says what each one holds, one module per category. `notes.py` holds each
-group's note and the subgraph descriptions, and `texts.py` the titles. Each step
-after the inputs is a subgraph, whose ID comes from its workflow and name. The build
-reads the node schemas through the ComfyUI interpreter, with the bundled model
-list; it needs no running ComfyUI server and sends no request. Node heights
-follow the sum ComfyUI's page computes, so a workflow keeps its layout when it
-loads.
+The example workflows are generated from `scripts/workflows/descriptions/`.
+Each category has a module. `notes.py` holds the group notes and subgraph
+descriptions, and `texts.py` holds the titles. The build reads the node
+descriptions through ComfyUI's Python and the bundled model list, and runs
+offline. Node sizes follow ComfyUI's own layout, so a workflow keeps its layout
+when it loads.
 
-`comfy:models:build` reads the network and is not part of the complete check.
-It fails when OpenRouter lists a kind of model that no node serves, so a new
-kind of model is noticed before a release.
+`comfy:models:build` downloads OpenRouter's lists, so it runs separately from
+the full check. It fails when OpenRouter lists a model type that no node
+serves.
 
-### Complete check
+### Full check
 
 ```shell
 mise run repo:check                # Run every check below
 ```
 
-This runs:
-
-- `repo:deps:verify`
-- `repo:format:check`
-- `repo:lint`
-- `repo:type:python` and `repo:type:frontend`
-- `comfy:frontend:check`, `comfy:nodes:check`, and `comfy:workflows:check`
-- `repo:security`
-- `repo:licenses`
-- `repo:links:external`
-
-Only the complete check proves a change is green.
+This runs `repo:deps:verify`, `repo:format:check`, `repo:lint`, `repo:type`,
+`comfy:frontend:check`, `comfy:nodes:check`, `comfy:workflows:check`,
+`repo:security`, `repo:licenses`, and `repo:links:external`. A change is ready
+when the full check passes.
 
 ### Format
 
 ```shell
-mise run repo:format               # Format Python, pyproject.toml, web, and documentation files
-mise run repo:format:check         # Report files that need formatting
+mise run repo:format               # Format Python, pyproject.toml, web, and Markdown files
+mise run repo:format:check         # List files that need formatting
 ```
 
-Formatters: `ruff format` for Python, `pyproject-fmt` for `pyproject.toml`, and
-Prettier for web and documentation files.
+This uses Ruff for Python, pyproject-fmt for `pyproject.toml`, and Prettier for
+web and Markdown files.
 
 ### Lint
 
@@ -451,11 +369,9 @@ Prettier for web and documentation files.
 mise run repo:lint                 # Run every linter
 ```
 
-This runs one task per concern:
-
 - `repo:lint:policy`: repository structure, naming, and function rules.
-- `repo:lint:python`: Ruff, the custom Python rules, import-linter,
-  pydoclint, interrogate, deptry, and vulture.
+- `repo:lint:python`: Ruff, the custom Python rules, import-linter, pydoclint,
+  interrogate, deptry, and vulture.
 - `repo:lint:frontend`: ESLint, naming, stylelint, knip, madge, and jscpd.
 - `repo:lint:shell`, `repo:lint:hooks`, and `repo:lint:mise`: shell syntax,
   ShellCheck, shfmt, and the shell rules.
@@ -468,18 +384,19 @@ This runs one task per concern:
 mise run repo:type                 # Check Python and TypeScript types
 ```
 
-This runs basedpyright in strict mode against the configured ComfyUI
-installation, and `tsc` for the browser files.
+This runs basedpyright in strict mode against your ComfyUI installation, and
+`tsc` for the browser code.
 
-### Generated-output checks
+### Generated-file checks
 
 ```shell
-mise run comfy:frontend:check      # Browser files match their source
-mise run comfy:nodes:check         # Help pages and menus match the node schemas
-mise run comfy:workflows:check     # Workflows match their descriptions; README links every one
+mise run comfy:frontend:check      # The browser files match their source
+mise run comfy:nodes:check         # The help pages and menus match the nodes
+mise run comfy:workflows:check     # The workflows match their descriptions, and the README links each one
 ```
 
-The workflow check also reports a node that no workflow places.
+The workflow check also requires every node to appear in at least one
+workflow.
 
 ### Security and licenses
 
@@ -489,32 +406,33 @@ mise run repo:licenses             # Check dependency licenses
 ```
 
 `repo:security` runs Gitleaks, Bearer, Bandit, the Python and Bun advisory
-audits, Semgrep with the pinned rule packs, and CodeQL for Python and the
-frontend. `repo:licenses` checks the Python and frontend dependency licenses.
+audits, Semgrep with the pinned rules, and CodeQL for Python and the browser
+code.
 
 ### Git hooks
 
-`mise run repo:setup` installs the hooks. Set `SKIP_HOOKS=1` to skip one run,
-`SKIP_LINT=1` to skip the pre-commit source, formatting, type, and browser-file
-checks, `SKIP_ENV_CHECK=1` to skip only the private-file guard, or
-`SKIP_COMMITLINT=1` to skip only the commit message check.
+`mise run repo:setup` installs the hooks:
 
-- **pre-commit** runs the private-file guard, the staged-secrets scan, source
-  checks, formatting, types, and the browser-file check.
-- **commit-msg** enforces the [conventional
+- **pre-commit** checks for private files and staged secrets, then runs the
+  source, formatting, type, and browser-file checks.
+- **commit-msg** checks the [conventional
   commit](https://www.conventionalcommits.org/) format, `type(scope): subject`.
-- **pre-push** runs the complete `mise run repo:check`.
+- **pre-push** runs the full check.
 
-### Runtime verification
+To skip a run, set `SKIP_HOOKS=1`. To skip only part of it, set `SKIP_LINT=1`
+(the pre-commit checks), `SKIP_ENV_CHECK=1` (the private-file check), or
+`SKIP_COMMITLINT=1` (the commit message check).
 
-Restart ComfyUI after Python changes. Rebuild the browser files and reload the
-browser after frontend changes. The project has no automated test suites:
-verify a change by running the affected workflows in the loaded checkout. Paid
-nodes send billed requests, so choose inexpensive models while testing.
+### Test a change
 
-### Code boundaries
+Testing is manual. Restart ComfyUI after Python changes, or rebuild the
+browser files and reload the window after browser changes, then run the
+workflows your change affects. Paid nodes are billed, so test with inexpensive
+models.
 
-The packages stack in one order, and a package imports only packages below it:
+### Import rules
+
+Each package imports only the packages below it:
 
 ```text
 src.extension
@@ -530,45 +448,41 @@ src.state
 src.config
 ```
 
-- Only `src/nodes/`, `src/comfy/`, and `src/extension.py` import ComfyUI's
-  modules; `src/execution/` never touches ComfyUI, and the nodes never touch
-  HTTP. The import contracts in `pyproject.toml` hold these rules.
-- `src/execution/transport.py` is the only code that sends the key.
-- Node display names, descriptions, and tooltips live in each `io.Schema` call,
-  because that is ComfyUI's contract.
-- Every other message a person reads is a named constant in
-  `src/config/messages/`, and in `web/scripts/text.ts` for the dialogs.
+- ComfyUI is imported only in `src/nodes/`, `src/comfy/`, and
+  `src/extension.py`.
+- All HTTP code is in `src/execution/`, and `src/execution/transport.py` is
+  the one place that sends the key.
+- The import contracts in `pyproject.toml` enforce these rules.
+- Node names, descriptions, and tooltips are in each node's `io.Schema` call.
+- Every other message is a constant in `src/config/messages/`, or in
+  `web/scripts/text.ts` for the dialogs.
 
-### Change messages and workflow notes
+### Change text
 
-- To change a message a node shows, edit its constant in
-  `src/config/messages/`. The [troubleshooting](#troubleshooting) headings
-  quote the messages, so change the matching heading too.
-- To change a node's labels or tooltips, edit its `io.Schema` call in
-  `src/nodes/`, then its help page in `web/docs/`.
-- To change the dialogs' text, edit `web/scripts/text.ts`, then rebuild the
-  browser files.
-- To change a workflow's group notes or subgraph descriptions, edit
-  `scripts/workflows/descriptions/notes.py`; for titles, edit `texts.py` in the
-  same folder. To change its nodes, models, or
-  prompts, edit its module in the same folder. Then rebuild the workflows.
-- To change a node's default model, edit `src/config/generation/models.py`.
-  The default must be in the bundled model list, which `mise run
-comfy:models:build` refreshes.
+- **A message:** edit its constant in `src/config/messages/`, and the matching
+  heading under [troubleshooting](#troubleshooting).
+- **A node's labels or tooltips:** edit its `io.Schema` call in `src/nodes/`,
+  then its help page in `web/docs/`.
+- **The dialogs:** edit `web/scripts/text.ts`, then rebuild the browser files.
+- **A workflow's notes:** edit `scripts/workflows/descriptions/notes.py`; for
+  titles, `texts.py`; for nodes, models, or prompts, the workflow's module. Then
+  rebuild the workflows.
+- **A node's default model:** edit `src/config/generation/models.py`. The model
+  must be in the bundled list, which `mise run comfy:models:build` refreshes.
 
-## Official packaging and publishing
+## Package and publish
 
-Use [Comfy's official CLI](https://github.com/Comfy-Org/comfy-cli) to create and
-publish the Registry package. The commands below use comfy-cli 1.20.0.
+The Comfy Registry package is made with
+[comfy-cli](https://github.com/Comfy-Org/comfy-cli). These steps use version
+1.20.0.
 
-1. Create a publisher and publishing API key in
-   [Comfy Registry](https://docs.comfy.org/registry/publishing). The publishing
-   key is separate from the OpenRouter key.
-2. Set `[tool.comfy].PublisherId` to that publisher's ID in `pyproject.toml`,
-   add `[project.urls]` with `Repository` and `Issues`, and choose an unused
-   semantic version in `[project].version`. Published versions cannot be
-   overwritten.
-3. Build the distribution files:
+1. Create a publisher and a publishing key in the
+   [Comfy Registry](https://docs.comfy.org/registry/publishing). This key is
+   separate from your OpenRouter key.
+2. In `pyproject.toml`, set `[tool.comfy].PublisherId` to your publisher ID, add
+   `Repository` and `Issues` under `[project.urls]`, and set a new version in
+   `[project].version`. Each published version is permanent.
+3. Rebuild the generated files:
 
     ```sh
     mise run comfy:models:build
@@ -577,77 +491,71 @@ publish the Registry package. The commands below use comfy-cli 1.20.0.
     mise run comfy:workflows:build
     ```
 
-4. Commit the reviewed source and built files. The official packer selects
-   Git-tracked paths and reads their current working-tree content. New untracked
-   files are omitted. `.comfyignore` excludes development files.
-5. Run the release task:
+4. Commit everything. The packer takes only files Git tracks, and
+   `.comfyignore` leaves out development files.
+5. Build and check the package:
 
     ```sh
     mise run comfy:release:package
     ```
 
-    This runs the project checks, including network-backed dependency, security,
-    and link checks. It then calls `comfy node pack`, lists the contents of
-    `node.zip`, and scans the archive for secrets.
+    This runs the full check, builds `node.zip` with `comfy node pack`, lists
+    its contents, and scans it for secrets.
 
-6. Publish when ready. This repeats the package checks before publishing:
+6. Publish:
 
     ```sh
     mise run comfy:release:publish
     ```
 
-    Enter the Registry publishing key at the hidden prompt. No `.env` file is
-    required. This CLI does not read `REGISTRY_ACCESS_TOKEN` automatically.
+    This repeats the package checks, then asks for the publishing key. The
+    publisher ID is public and permanent; the key stays private.
 
-    Choose the publisher ID yourself when creating the account. Comfy requires
-    this public ID in the committed `pyproject.toml`; it cannot be renamed after
-    account creation. The API key authorizes publishing and stays private.
+7. Install the published version with ComfyUI Manager, and check that the nodes,
+   menus, help pages, and templates load.
 
-7. Install the published version through ComfyUI Manager and check node loading,
-   menus, help, and templates in that installation.
-
-Publishing creates a new archive from the checkout. Keep the source, built
-files, tracked paths, metadata, `.comfyignore`, and CLI version unchanged after
-inspection. The publish command does not upload the previously inspected ZIP.
+Publishing rebuilds the archive from the checkout, so publish the same commit
+you packaged.
 
 ## Troubleshooting
 
+Each heading below is a message a node or dialog shows.
+
 ### Set your OpenRouter API key in OpenRouter settings
 
-No key is saved and the server has no `OPENROUTER_API_KEY`. Save the key in
-**OpenRouter settings**, or set the variable where ComfyUI starts and restart it.
+No key is saved, and the server has no `OPENROUTER_API_KEY`. Save the key in
+**OpenRouter settings**, or set the variable where ComfyUI starts and restart.
 
 ### OpenRouter did not accept the API key
 
-OpenRouter answered 401. Check the key in **OpenRouter settings** or in the
-server's `OPENROUTER_API_KEY`, which takes precedence, and create a new key at
-openrouter.ai if it was revoked.
+OpenRouter answered 401. Check the key in **OpenRouter settings**, or in
+`OPENROUTER_API_KEY`, which takes precedence. If the key was revoked, create a
+new one at openrouter.ai.
 
 ### Your OpenRouter account or key has no credit left for this request
 
-OpenRouter answered 402. Add credits at openrouter.ai/credits, or raise the
-key's credit limit.
+OpenRouter answered 402. Add credit at openrouter.ai/credits, or raise the key's
+credit limit.
 
 ### OpenRouter refused the request
 
-OpenRouter answered 400, and the message gives its reason, such as a duration
-the video model does not accept or a model ID that does not exist. Change the
-value it names.
+OpenRouter answered 400. The message gives the reason, such as a duration the
+model does not accept or a model ID that does not exist. Change that value.
 
 ### The model's provider refused this input
 
-The provider's content checker refused the prompt or media, and the message
-gives its reason. Change the input, or choose another model.
+The provider's content filter refused the prompt or media; the message gives
+the reason. Change the input, or choose another model.
 
 ### The model refused to answer
 
-The model answered with a refusal instead of an answer. Rephrase the prompt, or
-choose another model.
+The model refused instead of answering. Rephrase the prompt, or choose another
+model.
 
 ### OpenRouter could not serve this model
 
-OpenRouter answered 404. The model or its variant is not available now, or the
-key cannot use it. Choose another model, or refresh the model list.
+OpenRouter answered 404. The model is unavailable now, or the key cannot use
+it. Choose another model, or refresh the model list.
 
 ### No provider can serve this model right now
 
@@ -664,17 +572,16 @@ OpenRouter answered 408 or 524. Try again later, or send a smaller request.
 
 ### OpenRouter is limiting requests
 
-OpenRouter answered 429. Wait a moment before running again, or lower
-**parallel requests** in OpenRouter settings.
+OpenRouter answered 429. Wait a moment, or lower **parallel requests** in
+**OpenRouter settings**.
 
 ### The request is too large for OpenRouter
 
-OpenRouter answered 413. Send fewer or smaller images, videos, audio clips, or
-documents.
+OpenRouter answered 413. Send fewer or smaller files.
 
 ### OpenRouter returned HTTP
 
-OpenRouter answered with a status this extension does not describe. Try again
+OpenRouter answered with a status the extension does not recognize. Try again
 later.
 
 ### ComfyUI could not reach OpenRouter
@@ -689,46 +596,46 @@ billed it; check openrouter.ai/activity before running again.
 
 ### The request took longer than the request timeout
 
-The request did not finish within **request timeout (seconds)** in OpenRouter
-settings. Raise the timeout, or send a smaller request.
+The request did not finish within **request timeout (seconds)**. Raise the
+timeout, or send a smaller request.
 
 ### OpenRouter's reply held no result
 
-The model answered without text, images, or audio. Run again, or choose
-another model.
+The model returned no text, images, or audio. Run again, or choose another
+model.
 
 ### OpenRouter's reply could not be read
 
-OpenRouter's reply had an unexpected form. Run again; if it repeats, choose
+The reply was not in the expected format. Run again; if it happens again, choose
 another model.
 
 ### The OpenRouter nodes are still loading
 
-ComfyUI has not finished loading the extension. Wait for it to finish starting,
-then run again.
+ComfyUI has not finished loading the extension. Wait until it has started, then
+run again.
 
 ### The saved OpenRouter key could not be read
 
-The key file in the state folder is unreadable. Save the key again in
+The key file in the private folder cannot be read. Save the key again in
 **OpenRouter settings**.
 
 ### Enter an OpenRouter API key of 1 to 1024 characters
 
-The key field was empty, too long, or had spaces at either end. Paste the whole
+The key was empty, too long, or started or ended with a space. Paste the whole
 key.
 
 ### Remove spaces and line breaks from the OpenRouter API key
 
-The key had a space or line break inside it. Paste it again as one piece.
+The key has a space or line break in it. Paste it again as one line.
 
 ### The settings changed in another window
 
-Another window saved the settings after this one read them. Select **Reload
-Settings** and make the change again.
+Another window saved the settings after this one loaded them. Select **Reload
+Settings** and make your change again.
 
 ### Choose each OpenRouter setting within its range
 
-A setting is outside the range shown next to it. Choose a value within it.
+A setting is outside the range shown next to it. Choose a value in range.
 
 ### Enter whole numbers for the OpenRouter settings
 
@@ -736,50 +643,50 @@ A setting is not a whole number. Enter one.
 
 ### Choose on or off for automatic model checks
 
-The settings file holds a value that is not on or off. Save the setting again
-in **OpenRouter settings**.
+The settings file holds a value that is not on or off. Save the setting again in
+**OpenRouter settings**.
 
 ### That OpenRouter setting cannot be changed here
 
-The request named a setting the dialog does not edit. Reload the window.
+The dialog sent a setting it does not edit. Reload the window.
 
 ### OpenRouter's settings file has an unknown setting
 
-The settings file in the state folder has a setting this version does not know.
-Remove it, or delete the file to go back to the defaults.
+The settings file has a setting this version does not know. Remove that
+setting, or delete the file to return to the defaults.
 
 ### OpenRouter's private settings could not be read
 
-The settings file or the state folder cannot be read. Check the state folder's
+The settings file or the private folder cannot be read. Check the folder's
 permissions.
 
 ### OpenRouter's private state could not be read or written
 
-The state folder cannot be read or written. Check its permissions.
+The private folder cannot be read or written. Check its permissions.
 
 ### Keep OpenRouter's private state outside ComfyUI
 
 `OPENROUTER_COMFY_STATE_DIRECTORY` points inside ComfyUI, the extension, or a
-media folder. Choose a private folder outside them and restart ComfyUI.
+media folder. Choose a folder outside them and restart ComfyUI.
 
 ### Set OPENROUTER_COMFY_STATE_DIRECTORY to an absolute folder path
 
-The variable holds a relative path. Set it to an absolute folder path.
+The variable holds a relative path. Set it to an absolute path.
 
 ### An OpenRouter state file is larger than expected
 
-A file in the state folder has grown beyond its limit. Delete that file; a
-video job record can be removed after you collect its video.
+A file in the private folder is over its size limit. Delete it. A video job
+record can be deleted once you have its video.
 
 ### Write a prompt or connect a first frame
 
-**Video: Generate** has an empty prompt and no first frame. Write a prompt, or
-connect an image to **first frame**.
+**Video: Generate** has no prompt and no first frame. Write a prompt, or connect
+an image to **first frame**.
 
 ### Connect first or last frames, or references, not both
 
-**Video: Generate** has both frames and references connected. OpenRouter uses
-the frames and ignores the references, so disconnect one kind.
+**Video: Generate** has both frames and references connected. OpenRouter would
+use the frames and ignore the references, so disconnect one kind.
 
 ### Connect one image for each frame, not a batch
 
@@ -787,33 +694,33 @@ A frame of **Video: Generate** received several images. Connect one image.
 
 ### Connect at most this many references
 
-**Video: Generate** has more references of one kind than a request takes:
-8 images, 2 videos, or 2 audio clips.
+**Video: Generate** has too many references of one kind. The limits are 8
+images, 2 videos, and 2 audio clips.
 
 ### This model does not accept these references
 
-The chosen video model does not take this kind of reference. Disconnect it, or
-choose a model that does.
+The video model does not take this kind of reference. Disconnect it, or choose
+a model that does.
 
 ### This model does not accept a last frame
 
-The chosen video model takes only a first frame. Disconnect the last frame, or
-choose a model that takes one.
+The video model takes only a first frame. Disconnect the last frame, or choose
+a model that takes one.
 
 ### The video was not ready within the maximum video wait
 
-The job was still running after **maximum video wait (minutes)**. OpenRouter
-keeps making it; collect it with **Video: Download**, or raise the wait.
+The video was still being made after **maximum video wait (minutes)**.
+OpenRouter keeps making it; get it with **Video: Download**, or raise the wait.
 
 ### OpenRouter could not make the video
 
-The job failed, and the message gives OpenRouter's reason. Change the input it
+The job failed; the message gives OpenRouter's reason. Change the input it
 names, or choose another model.
 
 ### OpenRouter cancelled the video job
 
-OpenRouter cancelled the job, and the message gives its reason. Run the node
-again to start a new job.
+OpenRouter cancelled the job; the message gives the reason. Run the node again
+to start a new job.
 
 ### The video job expired before it finished
 
@@ -821,23 +728,23 @@ The job expired at OpenRouter. Run the node again to start a new job.
 
 ### Choose an unfinished video job from the list
 
-**Video: Download** names no recorded job. Press R to refresh the list, then
-choose a job.
+**Video: Download** has no recorded job chosen. Press R to refresh the list,
+then choose a job.
 
 ### An earlier identical video request may have been accepted
 
 An identical request is on hold after an uncertain submission. Wait the minutes
-the message names, or check openrouter.ai/activity for the job.
+the message gives, or look for the job at openrouter.ai/activity.
 
 ### The connection closed before OpenRouter confirmed the video request
 
-The video request may be running and billed; check openrouter.ai/activity. The
-identical request is held for **resubmit hold (minutes)**.
+The video may be running and billed; check openrouter.ai/activity. An identical
+request is refused for **resubmit hold (minutes)**.
 
 ### OpenRouter's video address was not on openrouter.ai
 
-The finished job named a download address outside openrouter.ai, so the key
-was not sent there. Try **Video: Download** again later.
+The finished job gave a download address outside openrouter.ai, so the key was
+not sent there. Try **Video: Download** again later.
 
 ### OpenRouter's model list could not be read
 
@@ -846,18 +753,18 @@ connection and select **Refresh Models** again.
 
 ### OpenRouter's model list had an unexpected format
 
-OpenRouter's public list could not be read as expected, so the saved list was
+OpenRouter's public list was not in the expected format, so your saved list was
 kept. Try again later.
 
 ### OpenRouter's model list grew more than expected in one refresh
 
-The new list added far more models than the saved one holds, so the saved list
-was kept. Try again later.
+The new list has far more models than your saved list, so your saved list was
+kept. Try again later.
 
 ### OpenRouter's model list was much shorter than the saved one
 
-The new list held fewer than half the saved models, so the saved list was kept.
-Try again later.
+The new list has fewer than half of your saved models, so your saved list was
+kept. Try again later.
 
 ### A model refresh is already running
 
@@ -866,5 +773,5 @@ previous list.
 
 ### Choose a model ID from the list or type one in the form author/model
 
-The **model ID** of **other model ID** is empty or not in the form
+**other model ID** is chosen, but the typed ID is empty or not in the form
 `author/model`. Type the full ID, such as `openai/gpt-audio-mini`.

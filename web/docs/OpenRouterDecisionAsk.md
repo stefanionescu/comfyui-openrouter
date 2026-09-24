@@ -1,16 +1,18 @@
 # Decision: Ask
 
-Answer typed questions about a situation with an OpenRouter decision model, such as Jev. It answers with probabilities instead of text. Connect **answers** to **Decision: Read Answer** and **summary** to **Preview as Text**. Each run sends one paid OpenRouter request with your OpenRouter key.
+Asks a decision model, such as Jev, questions about a situation, and returns
+the answers with their probabilities. Each run is one paid request; Jev bills only
+the input, and prices are in **OpenRouter models**.
 
 ## Inputs
 
-| Input       | What it takes                                                                                               |
-| ----------- | ----------------------------------------------------------------------------------------------------------- |
-| `situation` | What to decide on. A JSON object or array is sent as JSON; anything else as text.                           |
-| `questions` | The questions, from **Decision: Add Question**.                                                             |
-| `model`     | Every OpenRouter decision model; by default `typesafe/jev-1.13`. Choose **other model ID** to type any ID.  |
-| `variation` | The **run number**. Change this number to send the request again with unchanged inputs. Each run is billed. |
-| `options`   | From **Request Options**, to choose providers.                                                              |
+| Input       | What it takes                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| `situation` | What to decide on, up to 200,000 characters. A JSON object or array is sent as JSON.             |
+| `questions` | The questions, from **Decision: Add Question**.                                                  |
+| `model`     | Any decision model; the default is `typesafe/jev-1.13`. Choose **other model ID** to type an ID. |
+| `variation` | **run number**: change it to send the same request again.                                        |
+| `options`   | Settings from **Request Options**.                                                               |
 
 ## Outputs
 
@@ -19,17 +21,18 @@ Answer typed questions about a situation with an OpenRouter decision model, such
 | `answers` | Every answer, for **Decision: Read Answer**.                     |
 | `summary` | One line per answer, such as `team: payments (confidence 0.75)`. |
 
-## Run
+## Use
 
-1. To start from a finished workflow, open **decision-01-verify-then-escalate** or **audio-01-triage-a-voicemail** from **Browse Templates → comfyui-openrouter**.
-1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Write the situation and connect the questions.
-1. Select **Run**.
+2. Connect **answers** to **Decision: Read Answer**, and **summary** to
+   **Preview as Text**.
+3. Select **Run**.
 
-Jev's output tokens are free, so a run costs only its input. The default model is pinned to a version, because OpenRouter recommends pinning one when you tune thresholds. The situation must fit in 200,000 characters.
+Examples: **decision-01-verify-then-escalate** and
+**audio-01-triage-a-voicemail**. The default model is a fixed version, as
+OpenRouter recommends when you tune thresholds.
 
-This node uses OpenRouter's alpha decisions API. OpenRouter can change it without notice, and a change can stop the node until the extension is updated. Jev's answers are probabilities: review the decisions that matter before you act on them.
-
-For current prices, open **Extensions → OpenRouter → OpenRouter models**.
+This node uses OpenRouter's alpha decisions API (`/api/alpha/decisions`),
+which OpenRouter may still change.
 
 [OpenRouter Jev documentation](https://openrouter.ai/docs/guides/community/jev)

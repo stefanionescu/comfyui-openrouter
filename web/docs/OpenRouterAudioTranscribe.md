@@ -1,39 +1,37 @@
 # Audio: Transcribe
 
-Turn speech into text, timed segments and words, and subtitles with any OpenRouter transcription model. Connect **text** to **Save Text** or **Preview as Text**. Each run sends one paid OpenRouter request with your OpenRouter key.
+Turns speech into text with any transcription model on OpenRouter, with timed
+segments, timed words, and subtitles if you ask for them. Each run is one paid
+request, priced per second of audio; prices are in **OpenRouter models**.
 
 ## Inputs
 
-| Input         | What it takes                                                                                                               |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `audio`       | One clip, from **Load Audio** or another node. It is sent as WAV.                                                           |
-| `model`       | Every OpenRouter transcription model; by default `openai/whisper-large-v3-turbo`. Choose **other model ID** to type any ID. |
-| `language`    | The spoken language as two letters, such as `en`; leave empty to let the model detect it.                                   |
-| `timestamps`  | `none`, `segments`, or `words and segments`, which also times each word. Not every model returns timestamps.                |
-| `temperature` | From 0 to 1; 0 leaves it to the model.                                                                                      |
-| `variation`   | The **run number**. Change this number to send the request again with unchanged inputs. Each run is billed.                 |
-| `options`     | From **Request Options**, to pass provider options.                                                                         |
+| Input         | What it takes                                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `audio`       | One clip. It is sent as WAV.                                                                                      |
+| `model`       | Any transcription model; the default is `openai/whisper-large-v3-turbo`. Choose **other model ID** to type an ID. |
+| `language`    | The spoken language as a two-letter code, such as `en`. Leave it empty to detect it.                              |
+| `timestamps`  | `none`, `segments`, or `words and segments`, for models that return timestamps.                                   |
+| `temperature` | 0 to 1; 0 leaves it to the model.                                                                                 |
+| `variation`   | **run number**: change it to send the same request again.                                                         |
+| `options`     | Settings from **Request Options**.                                                                                |
 
 ## Outputs
 
-| Output      | What it carries                                                                                     |
-| ----------- | --------------------------------------------------------------------------------------------------- |
-| `text`      | The whole transcript.                                                                               |
-| `segments`  | A JSON list of `start`, `end`, `text`, and `speaker` per segment; `[]` without timestamps.          |
-| `subtitles` | SRT subtitles built from the segments; empty without timestamps.                                    |
-| `words`     | A JSON list of `start`, `end`, and `text` per word; `[]` unless timestamps is `words and segments`. |
+| Output      | What it carries                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------ |
+| `text`      | The transcript.                                                                            |
+| `segments`  | A JSON list of `start`, `end`, `text`, and `speaker` per segment; `[]` without timestamps. |
+| `subtitles` | SRT subtitles; empty without timestamps.                                                   |
+| `words`     | A JSON list of `start`, `end`, and `text` per word; `[]` unless you ask for words.         |
 
-## Run
+## Use
 
-1. To start from a finished workflow, open **audio-01-triage-a-voicemail** or **audio-02-dub-a-clip** from **Browse Templates → comfyui-openrouter**.
-1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Connect the audio and choose the model.
-1. Select **Run**.
+2. Connect **text** to **Save Text** or **Preview as Text**.
+3. Select **Run**.
 
-Providers stop after about 60 seconds of processing, so split long recordings before sending them. Transcription is billed by the second, rounded up.
-
-Review a transcript before you rely on it; names and numbers are the most common errors.
-
-For current prices, open **Extensions → OpenRouter → OpenRouter models**.
+Examples: **audio-01-triage-a-voicemail** and **audio-02-dub-a-clip**.
+Providers stop after about 60 seconds of processing, so split long recordings.
 
 [OpenRouter speech-to-text documentation](https://openrouter.ai/docs/guides/overview/multimodal/stt)

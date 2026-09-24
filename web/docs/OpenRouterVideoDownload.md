@@ -1,12 +1,13 @@
 # Video: Download
 
-Collect a video job that kept running after a cancel or a restart. Connect **video** to **Save Video**. It only checks the job and downloads the video, which costs nothing more.
+Downloads a video that OpenRouter kept making after a run stopped: you
+cancelled it, ComfyUI restarted, or it waited too long. Downloading is free.
 
 ## Inputs
 
-| Input | What it takes                                                                                      |
-| ----- | -------------------------------------------------------------------------------------------------- |
-| `job` | An unfinished video job recorded on this server, shown as its ID, model, and the time it was sent. |
+| Input | What it takes                                                               |
+| ----- | --------------------------------------------------------------------------- |
+| `job` | A video job started on this server, shown as its ID, model, and start time. |
 
 ## Outputs
 
@@ -14,13 +15,16 @@ Collect a video job that kept running after a cancel or a restart. Connect **vid
 | ------- | --------------- |
 | `video` | The MP4 video.  |
 
-## Run
+## Use
 
-1. To start from a finished workflow, open **video-02-recover-a-cancelled-video** from **Browse Templates → comfyui-openrouter**.
-1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
-1. Choose the job in **job**. Press R to list jobs recorded later.
-1. Select **Run**.
+1. Choose the job in **job**. Press R to list jobs started after the page
+   loaded.
+2. Connect **video** to **Save Video**.
+3. Select **Run**.
 
-The list holds the jobs **Video: Generate** recorded on this server and did not finish collecting. A job's record is removed after its video downloads, or when OpenRouter reports that it failed, was cancelled, or expired.
+The list shows the jobs **Video: Generate** started that are still waiting to
+be downloaded. A job leaves the list once its video is downloaded, or when OpenRouter reports
+that it failed, was cancelled, or expired. Example:
+**video-02-recover-a-cancelled-video**.
 
 [OpenRouter video generation documentation](https://openrouter.ai/docs/guides/overview/multimodal/video-generation)
