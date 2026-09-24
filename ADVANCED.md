@@ -412,30 +412,55 @@ browser files and reload the window after browser changes, then run the
 workflows your change affects. Paid nodes are billed, so test with inexpensive
 models.
 
+### Code layout
+
+`src/` holds only packages. The package's `__init__.py` holds the `Extension`
+class ComfyUI loads, and imports the nodes and routes when ComfyUI calls it.
+
+| Package      | Holds                                                                               |
+| ------------ | ----------------------------------------------------------------------------------- |
+| `nodes`      | The node classes and the inputs they share                                          |
+| `comfy`      | ComfyUI glue: running a request with progress and cancel, media, routes, runtime    |
+| `openrouter` | Every request to OpenRouter, the model check, and the one module that sends the key |
+| `settings`   | The private settings, their local routes, and the checks that keep them local       |
+| `storage`    | The private files: settings, the saved key, and video job records                   |
+| `types`      | Records, type aliases, JSON parsing, and the `OpenRouterError` every message uses   |
+| `config`     | Constants and messages, with no code                                                |
+
+The build scripts keep their paths in `scripts/paths.py`, the ComfyUI nodes the
+workflows use in `scripts/nodes/host.py`, and their type aliases in
+`scripts/types.py`.
+
 ### Import rules
 
 Each package imports only the packages below it:
 
 ```text
-src.extension
 src.nodes
 src.comfy
-src.runtime
 src.openrouter | src.settings
 src.storage
-src.state
-src.errors
+src.types
 src.config
 ```
 
-- ComfyUI is imported only in `src/nodes/`, `src/comfy/`, and
-  `src/extension.py`.
+- ComfyUI is imported only in `src/nodes/`, `src/comfy/`, and the package's
+  `__init__.py`.
 - All OpenRouter code is in `src/openrouter/`, and
   `src/openrouter/transport.py` is the one place that sends the key.
 - The import contracts in `pyproject.toml` enforce these rules.
 - Node names, descriptions, and tooltips are in each node's `io.Schema` call.
 - Every other message is a constant in `src/config/messages/`, or in
-  `web/scripts/text.ts` for the dialogs.
+  `web/scripts/text.ts` for the dialogs. Every other fixed value, such as a
+  limit, a step, a file name, or a route, is a constant in `src/config/`.
+
+### Function names
+
+Every function in `src/`, `scripts/`, and `__init__.py` starts with a verb from
+the table in `rules/NAMING.md`, or is an `is_` or `has_` predicate. In each
+module and class, private functions come first, `__all__` lists no private
+name, and a function only its own module uses is private. `repo:lint:policy`
+checks all four.
 
 ### README images
 
