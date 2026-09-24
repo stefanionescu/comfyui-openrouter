@@ -30,11 +30,14 @@ Generate or edit images with any OpenRouter image model. Connect **images** to *
 
 ## Run
 
+1. To start from a finished workflow, open **image-01-pick-the-best-image-for-an-occasion** or **image-04-design-a-logo** from **Browse Templates → comfyui-openrouter**.
 1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Write the prompt, choose the model, and connect any reference images.
 1. Select **Run**.
 
 Each control under **model** starts at **model default**, which sends nothing and leaves the value to the model. FLUX models return JPEG unless you choose `png`; JPEG has no transparency, so its mask is empty. A failed image request is not billed: OpenRouter bills only completed images.
+
+Review each image for defects, such as warped hands or garbled text, before you use it.
 
 For current prices, open **Extensions → OpenRouter → OpenRouter models**.
 

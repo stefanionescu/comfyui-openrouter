@@ -31,11 +31,14 @@ Make a video with any OpenRouter video model, from a prompt, first and last fram
 
 ## Run
 
+1. To start from a finished workflow, open **video-01-animate-a-product-shot** from **Browse Templates → comfyui-openrouter**.
 1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Write the prompt, choose the model and its duration, and connect any frames.
 1. Select **Run**. Jobs take from half a minute to several minutes.
 
 Video is priced per second. OpenRouter records the job as soon as it accepts it, and this extension keeps a private record of it. ComfyUI's cancel stops waiting but not the job, which OpenRouter keeps making and billing; collect it later with **Video: Download**. Running the identical request again resumes the recorded job instead of paying for a second one. When the connection closes before OpenRouter confirms the request, the identical request is held back for the **resubmit hold (minutes)** setting; check openrouter.ai/activity. Large reference videos count toward the maximum upload size in OpenRouter settings.
+
+Review each video before you use it.
 
 For current prices, open **Extensions → OpenRouter → OpenRouter models**.
 

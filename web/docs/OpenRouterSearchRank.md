@@ -24,6 +24,7 @@ Order lines of text and images by how well they match a query, best first. Conne
 
 ## Run
 
+1. To start from a finished workflow, open **search-01-answer-from-help-articles** or **search-02-choose-a-hero-image** from **Browse Templates → comfyui-openrouter**.
 1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Write the query and the documents, and connect any images.
 1. Select **Run**.

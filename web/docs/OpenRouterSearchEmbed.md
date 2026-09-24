@@ -23,6 +23,7 @@ Turn lines of text and images into embedding vectors, and compare each item with
 
 ## Run
 
+1. To start from a finished workflow, open **image-02-reject-distorted-images** from **Browse Templates → comfyui-openrouter**.
 1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Write one item per line, with the item to compare against first.
 1. Select **Run**.

@@ -25,11 +25,14 @@ Turn speech into text, timed segments and words, and subtitles with any OpenRout
 
 ## Run
 
+1. To start from a finished workflow, open **audio-01-triage-a-voicemail** or **audio-02-dub-a-clip-in-your-voice** from **Browse Templates → comfyui-openrouter**.
 1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Connect the audio and choose the model.
 1. Select **Run**.
 
 Providers stop after about 60 seconds of processing, so split long recordings before sending them. Transcription is billed by the second, rounded up.
+
+Review a transcript before you rely on it; names and numbers are the most common errors.
 
 For current prices, open **Extensions → OpenRouter → OpenRouter models**.
 

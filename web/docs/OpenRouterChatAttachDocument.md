@@ -17,6 +17,7 @@ Attach a PDF or text file from ComfyUI's input folder to **Chat: Ask**. Each nod
 
 ## Run
 
+1. To start from a finished workflow, open **chat-01-write-a-product-listing** from **Browse Templates → comfyui-openrouter**.
 1. Put the file in ComfyUI's input folder and press R so the list shows it.
 1. Choose it in **document** and connect **documents** to **Chat: Ask**.
 

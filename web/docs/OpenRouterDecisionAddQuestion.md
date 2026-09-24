@@ -23,10 +23,11 @@ Add one question for a decision model. Its **answer type** shows only the fields
 
 ## Run
 
+1. To start from a finished workflow, open **audio-01-triage-a-voicemail** or **image-01-pick-the-best-image-for-an-occasion** from **Browse Templates → comfyui-openrouter**.
 1. Name the question and write what it asks.
 1. Choose the answer type and fill in its fields.
 1. Connect **questions** to the next question or to **Decision: Ask**.
 
-Use **yes or no** for checks, such as whether an image matches its brief; **one choice** to route or classify, such as which team handles a ticket; and **score** for a degree, such as urgency. A score answer runs from 0 to the number of levels minus one.
+Use **yes or no** for a check, such as whether an image matches its brief. Use **one choice** to route or classify, such as which team handles a ticket. Use **score** for a degree, such as urgency. A score answer runs from 0 to the number of levels minus one.
 
 [OpenRouter Jev documentation](https://openrouter.ai/docs/guides/community/jev)

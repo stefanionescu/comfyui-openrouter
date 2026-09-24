@@ -26,6 +26,7 @@ Choose providers, price caps, and extra request fields once, for any number of O
 
 ## Run
 
+1. To start from a finished workflow, open **chat-01-write-a-product-listing** from **Browse Templates → comfyui-openrouter**.
 1. Fill in the fields you need and leave the rest at their defaults.
 1. Connect **options** to the **request options** socket of one or more paid nodes.
 

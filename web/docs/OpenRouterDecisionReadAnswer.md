@@ -34,6 +34,7 @@ Every output has a value for every answer type:
 
 ## Run
 
+1. To start from a finished workflow, open **image-03-edit-with-the-best-idea** or **decision-01-verify-then-escalate** from **Browse Templates → comfyui-openrouter**.
 1. Connect **answers** from **Decision: Ask**.
 1. Write the question's name and choose the threshold.
 1. Connect the output you need, such as **is_yes** to **If/Else Switch**.
