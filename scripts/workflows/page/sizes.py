@@ -20,9 +20,12 @@ from scripts.workflows.page.config import (
     WIDGETS_PADDING,
     MULTILINE_HEIGHT,
     NOTE_LINE_HEIGHT,
+    NOTE_LIST_INDENT,
+    NOTE_SIDE_PADDING,
     MULTISELECT_HEIGHT,
     NOTE_PARAGRAPH_GAP,
-    NOTE_CHARS_PER_LINE,
+    NOTE_CHARACTER_WIDTH,
+    NOTE_CODE_CHARACTER_WIDTH,
 )
 
 if TYPE_CHECKING:
@@ -72,13 +75,22 @@ def measure(
     return NODE_WIDTH, height
 
 
-def measure_note(text: str) -> int:
-    """Height of a note that fits its text: each line wraps at the note width, and a blank line is a gap."""
+def measure_note(text: str, width: int) -> int:
+    """Height of a note that fits its text: each line wraps at the note's width, and a blank line is a gap.
+
+    A numbered step wraps sooner, since the list is indented.
+    """
     height = NOTE_PADDING
     for line in text.splitlines():
-        # Bold and code marks take no space once the page renders them.
-        shown = re.sub(r"\*\*|`", "", line)
-        height += NOTE_LINE_HEIGHT * math.ceil(len(shown) / NOTE_CHARS_PER_LINE) if shown else NOTE_PARAGRAPH_GAP
+        if not line:
+            height += NOTE_PARAGRAPH_GAP
+            continue
+        # Bold and code marks take no space once the page renders them, and code is set in a wider font.
+        code = sum(len(span) for span in re.findall(r"`([^`]*)`", line))
+        shown = len(re.sub(r"\*\*|`", "", line))
+        drawn = (shown - code) * NOTE_CHARACTER_WIDTH + code * NOTE_CODE_CHARACTER_WIDTH
+        indent = NOTE_LIST_INDENT if re.match(r"\d+\. ", line) else 0
+        height += NOTE_LINE_HEIGHT * math.ceil(drawn / (width - NOTE_SIDE_PADDING - indent))
     return max(height, NOTE_MIN_HEIGHT)
 
 

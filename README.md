@@ -129,9 +129,9 @@ package changes. Install only runtime requirements into ComfyUI's environment.
    **decision-01-verify-then-escalate**. You can also drag the
    [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json)
    workflow onto the canvas. It needs no uploads.
-3. Read **Start Here** and **Using This Workflow**, then edit **Notes** and **Question**.
+3. Read the note at the top of each group, then edit **Notes** and **Question**.
 4. Select **Run**.
-5. Read the result in **Answer**, and Jev's check in **Check Summary**.
+5. Read the result in **Answer**, and Jev's check in **Summary**.
 
 Use ComfyUI's cancel control to stop a run. Change **run number** to request
 another run with unchanged inputs. OpenRouter lists each request's charge at
@@ -144,10 +144,11 @@ Each one uses the newest models for its job. Jev, OpenRouter's decision model, t
 every node.
 
 Open one from native **Browse Templates → comfyui-openrouter**, or drag its JSON
-file onto ComfyUI. Each workflow has a **Start Here** note with the steps and a
-**Using This Workflow** note that explains how it decides. Examples need only
-native ComfyUI nodes and this extension. Media inputs start empty; select your
-own image, audio, or document.
+file onto ComfyUI. Each group has a note that says what it does, and the first
+note, **Start Here**, lists the steps. Each step after the inputs is a subgraph:
+select the icon at its top-right corner to see and change the nodes inside.
+Examples need only native ComfyUI nodes and this extension. Media inputs start
+empty; select your own image, audio, or document.
 
 Several workflows route their results with ComfyUI's **If/Else Switch**, which
 ComfyUI marks as beta. It runs only the branch it picks, so a paid node on the
@@ -175,17 +176,17 @@ English; changing the interface language does not translate them.
 
 ### Video
 
-| Workflow JSON                                                                           | Input                | Guide                                             |
-| --------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------- |
-| [Video: Animate a Product Shot](example_workflows/video-01-animate-a-product-shot.json) | Product brief        | [Node guide](web/docs/OpenRouterVideoGenerate.md) |
-| [Video: Collect a Video](example_workflows/video-02-collect-a-video.json)               | A recorded video job | [Node guide](web/docs/OpenRouterVideoDownload.md) |
+| Workflow JSON                                                                                 | Input                 | Guide                                             |
+| --------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------- |
+| [Video: Animate a Product Shot](example_workflows/video-01-animate-a-product-shot.json)       | Product brief         | [Node guide](web/docs/OpenRouterVideoGenerate.md) |
+| [Video: Recover a Cancelled Video](example_workflows/video-02-recover-a-cancelled-video.json) | A cancelled video job | [Node guide](web/docs/OpenRouterVideoDownload.md) |
 
 ### Audio
 
-| Workflow JSON                                                                               | Input                   | Guide                                               |
-| ------------------------------------------------------------------------------------------- | ----------------------- | --------------------------------------------------- |
-| [Audio: Triage a Voicemail](example_workflows/audio-01-triage-a-voicemail.json)             | Voicemail recording     | [Node guide](web/docs/OpenRouterAudioTranscribe.md) |
-| [Audio: Dub a Clip in Your Voice](example_workflows/audio-02-dub-a-clip-in-your-voice.json) | A short clip of a voice | [Node guide](web/docs/OpenRouterAudioSpeak.md)      |
+| Workflow JSON                                                                   | Input                       | Guide                                               |
+| ------------------------------------------------------------------------------- | --------------------------- | --------------------------------------------------- |
+| [Audio: Triage a Voicemail](example_workflows/audio-01-triage-a-voicemail.json) | Voicemail recording         | [Node guide](web/docs/OpenRouterAudioTranscribe.md) |
+| [Audio: Dub a Clip](example_workflows/audio-02-dub-a-clip.json)                 | A short clip of one speaker | [Node guide](web/docs/OpenRouterAudioSpeak.md)      |
 
 ### Search
 

@@ -1,19 +1,19 @@
 {
   "id": "ce56ebcb-62f1-5246-86f2-670c8da64c39",
   "revision": 0,
-  "last_node_id": 18,
-  "last_link_id": 17,
+  "last_node_id": 12,
+  "last_link_id": 9,
   "nodes": [
     {
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        0,
-        30
+        30,
+        140
       ],
       "size": [
-        620,
-        88
+        720,
+        108
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload two photos in **Product Photo (Front)** and **Product Photo (Detail)**.\n3. Choose the spec sheet, a PDF or text file in ComfyUI's input folder, in **Spec Sheet**.\n4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a front photo in **Front** and a close-up in **Detail**.\n3. In **Chat: Attach Document**, choose the spec sheet: a PDF or text file in ComfyUI's input folder.\n4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`.\n\n**Request Options** keeps the listing away from providers that store or train on requests. Three paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -41,12 +41,12 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        650,
-        30
+        840,
+        140
       ],
       "size": [
-        620,
-        118
+        340,
+        108
       ],
       "flags": {},
       "order": 1,
@@ -66,23 +66,56 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "**Write the Listing** reads both photos and the spec sheet and answers in a fixed JSON shape: title, bullet points, and price. **Keep Data Private** sends it only to providers that do not store or train on requests.\n\n**List the Spec Facts** turns the spec sheet into plain facts. Jev compares them with the listing: **Supported** asks whether every claim is backed, and **Persuasive** scores the copy. The listing goes to `listings/approved` only when Jev finds every claim supported.\n\nThree paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "GPT-6 Sol reads both photos and the spec sheet, and writes the listing as JSON: a title, five bullet points, and a price. GPT-6 Luna lists the facts in the spec sheet for **Check**.\n\nOpen **Write** to change what each model is asked. Two paid requests."
       ],
-      "title": "Using This Workflow"
+      "title": "Note"
     },
     {
       "id": 3,
+      "type": "MarkdownNote",
+      "pos": [
+        1270,
+        140
+      ],
+      "size": [
+        720,
+        108
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "Jev compares the listing with the spec facts and answers two questions: **supported** asks whether every claim is backed, and **persuasive** scores the copy.\n\nThe listing is saved in the **approved** folder when every claim is supported, and in **review** otherwise. One paid request."
+      ],
+      "title": "Note"
+    },
+    {
+      "id": 4,
       "type": "LoadImage",
       "pos": [
         30,
-        288
+        312
       ],
       "size": [
         340,
         350
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -115,21 +148,21 @@
         "",
         "image"
       ],
-      "title": "Product Photo (Front)"
+      "title": "Front"
     },
     {
-      "id": 4,
+      "id": 5,
       "type": "LoadImage",
       "pos": [
         30,
-        702
+        726
       ],
       "size": [
         340,
         350
       ],
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -162,21 +195,21 @@
         "",
         "image"
       ],
-      "title": "Product Photo (Detail)"
+      "title": "Detail"
     },
     {
-      "id": 5,
+      "id": 6,
       "type": "OpenRouterChatAttachDocument",
       "pos": [
         410,
-        288
+        312
       ],
       "size": [
         340,
         58
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -199,8 +232,7 @@
           "name": "documents",
           "type": "CHAT_DOCUMENTS",
           "links": [
-            3,
-            4
+            3
           ]
         }
       ],
@@ -209,22 +241,21 @@
       },
       "widgets_values": [
         ""
-      ],
-      "title": "Spec Sheet"
+      ]
     },
     {
-      "id": 6,
+      "id": 7,
       "type": "OpenRouterRequestOptions",
       "pos": [
         410,
-        410
+        434
       ],
       "size": [
         340,
         358
       ],
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -321,7 +352,7 @@
           "name": "options",
           "type": "REQUEST_OPTIONS",
           "links": [
-            5
+            4
           ]
         }
       ],
@@ -340,306 +371,70 @@
         0.0,
         "",
         ""
-      ],
-      "title": "Keep Data Private"
-    },
-    {
-      "id": 7,
-      "type": "OpenRouterChatAsk",
-      "pos": [
-        840,
-        288
-      ],
-      "size": [
-        340,
-        464
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "prompt"
-          }
-        },
-        {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "label": "image_1",
-          "name": "model.images.image_1",
-          "type": "IMAGE",
-          "link": 1,
-          "shape": 7
-        },
-        {
-          "label": "image_2",
-          "name": "model.images.image_2",
-          "type": "IMAGE",
-          "link": 2,
-          "shape": 7
-        },
-        {
-          "label": "image_3",
-          "name": "model.images.image_3",
-          "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "system",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "system"
-          }
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "documents",
-          "type": "CHAT_DOCUMENTS",
-          "link": 3,
-          "shape": 7
-        },
-        {
-          "name": "pdf_engine",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "pdf_engine"
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "seed"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": 5,
-          "shape": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": [
-            7,
-            17
-          ]
-        },
-        {
-          "name": "reasoning",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "links": []
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterChatAsk"
-      },
-      "widgets_values": [
-        "Write a marketplace listing for this product from the photos and the spec sheet. Use only facts you can see or read. Keep the title under 80 characters and write five bullet points.",
-        "openai/gpt-6-sol",
-        "medium",
-        0,
-        "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"bullets\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"title\",\n    \"bullets\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
-        "model default",
-        42,
-        "fixed",
-        0,
-        ""
-      ],
-      "title": "Write the Listing",
-      "color": "#432",
-      "bgcolor": "#653"
+      ]
     },
     {
       "id": 8,
-      "type": "OpenRouterChatAsk",
+      "type": "03101bf2-751c-5267-9370-229909312915",
       "pos": [
-        1220,
-        288
+        840,
+        312
       ],
       "size": [
         340,
-        444
+        86
       ],
       "flags": {},
       "order": 7,
       "mode": 0,
       "inputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "prompt"
-          }
-        },
-        {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "label": "image_1",
-          "name": "model.images.image_1",
+          "name": "front",
           "type": "IMAGE",
-          "link": null,
-          "shape": 7
+          "link": 1
         },
         {
-          "name": "system",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "system"
-          }
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "link": null,
-          "shape": 7
+          "name": "detail",
+          "type": "IMAGE",
+          "link": 2
         },
         {
           "name": "documents",
           "type": "CHAT_DOCUMENTS",
-          "link": 4,
-          "shape": 7
-        },
-        {
-          "name": "pdf_engine",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "pdf_engine"
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "seed"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
+          "link": 3
         },
         {
           "name": "options",
           "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
+          "link": 4
         }
       ],
       "outputs": [
         {
-          "name": "text",
+          "name": "listing",
           "type": "STRING",
           "links": [
             6
           ]
         },
         {
-          "name": "reasoning",
+          "name": "facts",
           "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "links": []
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "links": []
+          "links": [
+            5
+          ]
         }
       ],
-      "properties": {
-        "Node name for S&R": "OpenRouterChatAsk"
-      },
-      "widgets_values": [
-        "List every fact in this spec sheet, one short line each. Add nothing else.",
-        "openai/gpt-6-luna",
-        "medium",
-        0,
-        "",
-        "model default",
-        42,
-        "fixed",
-        0,
-        ""
-      ],
-      "title": "List the Spec Facts",
-      "color": "#432",
-      "bgcolor": "#653"
+      "properties": {},
+      "widgets_values": [],
+      "title": "Write"
     },
     {
       "id": 9,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
-        1650,
-        288
+        1270,
+        312
       ],
       "size": [
         340,
@@ -685,7 +480,7 @@
           "name": "questions",
           "type": "DECISION_QUESTIONS",
           "links": [
-            9
+            7
           ]
         }
       ],
@@ -698,15 +493,14 @@
         "yes or no",
         "Every claim is backed.",
         "At least one claim is invented or exaggerated."
-      ],
-      "title": "Supported"
+      ]
     },
     {
       "id": 10,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
-        1650,
-        536
+        1270,
+        560
       ],
       "size": [
         340,
@@ -719,7 +513,7 @@
         {
           "name": "questions",
           "type": "DECISION_QUESTIONS",
-          "link": 9,
+          "link": 7,
           "shape": 7
         },
         {
@@ -752,7 +546,7 @@
           "name": "questions",
           "type": "DECISION_QUESTIONS",
           "links": [
-            10
+            8
           ]
         }
       ],
@@ -764,435 +558,98 @@
         "How persuasive is the listing for a shopper comparing similar products?",
         "score",
         "Flat\nClear\nCompelling"
-      ],
-      "title": "Persuasive"
+      ]
     },
     {
       "id": 11,
-      "type": "StringFormat",
+      "type": "fddc54ac-124b-53dc-a6cc-60482c09f55b",
       "pos": [
-        2030,
-        288
+        1650,
+        312
       ],
       "size": [
         340,
-        148
+        122
       ],
       "flags": {},
       "order": 10,
       "mode": 0,
       "inputs": [
         {
-          "label": "a",
-          "name": "values.a",
+          "name": "facts",
           "type": "*",
-          "link": 6,
-          "shape": 7
+          "link": 5
         },
         {
-          "label": "b",
-          "name": "values.b",
-          "type": "*",
-          "link": 7,
-          "shape": 7
-        },
-        {
-          "label": "c",
-          "name": "values.c",
-          "type": "*",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "f_string",
+          "name": "listing",
           "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "f_string"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            8
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "StringFormat"
-      },
-      "widgets_values": [
-        "Spec facts:\n{a}\n\nListing:\n{b}"
-      ],
-      "title": "Facts and Listing"
-    },
-    {
-      "id": 12,
-      "type": "OpenRouterDecisionAsk",
-      "pos": [
-        2030,
-        500
-      ],
-      "size": [
-        340,
-        156
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "situation",
-          "type": "STRING",
-          "link": 8,
-          "widget": {
-            "name": "situation"
-          }
+          "link": 6
         },
         {
           "name": "questions",
           "type": "DECISION_QUESTIONS",
-          "link": 10
+          "link": 8
         },
         {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
+          "name": "approved",
+          "type": "STRING",
           "link": null,
           "widget": {
-            "name": "model"
+            "name": "approved"
           }
         },
         {
-          "name": "variation",
-          "type": "INT",
+          "name": "review",
+          "type": "STRING",
           "link": null,
           "widget": {
-            "name": "variation"
+            "name": "review"
           }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
         }
       ],
       "outputs": [
-        {
-          "name": "answers",
-          "type": "DECISION_ANSWERS",
-          "links": [
-            11
-          ]
-        },
         {
           "name": "summary",
           "type": "STRING",
           "links": [
-            12
+            9
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "OpenRouterDecisionAsk"
+        "previewExposures": [
+          {
+            "name": "preview_text",
+            "sourceNodeId": "207",
+            "sourcePreviewName": "preview_text"
+          }
+        ]
       },
       "widgets_values": [
-        "",
-        "typesafe/jev-1.13",
-        0
-      ],
-      "title": "Check the Listing",
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 13,
-      "type": "OpenRouterDecisionReadAnswer",
-      "pos": [
-        2030,
-        720
-      ],
-      "size": [
-        340,
-        182
-      ],
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "answers",
-          "type": "DECISION_ANSWERS",
-          "link": 11
-        },
-        {
-          "name": "question",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "question"
-          }
-        },
-        {
-          "name": "threshold",
-          "type": "FLOAT",
-          "link": null,
-          "widget": {
-            "name": "threshold"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "answer",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "is_yes",
-          "type": "BOOLEAN",
-          "links": [
-            13
-          ]
-        },
-        {
-          "name": "probability",
-          "type": "FLOAT",
-          "links": []
-        },
-        {
-          "name": "score",
-          "type": "FLOAT",
-          "links": []
-        },
-        {
-          "name": "level",
-          "type": "INT",
-          "links": []
-        },
-        {
-          "name": "confidence",
-          "type": "FLOAT",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterDecisionReadAnswer"
-      },
-      "widgets_values": [
-        "supported",
-        0.5
-      ],
-      "title": "Read Supported"
-    },
-    {
-      "id": 14,
-      "type": "PrimitiveString",
-      "pos": [
-        2460,
-        288
-      ],
-      "size": [
-        340,
-        58
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "value"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            14
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PrimitiveString"
-      },
-      "widgets_values": [
-        "listings/approved"
-      ],
-      "title": "Approved Folder"
-    },
-    {
-      "id": 15,
-      "type": "PrimitiveString",
-      "pos": [
-        2460,
-        410
-      ],
-      "size": [
-        340,
-        58
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "value"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            15
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PrimitiveString"
-      },
-      "widgets_values": [
+        "listings/approved",
         "listings/review"
       ],
-      "title": "Review Folder"
+      "title": "Check"
     },
     {
-      "id": 16,
-      "type": "ComfySwitchNode",
-      "pos": [
-        2460,
-        532
-      ],
-      "size": [
-        340,
-        78
-      ],
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "switch",
-          "type": "BOOLEAN",
-          "link": 13,
-          "widget": {
-            "name": "switch"
-          }
-        },
-        {
-          "name": "on_false",
-          "type": "STRING",
-          "link": 15
-        },
-        {
-          "name": "on_true",
-          "type": "STRING",
-          "link": 14
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "STRING",
-          "links": [
-            16
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ComfySwitchNode"
-      },
-      "widgets_values": [
-        false
-      ],
-      "title": "Choose the Folder"
-    },
-    {
-      "id": 17,
-      "type": "SaveText",
-      "pos": [
-        2840,
-        288
-      ],
-      "size": [
-        340,
-        170
-      ],
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": 17
-        },
-        {
-          "name": "filename_prefix",
-          "type": "STRING",
-          "link": 16,
-          "widget": {
-            "name": "filename_prefix"
-          }
-        },
-        {
-          "name": "format",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "format"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SaveText"
-      },
-      "widgets_values": [
-        "ComfyUI",
-        "json"
-      ],
-      "title": "Save the Listing"
-    },
-    {
-      "id": 18,
+      "id": 12,
       "type": "PreviewAny",
       "pos": [
-        2840,
-        522
+        1650,
+        498
       ],
       "size": [
         340,
         240
       ],
       "flags": {},
-      "order": 17,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
           "name": "source",
           "type": "*",
-          "link": 12
+          "link": 9
         }
       ],
       "outputs": [
@@ -1206,143 +663,79 @@
         "Node name for S&R": "PreviewAny"
       },
       "widgets_values": [],
-      "title": "Check Summary"
+      "title": "Summary"
     }
   ],
   "links": [
     [
       1,
-      3,
+      4,
       0,
-      7,
-      2,
+      8,
+      0,
       "IMAGE"
     ],
     [
       2,
-      4,
-      0,
-      7,
-      3,
-      "IMAGE"
-    ],
-    [
-      3,
-      5,
-      0,
-      7,
-      7,
-      "CHAT_DOCUMENTS"
-    ],
-    [
-      4,
       5,
       0,
       8,
-      5,
+      1,
+      "IMAGE"
+    ],
+    [
+      3,
+      6,
+      0,
+      8,
+      2,
       "CHAT_DOCUMENTS"
     ],
     [
-      5,
-      6,
-      0,
+      4,
       7,
-      11,
+      0,
+      8,
+      3,
       "REQUEST_OPTIONS"
     ],
     [
+      5,
+      8,
+      1,
+      11,
+      0,
+      "STRING"
+    ],
+    [
       6,
       8,
       0,
       11,
-      0,
+      1,
       "STRING"
     ],
     [
       7,
-      7,
+      9,
       0,
-      11,
-      1,
-      "STRING"
+      10,
+      0,
+      "DECISION_QUESTIONS"
     ],
     [
       8,
+      10,
+      0,
       11,
-      0,
-      12,
-      0,
-      "STRING"
-    ],
-    [
-      9,
-      9,
-      0,
-      10,
-      0,
-      "DECISION_QUESTIONS"
-    ],
-    [
-      10,
-      10,
-      0,
-      12,
-      1,
-      "DECISION_QUESTIONS"
-    ],
-    [
-      11,
-      12,
-      0,
-      13,
-      0,
-      "DECISION_ANSWERS"
-    ],
-    [
-      12,
-      12,
-      1,
-      18,
-      0,
-      "STRING"
-    ],
-    [
-      13,
-      13,
-      1,
-      16,
-      0,
-      "BOOLEAN"
-    ],
-    [
-      14,
-      14,
-      0,
-      16,
       2,
-      "STRING"
+      "DECISION_QUESTIONS"
     ],
     [
-      15,
-      15,
+      9,
+      11,
       0,
-      16,
-      1,
-      "STRING"
-    ],
-    [
-      16,
-      16,
-      0,
-      17,
-      1,
-      "STRING"
-    ],
-    [
-      17,
-      7,
-      0,
-      17,
+      12,
       0,
       "STRING"
     ]
@@ -1353,9 +746,9 @@
       "title": "Input",
       "bounding": [
         0,
-        178,
+        30,
         780,
-        904
+        1076
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -1366,9 +759,9 @@
       "title": "Write",
       "bounding": [
         810,
-        178,
-        780,
-        604
+        30,
+        400,
+        398
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -1378,25 +771,12 @@
       "id": 3,
       "title": "Check",
       "bounding": [
-        1620,
-        178,
+        1240,
+        30,
         780,
-        754
+        750
       ],
       "color": "#68688c",
-      "font_size": 24,
-      "flags": {}
-    },
-    {
-      "id": 4,
-      "title": "Save",
-      "bounding": [
-        2430,
-        178,
-        780,
-        614
-      ],
-      "color": "#55746b",
       "font_size": 24,
       "flags": {}
     }
@@ -1411,5 +791,1095 @@
       ]
     }
   },
-  "version": 0.4
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "03101bf2-751c-5267-9370-229909312915",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 102,
+          "lastLinkId": 7,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Write",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            80
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "2891d7a1-8faa-5b8d-81b8-1558365a3aa6",
+            "name": "front",
+            "type": "IMAGE",
+            "linkIds": [
+              1
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "dd043bfa-d296-557d-b114-3cf88bc65d3a",
+            "name": "detail",
+            "type": "IMAGE",
+            "linkIds": [
+              2
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "46465c68-b0c0-532c-9a1a-dd43b048d13a",
+            "name": "documents",
+            "type": "CHAT_DOCUMENTS",
+            "linkIds": [
+              3,
+              4
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "4c9764ae-2260-5263-b1fc-b14ff127b330",
+            "name": "options",
+            "type": "REQUEST_OPTIONS",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "553429ba-f462-5d26-b0f4-8e5eb5b2bb1c",
+            "name": "listing",
+            "type": "STRING",
+            "linkIds": [
+              6
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          },
+          {
+            "id": "0f8cd424-0690-5c0f-81d1-8c96895416cb",
+            "name": "facts",
+            "type": "STRING",
+            "linkIds": [
+              7
+            ],
+            "pos": [
+              1010,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              464
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "label": "image_1",
+                "name": "model.images.image_1",
+                "type": "IMAGE",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "model.images.image_2",
+                "type": "IMAGE",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "image_3",
+                "name": "model.images.image_3",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "system",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "CHAT_DOCUMENTS",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": 5,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  6
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "Write a marketplace listing for this product from the photos and the spec sheet. Use only facts you can see or read. Keep the title under 80 characters and write five bullet points.",
+              "openai/gpt-6-sol",
+              "medium",
+              0,
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"bullets\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"title\",\n    \"bullets\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
+              "model default",
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "title": "Listing",
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              444
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "label": "image_1",
+                "name": "model.images.image_1",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "system",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "CHAT_DOCUMENTS",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  7
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "List every fact in this spec sheet, one short line each. Add nothing else.",
+              "openai/gpt-6-luna",
+              "medium",
+              0,
+              "",
+              "model default",
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "title": "Facts",
+            "color": "#432",
+            "bgcolor": "#653"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 2,
+            "type": "IMAGE"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 3,
+            "type": "IMAGE"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 101,
+            "target_slot": 7,
+            "type": "CHAT_DOCUMENTS"
+          },
+          {
+            "id": 4,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 102,
+            "target_slot": 5,
+            "type": "CHAT_DOCUMENTS"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 101,
+            "target_slot": 11,
+            "type": "REQUEST_OPTIONS"
+          },
+          {
+            "id": 6,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Writes the listing from the photos and the spec sheet, and lists the spec's facts."
+        }
+      },
+      {
+        "id": "fddc54ac-124b-53dc-a6cc-60482c09f55b",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 207,
+          "lastLinkId": 13,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Check",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            100
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1390,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "fd721cac-3a8b-58b4-94e7-d75a735a72a9",
+            "name": "facts",
+            "type": "*",
+            "linkIds": [
+              7
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "3a2303e9-2be9-5d8c-9405-b9b6923e2086",
+            "name": "listing",
+            "type": "STRING",
+            "linkIds": [
+              8,
+              9
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "1f4d61e2-286e-51d7-badb-dab01a730b13",
+            "name": "questions",
+            "type": "DECISION_QUESTIONS",
+            "linkIds": [
+              10
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "a8d5cecd-ab0c-567e-9a86-201e40671ccd",
+            "name": "approved",
+            "type": "STRING",
+            "linkIds": [
+              11
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          },
+          {
+            "id": "733e1152-ba2a-52cd-819e-71254a32dc8e",
+            "name": "review",
+            "type": "STRING",
+            "linkIds": [
+              12
+            ],
+            "pos": [
+              110,
+              220
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "d198b8c3-9e02-5b62-a1df-ccd512b57adb",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              13
+            ],
+            "pos": [
+              1390,
+              140
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 201,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              148
+            ],
+            "flags": {},
+            "order": 200,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 7,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 9,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Spec facts:\n{a}\n\nListing:\n{b}"
+            ]
+          },
+          {
+            "id": 202,
+            "type": "OpenRouterDecisionAsk",
+            "pos": [
+              200,
+              352
+            ],
+            "size": [
+              340,
+              156
+            ],
+            "flags": {},
+            "order": 201,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "situation"
+                }
+              },
+              {
+                "name": "questions",
+                "type": "DECISION_QUESTIONS",
+                "link": 10
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answers",
+                "type": "DECISION_ANSWERS",
+                "links": [
+                  2
+                ]
+              },
+              {
+                "name": "summary",
+                "type": "STRING",
+                "links": [
+                  13
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionAsk"
+            },
+            "widgets_values": [
+              "",
+              "typesafe/jev-1.13",
+              0
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 203,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 202,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "DECISION_ANSWERS",
+                "link": 2
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": [
+                  3
+                ]
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "supported",
+              0.5
+            ]
+          },
+          {
+            "id": 204,
+            "type": "PrimitiveString",
+            "pos": [
+              580,
+              386
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 203,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 11,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  4
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "listings/approved"
+            ],
+            "title": "Approved"
+          },
+          {
+            "id": 205,
+            "type": "PrimitiveString",
+            "pos": [
+              580,
+              508
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 204,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 12,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  5
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "listings/review"
+            ],
+            "title": "Review"
+          },
+          {
+            "id": 206,
+            "type": "ComfySwitchNode",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              78
+            ],
+            "flags": {},
+            "order": 205,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "switch",
+                "type": "BOOLEAN",
+                "link": 3,
+                "widget": {
+                  "name": "switch"
+                }
+              },
+              {
+                "name": "on_false",
+                "type": "STRING",
+                "link": 5
+              },
+              {
+                "name": "on_true",
+                "type": "STRING",
+                "link": 4
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "STRING",
+                "links": [
+                  6
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 207,
+            "type": "SaveText",
+            "pos": [
+              960,
+              282
+            ],
+            "size": [
+              340,
+              170
+            ],
+            "flags": {},
+            "order": 206,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 8
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": 6,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              },
+              {
+                "name": "format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveText"
+            },
+            "widgets_values": [
+              "ComfyUI",
+              "json"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 201,
+            "origin_slot": 0,
+            "target_id": 202,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": 202,
+            "origin_slot": 0,
+            "target_id": 203,
+            "target_slot": 0,
+            "type": "DECISION_ANSWERS"
+          },
+          {
+            "id": 3,
+            "origin_id": 203,
+            "origin_slot": 1,
+            "target_id": 206,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 4,
+            "origin_id": 204,
+            "origin_slot": 0,
+            "target_id": 206,
+            "target_slot": 2,
+            "type": "STRING"
+          },
+          {
+            "id": 5,
+            "origin_id": 205,
+            "origin_slot": 0,
+            "target_id": 206,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 6,
+            "origin_id": 206,
+            "origin_slot": 0,
+            "target_id": 207,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 201,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 8,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 207,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 9,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 201,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 202,
+            "target_slot": 1,
+            "type": "DECISION_QUESTIONS"
+          },
+          {
+            "id": 11,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 204,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 12,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 205,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 13,
+            "origin_id": 202,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Asks Jev about the listing and saves it in the approved or review folder."
+        }
+      }
+    ]
+  }
 }

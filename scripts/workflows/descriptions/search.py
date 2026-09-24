@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from src.config.namespace import NODE_PREFIX
-from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
-from scripts.workflows.page.graph import Node, Group, Workflow
+from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
+from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
+from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.config import TEXT, FORMAT, SWITCH, PREVIEW, SAVE_IMAGE, TEXT_BLOCK
 
 ASK = f"{NODE_PREFIX}ChatAsk"
@@ -24,39 +25,12 @@ ARTICLES = (
     "Gift wrap: gift wrap costs 4 euros per item and includes a handwritten card.\n"
     "Repairs: send faulty items under warranty to our repair centre; we cover the postage both ways."
 )
+ARTICLE_TEXTS = WORKFLOW_TEXTS["search-01-answer-from-help-articles"]
+HERO_TEXTS = WORKFLOW_TEXTS["search-02-choose-a-hero-image"]
 
-ANSWER_FROM_ARTICLES = Workflow(
-    slug="search-01-answer-from-help-articles",
+ANSWER = Subgraph(
+    name=SHARED_TEXTS["answer"],
     nodes=(
-        Node(
-            "question",
-            TEXT,
-            {"value": "My kettle stopped heating after 18 months. Can I get it fixed for free?"},
-            title="Customer Question",
-        ),
-        Node("articles", TEXT_BLOCK, {"value": ARTICLES}, title="Help Articles"),
-        Node(
-            "supported",
-            QUESTION,
-            {"name": "supported", "instructions": "Does every sentence of the answer come from the articles?"},
-            title="Supported",
-        ),
-        Node(
-            "person",
-            QUESTION,
-            {
-                "name": "needs_person",
-                "instructions": "Should a person handle this customer instead of an automatic reply?",
-            },
-            title="Needs a Person",
-        ),
-        Node(
-            "find",
-            RANK,
-            {"model": "cohere/rerank-4-pro", "top_n": 3},
-            title="Find Relevant Articles",
-            is_paid=True,
-        ),
         Node(
             "request",
             FORMAT,
@@ -66,56 +40,156 @@ ANSWER_FROM_ARTICLES = Workflow(
                     "Articles:\n{a}\n\nCustomer: {b}"
                 )
             },
-            title="Answer Request",
         ),
-        Node("draft", ASK, {"model": READER}, title="Draft the Answer", is_paid=True),
-        Node(
-            "situation",
-            FORMAT,
-            {"f_string": "Articles:\n{a}\n\nCustomer: {b}\n\nDraft answer: {c}"},
-            title="Articles and Draft",
-        ),
-        Node("decide", DECIDE, title="Check the Draft", is_paid=True),
-        Node("read", READ, {"question": "supported"}, title="Read Supported"),
-        Node(
-            "escalation",
-            FORMAT,
-            {"f_string": "Escalate to a person. The customer asked: {a}"},
-            title="Escalation Note",
-        ),
-        Node("pick", SWITCH, title="Answer or Escalate"),
-        Node("reply", PREVIEW, title="Reply"),
-        Node("summary", PREVIEW, title="Check Summary"),
+        Node("answer", ASK, {"model": READER}, is_paid=True),
+    ),
+    links=(("request.STRING", "answer.prompt"),),
+    columns=(("request",), ("answer",)),
+    inputs=(("articles", "request.values.a"), ("question", "request.values.b")),
+    outputs=(("answer", "answer.text"),),
+    description=ARTICLE_TEXTS["answer_description"],
+)
+
+CHECK_ANSWER = Subgraph(
+    name=SHARED_TEXTS["check"],
+    nodes=(
+        Node("situation", FORMAT, {"f_string": "Articles:\n{a}\n\nCustomer: {b}\n\nAnswer: {c}"}),
+        Node("decide", DECIDE, is_paid=True),
+        Node("read", READ, {"question": "supported"}),
+        Node("escalation", FORMAT, {"f_string": "Pass this customer to a person. They asked: {a}"}),
+        Node("pick", SWITCH),
     ),
     links=(
-        ("question.STRING", "find.query"),
-        ("articles.STRING", "find.documents"),
-        ("find.texts", "request.values.a"),
-        ("question.STRING", "request.values.b"),
-        ("request.STRING", "draft.prompt"),
-        ("find.texts", "situation.values.a"),
-        ("question.STRING", "situation.values.b"),
-        ("draft.text", "situation.values.c"),
         ("situation.STRING", "decide.situation"),
-        ("supported.questions", "person.questions"),
-        ("person.questions", "decide.questions"),
         ("decide.answers", "read.answers"),
-        ("decide.summary", "summary.source"),
-        ("question.STRING", "escalation.values.a"),
         ("read.is_yes", "pick.switch"),
-        ("draft.text", "pick.on_true"),
         ("escalation.STRING", "pick.on_false"),
-        ("pick.output", "reply.source"),
+    ),
+    columns=(("situation", "decide"), ("read", "escalation"), ("pick",)),
+    inputs=(
+        ("articles", "situation.values.a"),
+        ("question", "situation.values.b"),
+        ("question", "escalation.values.a"),
+        ("answer", "situation.values.c"),
+        ("answer", "pick.on_true"),
+        ("questions", "decide.questions"),
+    ),
+    outputs=(("reply", "pick.output"), ("summary", "decide.summary")),
+    description=ARTICLE_TEXTS["check_description"],
+)
+
+ANSWER_FROM_ARTICLES = Workflow(
+    slug="search-01-answer-from-help-articles",
+    nodes=(
+        Node(
+            "question",
+            TEXT,
+            {"value": "My kettle stopped heating after 18 months. Can I get it fixed for free?"},
+            title=SHARED_TEXTS["question"],
+        ),
+        Node("articles", TEXT_BLOCK, {"value": ARTICLES}, title=SHARED_TEXTS["articles"]),
+        Node("rank", RANK, {"model": "cohere/rerank-4-pro", "top_n": 3}, is_paid=True),
+        Node("answer", ANSWER.name),
+        Node(
+            "supported",
+            QUESTION,
+            {"name": "supported", "instructions": "Does every sentence of the answer come from the articles?"},
+        ),
+        Node("check", CHECK_ANSWER.name),
+        Node("reply", PREVIEW, title=SHARED_TEXTS["reply"]),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+    ),
+    links=(
+        ("question.STRING", "rank.query"),
+        ("articles.STRING", "rank.documents"),
+        ("rank.texts", "answer.articles"),
+        ("question.STRING", "answer.question"),
+        ("rank.texts", "check.articles"),
+        ("question.STRING", "check.question"),
+        ("answer.answer", "check.answer"),
+        ("supported.questions", "check.questions"),
+        ("check.reply", "reply.source"),
+        ("check.summary", "summary.source"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("question", "articles"), ("supported", "person"))),),
-        (Group(SHARED_TEXTS["search"], (("find", "request"), ("draft", "situation")), STAGE_COLOUR),),
+        (Group(SHARED_TEXTS["input"], (("question", "articles"),), note=ARTICLE_TEXTS["input"]),),
+        (Group(SHARED_TEXTS["search"], (("rank",),), STAGE_COLOUR, ARTICLE_TEXTS["search"]),),
+        (Group(SHARED_TEXTS["answer"], (("answer",),), STAGE_COLOUR, ARTICLE_TEXTS["answer"]),),
         (
             Group(
-                SHARED_TEXTS["answer"], (("decide", "read"), ("escalation", "pick"), ("reply", "summary")), STAGE_COLOUR
+                SHARED_TEXTS["check"],
+                (("supported", "check"), ("reply", "summary")),
+                STAGE_COLOUR,
+                ARTICLE_TEXTS["check"],
             ),
         ),
     ),
+    subgraphs=(ANSWER, CHECK_ANSWER),
+)
+
+RANK_IMAGES = Subgraph(
+    name=SHARED_TEXTS["rank"],
+    nodes=(
+        Node(
+            "candidates",
+            f"{NODE_PREFIX}ImageGenerate",
+            {"model": "recraft/recraft-v4.1-flash", "model.aspect_ratio": "16:9", "model.count": 4},
+            is_paid=True,
+        ),
+        Node("rank", RANK, {"model": "nvidia/llama-nemotron-rerank-vl-1b-v2:free", "top_n": 1}, is_paid=True),
+    ),
+    links=(("candidates.images", "rank.model.images.image_1"),),
+    columns=(("candidates",), ("rank",)),
+    inputs=(("brief", "candidates.prompt"), ("brief", "rank.query")),
+    outputs=(("image", "rank.images"), ("scores", "rank.scores")),
+    description=HERO_TEXTS["rank_description"],
+)
+
+CHECK_HERO = Subgraph(
+    name=SHARED_TEXTS["check"],
+    nodes=(
+        Node(
+            "describe",
+            ASK,
+            {
+                "model": READER,
+                "prompt": (
+                    "Describe this image in three sentences: the subject, where the empty space is, and any visible "
+                    "defect."
+                ),
+            },
+            is_paid=True,
+        ),
+        Node("situation", FORMAT, {"f_string": "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"}),
+        Node("decide", DECIDE, is_paid=True),
+        Node("read", READ, {"question": "ready"}),
+        Node("approved", TEXT, {"value": "hero/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", TEXT, {"value": "hero/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", SWITCH),
+        Node("save", SAVE_IMAGE),
+    ),
+    links=(
+        ("describe.text", "situation.values.b"),
+        ("situation.STRING", "decide.situation"),
+        ("decide.answers", "read.answers"),
+        ("read.is_yes", "folder.switch"),
+        ("approved.STRING", "folder.on_true"),
+        ("review.STRING", "folder.on_false"),
+        ("folder.output", "save.filename_prefix"),
+    ),
+    columns=(("describe",), ("situation", "decide", "read"), ("approved", "review", "folder"), ("save",)),
+    inputs=(
+        ("brief", "situation.values.a"),
+        ("image", "describe.model.images.image_1"),
+        ("image", "save.images"),
+        ("scores", "situation.values.c"),
+        ("questions", "decide.questions"),
+        ("approved", "approved.value"),
+        ("review", "review.value"),
+    ),
+    outputs=(("summary", "decide.summary"),),
+    description=HERO_TEXTS["check_description"],
+    previews=(("save", IMAGE_PREVIEW),),
 )
 
 CHOOSE_HERO_IMAGE = Workflow(
@@ -130,90 +204,37 @@ CHOOSE_HERO_IMAGE = Workflow(
                     "landscape, calm sky on the left for the headline"
                 )
             },
-            title="Hero Brief",
+            title=SHARED_TEXTS["brief"],
         ),
+        Node("rank", RANK_IMAGES.name),
         Node(
             "ready",
             QUESTION,
             {
-                "name": "hero_ready",
+                "name": "ready",
                 "instructions": (
                     "Does the image work as a homepage hero: a clear subject, open space for a headline, and no "
                     "visible defects?"
                 ),
             },
-            title="Hero Ready",
         ),
-        Node(
-            "candidates",
-            f"{NODE_PREFIX}ImageGenerate",
-            {"model": "recraft/recraft-v4.1-flash", "model.aspect_ratio": "16:9", "model.count": 4},
-            title="Four Candidates",
-            is_paid=True,
-        ),
-        Node(
-            "rank",
-            RANK,
-            {"model": "nvidia/llama-nemotron-rerank-vl-1b-v2:free", "top_n": 1},
-            title="Rank the Images",
-            is_paid=True,
-        ),
-        Node(
-            "describe",
-            ASK,
-            {
-                "model": READER,
-                "prompt": (
-                    "Describe this image in three sentences: the subject, where the empty space is, and any visible "
-                    "defect."
-                ),
-            },
-            title="Describe the Winner",
-            is_paid=True,
-        ),
-        Node(
-            "situation",
-            FORMAT,
-            {"f_string": "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"},
-            title="Brief and Winner",
-        ),
-        Node("decide", DECIDE, title="Check the Winner", is_paid=True),
-        Node("read", READ, {"question": "hero_ready"}, title="Read Hero Ready"),
-        Node("approved", TEXT, {"value": "hero/approved"}, title="Approved Folder"),
-        Node("review", TEXT, {"value": "hero/review"}, title="Review Folder"),
-        Node("folder", SWITCH, title="Choose the Folder"),
-        Node("save", SAVE_IMAGE, title="Save the Hero"),
-        Node("summary", PREVIEW, title="Check Summary"),
+        Node("check", CHECK_HERO.name),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
-        ("brief.STRING", "candidates.prompt"),
-        ("brief.STRING", "rank.query"),
-        ("brief.STRING", "situation.values.a"),
-        ("candidates.images", "rank.model.images.image_1"),
-        ("rank.images", "describe.model.images.image_1"),
-        ("describe.text", "situation.values.b"),
-        ("rank.scores", "situation.values.c"),
-        ("situation.STRING", "decide.situation"),
-        ("ready.questions", "decide.questions"),
-        ("decide.answers", "read.answers"),
-        ("decide.summary", "summary.source"),
-        ("read.is_yes", "folder.switch"),
-        ("approved.STRING", "folder.on_true"),
-        ("review.STRING", "folder.on_false"),
-        ("folder.output", "save.filename_prefix"),
-        ("rank.images", "save.images"),
+        ("brief.STRING", "rank.brief"),
+        ("brief.STRING", "check.brief"),
+        ("rank.image", "check.image"),
+        ("rank.scores", "check.scores"),
+        ("ready.questions", "check.questions"),
+        ("check.summary", "summary.source"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("brief", "ready"),)),),
-        (Group(SHARED_TEXTS["search"], (("candidates", "rank"), ("describe", "situation")), STAGE_COLOUR),),
-        (
-            Group(
-                SHARED_TEXTS["check"],
-                (("decide", "read"), ("approved", "review", "folder"), ("save", "summary")),
-                STAGE_COLOUR,
-            ),
-        ),
+        (Group(SHARED_TEXTS["input"], (("brief",),), note=HERO_TEXTS["input"]),),
+        (Group(SHARED_TEXTS["rank"], (("rank",),), STAGE_COLOUR, HERO_TEXTS["rank"]),),
+        (Group(SHARED_TEXTS["check"], (("ready",), ("check", "summary")), STAGE_COLOUR, HERO_TEXTS["check"]),),
     ),
+    subgraphs=(RANK_IMAGES, CHECK_HERO),
 )
 
 SEARCH_WORKFLOWS = (ANSWER_FROM_ARTICLES, CHOOSE_HERO_IMAGE)

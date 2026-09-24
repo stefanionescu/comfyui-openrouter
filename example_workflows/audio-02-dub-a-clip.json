@@ -1,8 +1,8 @@
 {
-  "id": "6c6ba9e8-cf5d-5c82-bdb0-3fa76892661c",
+  "id": "48282f90-86dd-57a5-9420-dc8f70394e31",
   "revision": 0,
-  "last_node_id": 13,
-  "last_link_id": 11,
+  "last_node_id": 10,
+  "last_link_id": 8,
   "nodes": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
       ],
       "size": [
         340,
-        132
+        156
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload the product photo in **Load Image**, and describe the campaign in **Campaign**.\n3. Press **Run**. The edited photo is saved under `campaign/approved` or `campaign/review`.\n\nThree paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a short clip of one speaker in **Load Audio**. The clip is also the voice sample, so use your own voice or one you have permission to copy.\n3. Press **Run**. The dub is saved under `dub/approved` or `dub/review`, and the subtitles under `dub/subtitles`.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -46,7 +46,7 @@
       ],
       "size": [
         340,
-        132
+        156
       ],
       "flags": {},
       "order": 1,
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol looks at the photo and writes three ideas for editing it into a campaign image, as idea_1 to idea_3. Each idea keeps the product exactly as it is. One paid request."
+        "Universal 3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`. One paid request."
       ],
       "title": "Note"
     },
@@ -78,8 +78,8 @@
         140
       ],
       "size": [
-        1100,
-        132
+        720,
+        156
       ],
       "flags": {},
       "order": 2,
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads the campaign and the ideas. **best** picks one, and **on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction. One paid request."
+        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and answers **accurate**: does the translation say the same, with nothing added or left out? Two paid requests."
       ],
       "title": "Note"
     },
@@ -107,12 +107,12 @@
       "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        2080,
+        1700,
         140
       ],
       "size": [
         340,
-        132
+        156
       ],
       "flags": {},
       "order": 3,
@@ -132,128 +132,203 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT Image 2.5 edits the photo with the chosen idea, keeping the photo as its reference. The result is saved in the **approved** folder when the idea is on brief, and in **review** otherwise. One paid request."
+        "Fish Audio S2.1 Pro reads the translation in the voice of the clip, using the transcript as the sample text. The dub is saved in the **approved** folder when the translation is accurate, and in **review** otherwise. One paid request."
       ],
       "title": "Note"
     },
     {
       "id": 5,
-      "type": "LoadImage",
+      "type": "LoadAudio",
       "pos": [
         30,
-        336
+        360
       ],
       "size": [
         340,
-        350
+        136
       ],
       "flags": {},
       "order": 4,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
+          "name": "audio",
           "type": "COMBO",
           "link": null,
           "widget": {
-            "name": "image"
+            "name": "audio"
           }
         }
       ],
       "outputs": [
         {
-          "name": "IMAGE",
-          "type": "IMAGE",
+          "name": "AUDIO",
+          "type": "AUDIO",
           "links": [
             1,
-            9
+            6
           ]
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        "",
-        "image"
+        ""
       ]
     },
     {
       "id": 6,
-      "type": "PrimitiveStringMultiline",
+      "type": "43368639-46a6-549f-882b-b08e16775ed5",
       "pos": [
-        30,
-        750
+        460,
+        360
       ],
       "size": [
         340,
-        88
+        26
       ],
       "flags": {},
       "order": 5,
       "mode": 0,
       "inputs": [
         {
-          "name": "value",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "value"
-          }
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1
         }
       ],
       "outputs": [
         {
-          "name": "STRING",
+          "name": "text",
           "type": "STRING",
           "links": [
             2,
-            3
+            7
           ]
         }
       ],
-      "properties": {
-        "Node name for S&R": "PrimitiveStringMultiline"
-      },
-      "widgets_values": [
-        "Autumn sale for young city commuters. Warm evening light, a sense of movement, premium feel."
-      ],
-      "title": "Campaign"
+      "properties": {},
+      "widgets_values": [],
+      "title": "Transcribe"
     },
     {
       "id": 7,
-      "type": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
+      "type": "OpenRouterDecisionAddQuestion",
       "pos": [
-        460,
-        336
+        890,
+        360
       ],
       "size": [
         340,
-        46
+        184
       ],
       "flags": {},
       "order": 6,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 1
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
         },
         {
-          "name": "campaign",
-          "type": "*",
-          "link": 2
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
         }
       ],
       "outputs": [
         {
-          "name": "ideas",
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "accurate",
+        "Does the translation say the same as the original, with nothing added or left out?",
+        "yes or no",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 8,
+      "type": "9a218e99-af71-58ea-a075-33a94e59fe97",
+      "pos": [
+        1270,
+        360
+      ],
+      "size": [
+        340,
+        98
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "link": 2
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 3
+        },
+        {
+          "name": "language",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "language"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "translation",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "accurate",
+          "type": "BOOLEAN",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "summary",
           "type": "STRING",
           "links": [
             4
@@ -261,257 +336,30 @@
         }
       ],
       "properties": {},
-      "widgets_values": [],
-      "title": "Ideas"
-    },
-    {
-      "id": 8,
-      "type": "OpenRouterDecisionAddQuestion",
-      "pos": [
-        890,
-        336
-      ],
-      "size": [
-        340,
-        190
-      ],
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "questions",
-          "type": "DECISION_QUESTIONS",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "name",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "name"
-          }
-        },
-        {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
-          "name": "answer_type",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "answer_type"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "questions",
-          "type": "DECISION_QUESTIONS",
-          "links": [
-            5
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterDecisionAddQuestion"
-      },
       "widgets_values": [
-        "best",
-        "Which editing idea fits the campaign best while keeping the product unchanged?",
-        "one choice",
-        "idea_1\nidea_2\nidea_3"
-      ]
+        "Spanish"
+      ],
+      "title": "Translate"
     },
     {
       "id": 9,
-      "type": "OpenRouterDecisionAddQuestion",
+      "type": "PreviewAny",
       "pos": [
-        890,
-        590
+        1270,
+        522
       ],
       "size": [
         340,
-        184
+        240
       ],
       "flags": {},
       "order": 8,
       "mode": 0,
       "inputs": [
         {
-          "name": "questions",
-          "type": "DECISION_QUESTIONS",
-          "link": 5,
-          "shape": 7
-        },
-        {
-          "name": "name",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "name"
-          }
-        },
-        {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
-          "name": "answer_type",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "answer_type"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "questions",
-          "type": "DECISION_QUESTIONS",
-          "links": [
-            6
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterDecisionAddQuestion"
-      },
-      "widgets_values": [
-        "on_brief",
-        "Does the chosen idea suit the campaign?",
-        "yes or no",
-        "",
-        ""
-      ]
-    },
-    {
-      "id": 10,
-      "type": "449b7034-0646-5783-aa7f-c91ed162c80a",
-      "pos": [
-        1270,
-        336
-      ],
-      "size": [
-        340,
-        128
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "campaign",
-          "type": "*",
-          "link": 3
-        },
-        {
-          "name": "ideas",
-          "type": "STRING",
-          "link": 4,
-          "widget": {
-            "name": "ideas"
-          }
-        },
-        {
-          "name": "questions",
-          "type": "DECISION_QUESTIONS",
-          "link": 6
-        }
-      ],
-      "outputs": [
-        {
-          "name": "idea",
-          "type": "STRING",
-          "links": [
-            7,
-            10
-          ]
-        },
-        {
-          "name": "on_brief",
-          "type": "BOOLEAN",
-          "links": [
-            11
-          ]
-        },
-        {
-          "name": "summary",
-          "type": "STRING",
-          "links": [
-            8
-          ]
-        }
-      ],
-      "properties": {},
-      "widgets_values": [
-        ""
-      ],
-      "title": "Choose"
-    },
-    {
-      "id": 11,
-      "type": "PreviewAny",
-      "pos": [
-        1270,
-        528
-      ],
-      "size": [
-        340,
-        240
-      ],
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
           "name": "source",
           "type": "*",
-          "link": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewAny"
-      },
-      "widgets_values": [],
-      "title": "Idea"
-    },
-    {
-      "id": 12,
-      "type": "PreviewAny",
-      "pos": [
-        1650,
-        336
-      ],
-      "size": [
-        340,
-        240
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "source",
-          "type": "*",
-          "link": 8
+          "link": 4
         }
       ],
       "outputs": [
@@ -528,39 +376,47 @@
       "title": "Summary"
     },
     {
-      "id": 13,
-      "type": "ff75c7fa-8756-5e1e-8046-b12306b5c003",
+      "id": 10,
+      "type": "e475331b-00e9-5d6e-ae6e-0bd37a7c8d74",
       "pos": [
-        2080,
-        336
+        1700,
+        360
       ],
       "size": [
         340,
-        160
+        184
       ],
       "flags": {},
-      "order": 12,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
-          "type": "IMAGE",
-          "link": 9
-        },
-        {
-          "name": "idea",
+          "name": "translation",
           "type": "STRING",
-          "link": 10,
+          "link": 5,
           "widget": {
-            "name": "idea"
+            "name": "translation"
           }
         },
         {
-          "name": "on_brief",
-          "type": "BOOLEAN",
-          "link": 11,
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 6
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 7,
           "widget": {
-            "name": "on_brief"
+            "name": "text"
+          }
+        },
+        {
+          "name": "accurate",
+          "type": "BOOLEAN",
+          "link": 8,
+          "widget": {
+            "name": "accurate"
           }
         },
         {
@@ -584,19 +440,20 @@
       "properties": {
         "previewExposures": [
           {
-            "name": "$$canvas-image-preview",
+            "name": "audioUI",
             "sourceNodeId": "305",
-            "sourcePreviewName": "$$canvas-image-preview"
+            "sourcePreviewName": "audioUI"
           }
         ]
       },
       "widgets_values": [
         "",
+        "",
         false,
-        "campaign/approved",
-        "campaign/review"
+        "dub/approved",
+        "dub/review"
       ],
-      "title": "Edit"
+      "title": "Speak"
     }
   ],
   "links": [
@@ -604,88 +461,64 @@
       1,
       5,
       0,
-      7,
+      6,
       0,
-      "IMAGE"
+      "AUDIO"
     ],
     [
       2,
       6,
       0,
-      7,
-      1,
+      8,
+      0,
       "STRING"
     ],
     [
       3,
-      6,
+      7,
       0,
-      10,
-      0,
-      "STRING"
+      8,
+      1,
+      "DECISION_QUESTIONS"
     ],
     [
       4,
-      7,
+      8,
+      2,
+      9,
       0,
-      10,
-      1,
       "STRING"
     ],
     [
       5,
       8,
       0,
-      9,
+      10,
       0,
-      "DECISION_QUESTIONS"
+      "STRING"
     ],
     [
       6,
-      9,
+      5,
       0,
       10,
-      2,
-      "DECISION_QUESTIONS"
+      1,
+      "AUDIO"
     ],
     [
       7,
+      6,
+      0,
       10,
-      0,
-      11,
-      0,
+      2,
       "STRING"
     ],
     [
       8,
-      10,
-      2,
-      12,
-      0,
-      "STRING"
-    ],
-    [
-      9,
-      5,
-      0,
-      13,
-      0,
-      "IMAGE"
-    ],
-    [
-      10,
-      10,
-      0,
-      13,
+      8,
       1,
-      "STRING"
-    ],
-    [
-      11,
       10,
-      1,
-      13,
-      2,
+      3,
       "BOOLEAN"
     ]
   ],
@@ -697,7 +530,7 @@
         0,
         30,
         400,
-        838
+        496
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -705,12 +538,12 @@
     },
     {
       "id": 2,
-      "title": "Ideas",
+      "title": "Transcribe",
       "bounding": [
         430,
         30,
         400,
-        382
+        386
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -718,12 +551,12 @@
     },
     {
       "id": 3,
-      "title": "Choose",
+      "title": "Translate",
       "bounding": [
         860,
         30,
-        1160,
-        774
+        780,
+        762
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -731,12 +564,12 @@
     },
     {
       "id": 4,
-      "title": "Edit",
+      "title": "Speak",
       "bounding": [
-        2050,
+        1670,
         30,
         400,
-        496
+        544
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -757,24 +590,24 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
+        "id": "43368639-46a6-549f-882b-b08e16775ed5",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 4,
+          "lastLinkId": 3,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Ideas",
+        "name": "Transcribe",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            40
+            20
           ]
         },
         "outputNode": {
@@ -788,9 +621,9 @@
         },
         "inputs": [
           {
-            "id": "46444815-b388-513d-ae54-a6815b5ce1aa",
-            "name": "image",
-            "type": "IMAGE",
+            "id": "3c945932-7a92-5f2e-b0d6-6839316076f8",
+            "name": "audio",
+            "type": "AUDIO",
             "linkIds": [
               2
             ],
@@ -798,27 +631,15 @@
               110,
               140
             ]
-          },
-          {
-            "id": "5eb1dc6e-b1e0-5c78-a8ca-84ff1a9d7263",
-            "name": "campaign",
-            "type": "*",
-            "linkIds": [
-              3
-            ],
-            "pos": [
-              110,
-              160
-            ]
           }
         ],
         "outputs": [
           {
-            "id": "def32d58-99aa-5d45-8f74-583c6152316e",
-            "name": "ideas",
+            "id": "0e95f68e-a1e5-55cd-b512-4b044b5f1ce3",
+            "name": "text",
             "type": "STRING",
             "linkIds": [
-              4
+              3
             ],
             "pos": [
               1010,
@@ -830,29 +651,377 @@
         "nodes": [
           {
             "id": 101,
-            "type": "StringFormat",
+            "type": "OpenRouterAudioTranscribe",
             "pos": [
               200,
               140
             ],
             "size": [
               340,
-              128
+              214
             ],
             "flags": {},
             "order": 100,
             "mode": 0,
             "inputs": [
               {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 2
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "language",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "language"
+                }
+              },
+              {
+                "name": "timestamps",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "timestamps"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  3
+                ]
+              },
+              {
+                "name": "segments",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "subtitles",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "words",
+                "type": "STRING",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterAudioTranscribe"
+            },
+            "widgets_values": [
+              "assemblyai/universal-3-5-pro",
+              "",
+              "segments",
+              0.0,
+              0
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "SaveText",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              170
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 1
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              },
+              {
+                "name": "format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveText"
+            },
+            "widgets_values": [
+              "dub/subtitles",
+              "txt"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 2,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 3,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Transcribes the clip and saves its subtitles."
+        }
+      },
+      {
+        "id": "9a218e99-af71-58ea-a075-33a94e59fe97",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 206,
+          "lastLinkId": 13,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Translate",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            60
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1390,
+            140,
+            120,
+            60
+          ]
+        },
+        "inputs": [
+          {
+            "id": "5bc7019c-38c2-585e-b287-5db2ab28cbd7",
+            "name": "text",
+            "type": "*",
+            "linkIds": [
+              7,
+              8
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "42ef6a24-5dd5-56a4-bb38-5abb555e8a6d",
+            "name": "questions",
+            "type": "DECISION_QUESTIONS",
+            "linkIds": [
+              9
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "30d223b2-18a9-54a1-a500-0eb085ca273f",
+            "name": "language",
+            "type": "STRING",
+            "linkIds": [
+              10
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "2f25a796-4d0e-57eb-a4ac-981f764b807d",
+            "name": "translation",
+            "type": "STRING",
+            "linkIds": [
+              11
+            ],
+            "pos": [
+              1390,
+              140
+            ]
+          },
+          {
+            "id": "92c284c2-ca73-550b-ae27-44d9dda50c78",
+            "name": "accurate",
+            "type": "BOOLEAN",
+            "linkIds": [
+              12
+            ],
+            "pos": [
+              1390,
+              160
+            ]
+          },
+          {
+            "id": "184fa7f0-85a6-5da7-ac3f-09b829fe9384",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              13
+            ],
+            "pos": [
+              1390,
+              180
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 201,
+            "type": "PrimitiveString",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 200,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 10,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1,
+                  3
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "Spanish"
+            ],
+            "title": "Language"
+          },
+          {
+            "id": 202,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              262
+            ],
+            "size": [
+              340,
+              148
+            ],
+            "flags": {},
+            "order": 201,
+            "mode": 0,
+            "inputs": [
+              {
                 "label": "a",
                 "name": "values.a",
                 "type": "*",
-                "link": 3,
+                "link": 1,
                 "shape": 7
               },
               {
                 "label": "b",
                 "name": "values.b",
+                "type": "*",
+                "link": 7,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
                 "type": "*",
                 "link": null,
                 "shape": 7
@@ -871,7 +1040,7 @@
                 "name": "STRING",
                 "type": "STRING",
                 "links": [
-                  1
+                  2
                 ]
               }
             ],
@@ -879,11 +1048,11 @@
               "Node name for S&R": "StringFormat"
             },
             "widgets_values": [
-              "Campaign: {a}\n\nWrite three different ideas for editing this product photo into a campaign image. Each idea is one detailed editing instruction that keeps the product exactly as it is."
+              "Translate this text into natural {a}. Keep the meaning and the tone, and answer with the translation only.\n\n{b}"
             ]
           },
           {
-            "id": 102,
+            "id": 203,
             "type": "OpenRouterChatAsk",
             "pos": [
               580,
@@ -894,13 +1063,13 @@
               444
             ],
             "flags": {},
-            "order": 101,
+            "order": 202,
             "mode": 0,
             "inputs": [
               {
                 "name": "prompt",
                 "type": "STRING",
-                "link": 1,
+                "link": 2,
                 "widget": {
                   "name": "prompt"
                 }
@@ -916,13 +1085,6 @@
               {
                 "label": "image_1",
                 "name": "model.images.image_1",
-                "type": "IMAGE",
-                "link": 2,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "model.images.image_2",
                 "type": "IMAGE",
                 "link": null,
                 "shape": 7
@@ -983,7 +1145,8 @@
                 "name": "text",
                 "type": "STRING",
                 "links": [
-                  4
+                  4,
+                  11
                 ]
               },
               {
@@ -1016,7 +1179,7 @@
               "openai/gpt-6-sol",
               "medium",
               0,
-              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"idea_1\": {\n      \"type\": \"string\"\n    },\n    \"idea_2\": {\n      \"type\": \"string\"\n    },\n    \"idea_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"idea_1\",\n    \"idea_2\",\n    \"idea_3\"\n  ],\n  \"additionalProperties\": false\n}",
+              "",
               "model default",
               42,
               "fixed",
@@ -1025,188 +1188,46 @@
             ],
             "color": "#432",
             "bgcolor": "#653"
-          }
-        ],
-        "groups": [],
-        "links": [
-          {
-            "id": 1,
-            "origin_id": 101,
-            "origin_slot": 0,
-            "target_id": 102,
-            "target_slot": 0,
-            "type": "STRING"
           },
           {
-            "id": 2,
-            "origin_id": -10,
-            "origin_slot": 0,
-            "target_id": 102,
-            "target_slot": 2,
-            "type": "IMAGE"
-          },
-          {
-            "id": 3,
-            "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 101,
-            "target_slot": 0,
-            "type": "*"
-          },
-          {
-            "id": 4,
-            "origin_id": 102,
-            "origin_slot": 0,
-            "target_id": -20,
-            "target_slot": 0,
-            "type": "STRING"
-          }
-        ],
-        "extra": {
-          "description": "Writes three editing ideas for the photo."
-        }
-      },
-      {
-        "id": "449b7034-0646-5783-aa7f-c91ed162c80a",
-        "version": 1,
-        "state": {
-          "lastGroupId": 0,
-          "lastNodeId": 205,
-          "lastLinkId": 11,
-          "lastRerouteId": 0
-        },
-        "revision": 0,
-        "config": {},
-        "name": "Choose",
-        "inputNode": {
-          "id": -10,
-          "bounding": [
-            -10,
-            140,
-            120,
-            60
-          ]
-        },
-        "outputNode": {
-          "id": -20,
-          "bounding": [
-            1390,
-            140,
-            120,
-            60
-          ]
-        },
-        "inputs": [
-          {
-            "id": "e7e2a251-0ab0-5961-a6a0-679080dc18bf",
-            "name": "campaign",
-            "type": "*",
-            "linkIds": [
-              5
-            ],
-            "pos": [
-              110,
-              140
-            ]
-          },
-          {
-            "id": "b2da0d0d-3fb4-530d-8d81-9b21ee63bcfe",
-            "name": "ideas",
-            "type": "STRING",
-            "linkIds": [
-              6,
-              7
-            ],
-            "pos": [
-              110,
-              160
-            ]
-          },
-          {
-            "id": "6fb2a749-38fd-5ac2-820e-4029dd4ac7b8",
-            "name": "questions",
-            "type": "DECISION_QUESTIONS",
-            "linkIds": [
-              8
-            ],
-            "pos": [
-              110,
-              180
-            ]
-          }
-        ],
-        "outputs": [
-          {
-            "id": "799d33f8-b96a-5340-847f-4c88ffa5da8f",
-            "name": "idea",
-            "type": "STRING",
-            "linkIds": [
-              9
-            ],
-            "pos": [
-              1390,
-              140
-            ]
-          },
-          {
-            "id": "ade5c675-0213-5da4-a683-cfd4cf0b4e8f",
-            "name": "on_brief",
-            "type": "BOOLEAN",
-            "linkIds": [
-              10
-            ],
-            "pos": [
-              1390,
-              160
-            ]
-          },
-          {
-            "id": "46f0de65-c01c-5cee-8edb-2b51a24da38f",
-            "name": "summary",
-            "type": "STRING",
-            "linkIds": [
-              11
-            ],
-            "pos": [
-              1390,
-              180
-            ]
-          }
-        ],
-        "widgets": [],
-        "nodes": [
-          {
-            "id": 201,
+            "id": 204,
             "type": "StringFormat",
             "pos": [
-              200,
+              960,
               140
             ],
             "size": [
               340,
-              148
+              168
             ],
             "flags": {},
-            "order": 200,
+            "order": 203,
             "mode": 0,
             "inputs": [
               {
                 "label": "a",
                 "name": "values.a",
                 "type": "*",
-                "link": 5,
+                "link": 8,
                 "shape": 7
               },
               {
                 "label": "b",
                 "name": "values.b",
                 "type": "*",
-                "link": 7,
+                "link": 3,
                 "shape": 7
               },
               {
                 "label": "c",
                 "name": "values.c",
+                "type": "*",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "label": "d",
+                "name": "values.d",
                 "type": "*",
                 "link": null,
                 "shape": 7
@@ -1225,7 +1246,7 @@
                 "name": "STRING",
                 "type": "STRING",
                 "links": [
-                  1
+                  5
                 ]
               }
             ],
@@ -1233,28 +1254,28 @@
               "Node name for S&R": "StringFormat"
             },
             "widgets_values": [
-              "Campaign:\n{a}\n\nIdeas:\n{b}"
+              "Original:\n{a}\n\n{b} translation:\n{c}"
             ]
           },
           {
-            "id": 202,
+            "id": 205,
             "type": "OpenRouterDecisionAsk",
             "pos": [
-              200,
-              352
+              960,
+              372
             ],
             "size": [
               340,
               156
             ],
             "flags": {},
-            "order": 201,
+            "order": 204,
             "mode": 0,
             "inputs": [
               {
                 "name": "situation",
                 "type": "STRING",
-                "link": 1,
+                "link": 5,
                 "widget": {
                   "name": "situation"
                 }
@@ -1262,7 +1283,7 @@
               {
                 "name": "questions",
                 "type": "DECISION_QUESTIONS",
-                "link": 8
+                "link": 9
               },
               {
                 "name": "model",
@@ -1292,15 +1313,14 @@
                 "name": "answers",
                 "type": "DECISION_ANSWERS",
                 "links": [
-                  2,
-                  3
+                  6
                 ]
               },
               {
                 "name": "summary",
                 "type": "STRING",
                 "links": [
-                  11
+                  13
                 ]
               }
             ],
@@ -1316,210 +1336,82 @@
             "bgcolor": "#653"
           },
           {
-            "id": 203,
+            "id": 206,
             "type": "OpenRouterDecisionReadAnswer",
-            "pos": [
-              580,
-              140
-            ],
-            "size": [
-              340,
-              182
-            ],
-            "flags": {},
-            "order": 202,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "answers",
-                "type": "DECISION_ANSWERS",
-                "link": 2
-              },
-              {
-                "name": "question",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "question"
-                }
-              },
-              {
-                "name": "threshold",
-                "type": "FLOAT",
-                "link": null,
-                "widget": {
-                  "name": "threshold"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "answer",
-                "type": "STRING",
-                "links": [
-                  4
-                ]
-              },
-              {
-                "name": "is_yes",
-                "type": "BOOLEAN",
-                "links": []
-              },
-              {
-                "name": "probability",
-                "type": "FLOAT",
-                "links": []
-              },
-              {
-                "name": "score",
-                "type": "FLOAT",
-                "links": []
-              },
-              {
-                "name": "level",
-                "type": "INT",
-                "links": []
-              },
-              {
-                "name": "confidence",
-                "type": "FLOAT",
-                "links": []
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "OpenRouterDecisionReadAnswer"
-            },
-            "widgets_values": [
-              "best",
-              0.5
-            ]
-          },
-          {
-            "id": 204,
-            "type": "OpenRouterDecisionReadAnswer",
-            "pos": [
-              580,
-              386
-            ],
-            "size": [
-              340,
-              182
-            ],
-            "flags": {},
-            "order": 203,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "answers",
-                "type": "DECISION_ANSWERS",
-                "link": 3
-              },
-              {
-                "name": "question",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "question"
-                }
-              },
-              {
-                "name": "threshold",
-                "type": "FLOAT",
-                "link": null,
-                "widget": {
-                  "name": "threshold"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "answer",
-                "type": "STRING",
-                "links": []
-              },
-              {
-                "name": "is_yes",
-                "type": "BOOLEAN",
-                "links": [
-                  10
-                ]
-              },
-              {
-                "name": "probability",
-                "type": "FLOAT",
-                "links": []
-              },
-              {
-                "name": "score",
-                "type": "FLOAT",
-                "links": []
-              },
-              {
-                "name": "level",
-                "type": "INT",
-                "links": []
-              },
-              {
-                "name": "confidence",
-                "type": "FLOAT",
-                "links": []
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "OpenRouterDecisionReadAnswer"
-            },
-            "widgets_values": [
-              "on_brief",
-              0.5
-            ]
-          },
-          {
-            "id": 205,
-            "type": "JsonExtractString",
             "pos": [
               960,
-              140
+              592
             ],
             "size": [
               340,
-              112
+              182
             ],
             "flags": {},
-            "order": 204,
+            "order": 205,
             "mode": 0,
             "inputs": [
               {
-                "name": "json_string",
+                "name": "answers",
+                "type": "DECISION_ANSWERS",
+                "link": 6
+              },
+              {
+                "name": "question",
                 "type": "STRING",
-                "link": 6,
+                "link": null,
                 "widget": {
-                  "name": "json_string"
+                  "name": "question"
                 }
               },
               {
-                "name": "key",
-                "type": "STRING",
-                "link": 4,
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
                 "widget": {
-                  "name": "key"
+                  "name": "threshold"
                 }
               }
             ],
             "outputs": [
               {
-                "name": "STRING",
+                "name": "answer",
                 "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
                 "links": [
-                  9
+                  12
                 ]
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "JsonExtractString"
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
             },
             "widgets_values": [
-              "",
-              ""
+              "accurate",
+              0.5
             ]
           }
         ],
@@ -1539,75 +1431,91 @@
             "origin_slot": 0,
             "target_id": 203,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "STRING"
           },
           {
             "id": 3,
-            "origin_id": 202,
+            "origin_id": 201,
             "origin_slot": 0,
             "target_id": 204,
-            "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "target_slot": 1,
+            "type": "STRING"
           },
           {
             "id": 4,
             "origin_id": 203,
             "origin_slot": 0,
-            "target_id": 205,
-            "target_slot": 1,
+            "target_id": 204,
+            "target_slot": 2,
             "type": "STRING"
           },
           {
             "id": 5,
-            "origin_id": -10,
+            "origin_id": 204,
             "origin_slot": 0,
-            "target_id": 201,
-            "target_slot": 0,
-            "type": "*"
-          },
-          {
-            "id": 6,
-            "origin_id": -10,
-            "origin_slot": 1,
             "target_id": 205,
             "target_slot": 0,
             "type": "STRING"
           },
           {
+            "id": 6,
+            "origin_id": 205,
+            "origin_slot": 0,
+            "target_id": 206,
+            "target_slot": 0,
+            "type": "DECISION_ANSWERS"
+          },
+          {
             "id": 7,
             "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 201,
+            "origin_slot": 0,
+            "target_id": 202,
             "target_slot": 1,
             "type": "*"
           },
           {
             "id": 8,
             "origin_id": -10,
-            "origin_slot": 2,
-            "target_id": 202,
+            "origin_slot": 0,
+            "target_id": 204,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 9,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 205,
             "target_slot": 1,
             "type": "DECISION_QUESTIONS"
           },
           {
-            "id": 9,
-            "origin_id": 205,
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 201,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 11,
+            "origin_id": 203,
             "origin_slot": 0,
             "target_id": -20,
             "target_slot": 0,
             "type": "STRING"
           },
           {
-            "id": 10,
-            "origin_id": 204,
+            "id": 12,
+            "origin_id": 206,
             "origin_slot": 1,
             "target_id": -20,
             "target_slot": 1,
             "type": "BOOLEAN"
           },
           {
-            "id": 11,
-            "origin_id": 202,
+            "id": 13,
+            "origin_id": 205,
             "origin_slot": 1,
             "target_id": -20,
             "target_slot": 2,
@@ -1615,28 +1523,28 @@
           }
         ],
         "extra": {
-          "description": "Asks Jev for the best idea and whether it suits the campaign."
+          "description": "Translates the transcript and asks Jev whether the translation is accurate."
         }
       },
       {
-        "id": "ff75c7fa-8756-5e1e-8046-b12306b5c003",
+        "id": "e475331b-00e9-5d6e-ae6e-0bd37a7c8d74",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 305,
-          "lastLinkId": 9,
+          "lastLinkId": 10,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Edit",
+        "name": "Speak",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            100
+            120
           ]
         },
         "outputNode": {
@@ -1650,9 +1558,9 @@
         },
         "inputs": [
           {
-            "id": "d7a02330-f09d-5e88-9fd5-c6906a8039a1",
-            "name": "image",
-            "type": "IMAGE",
+            "id": "044e0591-8c98-548a-a6de-d055907a2123",
+            "name": "translation",
+            "type": "STRING",
             "linkIds": [
               5
             ],
@@ -1662,9 +1570,9 @@
             ]
           },
           {
-            "id": "c85e38a9-667f-5a12-8635-a72734c929d8",
-            "name": "idea",
-            "type": "STRING",
+            "id": "c251bebb-d601-55d0-95fb-3ff3451ca693",
+            "name": "audio",
+            "type": "AUDIO",
             "linkIds": [
               6
             ],
@@ -1674,9 +1582,9 @@
             ]
           },
           {
-            "id": "2aab545f-4c40-5356-970f-62d524ea0dd1",
-            "name": "on_brief",
-            "type": "BOOLEAN",
+            "id": "bc23e986-a454-5ec9-b544-7592df5dcd33",
+            "name": "text",
+            "type": "STRING",
             "linkIds": [
               7
             ],
@@ -1686,9 +1594,9 @@
             ]
           },
           {
-            "id": "2e925853-2e82-5b8b-8f29-059a13384200",
-            "name": "approved",
-            "type": "STRING",
+            "id": "d7cedd3c-8561-5944-b327-c7f14a205067",
+            "name": "accurate",
+            "type": "BOOLEAN",
             "linkIds": [
               8
             ],
@@ -1698,8 +1606,8 @@
             ]
           },
           {
-            "id": "1fa5ac49-2c48-5cc4-9bb5-0fbb81b9a4b0",
-            "name": "review",
+            "id": "15b10bb6-9664-5819-944d-7f57e3d162ad",
+            "name": "approved",
             "type": "STRING",
             "linkIds": [
               9
@@ -1708,6 +1616,18 @@
               110,
               220
             ]
+          },
+          {
+            "id": "c1ac77e1-255d-58db-8f69-21e41b12f10d",
+            "name": "review",
+            "type": "STRING",
+            "linkIds": [
+              10
+            ],
+            "pos": [
+              110,
+              240
+            ]
           }
         ],
         "outputs": [],
@@ -1715,25 +1635,25 @@
         "nodes": [
           {
             "id": 301,
-            "type": "OpenRouterImageGenerate",
+            "type": "OpenRouterAudioSpeak",
             "pos": [
               200,
               140
             ],
             "size": [
               340,
-              344
+              228
             ],
             "flags": {},
             "order": 300,
             "mode": 0,
             "inputs": [
               {
-                "name": "prompt",
+                "name": "text",
                 "type": "STRING",
-                "link": 6,
+                "link": 5,
                 "widget": {
-                  "name": "prompt"
+                  "name": "text"
                 }
               },
               {
@@ -1745,25 +1665,25 @@
                 }
               },
               {
-                "label": "reference_1",
-                "name": "model.references.reference_1",
-                "type": "IMAGE",
-                "link": 5,
-                "shape": 7
-              },
-              {
-                "label": "reference_2",
-                "name": "model.references.reference_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "seed",
-                "type": "INT",
+                "name": "speed",
+                "type": "FLOAT",
                 "link": null,
                 "widget": {
-                  "name": "seed"
+                  "name": "speed"
+                }
+              },
+              {
+                "name": "voice_sample",
+                "type": "AUDIO",
+                "link": 6,
+                "shape": 7
+              },
+              {
+                "name": "sample_transcript",
+                "type": "STRING",
+                "link": 7,
+                "widget": {
+                  "name": "sample_transcript"
                 }
               },
               {
@@ -1783,38 +1703,22 @@
             ],
             "outputs": [
               {
-                "name": "images",
-                "type": "IMAGE",
-                "shape": 6,
+                "name": "audio",
+                "type": "AUDIO",
                 "links": [
                   4
                 ]
-              },
-              {
-                "name": "masks",
-                "type": "MASK",
-                "shape": 6,
-                "links": []
-              },
-              {
-                "name": "svg",
-                "type": "SVG",
-                "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "OpenRouterImageGenerate"
+              "Node name for S&R": "OpenRouterAudioSpeak"
             },
             "widgets_values": [
               "",
-              "openai/gpt-image-2.5-flare",
-              "model default",
-              "medium",
-              "model default",
-              90,
-              1,
-              42,
-              "fixed",
+              "fish-audio/s2.1-pro",
+              "pcm",
+              1.0,
+              "",
               0
             ],
             "color": "#432",
@@ -1838,7 +1742,7 @@
               {
                 "name": "value",
                 "type": "STRING",
-                "link": 8,
+                "link": 9,
                 "widget": {
                   "name": "value"
                 }
@@ -1857,7 +1761,7 @@
               "Node name for S&R": "PrimitiveString"
             },
             "widgets_values": [
-              "campaign/approved"
+              "dub/approved"
             ],
             "title": "Approved"
           },
@@ -1879,7 +1783,7 @@
               {
                 "name": "value",
                 "type": "STRING",
-                "link": 9,
+                "link": 10,
                 "widget": {
                   "name": "value"
                 }
@@ -1898,7 +1802,7 @@
               "Node name for S&R": "PrimitiveString"
             },
             "widgets_values": [
-              "campaign/review"
+              "dub/review"
             ],
             "title": "Review"
           },
@@ -1920,7 +1824,7 @@
               {
                 "name": "switch",
                 "type": "BOOLEAN",
-                "link": 7,
+                "link": 8,
                 "widget": {
                   "name": "switch"
                 }
@@ -1954,22 +1858,22 @@
           },
           {
             "id": 305,
-            "type": "SaveImage",
+            "type": "SaveAudioAdvanced",
             "pos": [
               960,
               140
             ],
             "size": [
               340,
-              290
+              136
             ],
             "flags": {},
             "order": 304,
             "mode": 0,
             "inputs": [
               {
-                "name": "images",
-                "type": "IMAGE",
+                "name": "audio",
+                "type": "AUDIO",
                 "link": 4
               },
               {
@@ -1979,20 +1883,29 @@
                 "widget": {
                   "name": "filename_prefix"
                 }
+              },
+              {
+                "name": "format",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
               }
             ],
             "outputs": [
               {
-                "name": "images",
-                "type": "IMAGE",
+                "name": "audio",
+                "type": "AUDIO",
                 "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "SaveImage"
+              "Node name for S&R": "SaveAudioAdvanced"
             },
             "widgets_values": [
-              "ComfyUI"
+              "audio/ComfyUI",
+              "flac"
             ]
           }
         ],
@@ -2028,51 +1941,59 @@
             "origin_slot": 0,
             "target_id": 305,
             "target_slot": 0,
-            "type": "IMAGE"
+            "type": "AUDIO"
           },
           {
             "id": 5,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 301,
-            "target_slot": 2,
-            "type": "IMAGE"
+            "target_slot": 0,
+            "type": "STRING"
           },
           {
             "id": 6,
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 301,
-            "target_slot": 0,
-            "type": "STRING"
+            "target_slot": 3,
+            "type": "AUDIO"
           },
           {
             "id": 7,
             "origin_id": -10,
             "origin_slot": 2,
-            "target_id": 304,
-            "target_slot": 0,
-            "type": "BOOLEAN"
+            "target_id": 301,
+            "target_slot": 4,
+            "type": "STRING"
           },
           {
             "id": 8,
             "origin_id": -10,
             "origin_slot": 3,
-            "target_id": 302,
+            "target_id": 304,
             "target_slot": 0,
-            "type": "STRING"
+            "type": "BOOLEAN"
           },
           {
             "id": 9,
             "origin_id": -10,
             "origin_slot": 4,
+            "target_id": 302,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 5,
             "target_id": 303,
             "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Edits the photo with the chosen idea and saves it in the approved or review folder."
+          "description": "Speaks the translation in the clip's voice and saves it by Jev's verdict."
         }
       }
     ]

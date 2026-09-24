@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import json
 from src.config.namespace import NODE_PREFIX
-from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
-from scripts.workflows.page.graph import Node, Group, Workflow
+from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
+from scripts.workflows.page.config import STAGE_COLOUR, TEXT_PREVIEW
+from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.config import (
     TEXT,
     IMAGE,
@@ -37,16 +38,14 @@ LISTING_SCHEMA = json.dumps(
     },
     indent=2,
 )
+LISTING_TEXTS = WORKFLOW_TEXTS["chat-01-write-a-product-listing"]
+CAPTION_TEXTS = WORKFLOW_TEXTS["chat-02-caption-a-training-set"]
 
-WRITE_LISTING = Workflow(
-    slug="chat-01-write-a-product-listing",
+WRITE = Subgraph(
+    name=SHARED_TEXTS["write"],
     nodes=(
-        Node("front", IMAGE, {"image": ""}, title="Product Photo (Front)"),
-        Node("detail", IMAGE, {"image": ""}, title="Product Photo (Detail)"),
-        Node("spec", f"{NODE_PREFIX}ChatAttachDocument", {"file": ""}, title="Spec Sheet"),
-        Node("private", f"{NODE_PREFIX}RequestOptions", {"data_collection": "deny"}, title="Keep Data Private"),
         Node(
-            "write",
+            "listing",
             ASK,
             {
                 "model": WRITER,
@@ -56,19 +55,71 @@ WRITE_LISTING = Workflow(
                     "facts you can see or read. Keep the title under 80 characters and write five bullet points."
                 ),
             },
-            title="Write the Listing",
+            title=SHARED_TEXTS["listing"],
             is_paid=True,
         ),
         Node(
             "facts",
             ASK,
-            {
-                "model": READER,
-                "prompt": "List every fact in this spec sheet, one short line each. Add nothing else.",
-            },
-            title="List the Spec Facts",
+            {"model": READER, "prompt": "List every fact in this spec sheet, one short line each. Add nothing else."},
+            title=SHARED_TEXTS["facts"],
             is_paid=True,
         ),
+    ),
+    links=(),
+    columns=(("listing",), ("facts",)),
+    inputs=(
+        ("front", "listing.model.images.image_1"),
+        ("detail", "listing.model.images.image_2"),
+        ("documents", "listing.documents"),
+        ("documents", "facts.documents"),
+        ("options", "listing.options"),
+    ),
+    outputs=(("listing", "listing.text"), ("facts", "facts.text")),
+    description=LISTING_TEXTS["write_description"],
+)
+
+CHECK_LISTING = Subgraph(
+    name=SHARED_TEXTS["check"],
+    nodes=(
+        Node("situation", FORMAT, {"f_string": "Spec facts:\n{a}\n\nListing:\n{b}"}),
+        Node("decide", DECIDE, is_paid=True),
+        Node("read", READ, {"question": "supported"}),
+        Node("approved", TEXT, {"value": "listings/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", TEXT, {"value": "listings/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", SWITCH),
+        Node("save", SAVE_TEXT, {"format": "json"}),
+    ),
+    links=(
+        ("situation.STRING", "decide.situation"),
+        ("decide.answers", "read.answers"),
+        ("read.is_yes", "folder.switch"),
+        ("approved.STRING", "folder.on_true"),
+        ("review.STRING", "folder.on_false"),
+        ("folder.output", "save.filename_prefix"),
+    ),
+    columns=(("situation", "decide"), ("read", "approved", "review"), ("folder", "save")),
+    inputs=(
+        ("facts", "situation.values.a"),
+        ("listing", "save.text"),
+        ("listing", "situation.values.b"),
+        ("questions", "decide.questions"),
+        ("approved", "approved.value"),
+        ("review", "review.value"),
+    ),
+    outputs=(("summary", "decide.summary"),),
+    description=LISTING_TEXTS["check_description"],
+    previews=(("save", TEXT_PREVIEW),),
+)
+
+WRITE_LISTING = Workflow(
+    slug="chat-01-write-a-product-listing",
+    nodes=(
+        Node("front", IMAGE, {"image": ""}, title=SHARED_TEXTS["front"]),
+        Node("detail", IMAGE, {"image": ""}, title=SHARED_TEXTS["detail"]),
+        Node("spec", f"{NODE_PREFIX}ChatAttachDocument", {"file": ""}),
+        Node("private", f"{NODE_PREFIX}RequestOptions", {"data_collection": "deny"}),
+        Node("write", WRITE.name),
         Node(
             "supported",
             QUESTION,
@@ -78,7 +129,6 @@ WRITE_LISTING = Workflow(
                 "answer_type.yes_means": "Every claim is backed.",
                 "answer_type.no_means": "At least one claim is invented or exaggerated.",
             },
-            title="Supported",
         ),
         Node(
             "persuasive",
@@ -89,48 +139,39 @@ WRITE_LISTING = Workflow(
                 "answer_type": "score",
                 "answer_type.levels": "Flat\nClear\nCompelling",
             },
-            title="Persuasive",
         ),
-        Node("situation", FORMAT, {"f_string": "Spec facts:\n{a}\n\nListing:\n{b}"}, title="Facts and Listing"),
-        Node("decide", DECIDE, title="Check the Listing", is_paid=True),
-        Node("read", READ, {"question": "supported"}, title="Read Supported"),
-        Node("approved", TEXT, {"value": "listings/approved"}, title="Approved Folder"),
-        Node("review", TEXT, {"value": "listings/review"}, title="Review Folder"),
-        Node("folder", SWITCH, title="Choose the Folder"),
-        Node("save", SAVE_TEXT, {"format": "json"}, title="Save the Listing"),
-        Node("summary", PREVIEW, title="Check Summary"),
+        Node("check", CHECK_LISTING.name),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
-        ("front.IMAGE", "write.model.images.image_1"),
-        ("detail.IMAGE", "write.model.images.image_2"),
+        ("front.IMAGE", "write.front"),
+        ("detail.IMAGE", "write.detail"),
         ("spec.documents", "write.documents"),
-        ("spec.documents", "facts.documents"),
         ("private.options", "write.options"),
-        ("facts.text", "situation.values.a"),
-        ("write.text", "situation.values.b"),
-        ("situation.STRING", "decide.situation"),
+        ("write.facts", "check.facts"),
+        ("write.listing", "check.listing"),
         ("supported.questions", "persuasive.questions"),
-        ("persuasive.questions", "decide.questions"),
-        ("decide.answers", "read.answers"),
-        ("decide.summary", "summary.source"),
-        ("read.is_yes", "folder.switch"),
-        ("approved.STRING", "folder.on_true"),
-        ("review.STRING", "folder.on_false"),
-        ("folder.output", "save.filename_prefix"),
-        ("write.text", "save.text"),
+        ("persuasive.questions", "check.questions"),
+        ("check.summary", "summary.source"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("front", "detail"), ("spec", "private"))),),
-        (Group(SHARED_TEXTS["write"], (("write",), ("facts",)), STAGE_COLOUR),),
-        (Group(SHARED_TEXTS["check"], (("supported", "persuasive"), ("situation", "decide", "read")), STAGE_COLOUR),),
-        (Group(SHARED_TEXTS["save"], (("approved", "review", "folder"), ("save", "summary"))),),
+        (Group(SHARED_TEXTS["input"], (("front", "detail"), ("spec", "private")), note=LISTING_TEXTS["input"]),),
+        (Group(SHARED_TEXTS["write"], (("write",),), STAGE_COLOUR, LISTING_TEXTS["write"]),),
+        (
+            Group(
+                SHARED_TEXTS["check"],
+                (("supported", "persuasive"), ("check", "summary")),
+                STAGE_COLOUR,
+                LISTING_TEXTS["check"],
+            ),
+        ),
     ),
+    subgraphs=(WRITE, CHECK_LISTING),
 )
 
-CAPTION_SET = Workflow(
-    slug="chat-02-caption-a-training-set",
+CAPTION = Subgraph(
+    name=SHARED_TEXTS["caption"],
     nodes=(
-        Node("folder", FOLDER_IMAGES, {"folder": ""}, title="Training Images"),
         Node(
             "caption",
             ASK,
@@ -141,37 +182,47 @@ CAPTION_SET = Workflow(
                     "setting, lighting, and style. No opinions."
                 ),
             },
-            title="Caption Each Image",
             is_paid=True,
         ),
+        Node("save", SAVE_CAPTIONS, {"folder_name": "captions"}),
+    ),
+    links=(("caption.text", "save.texts"),),
+    columns=(("caption",), ("save",)),
+    inputs=(("images", "caption.model.images.image_1"), ("images", "save.images")),
+    outputs=(("captions", "caption.text"),),
+    description=CAPTION_TEXTS["caption_description"],
+)
+
+CAPTION_SET = Workflow(
+    slug="chat-02-caption-a-training-set",
+    nodes=(
+        Node("folder", FOLDER_IMAGES, {"folder": ""}),
+        Node("caption", CAPTION.name),
         Node(
-            "rules",
+            "valid",
             QUESTION,
             {
-                "name": "follows_rules",
+                "name": "valid",
                 "instructions": (
                     "Is the caption one sentence that describes only visible content, without opinions or guesses?"
                 ),
             },
-            title="Caption Rules",
         ),
-        Node("decide", DECIDE, title="Check Each Caption", is_paid=True),
-        Node("save", SAVE_CAPTIONS, {"folder_name": "captions"}, title="Save Captions"),
-        Node("verdicts", PREVIEW, title="Caption Verdicts"),
+        Node("decide", DECIDE, is_paid=True),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
-        ("folder.images", "caption.model.images.image_1"),
-        ("folder.images", "save.images"),
-        ("caption.text", "save.texts"),
-        ("caption.text", "decide.situation"),
-        ("rules.questions", "decide.questions"),
-        ("decide.summary", "verdicts.source"),
+        ("folder.images", "caption.images"),
+        ("caption.captions", "decide.situation"),
+        ("valid.questions", "decide.questions"),
+        ("decide.summary", "summary.source"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("folder",),)),),
-        (Group(SHARED_TEXTS["write"], (("caption", "save"),), STAGE_COLOUR),),
-        (Group(SHARED_TEXTS["check"], (("rules",), ("decide", "verdicts")), STAGE_COLOUR),),
+        (Group(SHARED_TEXTS["input"], (("folder",),), note=CAPTION_TEXTS["input"]),),
+        (Group(SHARED_TEXTS["caption"], (("caption",),), STAGE_COLOUR, CAPTION_TEXTS["caption"]),),
+        (Group(SHARED_TEXTS["check"], (("valid",), ("decide", "summary")), STAGE_COLOUR, CAPTION_TEXTS["check"]),),
     ),
+    subgraphs=(CAPTION,),
 )
 
 CHAT_WORKFLOWS = (WRITE_LISTING, CAPTION_SET)

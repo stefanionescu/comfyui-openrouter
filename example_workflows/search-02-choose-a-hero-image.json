@@ -1,19 +1,19 @@
 {
   "id": "1e881e92-1195-5479-8971-a3f1a9a63668",
   "revision": 0,
-  "last_node_id": 15,
-  "last_link_id": 16,
+  "last_node_id": 8,
+  "last_link_id": 6,
   "nodes": [
     {
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        0,
-        30
+        30,
+        140
       ],
       "size": [
-        620,
-        88
+        340,
+        120
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the page and the picture you need in **Hero Brief**.\n3. Press **Run**. The best of four images is saved under `hero/approved` or `hero/review`."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the page and the picture you need in **Brief**.\n3. Press **Run**. The best of four images is saved under `hero/approved` or `hero/review`.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -41,12 +41,12 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        650,
-        30
+        460,
+        140
       ],
       "size": [
-        620,
-        106
+        340,
+        120
       ],
       "flags": {},
       "order": 1,
@@ -66,23 +66,56 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "**Four Candidates** draws four images in one request. **Rank the Images** scores each against the brief with a vision reranker and keeps the best.\n\n**Describe the Winner** writes what the winning image shows. Jev then decides in **Hero Ready** whether it works as a homepage hero: a clear subject, room for a headline, and no defects.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "Recraft V4.1 draws four images in one request. Nemotron Rerank VL, a vision reranker, scores each against the brief and keeps the best. Two paid requests; the reranker is free."
       ],
-      "title": "Using This Workflow"
+      "title": "Note"
     },
     {
       "id": 3,
+      "type": "MarkdownNote",
+      "pos": [
+        890,
+        140
+      ],
+      "size": [
+        720,
+        120
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "GPT-6 Luna describes the winner. Jev then answers **ready**: does it work as a homepage hero, with a clear subject, room for a headline, and no defects? The image is saved in the **approved** folder when it is ready, and in **review** otherwise. Two paid requests."
+      ],
+      "title": "Note"
+    },
+    {
+      "id": 4,
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        276
+        324
       ],
       "size": [
         340,
         88
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -100,8 +133,7 @@
           "type": "STRING",
           "links": [
             1,
-            2,
-            3
+            2
           ]
         }
       ],
@@ -111,21 +143,68 @@
       "widgets_values": [
         "Homepage hero for an outdoor gear shop's spring sale: a hiker on a ridge at sunrise, wide landscape, calm sky on the left for the headline"
       ],
-      "title": "Hero Brief"
+      "title": "Brief"
     },
     {
-      "id": 4,
+      "id": 5,
+      "type": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
+      "pos": [
+        460,
+        324
+      ],
+      "size": [
+        340,
+        108
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "brief",
+          "type": "STRING",
+          "link": 1,
+          "widget": {
+            "name": "brief"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            3
+          ]
+        },
+        {
+          "name": "scores",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        ""
+      ],
+      "title": "Rank"
+    },
+    {
+      "id": 6,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
-        30,
-        428
+        890,
+        324
       ],
       "size": [
         340,
         184
       ],
       "flags": {},
-      "order": 3,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -164,7 +243,7 @@
           "name": "questions",
           "type": "DECISION_QUESTIONS",
           "links": [
-            9
+            5
           ]
         }
       ],
@@ -172,787 +251,108 @@
         "Node name for S&R": "OpenRouterDecisionAddQuestion"
       },
       "widgets_values": [
-        "hero_ready",
+        "ready",
         "Does the image work as a homepage hero: a clear subject, open space for a headline, and no visible defects?",
         "yes or no",
         "",
         ""
-      ],
-      "title": "Hero Ready"
-    },
-    {
-      "id": 5,
-      "type": "OpenRouterImageGenerate",
-      "pos": [
-        460,
-        276
-      ],
-      "size": [
-        340,
-        272
-      ],
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "link": 1,
-          "widget": {
-            "name": "prompt"
-          }
-        },
-        {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "seed"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": [
-            4
-          ]
-        },
-        {
-          "name": "masks",
-          "type": "MASK",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "svg",
-          "type": "SVG",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterImageGenerate"
-      },
-      "widgets_values": [
-        "",
-        "recraft/recraft-v4.1-flash",
-        "16:9",
-        4,
-        42,
-        "fixed",
-        0
-      ],
-      "title": "Four Candidates",
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 6,
-      "type": "OpenRouterSearchRank",
-      "pos": [
-        460,
-        612
-      ],
-      "size": [
-        340,
-        254
-      ],
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "query",
-          "type": "STRING",
-          "link": 2,
-          "widget": {
-            "name": "query"
-          }
-        },
-        {
-          "name": "documents",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "documents"
-          }
-        },
-        {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "label": "image_1",
-          "name": "model.images.image_1",
-          "type": "IMAGE",
-          "link": 4,
-          "shape": 7
-        },
-        {
-          "label": "image_2",
-          "name": "model.images.image_2",
-          "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "top_n",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "top_n"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "texts",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": [
-            5,
-            16
-          ]
-        },
-        {
-          "name": "scores",
-          "type": "STRING",
-          "links": [
-            7
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterSearchRank"
-      },
-      "widgets_values": [
-        "",
-        "",
-        "nvidia/llama-nemotron-rerank-vl-1b-v2:free",
-        1,
-        0
-      ],
-      "title": "Rank the Images",
-      "color": "#432",
-      "bgcolor": "#653"
+      ]
     },
     {
       "id": 7,
-      "type": "OpenRouterChatAsk",
+      "type": "9dadd14e-c511-5712-8dce-3d3792969ad8",
       "pos": [
-        840,
-        276
+        1270,
+        324
       ],
       "size": [
         340,
-        444
+        142
       ],
       "flags": {},
       "order": 6,
       "mode": 0,
       "inputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "prompt"
-          }
+          "name": "brief",
+          "type": "*",
+          "link": 2
         },
         {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "label": "image_1",
-          "name": "model.images.image_1",
+          "name": "image",
           "type": "IMAGE",
-          "link": 5,
-          "shape": 7
+          "link": 3
         },
         {
-          "label": "image_2",
-          "name": "model.images.image_2",
-          "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "system",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "system"
-          }
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "documents",
-          "type": "CHAT_DOCUMENTS",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "pdf_engine",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "pdf_engine"
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "seed"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": [
-            6
-          ]
-        },
-        {
-          "name": "reasoning",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "links": []
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterChatAsk"
-      },
-      "widgets_values": [
-        "Describe this image in three sentences: the subject, where the empty space is, and any visible defect.",
-        "openai/gpt-6-luna",
-        "medium",
-        0,
-        "",
-        "model default",
-        42,
-        "fixed",
-        0,
-        ""
-      ],
-      "title": "Describe the Winner",
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 8,
-      "type": "StringFormat",
-      "pos": [
-        840,
-        784
-      ],
-      "size": [
-        340,
-        168
-      ],
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "inputs": [
-        {
-          "label": "a",
-          "name": "values.a",
+          "name": "scores",
           "type": "*",
-          "link": 3,
-          "shape": 7
-        },
-        {
-          "label": "b",
-          "name": "values.b",
-          "type": "*",
-          "link": 6,
-          "shape": 7
-        },
-        {
-          "label": "c",
-          "name": "values.c",
-          "type": "*",
-          "link": 7,
-          "shape": 7
-        },
-        {
-          "label": "d",
-          "name": "values.d",
-          "type": "*",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "f_string",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "f_string"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            8
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "StringFormat"
-      },
-      "widgets_values": [
-        "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"
-      ],
-      "title": "Brief and Winner"
-    },
-    {
-      "id": 9,
-      "type": "OpenRouterDecisionAsk",
-      "pos": [
-        1270,
-        276
-      ],
-      "size": [
-        340,
-        156
-      ],
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "situation",
-          "type": "STRING",
-          "link": 8,
-          "widget": {
-            "name": "situation"
-          }
+          "link": 4
         },
         {
           "name": "questions",
           "type": "DECISION_QUESTIONS",
-          "link": 9
+          "link": 5
         },
         {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
+          "name": "approved",
+          "type": "STRING",
           "link": null,
           "widget": {
-            "name": "model"
+            "name": "approved"
           }
         },
         {
-          "name": "variation",
-          "type": "INT",
+          "name": "review",
+          "type": "STRING",
           "link": null,
           "widget": {
-            "name": "variation"
+            "name": "review"
           }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
         }
       ],
       "outputs": [
-        {
-          "name": "answers",
-          "type": "DECISION_ANSWERS",
-          "links": [
-            10
-          ]
-        },
         {
           "name": "summary",
           "type": "STRING",
           "links": [
-            11
+            6
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "OpenRouterDecisionAsk"
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "208",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
       },
       "widgets_values": [
-        "",
-        "typesafe/jev-1.13",
-        0
-      ],
-      "title": "Check the Winner",
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 10,
-      "type": "OpenRouterDecisionReadAnswer",
-      "pos": [
-        1270,
-        496
-      ],
-      "size": [
-        340,
-        182
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "answers",
-          "type": "DECISION_ANSWERS",
-          "link": 10
-        },
-        {
-          "name": "question",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "question"
-          }
-        },
-        {
-          "name": "threshold",
-          "type": "FLOAT",
-          "link": null,
-          "widget": {
-            "name": "threshold"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "answer",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "is_yes",
-          "type": "BOOLEAN",
-          "links": [
-            12
-          ]
-        },
-        {
-          "name": "probability",
-          "type": "FLOAT",
-          "links": []
-        },
-        {
-          "name": "score",
-          "type": "FLOAT",
-          "links": []
-        },
-        {
-          "name": "level",
-          "type": "INT",
-          "links": []
-        },
-        {
-          "name": "confidence",
-          "type": "FLOAT",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterDecisionReadAnswer"
-      },
-      "widgets_values": [
-        "hero_ready",
-        0.5
-      ],
-      "title": "Read Hero Ready"
-    },
-    {
-      "id": 11,
-      "type": "PrimitiveString",
-      "pos": [
-        1650,
-        276
-      ],
-      "size": [
-        340,
-        58
-      ],
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "value"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            13
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PrimitiveString"
-      },
-      "widgets_values": [
-        "hero/approved"
-      ],
-      "title": "Approved Folder"
-    },
-    {
-      "id": 12,
-      "type": "PrimitiveString",
-      "pos": [
-        1650,
-        398
-      ],
-      "size": [
-        340,
-        58
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "value",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "value"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            14
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PrimitiveString"
-      },
-      "widgets_values": [
+        "hero/approved",
         "hero/review"
       ],
-      "title": "Review Folder"
+      "title": "Check"
     },
     {
-      "id": 13,
-      "type": "ComfySwitchNode",
-      "pos": [
-        1650,
-        520
-      ],
-      "size": [
-        340,
-        78
-      ],
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "switch",
-          "type": "BOOLEAN",
-          "link": 12,
-          "widget": {
-            "name": "switch"
-          }
-        },
-        {
-          "name": "on_false",
-          "type": "STRING",
-          "link": 14
-        },
-        {
-          "name": "on_true",
-          "type": "STRING",
-          "link": 13
-        }
-      ],
-      "outputs": [
-        {
-          "name": "output",
-          "type": "STRING",
-          "links": [
-            15
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "ComfySwitchNode"
-      },
-      "widgets_values": [
-        false
-      ],
-      "title": "Choose the Folder"
-    },
-    {
-      "id": 14,
-      "type": "SaveImage",
-      "pos": [
-        2030,
-        276
-      ],
-      "size": [
-        340,
-        290
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 16
-        },
-        {
-          "name": "filename_prefix",
-          "type": "STRING",
-          "link": 15,
-          "widget": {
-            "name": "filename_prefix"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "SaveImage"
-      },
-      "widgets_values": [
-        "ComfyUI"
-      ],
-      "title": "Save the Hero"
-    },
-    {
-      "id": 15,
+      "id": 8,
       "type": "PreviewAny",
       "pos": [
-        2030,
-        630
+        1270,
+        530
       ],
       "size": [
         340,
         240
       ],
       "flags": {},
-      "order": 14,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
           "name": "source",
           "type": "*",
-          "link": 11
+          "link": 6
         }
       ],
       "outputs": [
@@ -966,13 +366,13 @@
         "Node name for S&R": "PreviewAny"
       },
       "widgets_values": [],
-      "title": "Check Summary"
+      "title": "Summary"
     }
   ],
   "links": [
     [
       1,
-      3,
+      4,
       0,
       5,
       0,
@@ -980,123 +380,43 @@
     ],
     [
       2,
-      3,
+      4,
       0,
-      6,
+      7,
       0,
       "STRING"
     ],
     [
       3,
-      3,
+      5,
       0,
-      8,
-      0,
-      "STRING"
+      7,
+      1,
+      "IMAGE"
     ],
     [
       4,
       5,
-      0,
-      6,
-      3,
-      "IMAGE"
+      1,
+      7,
+      2,
+      "STRING"
     ],
     [
       5,
       6,
-      1,
+      0,
       7,
-      2,
-      "IMAGE"
-    ],
-    [
-      6,
-      7,
-      0,
-      8,
-      1,
-      "STRING"
-    ],
-    [
-      7,
-      6,
-      2,
-      8,
-      2,
-      "STRING"
-    ],
-    [
-      8,
-      8,
-      0,
-      9,
-      0,
-      "STRING"
-    ],
-    [
-      9,
-      4,
-      0,
-      9,
-      1,
+      3,
       "DECISION_QUESTIONS"
     ],
     [
-      10,
-      9,
-      0,
-      10,
-      0,
-      "DECISION_ANSWERS"
-    ],
-    [
-      11,
-      9,
-      1,
-      15,
-      0,
-      "STRING"
-    ],
-    [
-      12,
-      10,
-      1,
-      13,
-      0,
-      "BOOLEAN"
-    ],
-    [
-      13,
-      11,
-      0,
-      13,
-      2,
-      "STRING"
-    ],
-    [
-      14,
-      12,
-      0,
-      13,
-      1,
-      "STRING"
-    ],
-    [
-      15,
-      13,
-      0,
-      14,
-      1,
-      "STRING"
-    ],
-    [
-      16,
       6,
-      1,
-      14,
+      7,
       0,
-      "IMAGE"
+      8,
+      0,
+      "STRING"
     ]
   ],
   "groups": [
@@ -1105,9 +425,9 @@
       "title": "Input",
       "bounding": [
         0,
-        166,
+        30,
         400,
-        476
+        412
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -1115,12 +435,12 @@
     },
     {
       "id": 2,
-      "title": "Search",
+      "title": "Rank",
       "bounding": [
         430,
-        166,
-        780,
-        816
+        30,
+        400,
+        432
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -1130,10 +450,10 @@
       "id": 3,
       "title": "Check",
       "bounding": [
-        1240,
-        166,
-        1160,
-        734
+        860,
+        30,
+        780,
+        770
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -1150,5 +470,1124 @@
       ]
     }
   },
-  "version": 0.4
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 102,
+          "lastLinkId": 5,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Rank",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            20
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "02f88d78-c4b0-5c87-98ab-04958b449938",
+            "name": "brief",
+            "type": "STRING",
+            "linkIds": [
+              2,
+              3
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "acee5343-0527-5fbb-b7d9-84bc4a312c16",
+            "name": "image",
+            "type": "IMAGE",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          },
+          {
+            "id": "ca85b7a8-750a-537d-a0aa-34f536230143",
+            "name": "scores",
+            "type": "STRING",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              1010,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterImageGenerate",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              272
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "masks",
+                "type": "MASK",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "svg",
+                "type": "SVG",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterImageGenerate"
+            },
+            "widgets_values": [
+              "",
+              "recraft/recraft-v4.1-flash",
+              "16:9",
+              4,
+              42,
+              "fixed",
+              0
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterSearchRank",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              254
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "query",
+                "type": "STRING",
+                "link": 3,
+                "widget": {
+                  "name": "query"
+                }
+              },
+              {
+                "name": "documents",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "documents"
+                }
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "label": "image_1",
+                "name": "model.images.image_1",
+                "type": "IMAGE",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "model.images.image_2",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "top_n",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "top_n"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "texts",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "scores",
+                "type": "STRING",
+                "links": [
+                  5
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterSearchRank"
+            },
+            "widgets_values": [
+              "",
+              "",
+              "nvidia/llama-nemotron-rerank-vl-1b-v2:free",
+              1,
+              0
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 3,
+            "type": "IMAGE"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 4,
+            "origin_id": 102,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 5,
+            "origin_id": 102,
+            "origin_slot": 2,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Draws four candidates and keeps the one that best matches the brief."
+        }
+      },
+      {
+        "id": "9dadd14e-c511-5712-8dce-3d3792969ad8",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 208,
+          "lastLinkId": 15,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Check",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            120
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1770,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "e0942f3d-c9e2-5c4b-9b69-8dcda08fd876",
+            "name": "brief",
+            "type": "*",
+            "linkIds": [
+              8
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "7ca9e255-adc3-5951-9016-80a308c216dd",
+            "name": "image",
+            "type": "IMAGE",
+            "linkIds": [
+              9,
+              10
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "64fef493-75da-5ab0-a6f4-6d66e09d2121",
+            "name": "scores",
+            "type": "*",
+            "linkIds": [
+              11
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "7da0be60-bbf0-528d-b7d8-fcac19bee212",
+            "name": "questions",
+            "type": "DECISION_QUESTIONS",
+            "linkIds": [
+              12
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          },
+          {
+            "id": "007b00ee-e7ab-503f-8c9d-9711f6d51d1f",
+            "name": "approved",
+            "type": "STRING",
+            "linkIds": [
+              13
+            ],
+            "pos": [
+              110,
+              220
+            ]
+          },
+          {
+            "id": "6b6699d2-ba85-5afc-9833-7dd5a83456ec",
+            "name": "review",
+            "type": "STRING",
+            "linkIds": [
+              14
+            ],
+            "pos": [
+              110,
+              240
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "a6fb35a0-5cad-5868-a4d9-d18d00d6237c",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              15
+            ],
+            "pos": [
+              1770,
+              140
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 201,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              444
+            ],
+            "flags": {},
+            "order": 200,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "label": "image_1",
+                "name": "model.images.image_1",
+                "type": "IMAGE",
+                "link": 9,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "model.images.image_2",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "system",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "CHAT_DOCUMENTS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "Describe this image in three sentences: the subject, where the empty space is, and any visible defect.",
+              "openai/gpt-6-luna",
+              "medium",
+              0,
+              "",
+              "model default",
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 202,
+            "type": "StringFormat",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              168
+            ],
+            "flags": {},
+            "order": 201,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 8,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": 11,
+                "shape": 7
+              },
+              {
+                "label": "d",
+                "name": "values.d",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  2
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"
+            ]
+          },
+          {
+            "id": 203,
+            "type": "OpenRouterDecisionAsk",
+            "pos": [
+              580,
+              372
+            ],
+            "size": [
+              340,
+              156
+            ],
+            "flags": {},
+            "order": 202,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "situation"
+                }
+              },
+              {
+                "name": "questions",
+                "type": "DECISION_QUESTIONS",
+                "link": 12
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answers",
+                "type": "DECISION_ANSWERS",
+                "links": [
+                  3
+                ]
+              },
+              {
+                "name": "summary",
+                "type": "STRING",
+                "links": [
+                  15
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionAsk"
+            },
+            "widgets_values": [
+              "",
+              "typesafe/jev-1.13",
+              0
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 204,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              592
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 203,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "DECISION_ANSWERS",
+                "link": 3
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "ready",
+              0.5
+            ]
+          },
+          {
+            "id": 205,
+            "type": "PrimitiveString",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 204,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 13,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  5
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "hero/approved"
+            ],
+            "title": "Approved"
+          },
+          {
+            "id": 206,
+            "type": "PrimitiveString",
+            "pos": [
+              960,
+              262
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 205,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 14,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  6
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "hero/review"
+            ],
+            "title": "Review"
+          },
+          {
+            "id": 207,
+            "type": "ComfySwitchNode",
+            "pos": [
+              960,
+              384
+            ],
+            "size": [
+              340,
+              78
+            ],
+            "flags": {},
+            "order": 206,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "switch",
+                "type": "BOOLEAN",
+                "link": 4,
+                "widget": {
+                  "name": "switch"
+                }
+              },
+              {
+                "name": "on_false",
+                "type": "STRING",
+                "link": 6
+              },
+              {
+                "name": "on_true",
+                "type": "STRING",
+                "link": 5
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "STRING",
+                "links": [
+                  7
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 208,
+            "type": "SaveImage",
+            "pos": [
+              1340,
+              140
+            ],
+            "size": [
+              340,
+              290
+            ],
+            "flags": {},
+            "order": 207,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 10
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": 7,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveImage"
+            },
+            "widgets_values": [
+              "ComfyUI"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 201,
+            "origin_slot": 0,
+            "target_id": 202,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": 202,
+            "origin_slot": 0,
+            "target_id": 203,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 3,
+            "origin_id": 203,
+            "origin_slot": 0,
+            "target_id": 204,
+            "target_slot": 0,
+            "type": "DECISION_ANSWERS"
+          },
+          {
+            "id": 4,
+            "origin_id": 204,
+            "origin_slot": 1,
+            "target_id": 207,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 5,
+            "origin_id": 205,
+            "origin_slot": 0,
+            "target_id": 207,
+            "target_slot": 2,
+            "type": "STRING"
+          },
+          {
+            "id": 6,
+            "origin_id": 206,
+            "origin_slot": 0,
+            "target_id": 207,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": 207,
+            "origin_slot": 0,
+            "target_id": 208,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 8,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 202,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 9,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 201,
+            "target_slot": 2,
+            "type": "IMAGE"
+          },
+          {
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 208,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 11,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 202,
+            "target_slot": 2,
+            "type": "*"
+          },
+          {
+            "id": 12,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 203,
+            "target_slot": 1,
+            "type": "DECISION_QUESTIONS"
+          },
+          {
+            "id": 13,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 205,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 14,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 206,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 15,
+            "origin_id": 203,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Asks Jev whether the winner works as a hero and saves it by the verdict."
+        }
+      }
+    ]
+  }
 }

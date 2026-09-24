@@ -1,19 +1,19 @@
 {
-  "id": "8c167515-0578-5b6c-89eb-09dab202589a",
+  "id": "0a962ba4-2ee7-539b-96a7-8beaaa73e7cb",
   "revision": 0,
-  "last_node_id": 4,
+  "last_node_id": 3,
   "last_link_id": 1,
   "nodes": [
     {
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        0,
-        30
+        30,
+        140
       ],
       "size": [
-        620,
-        88
+        720,
+        106
       ],
       "flags": {},
       "order": 0,
@@ -33,56 +33,23 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Choose the job in **Unfinished Job**. Press R in ComfyUI to list jobs recorded after the page loaded.\n2. Press **Run**. The video is saved under `video/openrouter`."
+        "Use this after you cancel a run of **Video: Generate**, or after ComfyUI restarts while a video is being made. OpenRouter still makes the video and bills it.\n\n1. In **job**, choose the video. Each entry shows its ID, model, and start time. Press R to list jobs started after the page loaded.\n2. Press **Run**. The video is saved under `video/openrouter`.\n\nDownloading costs nothing. A job leaves the list once its video is saved."
       ],
       "title": "Start Here"
     },
     {
       "id": 2,
-      "type": "MarkdownNote",
-      "pos": [
-        650,
-        30
-      ],
-      "size": [
-        620,
-        88
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "text"
-          }
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "Node name for S&R": "MarkdownNote"
-      },
-      "widgets_values": [
-        "OpenRouter keeps making a video after a cancel, a restart, or a run that stopped waiting, and bills it. **Video: Generate** records every job it starts, and **Unfinished Job** lists them.\n\nCollecting a job sends only status and download requests, which bill nothing. The job leaves the list once its video is saved."
-      ],
-      "title": "Using This Workflow"
-    },
-    {
-      "id": 3,
       "type": "OpenRouterVideoDownload",
       "pos": [
         30,
-        258
+        310
       ],
       "size": [
         340,
         58
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
@@ -108,22 +75,21 @@
       },
       "widgets_values": [
         ""
-      ],
-      "title": "Unfinished Job"
+      ]
     },
     {
-      "id": 4,
+      "id": 3,
       "type": "SaveVideo",
       "pos": [
         410,
-        258
+        310
       ],
       "size": [
         340,
         106
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -167,19 +133,18 @@
         "Node name for S&R": "SaveVideo"
       },
       "widgets_values": [
-        "video/openrouter/collected",
+        "video/openrouter/recovered",
         "auto",
         "auto"
-      ],
-      "title": "Save the Video"
+      ]
     }
   ],
   "links": [
     [
       1,
-      3,
+      2,
       0,
-      4,
+      3,
       0,
       "VIDEO"
     ]
@@ -187,12 +152,12 @@
   "groups": [
     {
       "id": 1,
-      "title": "Video",
+      "title": "Recover",
       "bounding": [
         0,
-        148,
+        30,
         780,
-        246
+        416
       ],
       "color": "#68688c",
       "font_size": 24,

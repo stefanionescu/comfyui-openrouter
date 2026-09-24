@@ -16,7 +16,7 @@ Collect a video job that kept running after a cancel or a restart. Connect **vid
 
 ## Run
 
-1. To start from a finished workflow, open **video-02-collect-a-video** from **Browse Templates → comfyui-openrouter**.
+1. To start from a finished workflow, open **video-02-recover-a-cancelled-video** from **Browse Templates → comfyui-openrouter**.
 1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.
 1. Choose the job in **job**. Press R to list jobs recorded later.
 1. Select **Run**.

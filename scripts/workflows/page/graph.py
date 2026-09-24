@@ -29,11 +29,12 @@ class Node:
 
 @dataclass(frozen=True, slots=True)
 class Group:
-    """One titled frame around columns of nodes."""
+    """One titled frame around columns of nodes, with a note across its top that says what the group does."""
 
     title: str
     columns: tuple[tuple[str, ...], ...]
     colour: str = INPUT_COLOUR
+    note: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,11 +49,8 @@ class Subgraph:
     outputs: tuple[tuple[str, str], ...] = ()
     description: str = ""
     stacks: tuple[tuple[Group, ...], ...] = ()
-
-    @property
-    def id(self) -> str:
-        """Derive the subgraph ID from its name."""
-        return str(uuid.uuid5(NAMESPACE, self.name))
+    # The previews shown on the placed node, as `node key` and preview name.
+    previews: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,6 +65,7 @@ class Workflow:
 
 
 __all__ = [
+    "NAMESPACE",
     "NO_VALUES",
     "Group",
     "Node",

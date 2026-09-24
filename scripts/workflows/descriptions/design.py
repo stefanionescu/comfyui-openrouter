@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from src.config.namespace import NODE_PREFIX
-from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
-from scripts.workflows.page.graph import Node, Group, Workflow
+from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.schemas import numbered_schema
+from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
+from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.config import (
     TEXT,
     FIELD,
@@ -29,34 +30,12 @@ QUESTION = f"{NODE_PREFIX}DecisionAddQuestion"
 READ = f"{NODE_PREFIX}DecisionReadAnswer"
 WRITER = "openai/gpt-6-sol"
 GPT_IMAGE = "openai/gpt-image-2.5-flare"
+EDIT_TEXTS = WORKFLOW_TEXTS["image-03-edit-with-the-best-idea"]
+LOGO_TEXTS = WORKFLOW_TEXTS["image-04-design-a-logo"]
 
-EDIT_BEST_IDEA = Workflow(
-    slug="image-03-edit-with-the-best-idea",
+IDEAS = Subgraph(
+    name=SHARED_TEXTS["ideas"],
     nodes=(
-        Node("photo", IMAGE, {"image": ""}, title="Product Photo"),
-        Node(
-            "campaign",
-            TEXT_BLOCK,
-            {"value": "Autumn sale for young city commuters. Warm evening light, a sense of movement, premium feel."},
-            title="Campaign",
-        ),
-        Node(
-            "best",
-            QUESTION,
-            {
-                "name": "best_idea",
-                "instructions": "Which editing idea fits the campaign best while keeping the product unchanged?",
-                "answer_type": "one choice",
-                "answer_type.options": "idea_1\nidea_2\nidea_3",
-            },
-            title="Best Idea",
-        ),
-        Node(
-            "on_brief",
-            QUESTION,
-            {"name": "on_brief", "instructions": "Does the chosen idea suit the campaign?"},
-            title="On Brief",
-        ),
         Node(
             "request",
             FORMAT,
@@ -66,66 +45,210 @@ EDIT_BEST_IDEA = Workflow(
                     "image. Each idea is one detailed editing instruction that keeps the product exactly as it is."
                 )
             },
-            title="Idea Request",
         ),
-        Node(
-            "ideas",
-            ASK,
-            {"model": WRITER, "model.answer_schema": numbered_schema("idea", 3)},
-            title="Write Edit Ideas",
-            is_paid=True,
-        ),
-        Node("situation", FORMAT, {"f_string": "Campaign:\n{a}\n\nIdeas:\n{b}"}, title="Campaign and Ideas"),
-        Node("decide", DECIDE, title="Choose an Idea", is_paid=True),
-        Node("read_best", READ, {"question": "best_idea"}, title="Read Best Idea"),
-        Node("read_brief", READ, {"question": "on_brief"}, title="Read On Brief"),
-        Node("idea", FIELD, title="Extract the Idea"),
-        Node(
-            "edit",
-            GENERATE,
-            {"model": GPT_IMAGE, "model.quality": "medium"},
-            title="Apply the Idea",
-            is_paid=True,
-        ),
-        Node("chosen", PREVIEW, title="Chosen Idea"),
-        Node("approved", TEXT, {"value": "campaign/approved"}, title="Approved Folder"),
-        Node("review", TEXT, {"value": "campaign/review"}, title="Review Folder"),
-        Node("folder", SWITCH, title="Choose the Folder"),
-        Node("save", SAVE_IMAGE, title="Save the Edit"),
+        Node("ideas", ASK, {"model": WRITER, "model.answer_schema": numbered_schema("idea", 3)}, is_paid=True),
+    ),
+    links=(("request.STRING", "ideas.prompt"),),
+    columns=(("request",), ("ideas",)),
+    inputs=(("image", "ideas.model.images.image_1"), ("campaign", "request.values.a")),
+    outputs=(("ideas", "ideas.text"),),
+    description=EDIT_TEXTS["ideas_description"],
+)
+
+CHOOSE_IDEA = Subgraph(
+    name=SHARED_TEXTS["choose"],
+    nodes=(
+        Node("situation", FORMAT, {"f_string": "Campaign:\n{a}\n\nIdeas:\n{b}"}),
+        Node("decide", DECIDE, is_paid=True),
+        Node("best", READ, {"question": "best"}),
+        Node("on_brief", READ, {"question": "on_brief"}),
+        Node("idea", FIELD),
     ),
     links=(
-        ("campaign.STRING", "request.values.a"),
-        ("campaign.STRING", "situation.values.a"),
-        ("request.STRING", "ideas.prompt"),
-        ("photo.IMAGE", "ideas.model.images.image_1"),
-        ("ideas.text", "situation.values.b"),
         ("situation.STRING", "decide.situation"),
-        ("best.questions", "on_brief.questions"),
-        ("on_brief.questions", "decide.questions"),
-        ("decide.answers", "read_best.answers"),
-        ("decide.answers", "read_brief.answers"),
-        ("ideas.text", "idea.json_string"),
-        ("read_best.answer", "idea.key"),
-        ("idea.STRING", "edit.prompt"),
-        ("idea.STRING", "chosen.source"),
-        ("photo.IMAGE", "edit.model.references.reference_1"),
-        ("read_brief.is_yes", "folder.switch"),
+        ("decide.answers", "best.answers"),
+        ("decide.answers", "on_brief.answers"),
+        ("best.answer", "idea.key"),
+    ),
+    columns=(("situation", "decide"), ("best", "on_brief"), ("idea",)),
+    inputs=(
+        ("campaign", "situation.values.a"),
+        ("ideas", "idea.json_string"),
+        ("ideas", "situation.values.b"),
+        ("questions", "decide.questions"),
+    ),
+    outputs=(("idea", "idea.STRING"), ("on_brief", "on_brief.is_yes"), ("summary", "decide.summary")),
+    description=EDIT_TEXTS["choose_description"],
+)
+
+EDIT = Subgraph(
+    name=SHARED_TEXTS["edit"],
+    nodes=(
+        Node("edit", GENERATE, {"model": GPT_IMAGE, "model.quality": "medium"}, is_paid=True),
+        Node("approved", TEXT, {"value": "campaign/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", TEXT, {"value": "campaign/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", SWITCH),
+        Node("save", SAVE_IMAGE),
+    ),
+    links=(
         ("approved.STRING", "folder.on_true"),
         ("review.STRING", "folder.on_false"),
         ("folder.output", "save.filename_prefix"),
         ("edit.images", "save.images"),
     ),
+    columns=(("edit",), ("approved", "review", "folder"), ("save",)),
+    inputs=(
+        ("image", "edit.model.references.reference_1"),
+        ("idea", "edit.prompt"),
+        ("on_brief", "folder.switch"),
+        ("approved", "approved.value"),
+        ("review", "review.value"),
+    ),
+    description=EDIT_TEXTS["edit_description"],
+    previews=(("save", IMAGE_PREVIEW),),
+)
+
+EDIT_BEST_IDEA = Workflow(
+    slug="image-03-edit-with-the-best-idea",
+    nodes=(
+        Node("photo", IMAGE, {"image": ""}),
+        Node(
+            "campaign",
+            TEXT_BLOCK,
+            {"value": "Autumn sale for young city commuters. Warm evening light, a sense of movement, premium feel."},
+            title=SHARED_TEXTS["campaign"],
+        ),
+        Node("ideas", IDEAS.name),
+        Node(
+            "best",
+            QUESTION,
+            {
+                "name": "best",
+                "instructions": "Which editing idea fits the campaign best while keeping the product unchanged?",
+                "answer_type": "one choice",
+                "answer_type.options": "idea_1\nidea_2\nidea_3",
+            },
+        ),
+        Node(
+            "on_brief",
+            QUESTION,
+            {"name": "on_brief", "instructions": "Does the chosen idea suit the campaign?"},
+        ),
+        Node("choose", CHOOSE_IDEA.name),
+        Node("idea", PREVIEW, title=SHARED_TEXTS["idea"]),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("edit", EDIT.name),
+    ),
+    links=(
+        ("photo.IMAGE", "ideas.image"),
+        ("campaign.STRING", "ideas.campaign"),
+        ("campaign.STRING", "choose.campaign"),
+        ("ideas.ideas", "choose.ideas"),
+        ("best.questions", "on_brief.questions"),
+        ("on_brief.questions", "choose.questions"),
+        ("choose.idea", "idea.source"),
+        ("choose.summary", "summary.source"),
+        ("photo.IMAGE", "edit.image"),
+        ("choose.idea", "edit.idea"),
+        ("choose.on_brief", "edit.on_brief"),
+    ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("photo", "campaign"), ("best", "on_brief"))),),
+        (Group(SHARED_TEXTS["input"], (("photo", "campaign"),), note=EDIT_TEXTS["input"]),),
+        (Group(SHARED_TEXTS["ideas"], (("ideas",),), STAGE_COLOUR, EDIT_TEXTS["ideas"]),),
         (
             Group(
                 SHARED_TEXTS["choose"],
-                (("request", "ideas"), ("situation", "decide"), ("read_best", "read_brief", "idea")),
+                (("best", "on_brief"), ("choose", "idea"), ("summary",)),
                 STAGE_COLOUR,
+                EDIT_TEXTS["choose"],
             ),
         ),
-        (Group(SHARED_TEXTS["edit"], (("edit", "chosen"), ("approved", "review", "folder", "save")), STAGE_COLOUR),),
+        (Group(SHARED_TEXTS["edit"], (("edit",),), STAGE_COLOUR, EDIT_TEXTS["edit"]),),
     ),
+    subgraphs=(IDEAS, CHOOSE_IDEA, EDIT),
+)
+
+PROMPTS = Subgraph(
+    name=SHARED_TEXTS["prompts"],
+    nodes=(
+        Node(
+            "prompts",
+            ASK,
+            {
+                "model": WRITER,
+                "model.answer_schema": numbered_schema("prompt", 3),
+                "system": (
+                    "Write three different prompts for a flat, two-colour logo mark for the brand the person "
+                    "describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
+                ),
+            },
+            is_paid=True,
+        ),
+        Node("situation", FORMAT, {"f_string": "Brand:\n{a}\n\nPrompts:\n{b}"}),
+        Node("decide", DECIDE, is_paid=True),
+        Node("best", READ, {"question": "best"}),
+        Node("prompt", FIELD),
+    ),
+    links=(
+        ("prompts.text", "situation.values.b"),
+        ("situation.STRING", "decide.situation"),
+        ("decide.answers", "best.answers"),
+        ("prompts.text", "prompt.json_string"),
+        ("best.answer", "prompt.key"),
+    ),
+    columns=(("prompts",), ("situation", "decide"), ("best", "prompt")),
+    inputs=(("brand", "prompts.prompt"), ("brand", "situation.values.a"), ("questions", "decide.questions")),
+    outputs=(("prompt", "prompt.STRING"), ("summary", "decide.summary")),
+    description=LOGO_TEXTS["prompts_description"],
+)
+
+VECTOR = Subgraph(
+    name=SHARED_TEXTS["vector"],
+    nodes=(
+        Node(
+            "vector",
+            GENERATE,
+            {"model": "recraft/recraft-v4.1-vector", "model.aspect_ratio": "1:1"},
+            is_paid=True,
+        ),
+        Node("save", SAVE_SVG, {"filename_prefix": "logo/fernwood"}),
+    ),
+    links=(("vector.svg", "save.svg"),),
+    columns=(("vector",), ("save",)),
+    inputs=(("prompt", "vector.prompt"),),
+    description=LOGO_TEXTS["vector_description"],
+)
+
+STICKER = Subgraph(
+    name=SHARED_TEXTS["sticker"],
+    nodes=(
+        Node(
+            "sticker",
+            GENERATE,
+            {
+                "model": GPT_IMAGE,
+                "model.aspect_ratio": "1:1",
+                "model.background": "transparent",
+                "model.quality": "medium",
+            },
+            is_paid=True,
+        ),
+        Node("join", JOIN_ALPHA),
+        Node("save", SAVE_IMAGE, {"filename_prefix": "logo/fernwood-sticker"}),
+        Node("mask", MASK_IMAGE),
+        Node("preview", PREVIEW_IMAGE, title=SHARED_TEXTS["mask"]),
+    ),
+    links=(
+        ("sticker.images", "join.image"),
+        ("sticker.masks", "join.alpha"),
+        ("join.IMAGE", "save.images"),
+        ("sticker.masks", "mask.mask"),
+        ("mask.IMAGE", "preview.images"),
+    ),
+    columns=(("sticker",), ("join", "mask"), ("save", "preview")),
+    inputs=(("prompt", "sticker.prompt"),),
+    description=LOGO_TEXTS["sticker_description"],
+    previews=(("save", IMAGE_PREVIEW),),
 )
 
 DESIGN_LOGO = Workflow(
@@ -140,91 +263,46 @@ DESIGN_LOGO = Workflow(
                     "The logo must read well at the size of a coffee-cup sleeve."
                 )
             },
-            title="Brand Brief",
+            title=SHARED_TEXTS["brand"],
         ),
         Node(
             "best",
             QUESTION,
             {
-                "name": "best_prompt",
+                "name": "best",
                 "instructions": "Which prompt will give the simplest, most memorable logo for this brand?",
                 "answer_type": "one choice",
                 "answer_type.options": "prompt_1\nprompt_2\nprompt_3",
             },
-            title="Best Prompt",
         ),
-        Node(
-            "prompts",
-            ASK,
-            {
-                "model": WRITER,
-                "model.answer_schema": numbered_schema("prompt", 3),
-                "system": (
-                    "Write three different prompts for a flat, two-colour logo mark for the brand the person "
-                    "describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
-                ),
-            },
-            title="Write Logo Prompts",
-            is_paid=True,
-        ),
-        Node("situation", FORMAT, {"f_string": "Brand:\n{a}\n\nPrompts:\n{b}"}, title="Brand and Prompts"),
-        Node("decide", DECIDE, title="Choose a Prompt", is_paid=True),
-        Node("read", READ, {"question": "best_prompt"}, title="Read Best Prompt"),
-        Node("prompt", FIELD, title="Extract the Prompt"),
-        Node(
-            "vector",
-            GENERATE,
-            {"model": "recraft/recraft-v4.1-vector", "model.aspect_ratio": "1:1"},
-            title="Vector Logo",
-            is_paid=True,
-        ),
-        Node(
-            "sticker",
-            GENERATE,
-            {
-                "model": GPT_IMAGE,
-                "model.aspect_ratio": "1:1",
-                "model.background": "transparent",
-                "model.quality": "medium",
-            },
-            title="Sticker",
-            is_paid=True,
-        ),
-        Node("save_vector", SAVE_SVG, {"filename_prefix": "logo/fernwood"}, title="Save Logo"),
-        Node("join", JOIN_ALPHA, title="Add Transparency"),
-        Node("save_sticker", SAVE_IMAGE, {"filename_prefix": "logo/fernwood-sticker"}, title="Save Sticker"),
-        Node("mask", MASK_IMAGE, title="Mask as Image"),
-        Node("preview_mask", PREVIEW_IMAGE, title="Sticker Mask"),
+        Node("prompts", PROMPTS.name),
+        Node("prompt", PREVIEW, title=SHARED_TEXTS["prompt"]),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("vector", VECTOR.name),
+        Node("sticker", STICKER.name),
     ),
     links=(
-        ("brand.STRING", "prompts.prompt"),
-        ("brand.STRING", "situation.values.a"),
-        ("prompts.text", "situation.values.b"),
-        ("situation.STRING", "decide.situation"),
-        ("best.questions", "decide.questions"),
-        ("decide.answers", "read.answers"),
-        ("prompts.text", "prompt.json_string"),
-        ("read.answer", "prompt.key"),
-        ("prompt.STRING", "vector.prompt"),
-        ("prompt.STRING", "sticker.prompt"),
-        ("vector.svg", "save_vector.svg"),
-        ("sticker.images", "join.image"),
-        ("sticker.masks", "join.alpha"),
-        ("join.IMAGE", "save_sticker.images"),
-        ("sticker.masks", "mask.mask"),
-        ("mask.IMAGE", "preview_mask.images"),
+        ("brand.STRING", "prompts.brand"),
+        ("best.questions", "prompts.questions"),
+        ("prompts.prompt", "prompt.source"),
+        ("prompts.summary", "summary.source"),
+        ("prompts.prompt", "vector.prompt"),
+        ("prompts.prompt", "sticker.prompt"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("brand", "best"),)),),
-        (Group(SHARED_TEXTS["choose"], (("prompts", "situation"), ("decide", "read", "prompt")), STAGE_COLOUR),),
+        (Group(SHARED_TEXTS["input"], (("brand",),), note=LOGO_TEXTS["input"]),),
         (
             Group(
-                SHARED_TEXTS["logo"],
-                (("vector", "save_vector"), ("sticker", "join", "save_sticker"), ("mask", "preview_mask")),
+                SHARED_TEXTS["prompts"],
+                (("best", "prompts"), ("prompt", "summary")),
                 STAGE_COLOUR,
+                LOGO_TEXTS["prompts"],
             ),
         ),
+        (Group(SHARED_TEXTS["vector"], (("vector",),), STAGE_COLOUR, LOGO_TEXTS["vector"]),),
+        (Group(SHARED_TEXTS["sticker"], (("sticker",),), STAGE_COLOUR, LOGO_TEXTS["sticker"]),),
     ),
+    subgraphs=(PROMPTS, VECTOR, STICKER),
 )
 
 DESIGN_WORKFLOWS = (EDIT_BEST_IDEA, DESIGN_LOGO)

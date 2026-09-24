@@ -5,8 +5,9 @@ from __future__ import annotations
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
-from scripts.workflows.page.graph import Node, Group, Workflow
+from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.config import TEXT, FORMAT, SWITCH, PREVIEW, TEXT_BLOCK
+from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 
 ASK = f"{NODE_PREFIX}ChatAsk"
 NOTES = (
@@ -14,17 +15,73 @@ NOTES = (
     "Saturday of each month at 16:00. It is closed on Sundays and public holidays. Returns are accepted at the "
     "service desk until 30 minutes before closing."
 )
+TEXTS = WORKFLOW_TEXTS["decision-01-verify-then-escalate"]
+
+ANSWER = Subgraph(
+    name=SHARED_TEXTS["answer"],
+    nodes=(
+        Node(
+            "request",
+            FORMAT,
+            {"f_string": "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"},
+        ),
+        Node("quick", ASK, {"model": "openai/gpt-6-luna"}, is_paid=True),
+    ),
+    links=(("request.STRING", "quick.prompt"),),
+    columns=(("request",), ("quick",)),
+    inputs=(("notes", "request.values.a"), ("question", "request.values.b")),
+    outputs=(("answer", "quick.text"), ("prompt", "request.STRING")),
+    description=TEXTS["answer_description"],
+)
+
+CHECK = Subgraph(
+    name=SHARED_TEXTS["check"],
+    nodes=(
+        Node("situation", FORMAT, {"f_string": "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"}),
+        Node("decide", f"{NODE_PREFIX}DecisionAsk", is_paid=True),
+        Node("read", f"{NODE_PREFIX}DecisionReadAnswer", {"question": "supported", "threshold": 0.8}),
+    ),
+    links=(("situation.STRING", "decide.situation"), ("decide.answers", "read.answers")),
+    columns=(("situation", "decide"), ("read",)),
+    inputs=(
+        ("notes", "situation.values.a"),
+        ("question", "situation.values.b"),
+        ("answer", "situation.values.c"),
+        ("questions", "decide.questions"),
+    ),
+    outputs=(("supported", "read.is_yes"), ("summary", "decide.summary")),
+    description=TEXTS["check_description"],
+)
+
+ESCALATE = Subgraph(
+    name=SHARED_TEXTS["escalate"],
+    nodes=(
+        Node(
+            "careful",
+            ASK,
+            {"model": "anthropic/claude-opus-5.5", "model.reasoning": "medium"},
+            is_paid=True,
+        ),
+        Node("pick", SWITCH),
+    ),
+    links=(("careful.text", "pick.on_false"),),
+    columns=(("careful",), ("pick",)),
+    inputs=(("prompt", "careful.prompt"), ("answer", "pick.on_true"), ("supported", "pick.switch")),
+    outputs=(("answer", "pick.output"),),
+    description=TEXTS["escalate_description"],
+)
 
 VERIFY_ESCALATE = Workflow(
     slug="decision-01-verify-then-escalate",
     nodes=(
-        Node("notes", TEXT_BLOCK, {"value": NOTES}, title="Notes"),
+        Node("notes", TEXT_BLOCK, {"value": NOTES}, title=SHARED_TEXTS["notes"]),
         Node(
             "question",
             TEXT,
             {"value": "Until what time can I return an item on the first Saturday of the month?"},
-            title="Question",
+            title=SHARED_TEXTS["question"],
         ),
+        Node("answer", ANSWER.name),
         Node(
             "supported",
             f"{NODE_PREFIX}DecisionAddQuestion",
@@ -32,61 +89,32 @@ VERIFY_ESCALATE = Workflow(
                 "name": "supported",
                 "instructions": "Is every fact in the answer stated in the notes, and does it answer the question?",
             },
-            title="Supported",
         ),
-        Node(
-            "request",
-            FORMAT,
-            {"f_string": "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"},
-            title="Answer Request",
-        ),
-        Node("quick", ASK, {"model": "openai/gpt-6-luna"}, title="Quick Answer", is_paid=True),
-        Node(
-            "situation",
-            FORMAT,
-            {"f_string": "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"},
-            title="Notes and Answer",
-        ),
-        Node("decide", f"{NODE_PREFIX}DecisionAsk", title="Check the Answer", is_paid=True),
-        Node(
-            "read",
-            f"{NODE_PREFIX}DecisionReadAnswer",
-            {"question": "supported", "threshold": 0.8},
-            title="Read Supported",
-        ),
-        Node(
-            "careful",
-            ASK,
-            {"model": "anthropic/claude-opus-5.5", "model.reasoning": "medium"},
-            title="Careful Answer",
-            is_paid=True,
-        ),
-        Node("pick", SWITCH, title="Keep or Escalate"),
-        Node("answer", PREVIEW, title="Answer"),
-        Node("summary", PREVIEW, title="Check Summary"),
+        Node("check", CHECK.name),
+        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("escalate", ESCALATE.name),
+        Node("result", PREVIEW, title=SHARED_TEXTS["answer"]),
     ),
     links=(
-        ("notes.STRING", "request.values.a"),
-        ("question.STRING", "request.values.b"),
-        ("request.STRING", "quick.prompt"),
-        ("request.STRING", "careful.prompt"),
-        ("notes.STRING", "situation.values.a"),
-        ("question.STRING", "situation.values.b"),
-        ("quick.text", "situation.values.c"),
-        ("situation.STRING", "decide.situation"),
-        ("supported.questions", "decide.questions"),
-        ("decide.answers", "read.answers"),
-        ("decide.summary", "summary.source"),
-        ("read.is_yes", "pick.switch"),
-        ("quick.text", "pick.on_true"),
-        ("careful.text", "pick.on_false"),
-        ("pick.output", "answer.source"),
+        ("notes.STRING", "answer.notes"),
+        ("question.STRING", "answer.question"),
+        ("notes.STRING", "check.notes"),
+        ("question.STRING", "check.question"),
+        ("answer.answer", "check.answer"),
+        ("supported.questions", "check.questions"),
+        ("check.summary", "summary.source"),
+        ("answer.prompt", "escalate.prompt"),
+        ("answer.answer", "escalate.answer"),
+        ("check.supported", "escalate.supported"),
+        ("escalate.answer", "result.source"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("notes", "question"), ("supported", "request"))),),
-        (Group(SHARED_TEXTS["check"], (("quick", "situation"), ("decide", "read")), STAGE_COLOUR),),
-        (Group(SHARED_TEXTS["escalate"], (("careful",), ("pick", "answer", "summary")), STAGE_COLOUR),),
+        (Group(SHARED_TEXTS["input"], (("notes", "question"),), note=TEXTS["input"]),),
+        (Group(SHARED_TEXTS["answer"], (("answer",),), STAGE_COLOUR, TEXTS["answer"]),),
+        (Group(SHARED_TEXTS["check"], (("supported",), ("check", "summary")), STAGE_COLOUR, TEXTS["check"]),),
+        (Group(SHARED_TEXTS["escalate"], (("escalate",), ("result",)), STAGE_COLOUR, TEXTS["escalate"]),),
     ),
+    subgraphs=(ANSWER, CHECK, ESCALATE),
 )
 
 DECISION_WORKFLOWS = (VERIFY_ESCALATE,)

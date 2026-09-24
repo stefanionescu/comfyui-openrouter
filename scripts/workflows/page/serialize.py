@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import uuid
-from scripts.config import NOTE
-from dataclasses import dataclass
 from typing import cast, TYPE_CHECKING
-from scripts.workflows.page.graph import Node, Subgraph, NAMESPACE
-from scripts.workflows.page.layout import GUTTER, place_stacks, place_columns
+from scripts.workflows.page.graph import NAMESPACE
+from scripts.workflows.page.palette import Palette, read_slot_type
+from scripts.workflows.page.layout import place_stacks, place_columns
+from scripts.workflows.page.widgets import Item, Schema, serialize_widget_values
 from scripts.workflows.page.sizes import measure, read_slots, count_slots, read_option_inputs
-from scripts.workflows.page.widgets import Item, Schema, read_widget_default, serialize_widget_values
 from scripts.workflows.page.config import (
+    ANY_TYPE,
+    PORT_GAP,
+    MATCH_TYPE,
     PORT_WIDTH,
     BYPASS_MODE,
     INNER_ORIGIN,
@@ -22,72 +24,10 @@ from scripts.workflows.page.config import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Mapping, Sequence
+    from scripts.workflows.page.graph import Node, Subgraph
 
 Json = dict[str, object]
-# The any-type sockets of a switch, which take the type of the values linked into them.
-MATCH_TYPE = "COMFY_MATCHTYPE_V3"
-# The page defines these nodes itself, so the schema export cannot describe them.
-BUILT_IN: dict[str, Schema] = {
-    NOTE: {"inputs": [{"name": "text", "type": "STRING", "widget": True, "default": ""}], "outputs": []},
-}
-
-
-@dataclass(frozen=True, slots=True)
-class Palette:
-    """The node descriptions and subgraphs a workflow may place."""
-
-    schemas: Mapping[str, Schema]
-    subgraphs: Mapping[str, Subgraph]
-
-    def schema(self, node: Node) -> Schema:
-        """Describe one node or placed subgraph."""
-        if node.kind in self.subgraphs:
-            return build_subgraph_schema(self.subgraphs[node.kind], self)
-        if node.kind in self.schemas:
-            return self.schemas[node.kind]
-        if node.kind in BUILT_IN:
-            return BUILT_IN[node.kind]
-        message = f"{node.kind} is not a node the workflows can place."
-        raise KeyError(message)
-
-
-def find_socket(schema: Schema, side: str, name: str, owner: str) -> tuple[int, Item]:
-    """Find an input or output by name, with its position."""
-    for index, item in enumerate(cast("list[Item]", schema[side])):
-        if item["name"] == name:
-            return index, item
-    message = f"{owner} has no {side[:-1]} named {name}."
-    raise KeyError(message)
-
-
-def find_node(subgraph: Subgraph, key: str) -> Node:
-    """Find one node of a subgraph by its key."""
-    node = next((node for node in subgraph.nodes if node.key == key), None)
-    if node is None:
-        message = f"{subgraph.name} has no node keyed {key}."
-        raise KeyError(message)
-    return node
-
-
-def build_subgraph_schema(subgraph: Subgraph, palette: Palette) -> Schema:
-    """Describe a subgraph as one node."""
-    inputs: list[Item] = []
-    for name, target in subgraph.inputs:
-        if any(item["name"] == name for item in inputs):
-            continue
-        key, socket = target.split(".")
-        node = find_node(subgraph, key)
-        _, item = find_socket(palette.schema(node), "inputs", socket, node.kind)
-        default = node.values.get(socket, read_widget_default(item))
-        inputs.append({**item, "name": name, "default": default, "optional": False})
-    outputs: list[Item] = []
-    for name, source in subgraph.outputs:
-        key, socket = source.split(".")
-        node = find_node(subgraph, key)
-        _, item = find_socket(palette.schema(node), "outputs", socket, node.kind)
-        outputs.append({**item, "name": name})
-    return {"inputs": inputs, "outputs": outputs}
 
 
 def serialize_option_sockets(item: Item, chosen: object, linked: frozenset[str]) -> list[Json]:
@@ -108,23 +48,19 @@ def serialize_option_sockets(item: Item, chosen: object, linked: frozenset[str])
 
 def serialize_autogrow(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> list[Json]:
     """Serialize a growing row of sockets: every slot up to the last linked one and one more, or its minimum."""
-    template = cast("dict[str, object]", settings["template"])
     slots = read_slots(name, settings)
     shown = count_slots(name, settings, linked)
-    socket = cast("dict[str, dict[str, list[object]]]", template["input"])
-    slot_type = next(iter((socket.get("required") or socket.get("optional") or {}).values()))[0]
+    slot_type = read_slot_type(settings)
     return [
         {"label": slot.rsplit(".", 1)[1], "name": slot, "type": slot_type, "link": None, "shape": 7}
         for slot in slots[:shown]
     ]
 
 
-def serialize_inputs(node: Node, schema: Schema, linked: frozenset[str], *, is_subgraph: bool) -> list[Json]:
+def serialize_inputs(node: Node, schema: Schema, linked: frozenset[str]) -> list[Json]:
     """Serialize a node's inputs; a dropdown's chosen option adds the sockets it shows after it."""
     inputs: list[Json] = []
     for item in cast("list[Item]", schema["inputs"]):
-        if item.get("widget") and is_subgraph:
-            continue
         if item["type"] == AUTOGROW_TYPE:
             inputs += serialize_autogrow(str(item["name"]), item, linked)
             continue
@@ -147,12 +83,12 @@ def serialize_node(
     """Serialize one node with nothing linked; a dropdown's chosen option adds the sockets it shows."""
     schema = palette.schema(node)
     is_subgraph = node.kind in palette.subgraphs
-    inputs = serialize_inputs(node, schema, linked, is_subgraph=is_subgraph)
+    inputs = serialize_inputs(node, schema, linked)
     outputs: list[Json] = [
         {"name": item["name"], "type": item["type"], **({"shape": 6} if item.get("is_list") else {}), "links": []}
         for item in cast("list[Item]", schema["outputs"])
     ]
-    kind = palette.subgraphs[node.kind].id if is_subgraph else node.kind
+    kind = palette.ids[node.kind] if is_subgraph else node.kind
     entry: Json = {
         "id": number,
         "type": kind,
@@ -183,29 +119,33 @@ def find_slot_index(entry: Json, side: str, name: str) -> int:
     return index
 
 
-def serialize_graph(
+def serialize_nodes(
     nodes: tuple[Node, ...],
-    links: tuple[tuple[str, str], ...],
     palette: Palette,
     boxes: Mapping[str, tuple[int, int, int, int]],
+    targets: Sequence[str],
     first_id: int = 1,
-) -> tuple[dict[str, Json], list[Json]]:
-    """Serialize nodes and the links between them."""
-    numbered = enumerate(nodes, first_id)
-    targets = [end.split(".", 1) for _start, end in links]
+) -> dict[str, Json]:
+    """Serialize nodes with nothing linked yet; the targets are the `node.socket` names links will fill."""
+    linked = [target.split(".", 1) for target in targets]
     entries = {
         node.key: serialize_node(
             node,
             number,
             palette,
             boxes[node.key],
-            frozenset(socket for key, socket in targets if key == node.key),
+            frozenset(socket for key, socket in linked if key == node.key),
         )
-        for number, node in numbered
+        for number, node in enumerate(nodes, first_id)
     }
     if len(entries) != len(nodes):
         message = "Give every node its own key."
         raise ValueError(message)
+    return entries
+
+
+def link_nodes(entries: Mapping[str, Json], links: tuple[tuple[str, str], ...]) -> list[Json]:
+    """Link serialized nodes, and give each switch the type of the values it passes on."""
     records: list[Json] = []
     matched = match_types(entries, links)
     for number, (start, end) in enumerate(links, 1):
@@ -233,7 +173,7 @@ def serialize_graph(
                 "type": kind,
             }
         )
-    return entries, records
+    return records
 
 
 def match_types(entries: Mapping[str, Json], links: tuple[tuple[str, str], ...]) -> dict[str, object]:
@@ -254,18 +194,20 @@ def match_types(entries: Mapping[str, Json], links: tuple[tuple[str, str], ...])
     return matched
 
 
-def link_subgraph_ports(subgraph: Subgraph, entries: dict[str, Json], records: list[Json], side: str) -> list[Json]:
+def link_subgraph_ports(
+    subgraph: Subgraph, subgraph_id: str, entries: dict[str, Json], records: list[Json], side: str
+) -> list[Json]:
     """Link the exposed inputs or outputs to the inner nodes."""
     ports: list[Json] = []
     port_node, inner_side = (-10, "inputs") if side == "inputs" else (-20, "outputs")
     for name, socket in getattr(subgraph, side):
         port = next((port for port in ports if port["name"] == name), None)
         if port is None:
-            port_id = str(uuid.uuid5(NAMESPACE, f"{subgraph.id}.{side}.{name}"))
+            port_id = str(uuid.uuid5(NAMESPACE, f"{subgraph_id}.{side}.{name}"))
             port = cast("Json", {"id": port_id, "name": name, "type": "", "linkIds": [], "pos": [0, 0]})
             ports.append(port)
         index = ports.index(port)
-        key, socket_name = socket.split(".")
+        key, socket_name = socket.split(".", 1)
         entry = entries[key]
         position = find_slot_index(entry, inner_side, socket_name)
         number = len(records) + 1
@@ -276,21 +218,48 @@ def link_subgraph_ports(subgraph: Subgraph, entries: dict[str, Json], records: l
         else:
             cast("list[int]", inner["links"]).append(number)
             record = {"origin_id": entry["id"], "origin_slot": position, "target_id": port_node, "target_slot": index}
+        if inner["type"] == MATCH_TYPE:
+            inner["type"] = read_switch_type(entry)
         records.append({"id": number, **record, "type": inner["type"]})
-        port["type"] = inner["type"]
+        # A port takes the most specific type among the sockets it feeds.
+        if port["type"] in {"", ANY_TYPE, MATCH_TYPE}:
+            port["type"] = inner["type"]
         cast("list[int]", port["linkIds"]).append(number)
     return ports
 
 
+def read_switch_type(entry: Json) -> object:
+    """Read the type a switch passes on from its sockets that links inside the subgraph already typed."""
+    sockets = [*cast("list[Json]", entry["inputs"]), *cast("list[Json]", entry["outputs"])]
+    typed = (socket["type"] for socket in sockets if socket["name"] != "switch" and socket["type"] != MATCH_TYPE)
+    return next(typed, MATCH_TYPE)
+
+
+def read_preview_exposures(subgraph: Subgraph, position: int) -> list[Json]:
+    """List the previews of nodes inside a subgraph that its placed node shows, such as a saved image.
+
+    The inner node IDs follow the numbering `serialize_subgraph` gives them.
+    """
+    keys = [node.key for node in subgraph.nodes]
+    first_id = position * SUBGRAPH_ID_STEP + 1
+    return [
+        {"name": name, "sourceNodeId": str(first_id + keys.index(key)), "sourcePreviewName": name}
+        for key, name in subgraph.previews
+    ]
+
+
 def serialize_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> Json:
     """Serialize one subgraph definition with its input and output ports."""
-    targets = [end.split(".", 1) for _start, end in subgraph.links]
+    subgraph_id = palette.ids[subgraph.name]
+    # The input ports link sockets too, so the growing rows they feed show those slots.
+    targets = [end for _start, end in (*subgraph.links, *subgraph.inputs)]
+    linked = [target.split(".", 1) for target in targets]
     sizes = {
         node.key: measure(
             node.kind,
             palette.schema(node),
             node.values,
-            frozenset(socket for key, socket in targets if key == node.key),
+            frozenset(socket for key, socket in linked if key == node.key),
         )
         for node in subgraph.nodes
     }
@@ -299,16 +268,17 @@ def serialize_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> J
     else:
         placed, groups = place_columns(subgraph.columns, sizes, INNER_ORIGIN), []
     boxes = {key: (box.x, box.y, box.width, box.height) for key, box in placed.items()}
-    entries, records = serialize_graph(subgraph.nodes, subgraph.links, palette, boxes, position * SUBGRAPH_ID_STEP + 1)
-    inputs = link_subgraph_ports(subgraph, entries, records, "inputs")
-    outputs = link_subgraph_ports(subgraph, entries, records, "outputs")
-    right = max(box.right for box in placed.values()) + GUTTER
+    entries = serialize_nodes(subgraph.nodes, palette, boxes, targets, position * SUBGRAPH_ID_STEP + 1)
+    records = link_nodes(entries, subgraph.links)
+    inputs = link_subgraph_ports(subgraph, subgraph_id, entries, records, "inputs")
+    outputs = link_subgraph_ports(subgraph, subgraph_id, entries, records, "outputs")
+    right = max(box.right for box in placed.values()) + PORT_GAP
     for index, port in enumerate(inputs):
-        port["pos"] = [INNER_ORIGIN[0] - GUTTER, INNER_ORIGIN[1] + 20 * index]
+        port["pos"] = [INNER_ORIGIN[0] - PORT_GAP, INNER_ORIGIN[1] + 20 * index]
     for index, port in enumerate(outputs):
         port["pos"] = [right, INNER_ORIGIN[1] + 20 * index]
     return {
-        "id": subgraph.id,
+        "id": subgraph_id,
         "version": 1,
         "state": {
             "lastGroupId": 0,
@@ -321,7 +291,12 @@ def serialize_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> J
         "name": subgraph.name,
         "inputNode": {
             "id": -10,
-            "bounding": [INNER_ORIGIN[0] - GUTTER - PORT_WIDTH, INNER_ORIGIN[1], PORT_WIDTH, 20 * max(1, len(inputs))],
+            "bounding": [
+                INNER_ORIGIN[0] - PORT_GAP - PORT_WIDTH,
+                INNER_ORIGIN[1],
+                PORT_WIDTH,
+                20 * max(1, len(inputs)),
+            ],
         },
         "outputNode": {"id": -20, "bounding": [right, INNER_ORIGIN[1], PORT_WIDTH, 20 * max(1, len(outputs))]},
         "inputs": inputs,
@@ -334,4 +309,4 @@ def serialize_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> J
     }
 
 
-__all__ = ["Json", "Palette", "Schema", "serialize_graph", "serialize_subgraph"]
+__all__ = ["Json", "link_nodes", "read_preview_exposures", "serialize_nodes", "serialize_subgraph"]

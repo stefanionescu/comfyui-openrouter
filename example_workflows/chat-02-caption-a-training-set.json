@@ -2,18 +2,18 @@
   "id": "ff9e1a0c-26b2-52df-a967-a4acf6fefbe6",
   "revision": 0,
   "last_node_id": 8,
-  "last_link_id": 6,
+  "last_link_id": 4,
   "nodes": [
     {
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        0,
-        30
+        30,
+        140
       ],
       "size": [
-        620,
-        88
+        340,
+        144
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Choose a folder of images in **Training Images**.\n3. Press **Run**. **Save Captions** writes each image and its caption to `output/captions`."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. In **Load Image (from Folder)**, choose a folder of images in ComfyUI's input folder.\n3. Press **Run**. Each image and its caption are saved to `output/captions`.\n\nEach image sends two paid requests, a caption and a check, so a folder of 20 images sends 40. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -41,12 +41,12 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        650,
-        30
+        460,
+        140
       ],
       "size": [
-        620,
-        106
+        340,
+        144
       ],
       "flags": {},
       "order": 1,
@@ -66,23 +66,56 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "**Caption Each Image** runs once per image, so a folder of 20 images sends 20 paid requests. Each caption is one sentence that names only what is visible.\n\nJev then checks every caption in **Caption Rules**: one sentence, visible content only, no opinions. **Caption Verdicts** lists Jev's answer for each image, so you can fix the few that fail before training.\n\nPrices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "GPT-6 Luna writes one sentence per image that names only what is visible: the subject, setting, lighting, and style. Each image is saved with its caption as a training pair.\n\nOpen **Caption** to change the instructions."
       ],
-      "title": "Using This Workflow"
+      "title": "Note"
     },
     {
       "id": 3,
+      "type": "MarkdownNote",
+      "pos": [
+        890,
+        140
+      ],
+      "size": [
+        720,
+        144
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "Jev reads each caption and answers **valid**: is it one sentence about visible content, without opinions or guesses?\n\n**Summary** lists one verdict per image, so you can fix the captions that fail before training."
+      ],
+      "title": "Note"
+    },
+    {
+      "id": 4,
       "type": "LoadImageDataSetFromFolder",
       "pos": [
         30,
-        276
+        348
       ],
       "size": [
         340,
         58
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -100,8 +133,7 @@
           "type": "IMAGE",
           "shape": 6,
           "links": [
-            1,
-            2
+            1
           ]
         }
       ],
@@ -110,168 +142,55 @@
       },
       "widgets_values": [
         ""
-      ],
-      "title": "Training Images"
+      ]
     },
     {
-      "id": 4,
-      "type": "OpenRouterChatAsk",
+      "id": 5,
+      "type": "aa7e4fdd-667b-590f-9554-0f6262b892d2",
       "pos": [
         460,
-        276
+        348
       ],
       "size": [
         340,
-        444
+        26
       ],
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "prompt"
-          }
-        },
-        {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "label": "image_1",
-          "name": "model.images.image_1",
+          "name": "images",
           "type": "IMAGE",
-          "link": 1,
-          "shape": 7
-        },
-        {
-          "label": "image_2",
-          "name": "model.images.image_2",
-          "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "system",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "system"
-          }
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "documents",
-          "type": "CHAT_DOCUMENTS",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "pdf_engine",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "pdf_engine"
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "seed"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
+          "link": 1
         }
       ],
       "outputs": [
         {
-          "name": "text",
+          "name": "captions",
           "type": "STRING",
           "links": [
-            3,
-            4
+            2
           ]
-        },
-        {
-          "name": "reasoning",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "links": []
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "links": []
         }
       ],
-      "properties": {
-        "Node name for S&R": "OpenRouterChatAsk"
-      },
-      "widgets_values": [
-        "Write a one-sentence training caption for this image. Name only what is visible: subject, setting, lighting, and style. No opinions.",
-        "openai/gpt-6-luna",
-        "medium",
-        0,
-        "",
-        "model default",
-        42,
-        "fixed",
-        0,
-        ""
-      ],
-      "title": "Caption Each Image",
-      "color": "#432",
-      "bgcolor": "#653"
+      "properties": {},
+      "widgets_values": [],
+      "title": "Caption"
     },
     {
-      "id": 5,
+      "id": 6,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        276
+        348
       ],
       "size": [
         340,
         184
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -310,7 +229,7 @@
           "name": "questions",
           "type": "DECISION_QUESTIONS",
           "links": [
-            5
+            3
           ]
         }
       ],
@@ -318,33 +237,32 @@
         "Node name for S&R": "OpenRouterDecisionAddQuestion"
       },
       "widgets_values": [
-        "follows_rules",
+        "valid",
         "Is the caption one sentence that describes only visible content, without opinions or guesses?",
         "yes or no",
         "",
         ""
-      ],
-      "title": "Caption Rules"
+      ]
     },
     {
-      "id": 6,
+      "id": 7,
       "type": "OpenRouterDecisionAsk",
       "pos": [
         1270,
-        276
+        348
       ],
       "size": [
         340,
         156
       ],
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
           "name": "situation",
           "type": "STRING",
-          "link": 4,
+          "link": 2,
           "widget": {
             "name": "situation"
           }
@@ -352,7 +270,7 @@
         {
           "name": "questions",
           "type": "DECISION_QUESTIONS",
-          "link": 5
+          "link": 3
         },
         {
           "name": "model",
@@ -387,7 +305,7 @@
           "name": "summary",
           "type": "STRING",
           "links": [
-            6
+            4
           ]
         }
       ],
@@ -399,78 +317,15 @@
         "typesafe/jev-1.13",
         0
       ],
-      "title": "Check Each Caption",
       "color": "#432",
       "bgcolor": "#653"
-    },
-    {
-      "id": 7,
-      "type": "SaveImageTextDataSetToFolder",
-      "pos": [
-        460,
-        784
-      ],
-      "size": [
-        340,
-        126
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 2
-        },
-        {
-          "name": "texts",
-          "type": "STRING",
-          "link": 3,
-          "shape": 7
-        },
-        {
-          "name": "folder_name",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "folder_name"
-          }
-        },
-        {
-          "name": "filename_prefix",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "filename_prefix"
-          }
-        },
-        {
-          "name": "mode",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "mode"
-          }
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "Node name for S&R": "SaveImageTextDataSetToFolder"
-      },
-      "widgets_values": [
-        "captions",
-        "image",
-        "overwrite"
-      ],
-      "title": "Save Captions"
     },
     {
       "id": 8,
       "type": "PreviewAny",
       "pos": [
         1270,
-        496
+        568
       ],
       "size": [
         340,
@@ -483,7 +338,7 @@
         {
           "name": "source",
           "type": "*",
-          "link": 6
+          "link": 4
         }
       ],
       "outputs": [
@@ -497,53 +352,37 @@
         "Node name for S&R": "PreviewAny"
       },
       "widgets_values": [],
-      "title": "Caption Verdicts"
+      "title": "Summary"
     }
   ],
   "links": [
     [
       1,
-      3,
-      0,
       4,
-      2,
+      0,
+      5,
+      0,
       "IMAGE"
     ],
     [
       2,
-      3,
+      5,
       0,
       7,
-      0,
-      "IMAGE"
-    ],
-    [
-      3,
-      4,
-      0,
-      7,
-      1,
-      "STRING"
-    ],
-    [
-      4,
-      4,
-      0,
-      6,
       0,
       "STRING"
     ],
     [
-      5,
-      5,
-      0,
+      3,
       6,
+      0,
+      7,
       1,
       "DECISION_QUESTIONS"
     ],
     [
-      6,
-      6,
+      4,
+      7,
       1,
       8,
       0,
@@ -556,9 +395,9 @@
       "title": "Input",
       "bounding": [
         0,
-        166,
+        30,
         400,
-        198
+        406
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -566,12 +405,12 @@
     },
     {
       "id": 2,
-      "title": "Write",
+      "title": "Caption",
       "bounding": [
         430,
-        166,
+        30,
         400,
-        774
+        374
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -582,9 +421,9 @@
       "title": "Check",
       "bounding": [
         860,
-        166,
+        30,
         780,
-        600
+        808
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -601,5 +440,316 @@
       ]
     }
   },
-  "version": 0.4
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "aa7e4fdd-667b-590f-9554-0f6262b892d2",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 102,
+          "lastLinkId": 4,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Caption",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            20
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "e262d83c-13e0-537e-8cbc-8a6c24b20725",
+            "name": "images",
+            "type": "IMAGE",
+            "linkIds": [
+              2,
+              3
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "5908fc91-620c-590f-ada3-f43a57f71ea4",
+            "name": "captions",
+            "type": "STRING",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              444
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "model",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "label": "image_1",
+                "name": "model.images.image_1",
+                "type": "IMAGE",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "model.images.image_2",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "system",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "CHAT_DOCUMENTS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "variation",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "variation"
+                }
+              },
+              {
+                "name": "options",
+                "type": "REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  1,
+                  4
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "Write a one-sentence training caption for this image. Name only what is visible: subject, setting, lighting, and style. No opinions.",
+              "openai/gpt-6-luna",
+              "medium",
+              0,
+              "",
+              "model default",
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "SaveImageTextDataSetToFolder",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              126
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 3
+              },
+              {
+                "name": "texts",
+                "type": "STRING",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "name": "folder_name",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "folder_name"
+                }
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              },
+              {
+                "name": "mode",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "mode"
+                }
+              }
+            ],
+            "outputs": [],
+            "properties": {
+              "Node name for S&R": "SaveImageTextDataSetToFolder"
+            },
+            "widgets_values": [
+              "captions",
+              "image",
+              "overwrite"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 2,
+            "type": "IMAGE"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 4,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Writes one caption per image and saves each image with its caption."
+        }
+      }
+    ]
+  }
 }
