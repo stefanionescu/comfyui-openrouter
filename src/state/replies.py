@@ -50,7 +50,6 @@ class ChatChoiceReply(Reply):
     """One chat choice."""
 
     message: ChatMessage | None = None
-    finish_reason: str | None = None
     error: ErrorBody | None = None
 
 

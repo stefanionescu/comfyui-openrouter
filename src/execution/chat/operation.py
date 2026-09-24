@@ -100,7 +100,7 @@ def _read_message(document: Json) -> ChatMessage:
     message = choice.message or ChatMessage()
     if message.refusal:
         reason = clean_reason(message.refusal)
-        raise ConnectorError(ErrorCode.REFUSED, MODEL_REFUSED.format(reason=reason), diagnostic_detail=reason)
+        raise ConnectorError(ErrorCode.REFUSED, MODEL_REFUSED.format(reason=reason))
     return message
 
 

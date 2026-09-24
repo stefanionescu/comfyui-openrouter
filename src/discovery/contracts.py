@@ -85,7 +85,6 @@ class _ImageEntry(Reply):
     id: str
     architecture: _Architecture
     supported_parameters: dict[str, _ImageParameterEntry] = Field(default_factory=dict[str, _ImageParameterEntry])
-    supports_streaming: bool = False
 
 
 class _ImageList(Reply):
@@ -136,7 +135,7 @@ def build_snapshot(models: Json, images: Json, videos: Json, retrieved_at: str) 
         identities = [record.id for record in records]
         if not 0 < len(identities) <= MAX_MODELS or len(set(identities)) != len(identities):
             raise ConnectorError(ErrorCode.DISCOVERY, MODEL_LIST_FORMAT)
-    return seal_snapshot(
+    return _make_snapshot(
         retrieved_at,
         _reduce_models(model_list.records),
         _reduce_images(image_list.records),
@@ -144,7 +143,7 @@ def build_snapshot(models: Json, images: Json, videos: Json, retrieved_at: str) 
     )
 
 
-def seal_snapshot(
+def _make_snapshot(
     retrieved_at: str,
     models: tuple[ModelRecord, ...],
     images: tuple[ImageModelRecord, ...],
@@ -187,7 +186,7 @@ def merge_observations(previous: Snapshot | None, candidate: Snapshot) -> Snapsh
     withdrawn = tuple(
         record.model_copy(update={"is_observed": False}) for record in previous.models if record.id not in new_ids
     )
-    return seal_snapshot(candidate.retrieved_at, candidate.models + withdrawn, candidate.images, candidate.videos)
+    return _make_snapshot(candidate.retrieved_at, candidate.models + withdrawn, candidate.images, candidate.videos)
 
 
 def _read_prices(pricing: Mapping[str, Json]) -> dict[str, str]:
@@ -254,7 +253,6 @@ def _reduce_images(entries: Sequence[_ImageEntry]) -> tuple[ImageModelRecord, ..
                 id=entry.id,
                 input_modalities=tuple(sorted(entry.architecture.input_modalities)),
                 parameters=dict(sorted(parameters.items())),
-                has_streaming=entry.supports_streaming,
             )
         )
     return tuple(records)
@@ -286,4 +284,4 @@ def _reduce_videos(entries: Sequence[_VideoEntry]) -> tuple[VideoModelRecord, ..
     return tuple(records)
 
 
-__all__ = ["build_snapshot", "merge_observations", "seal_snapshot"]
+__all__ = ["build_snapshot", "merge_observations"]

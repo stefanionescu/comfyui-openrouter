@@ -23,13 +23,12 @@ class ErrorCode(StrEnum):
 
 
 class ConnectorError(RuntimeError):
-    """Show reviewed text; keep OpenRouter's cleaned reason beside it."""
+    """Show reviewed text; OpenRouter's cleaned reason, when there is one, is already part of it."""
 
-    def __init__(self, code: ErrorCode, message: str, *, diagnostic_detail: str = "") -> None:
-        """Store the complete message, its category, and the cleaned reason it carries."""
+    def __init__(self, code: ErrorCode, message: str) -> None:
+        """Store the complete message and its category."""
         super().__init__(message)
         self.code = code
-        self.diagnostic_detail = diagnostic_detail
 
 
 __all__ = ["ConnectorError", "ErrorCode"]

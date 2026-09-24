@@ -16,9 +16,9 @@ from ...state.videos import VideoJob
 from pydantic import ValidationError
 from ..operation import check_upload_size
 from ...state.replies import VideoJobReply
+from ..transport import get_video, post_json
 from ...config.patterns import JOB_ID_PATTERN
 from ...errors import ErrorCode, ConnectorError
-from ..transport import post_json, download_video
 from ...config.openrouter import VIDEOS_URL, VIDEO_JOB_URL
 from ...config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
 from ...config.generation.videos import DONE_STATUSES, UNCERTAIN_PREFIX, SECONDS_PER_MINUTE
@@ -66,7 +66,7 @@ class VideoDownloadOperation:
         settings = configuration.settings
         deadline = time.monotonic() + settings.video_wait_minutes * SECONDS_PER_MINUTE
         while True:
-            content = await download_video(VIDEO_JOB_URL.format(job_id=self.job.job_id), configuration)
+            content = await get_video(VIDEO_JOB_URL.format(job_id=self.job.job_id), configuration)
             try:
                 reply = VideoJobReply.model_validate_json(content)
             except ValidationError:
@@ -80,10 +80,10 @@ class VideoDownloadOperation:
             await asyncio.to_thread(self.jobs.remove, self.job.name)
             reason = clean_reason(reply.error or "")
             ended = {"failed": JOB_FAILED, "cancelled": JOB_CANCELLED}.get(reply.status, JOB_EXPIRED)
-            raise ConnectorError(ErrorCode.UNAVAILABLE, ended.format(reason=reason), diagnostic_detail=reason)
+            raise ConnectorError(ErrorCode.UNAVAILABLE, ended.format(reason=reason))
         if not reply.unsigned_urls:
             raise ConnectorError(ErrorCode.TRANSPORT, REPLY_EMPTY)
-        video = await download_video(reply.unsigned_urls[0], configuration)
+        video = await get_video(reply.unsigned_urls[0], configuration)
         # The record goes only after the download, so a failed download can be collected again.
         await asyncio.to_thread(self.jobs.remove, self.job.name)
         return video

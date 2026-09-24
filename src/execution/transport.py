@@ -171,7 +171,7 @@ def _read_retry_delay(header: str | None, delay: float) -> float:
     return min(max(seconds, MIN_RETRY_SECONDS), MAX_RETRY_SECONDS)
 
 
-async def download_video(url: str, configuration: ExecutionConfiguration) -> bytes:
+async def get_video(url: str, configuration: ExecutionConfiguration) -> bytes:
     """Read a video job's status or its finished video from OpenRouter, the only host the key is sent to."""
     if not url.startswith(VIDEO_CONTENT_PREFIX):
         raise ConnectorError(ErrorCode.TRANSPORT, VIDEO_URL_UNEXPECTED)
@@ -181,8 +181,8 @@ async def download_video(url: str, configuration: ExecutionConfiguration) -> byt
 async def download_public(url: str, configuration: ExecutionConfiguration) -> bytes:
     """Download media a reply links on a provider's host, without the key."""
     if not url.startswith("https://"):
-        raise ConnectorError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE)
+        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
     return await _get(url, configuration, is_authorized=False)
 
 
-__all__ = ["download_public", "download_video", "post_audio", "post_json", "stream_events"]
+__all__ = ["download_public", "get_video", "post_audio", "post_json", "stream_events"]

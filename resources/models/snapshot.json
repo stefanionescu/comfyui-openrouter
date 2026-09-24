@@ -1,7 +1,7 @@
 {
  "version": 1,
- "revision": "2d66279072a5c7881dd0c3f4f5c02dcedab7817bf395e8c7fd7d77fbec85d56b",
- "retrieved_at": "2026-09-24T01:19:21.772719+00:00",
+ "revision": "03ba1036c22e105820b23dc99f7db89e5aba39e21b00dd493466298dad82c861",
+ "retrieved_at": "2026-09-24T05:47:21.094725+00:00",
  "models": [
   {
    "id": "aion-labs/aion-2.0",
@@ -3795,7 +3795,7 @@
    "voices": [],
    "prices": {
     "prompt": "0.00000004",
-    "completion": "0.00000064",
+    "completion": "0.00000032",
     "input_cache_read": "0.000000016"
    },
    "expiration_date": null,
@@ -4085,6 +4085,55 @@
     "completion": "0"
    },
    "expiration_date": "2026-12-31",
+   "is_observed": true
+  },
+  {
+   "id": "fireworks/ember-1",
+   "name": "Fireworks: Ember-1",
+   "created": 1790208461,
+   "context_length": 1048576,
+   "input_modalities": [
+    "image",
+    "text"
+   ],
+   "output_modalities": [
+    "text"
+   ],
+   "parameters": [
+    "frequency_penalty",
+    "include_reasoning",
+    "logit_bias",
+    "logprobs",
+    "max_tokens",
+    "presence_penalty",
+    "reasoning",
+    "reasoning_effort",
+    "repetition_penalty",
+    "response_format",
+    "stop",
+    "structured_outputs",
+    "temperature",
+    "tool_choice",
+    "tools",
+    "top_k",
+    "top_logprobs",
+    "top_p"
+   ],
+   "efforts": [
+    "max",
+    "high",
+    "low"
+   ],
+   "default_effort": "max",
+   "is_reasoning_mandatory": false,
+   "max_output_tokens": 943718,
+   "voices": [],
+   "prices": {
+    "prompt": "0.000003",
+    "completion": "0.000015",
+    "input_cache_read": "0.0000003"
+   },
+   "expiration_date": null,
    "is_observed": true
   },
   {
@@ -10647,47 +10696,6 @@
    "is_observed": true
   },
   {
-   "id": "nex-agi/nex-n2.5-mini",
-   "name": "Nex AGI: Nex-N2.5-Mini",
-   "created": 1788890061,
-   "context_length": 262144,
-   "input_modalities": [
-    "image",
-    "text"
-   ],
-   "output_modalities": [
-    "text"
-   ],
-   "parameters": [
-    "include_reasoning",
-    "logprobs",
-    "max_tokens",
-    "reasoning",
-    "reasoning_effort",
-    "structured_outputs",
-    "temperature",
-    "top_k",
-    "top_logprobs",
-    "top_p"
-   ],
-   "efforts": [
-    "high",
-    "medium",
-    "none"
-   ],
-   "default_effort": "high",
-   "is_reasoning_mandatory": false,
-   "max_output_tokens": 235929,
-   "voices": [],
-   "prices": {
-    "prompt": "0.000000025",
-    "completion": "0.0000001",
-    "input_cache_read": "0.0000000025"
-   },
-   "expiration_date": null,
-   "is_observed": true
-  },
-  {
    "id": "nex-agi/nex-n2.5-mini:free",
    "name": "Nex AGI: Nex-N2.5-Mini (free)",
    "created": 1788890061,
@@ -10728,49 +10736,6 @@
     "completion": "0"
    },
    "expiration_date": "2026-09-25",
-   "is_observed": true
-  },
-  {
-   "id": "nex-agi/nex-n2.5-pro",
-   "name": "Nex AGI: Nex-N2.5-Pro",
-   "created": 1788890050,
-   "context_length": 262144,
-   "input_modalities": [
-    "image",
-    "text"
-   ],
-   "output_modalities": [
-    "text"
-   ],
-   "parameters": [
-    "include_reasoning",
-    "logprobs",
-    "max_tokens",
-    "reasoning",
-    "reasoning_effort",
-    "structured_outputs",
-    "temperature",
-    "tool_choice",
-    "tools",
-    "top_k",
-    "top_logprobs",
-    "top_p"
-   ],
-   "efforts": [
-    "high",
-    "medium",
-    "none"
-   ],
-   "default_effort": "high",
-   "is_reasoning_mandatory": false,
-   "max_output_tokens": 235929,
-   "voices": [],
-   "prices": {
-    "prompt": "0.000000075",
-    "completion": "0.00000025",
-    "input_cache_read": "0.000000015"
-   },
-   "expiration_date": null,
    "is_observed": true
   },
   {
@@ -20845,7 +20810,7 @@
    "id": "tencent/hy-mt2-30b-a3b",
    "name": "Tencent: Hy-MT2-30B-A3B",
    "created": 1787231561,
-   "context_length": 8192,
+   "context_length": 32768,
    "input_modalities": [
     "text"
    ],
@@ -20853,12 +20818,19 @@
     "text"
    ],
    "parameters": [
+    "frequency_penalty",
+    "logprobs",
     "max_completion_tokens",
     "max_tokens",
+    "presence_penalty",
     "response_format",
+    "seed",
     "stop",
     "structured_outputs",
-    "temperature"
+    "temperature",
+    "top_k",
+    "top_logprobs",
+    "top_p"
    ],
    "efforts": [],
    "default_effort": null,
@@ -23671,9 +23643,9 @@
    "max_output_tokens": 943718,
    "voices": [],
    "prices": {
-    "prompt": "0.000000099",
-    "completion": "0.0000006",
-    "input_cache_read": "0.00000006"
+    "prompt": "0.00000004",
+    "completion": "0.000001",
+    "input_cache_read": "0.00000001"
    },
    "expiration_date": null,
    "is_observed": true
@@ -23721,7 +23693,7 @@
    "max_output_tokens": 943718,
    "voices": [],
    "prices": {
-    "prompt": "0.0000003865",
+    "prompt": "0.00000039",
     "completion": "0.0000029",
     "input_cache_read": "0.00000025"
    },
@@ -23929,9 +23901,9 @@
    "max_output_tokens": 943718,
    "voices": [],
    "prices": {
-    "prompt": "0.00000091",
-    "completion": "0.0000069875",
-    "input_cache_read": "0.000000195"
+    "prompt": "0.0000014",
+    "completion": "0.00001075",
+    "input_cache_read": "0.0000003"
    },
    "expiration_date": null,
    "is_observed": true
@@ -24282,12 +24254,12 @@
    ],
    "default_effort": "max",
    "is_reasoning_mandatory": true,
-   "max_output_tokens": 131072,
+   "max_output_tokens": 128000,
    "voices": [],
    "prices": {
-    "prompt": "0.000000075",
-    "completion": "0.00000025",
-    "input_cache_read": "0.000000015"
+    "prompt": "0.000000045",
+    "completion": "0.00000014",
+    "input_cache_read": "0.00000001"
    },
    "expiration_date": null,
    "is_observed": true
@@ -24395,8 +24367,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "black-forest-labs/flux.2-klein-4b",
@@ -24448,8 +24419,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "black-forest-labs/flux.2-max",
@@ -24501,8 +24471,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "black-forest-labs/flux.2-pro",
@@ -24554,8 +24523,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "bytedance-seed/seedream-4.5",
@@ -24617,8 +24585,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "bytedance-seed/seedream-5-0-lite",
@@ -24679,8 +24646,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "bytedance-seed/seedream-5-0-pro",
@@ -24741,8 +24707,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "google/gemini-2.5-flash-image",
@@ -24780,8 +24745,7 @@
      "minimum": 1,
      "maximum": 1
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "google/gemini-3-pro-image",
@@ -24829,8 +24793,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "google/gemini-3-pro-image-preview",
@@ -24878,8 +24841,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "google/gemini-3.1-flash-image",
@@ -24932,8 +24894,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "google/gemini-3.1-flash-image-preview",
@@ -24986,8 +24947,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "google/gemini-3.1-flash-lite-image",
@@ -25037,8 +24997,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "inclusionai/ming-image-0.1-design",
@@ -25068,8 +25027,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "inclusionai/ming-image-0.1-design-layer",
@@ -25099,8 +25057,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "krea/krea-2-large",
@@ -25143,8 +25100,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "krea/krea-2-medium",
@@ -25187,8 +25143,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "krea/krea-2-medium-turbo",
@@ -25231,8 +25186,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "meta/muse-image",
@@ -25240,8 +25194,7 @@
     "image",
     "text"
    ],
-   "parameters": {},
-   "has_streaming": false
+   "parameters": {}
   },
   {
    "id": "microsoft/mai-image-2.5",
@@ -25277,8 +25230,7 @@
      "minimum": 1,
      "maximum": 1
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "microsoft/mai-image-2.5-pro",
@@ -25314,8 +25266,7 @@
      "minimum": 1,
      "maximum": 1
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "microsoft/mai-image-2.6",
@@ -25351,8 +25302,7 @@
      "minimum": 1,
      "maximum": 1
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "microsoft/mai-image-2.6-flash",
@@ -25388,8 +25338,7 @@
      "minimum": 1,
      "maximum": 1
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "openai/gpt-5-image",
@@ -25449,8 +25398,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-5-image-mini",
@@ -25510,8 +25458,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-5.4-image-2",
@@ -25575,8 +25522,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-image-1",
@@ -25635,8 +25581,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-image-1-mini",
@@ -25695,8 +25640,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-image-2",
@@ -25759,8 +25703,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-image-2.5-flare",
@@ -25826,8 +25769,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "openai/gpt-image-2.5-sunburst",
@@ -25893,8 +25835,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": true
+   }
   },
   {
    "id": "qwen/qwen-image-3",
@@ -25950,8 +25891,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "qwen/qwen-image-3-pro",
@@ -26007,8 +25947,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v3",
@@ -26042,8 +25981,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4",
@@ -26077,8 +26015,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-pro",
@@ -26112,8 +26049,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-pro-vector",
@@ -26155,8 +26091,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-styles",
@@ -26196,8 +26131,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-styles-pro",
@@ -26237,8 +26171,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-styles-pro-vector",
@@ -26286,8 +26219,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-styles-vector",
@@ -26335,8 +26267,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4-vector",
@@ -26378,8 +26309,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1",
@@ -26413,8 +26343,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1-flash",
@@ -26441,8 +26370,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1-pro",
@@ -26476,8 +26404,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1-pro-vector",
@@ -26519,8 +26446,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1-utility",
@@ -26554,8 +26480,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1-utility-pro",
@@ -26589,8 +26514,7 @@
      "minimum": 1,
      "maximum": 6
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "recraft/recraft-v4.1-vector",
@@ -26632,8 +26556,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "sourceful/riverflow-v2-fast",
@@ -26680,8 +26603,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "sourceful/riverflow-v2-pro",
@@ -26728,8 +26650,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "sourceful/riverflow-v2.5-fast",
@@ -26793,8 +26714,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "sourceful/riverflow-v2.5-pro",
@@ -26861,8 +26781,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "x-ai/grok-imagine-image-2.0",
@@ -26922,8 +26841,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   },
   {
    "id": "x-ai/grok-imagine-image-quality",
@@ -26974,8 +26892,7 @@
      "minimum": null,
      "maximum": null
     }
-   },
-   "has_streaming": false
+   }
   }
  ],
  "videos": [

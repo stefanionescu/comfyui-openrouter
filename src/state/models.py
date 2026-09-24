@@ -68,14 +68,12 @@ class ImageModelRecord(Value):
         id: Model ID.
         input_modalities: Kinds of input the model reads.
         parameters: Image request fields the model accepts, keyed by field name.
-        has_streaming: Whether the model can stream partial images.
 
     """
 
     id: str
     input_modalities: tuple[str, ...]
     parameters: Mapping[str, ImageParameter]
-    has_streaming: bool
 
 
 class VideoModelRecord(Value):

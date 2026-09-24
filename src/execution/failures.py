@@ -52,7 +52,7 @@ def read_failure(status: int, body: bytes) -> ConnectorError:
             reason = clean_reason(read_reason(ErrorReply.model_validate_json(body)))
         except ValidationError:
             reason = NO_REASON
-        return ConnectorError(code, message.format(reason=reason), diagnostic_detail=reason)
+        return ConnectorError(code, message.format(reason=reason))
     code, message = FIXED_FAILURES.get(status, (ErrorCode.TRANSPORT, REQUEST_FAILED))
     return ConnectorError(code, message.format(status=status))
 
