@@ -104,7 +104,7 @@ def _encode_frames(frames: Mapping[str, object]) -> dict[str, str]:
     return encoded
 
 
-def _encode_references(sockets: Mapping[str, object]) -> tuple[tuple[str, str], ...]:
+def _encode_references(sockets: Mapping[str, Mapping[str, object] | None]) -> tuple[tuple[str, str], ...]:
     """Encode every connected reference image, video, and audio clip as a (kind, data URL) pair."""
     references: list[tuple[str, str]] = []
     for kind, slots in sockets.items():

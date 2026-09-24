@@ -130,7 +130,9 @@ def _read_schema(text: str) -> Mapping[str, Json] | None:
     return schema
 
 
-def _encode_media(sockets: Mapping[str, object]) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+def _encode_media(
+    sockets: Mapping[str, Mapping[str, object] | None],
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     """Encode every connected image, video, and audio clip; every image of a batch is sent."""
     images = [image for image in read_sockets(sockets.get("images")) if isinstance(image, torch.Tensor)]
     videos = [video for video in read_sockets(sockets.get("videos")) if isinstance(video, Input.Video)]

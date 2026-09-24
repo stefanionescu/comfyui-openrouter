@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from comfy_api.latest import io
-from typing import cast, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from ..config.namespace import OPTIONS_TYPE
 from ..config.generation.inputs import (
     MAX_SEED,
@@ -47,9 +47,9 @@ def define_request_inputs(*, has_seed: bool) -> list[io.Input]:
     return [seed, variation, options] if has_seed else [variation, options]
 
 
-def read_sockets(slots: object) -> list[object]:
+def read_sockets(slots: Mapping[str, object] | None) -> list[object]:
     """List the connected sockets of a growing row, such as image_1 and image_2, in socket order."""
-    values = cast("Mapping[str, object]", slots or {})
+    values = slots or {}
     ordered = sorted(values.items(), key=lambda item: int(item[0].rsplit("_", 1)[1]))
     return [value for _name, value in ordered if value is not None]
 
