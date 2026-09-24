@@ -1,8 +1,9 @@
 # Decision: Ask
 
-Asks a decision model, such as Jev, questions about a situation, and returns
-the answers with their probabilities. Each run is one paid request; Jev bills only
-the input, and prices are in **OpenRouter models**.
+Asks a decision model on OpenRouter, such as TypeSafe's Jev, typed questions
+about a situation. Each answer comes with its probabilities. Each run is one
+paid request; Jev charges only for input tokens. Prices are in **OpenRouter
+models**.
 
 ## Inputs
 
@@ -29,8 +30,12 @@ the input, and prices are in **OpenRouter models**.
 3. Select **Run**.
 
 Examples: **decision-01-verify-then-escalate** and
-**audio-01-triage-a-voicemail**. The default model is a fixed version, as
-OpenRouter recommends when you tune thresholds.
+**audio-01-triage-a-voicemail**.
+
+The default model, `typesafe/jev-1.13`, is a fixed version. To follow
+TypeSafe's newest release, choose **other model ID** and type
+`~typesafe/jev-latest`. Jev reads up to 32,000 tokens per request. TypeSafe
+advises choosing thresholds from your own labeled examples.
 
 This node uses OpenRouter's alpha decisions API (`/api/alpha/decisions`),
 which OpenRouter may still change.

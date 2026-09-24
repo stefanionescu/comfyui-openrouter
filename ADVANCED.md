@@ -63,7 +63,7 @@ outputs. Media are converted in a worker thread, so ComfyUI stays responsive.
 - **Search: Rank** sends the query and every text line and image in one request.
   It returns them in order, with their scores.
 - **Decision: Ask** sends the situation and the questions to OpenRouter's alpha
-  decisions API. **Decision: Read Answer** reads one answer locally.
+  decisions API, which serves decision models such as TypeSafe's Jev. **Decision: Read Answer** reads one answer locally.
 - **Request Options** holds settings that each connected paid node adds to its
   request. A node stops with an error on a setting its request type rejects.
 
@@ -172,7 +172,7 @@ interval.
 - ComfyUI keeps only the last run's results by default, so running another
   workflow in between sends the requests again.
 - Free requests, such as model lists, video checks, and video downloads, are
-  retried up to three times after a busy reply or a dropped connection. Paid
+  tried up to three times when OpenRouter is busy or the connection drops. Paid
   requests are sent exactly once.
 - ComfyUI's cancel stops the wait. A chat model still bills the tokens it
   produced, and a video job keeps running and is billed.
@@ -213,7 +213,7 @@ expired.
 | Voice sample                      | 15 MiB.                                                        |
 | Search items in one request       | 256, with up to 16 image sockets.                              |
 | Embedding dimensions              | Up to 8192; 0 leaves it to the model.                          |
-| Decision questions                | 32; 2 to 32 options; 2 to 11 levels.                           |
+| Decision questions                | 32; 2 to 32 options; 2 to 10 levels.                           |
 | Decision situation                | 200,000 characters.                                            |
 | Answer threshold                  | 0.5 by default.                                                |
 | Providers in one list             | 32.                                                            |
@@ -273,18 +273,19 @@ accept.
 
 Once a request is sent, OpenRouter's answer decides:
 
-| Status   | Meaning                                                               |
-| -------- | --------------------------------------------------------------------- |
-| 400      | OpenRouter refused the request; the message gives the reason.         |
-| 401      | The key is missing or invalid.                                        |
-| 402      | The account or key is out of credit.                                  |
-| 403      | The model's provider refused the input; the message gives the reason. |
-| 404      | OpenRouter cannot serve the model; the message gives the reason.      |
-| 408, 524 | The provider took too long.                                           |
-| 413      | The request is too large.                                             |
-| 429      | OpenRouter is limiting requests.                                      |
-| 502      | The provider failed. Failed image requests are free.                  |
-| 503, 529 | No provider can serve the model right now.                            |
+| Status   | Meaning                                                          |
+| -------- | ---------------------------------------------------------------- |
+| 400      | OpenRouter refused the request; the message gives the reason.    |
+| 401      | The key is missing or invalid.                                   |
+| 402      | The account or key is out of credit.                             |
+| 403      | OpenRouter blocked the request; the message gives the reason.    |
+| 404      | OpenRouter cannot serve the model; the message gives the reason. |
+| 408, 524 | The provider took too long.                                      |
+| 413      | The request is too large.                                        |
+| 429      | OpenRouter is limiting requests.                                 |
+| 502      | The provider failed. Failed image requests are free.             |
+| 503      | No provider meets the request's routing requirements.            |
+| 529      | The provider is overloaded.                                      |
 
 ## Update or remove
 
@@ -480,8 +481,8 @@ The Comfy Registry package is made with
    [Comfy Registry](https://docs.comfy.org/registry/publishing). This key is
    separate from your OpenRouter key.
 2. In `pyproject.toml`, set `[tool.comfy].PublisherId` to your publisher ID, add
-   `Repository` and `Issues` under `[project.urls]`, and set a new version in
-   `[project].version`. Each published version is permanent.
+   `Repository` under `[project.urls]`, and set `[project].version`. Use a new
+   version number for each release.
 3. Rebuild the generated files:
 
     ```sh
@@ -542,10 +543,11 @@ credit limit.
 OpenRouter answered 400. The message gives the reason, such as a duration the
 model does not accept or a model ID that does not exist. Change that value.
 
-### The model's provider refused this input
+### OpenRouter blocked this request
 
-The provider's content filter refused the prompt or media; the message gives
-the reason. Change the input, or choose another model.
+OpenRouter answered 403. Moderation flagged the input, a guardrail on your
+account or key blocked it, or the key lacks permission; the message gives the
+reason. Change the input, the guardrail, or the key's permissions.
 
 ### The model refused to answer
 
@@ -557,9 +559,16 @@ model.
 OpenRouter answered 404. The model is unavailable now, or the key cannot use
 it. Choose another model, or refresh the model list.
 
-### No provider can serve this model right now
+### No provider is available for this request
 
-OpenRouter answered 503 or 529. Try again later, or choose another model.
+OpenRouter answered 503: no provider meets the request's routing requirements.
+If **Request Options** is connected, loosen it, for example the provider lists,
+**zero data retention**, or the price limits. Otherwise, try again later or
+choose another model.
+
+### The model's provider is overloaded
+
+OpenRouter answered 529. Try again later, or choose another model.
 
 ### The model's provider failed to answer
 

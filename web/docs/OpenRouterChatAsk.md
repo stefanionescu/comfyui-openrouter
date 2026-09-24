@@ -6,27 +6,27 @@ them. Each run is one paid request; prices are in **OpenRouter models**.
 
 ## Inputs
 
-| Input                     | What it takes                                                                                                                       |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `prompt`                  | The question or instruction.                                                                                                        |
-| `model`                   | Any chat model; the default is `google/gemini-3.5-flash`. Choose **other model ID** to type an ID, such as one ending in `:online`. |
-| `model.reasoning`         | How much a reasoning model thinks before answering.                                                                                 |
-| `model.max_output_tokens` | The longest answer in tokens; 0 leaves it to the model.                                                                             |
-| `model.temperature`       | 0 to 2. Higher values vary the answer more.                                                                                         |
-| `model.answer_schema`     | A JSON schema the answer must follow. Leave it empty for free text.                                                                 |
-| `model.images`            | Images, one per socket, up to 16. Every image in a batch is sent.                                                                   |
-| `model.videos`            | Videos, one per socket, up to 4. Each is sent as MP4.                                                                               |
-| `model.audio`             | Audio clips, one per socket, up to 4. Each is sent as WAV.                                                                          |
-| `model.outputs`           | For models that draw or speak: **text**, **image and text**, or **audio and text**.                                                 |
-| `model.aspect_ratio`      | The shape of the images a model draws.                                                                                              |
-| `model.voice`             | The voice of a spoken answer, such as `alloy`. Music models need it empty.                                                          |
-| `system`                  | The system prompt: instructions for the whole answer.                                                                               |
-| `conversation`            | Earlier turns, from another **Chat: Ask**.                                                                                          |
-| `documents`               | Files from **Chat: Attach Document**.                                                                                               |
-| `pdf_engine`              | How OpenRouter reads PDFs: the model's default, `native`, `cloudflare-ai`, or `mistral-ocr`.                                        |
-| `seed`                    | Varies the output, for models that take a seed.                                                                                     |
-| `variation`               | **run number**: change it to send the same request again.                                                                           |
-| `options`                 | Settings from **Request Options**.                                                                                                  |
+| Input                     | What it takes                                                                                                                                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prompt`                  | The question or instruction.                                                                                                                                                                                         |
+| `model`                   | Any chat model; the default is `google/gemini-3.5-flash`. Choose **other model ID** to type an ID, such as one ending in `:nitro`.                                                                                   |
+| `model.reasoning`         | How much a reasoning model thinks before answering.                                                                                                                                                                  |
+| `model.max_output_tokens` | The longest answer in tokens; 0 leaves it to the model.                                                                                                                                                              |
+| `model.temperature`       | 0 to 2. Higher values vary the answer more.                                                                                                                                                                          |
+| `model.answer_schema`     | A JSON schema the answer must follow. Leave it empty for free text.                                                                                                                                                  |
+| `model.images`            | Images, one per socket, up to 16. Every image in a batch is sent.                                                                                                                                                    |
+| `model.videos`            | Videos, one per socket, up to 4. Each is sent as MP4.                                                                                                                                                                |
+| `model.audio`             | Audio clips, one per socket, up to 4. Each is sent as WAV.                                                                                                                                                           |
+| `model.outputs`           | For models that draw or speak: **text**, **image and text**, or **audio and text**.                                                                                                                                  |
+| `model.aspect_ratio`      | The shape of the images a model draws.                                                                                                                                                                               |
+| `model.voice`             | The voice of a spoken answer, such as `alloy`. Music models need it empty.                                                                                                                                           |
+| `system`                  | The system prompt: instructions for the whole answer.                                                                                                                                                                |
+| `conversation`            | Earlier turns, from another **Chat: Ask**.                                                                                                                                                                           |
+| `documents`               | Files from **Chat: Attach Document**.                                                                                                                                                                                |
+| `pdf_engine`              | How OpenRouter reads PDFs: `native` (billed as input tokens), `cloudflare-ai` (free), or `mistral-ocr` ($2 per 1,000 pages). **model default** uses the model's own file reading, or `mistral-ocr` when it has none. |
+| `seed`                    | Varies the output, for models that take a seed.                                                                                                                                                                      |
+| `variation`               | **run number**: change it to send the same request again.                                                                                                                                                            |
+| `options`                 | Settings from **Request Options**.                                                                                                                                                                                   |
 
 ## Outputs
 

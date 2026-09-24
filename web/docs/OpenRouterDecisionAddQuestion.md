@@ -14,7 +14,7 @@ several questions.
 | `answer_type.yes_means` | What yes means. Describe both yes and no, or neither.                                 |
 | `answer_type.no_means`  | What no means.                                                                        |
 | `answer_type.options`   | 2 to 32 options, one per line, as `key: description`. The description is optional.    |
-| `answer_type.levels`    | 2 to 11 levels, one per line, lowest first.                                           |
+| `answer_type.levels`    | 2 to 10 levels, one per line, lowest first.                                           |
 
 ## Outputs
 

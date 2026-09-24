@@ -9,13 +9,14 @@ key. It has six kinds of nodes:
 - **Video**: make a video from a prompt, frames, or reference media.
 - **Audio**: turn text into speech, optionally in a cloned voice, and speech
   into text with timestamps and subtitles.
-- **Search**: turn text and images into embeddings, and rank them against a
-  query.
-- **Decisions**: ask Jev, OpenRouter's decision model, questions it answers
-  with probabilities. A workflow can branch on the answers.
+- **Search**: turn text and images into embeddings (lists of numbers that
+  place similar items close together), and rank them against a query.
+- **Decisions**: ask a decision model, such as TypeSafe's Jev, typed questions.
+  It answers with probabilities, so a workflow can branch on the answers.
 
 Requests go from your ComfyUI server to OpenRouter, which passes them to the
-model's provider and bills your OpenRouter account. Every run of a paid node is
+model's provider (the company that runs the model) and bills your OpenRouter
+account. Every run of a paid node is
 billed, so check the model's price in **OpenRouter models** before you run it.
 
 ## Contents
@@ -50,7 +51,8 @@ billed, so check the model's price in **OpenRouter models** before you run it.
 
 ### Comfy Desktop
 
-1. On the home screen, open the installation's **⋮** menu and select **Manage**.
+1. In the instance chooser, select the **⋮** icon on the instance card, then
+   **Manage**.
 2. Under **About**, copy **Location**. In that folder, find the `ComfyUI` folder
    that holds `main.py`, and put the extension in its `custom_nodes` folder.
 3. Select **Terminal** in the same panel. It opens in the ComfyUI folder with
@@ -191,7 +193,7 @@ Search, and Decision. ComfyUI's node help opens each node's guide.
 | [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turns speech into text, with timed segments, words, and subtitles.         |
 | [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turns text and images into embeddings and compares them.                   |
 | [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Ranks text and images by how well they match a query.                      |
-| [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks Jev questions about a situation.                                      |
+| [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, questions about a situation.           |
 | [Decision: Add Question](web/docs/OpenRouterDecisionAddQuestion.md) | Adds a yes-or-no, one-choice, or score question.                           |
 | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                         |
 | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for the paid nodes. |
@@ -207,8 +209,8 @@ list and prices, open **Extensions → OpenRouter → OpenRouter models** and se
 estimates prices.
 
 To use a model that is not in the list, choose **other model ID** in a node's
-model dropdown and type its ID. You can add a suffix, such as `:online` for web
-search.
+model dropdown and type its ID. You can add a variant suffix, such as `:nitro`
+for the fastest providers.
 
 Automatic checks tell you when OpenRouter's list has changed; select
 **Refresh Models** to take the new list. See

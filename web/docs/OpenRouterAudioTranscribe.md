@@ -2,7 +2,8 @@
 
 Turns speech into text with any transcription model on OpenRouter, with timed
 segments, timed words, and subtitles if you ask for them. Each run is one paid
-request, priced per second of audio; prices are in **OpenRouter models**.
+request, priced per second of audio or per token, depending on the model. Prices
+are in **OpenRouter models**.
 
 ## Inputs
 
