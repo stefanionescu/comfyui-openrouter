@@ -322,7 +322,7 @@ mise trust && mise run repo:setup   # Install tools, dependencies, rules, and ho
 mise run repo:deps:export          # Regenerate requirements.txt from pyproject.toml
 mise run comfy:models:build        # Rebuild the bundled model list from OpenRouter's public lists
 mise run comfy:frontend:build      # Compile the browser files
-mise run comfy:workflows:build     # Rebuild the 31 workflows from their descriptions
+mise run comfy:workflows:build     # Rebuild the 13 workflows from their descriptions
 mise run comfy:nodes:schema        # Print the node descriptions the workflow build reads
 ```
 
