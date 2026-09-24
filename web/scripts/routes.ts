@@ -5,9 +5,4 @@ export const browserRoutes = {
     values: '/openrouter/v1/settings',
     credential: '/openrouter/v1/credential',
   },
-  models: {
-    read: '/openrouter/v1/models',
-    refresh: '/openrouter/v1/models/refresh',
-    rollback: '/openrouter/v1/models/rollback',
-  },
 } as const;

@@ -392,58 +392,13 @@
             "reason": "ESLint rule identifiers use these kebab-case names."
         },
         {
-            "pathRegexes": ["^web/scripts/discovery/schema\\.ts$"],
-            "categories": ["properties"],
-            "names": [
-                "automatic_check",
-                "can_rollback",
-                "checked_at",
-                "documentation_url",
-                "interval_hours",
-                "is_bundled",
-                "is_damaged",
-                "mutation_allowed",
-                "retrieved_at",
-                "update_available"
-            ],
-            "caseNames": ["snake"],
-            "reason": "These fields are deserialized from the local ComfyUI API and must keep their wire names."
-        },
-        {
             "pathRegexes": ["^web/scripts/settings/schema\\.ts$"],
             "categories": ["properties"],
-            "names": [
-                "credential_limit",
-                "integer_settings",
-                "model_auto_check",
-                "model_interval_hours",
-                "mutation_allowed"
-            ],
+            "names": ["credential_limit", "integer_settings", "mutation_allowed"],
             "caseNames": ["snake"],
             "reason": "These fields are deserialized from the local settings API and must keep their wire names."
         },
         {
-            "pathRegexes": ["^web/scripts/discovery/api\\.ts$"],
-            "categories": ["properties", "functions"],
-            "names": ["Content-Type"],
-            "allowedViolations": ["case"],
-            "reason": "HTTP headers retain their protocol names."
-        },
-        {
-            "pathRegexes": ["^web/scripts/discovery/api\\.ts$"],
-            "categories": ["properties", "functions"],
-            "names": ["X-OpenRouter-Comfy"],
-            "allowedViolations": ["case"],
-            "reason": "Local extension requests use this header name."
-        },
-        {
-            "pathRegexes": ["^web/scripts/discovery/dialog\\.ts$"],
-            "categories": ["properties", "functions"],
-            "names": ["once"],
-            "allowedViolations": ["banned-term"],
-            "reason": "DOM event listeners use the once option."
-        },
-        {
             "pathRegexes": ["^web/scripts/settings/api\\.ts$"],
             "categories": ["properties", "functions"],
             "names": ["Content-Type"],
@@ -463,13 +418,6 @@
             "names": ["once"],
             "allowedViolations": ["banned-term"],
             "reason": "DOM event listeners use the once option."
-        },
-        {
-            "pathRegexes": ["^web/scripts/settings/dialog\\.ts$"],
-            "categories": ["properties", "functions"],
-            "names": ["model_auto_check", "model_interval_hours"],
-            "allowedViolations": ["case"],
-            "reason": "The local settings API uses these persisted field names."
         },
         {
             "pathRegexes": ["^web/scripts/settings/dialog\\.ts$"],

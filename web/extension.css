@@ -70,11 +70,6 @@
   background: var(--comfy-input-bg, ButtonFace);
   cursor: pointer;
 }
-.openrouter-dialog input[type=checkbox] {
-  width: auto;
-  padding: 0;
-  margin: 0;
-}
 .openrouter-dialog button:disabled {
   cursor: default;
   opacity: 0.55;
@@ -123,34 +118,6 @@
 .openrouter-dialog button:not(:disabled):hover {
   filter: brightness(1.15);
 }
-.openrouter-dialog label:has(input[type=checkbox]) {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
 .openrouter-dialog [role=status]:empty {
   display: none;
-}
-.openrouter-models {
-  width: min(54rem, calc(100vw - 2rem));
-}
-.openrouter-models ul {
-  list-style: none;
-  padding: 0;
-}
-.openrouter-models li {
-  border-top: 1px solid var(--border-color, GrayText);
-  padding: 1rem 0;
-}
-.openrouter-models h3 {
-  margin: 0 0 0.4rem;
-}
-.openrouter-models code {
-  overflow-wrap: anywhere;
-}
-.openrouter-models details {
-  margin: 0.75rem 0;
-}
-.openrouter-models :where(li) p {
-  margin: 0.35rem 0;
 }

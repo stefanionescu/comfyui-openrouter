@@ -9,11 +9,8 @@ export type Configuration = {
   credentialSource: 'missing' | 'saved' | 'environment';
   credentialLimit: number;
   mutationAllowed: boolean;
-  definitions: Record<string, SettingDefinition> & { model_interval_hours: SettingDefinition };
-  settings: Record<string, number | boolean> & {
-    model_auto_check: boolean;
-    model_interval_hours: number;
-  };
+  definitions: Record<string, SettingDefinition>;
+  settings: Record<string, number>;
 };
 
 const unknownRecordSchema = v.record(v.string(), v.unknown());
@@ -36,7 +33,6 @@ const configurationDocumentSchema = v.object({
   credential_limit: v.unknown(),
 });
 
-const checkSettingsSchema = v.object({ model_auto_check: v.boolean() });
 const credentialLimitSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(1));
 
 /**
@@ -47,9 +43,6 @@ const credentialLimitSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(1))
 function parseDefinitions(value: unknown): Configuration['definitions'] {
   const document = v.safeParse(unknownRecordSchema, value);
   if (!document.success) throw new Error(message('settings.invalidResponse'));
-  if (!Object.hasOwn(document.output, 'model_interval_hours')) {
-    throw new Error(message('settings.incompleteResponse'));
-  }
   const definitions = new Map<string, SettingDefinition>();
   for (const [name, raw] of Object.entries(document.output)) {
     const validName = v.safeParse(settingNameSchema, name);
@@ -63,7 +56,7 @@ function parseDefinitions(value: unknown): Configuration['definitions'] {
     }
     definitions.set(name, definition.output);
   }
-  return Object.fromEntries(definitions) as Configuration['definitions'];
+  return Object.fromEntries(definitions);
 }
 
 /**
@@ -76,11 +69,8 @@ export function parseConfiguration(value: unknown): Configuration {
   if (!result.success) throw new Error(message('settings.invalidResponse'));
   const document = result.output;
   const definitions = parseDefinitions(document.integer_settings);
-  const checkSettings = v.safeParse(checkSettingsSchema, document.settings);
   const credentialLimit = v.safeParse(credentialLimitSchema, document.credential_limit);
-  if (!checkSettings.success || !credentialLimit.success) {
-    throw new Error(message('settings.invalidChecks'));
-  }
+  if (!credentialLimit.success) throw new Error(message('settings.invalidResponse'));
   const settings = new Map(Object.entries(document.settings));
   for (const [name, definition] of Object.entries(definitions)) {
     const setting = v.safeParse(

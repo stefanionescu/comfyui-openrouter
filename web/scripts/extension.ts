@@ -3,7 +3,6 @@ import { message } from '#web/text.ts';
 import { app } from '../../scripts/app.js';
 import { requestLocal } from '#web/http.ts';
 import { dynamicControlInputs } from '#web/nodes.ts';
-import { openModels } from '#web/discovery/dialog.ts';
 import { openSettings } from '#web/settings/dialog.ts';
 import type { Widget, CanvasNode } from '#web/contracts.ts';
 import { findWidget, chainCallback } from '#web/widgets.ts';
@@ -78,11 +77,6 @@ function preserveControlValues(
   return restoreValues;
 }
 
-/** Read ComfyUI's node definitions again, so every model dropdown shows the saved model list. */
-function reloadNodes(): void {
-  app.extensionManager.command.execute('Comfy.RefreshNodeDefinitions');
-}
-
 /** Watch the conditional values of every node after the graph changes. */
 function refreshGraph(): void {
   for (const canvasNode of app.rootGraph.nodes) {
@@ -110,16 +104,11 @@ app.registerExtension({
       label: message('settings.menu'),
       function: openSettings.bind(null, requestLocal),
     },
-    {
-      id: 'OpenRouter.OpenModels',
-      label: message('models.menu'),
-      function: openModels.bind(null, requestLocal, reloadNodes),
-    },
   ],
   menuCommands: [
     {
       path: ['Extensions', 'OpenRouter'],
-      commands: ['OpenRouter.OpenSettings', 'OpenRouter.OpenModels'],
+      commands: ['OpenRouter.OpenSettings'],
     },
   ],
 });
