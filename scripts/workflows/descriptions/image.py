@@ -58,7 +58,9 @@ PICK_OCCASION_IMAGE = Workflow(
             QUESTION,
             {
                 "name": "ready",
-                "instructions": "Can the chosen candidate go to the client as it is, with no visible flaws?",
+                "instructions": (
+                    "Is the best of the three candidates ready to send to the client as it is, with no visible flaw?"
+                ),
             },
             title="Ready to Send",
         ),

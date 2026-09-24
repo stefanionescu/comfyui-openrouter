@@ -107,7 +107,9 @@ WORKFLOW_TEXTS = {
             "**Write Logo Prompts** answers with three prompts as JSON, and Jev picks the strongest in **Best "
             "Prompt**. **Vector Logo** draws it as SVG for **Save Logo**, and **Sticker** draws it on a "
             "transparent background.\n\n"
-            "**Sticker Mask** shows the transparency the model returned; white marks the transparent area.\n\n"
+            "The picture and its transparency arrive separately: **Add Transparency** joins them, so the saved PNG "
+            "keeps its transparent background. **Sticker Mask** shows the transparency; white marks the transparent "
+            "area.\n\n"
             "Four paid requests per run. " + PRICES
         ),
     },

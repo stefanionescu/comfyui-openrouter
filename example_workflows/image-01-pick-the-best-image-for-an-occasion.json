@@ -240,7 +240,7 @@
       },
       "widgets_values": [
         "ready",
-        "Can the chosen candidate go to the client as it is, with no visible flaws?",
+        "Is the best of the three candidates ready to send to the client as it is, with no visible flaw?",
         "yes or no",
         "",
         ""

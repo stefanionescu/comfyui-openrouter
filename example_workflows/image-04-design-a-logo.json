@@ -1,8 +1,8 @@
 {
   "id": "16e1cc19-c50d-515b-83f4-98dae9afc6c1",
   "revision": 0,
-  "last_node_id": 15,
-  "last_link_id": 14,
+  "last_node_id": 16,
+  "last_link_id": 16,
   "nodes": [
     {
       "id": 1,
@@ -46,7 +46,7 @@
       ],
       "size": [
         620,
-        94
+        106
       ],
       "flags": {},
       "order": 1,
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "**Write Logo Prompts** answers with three prompts as JSON, and Jev picks the strongest in **Best Prompt**. **Vector Logo** draws it as SVG for **Save Logo**, and **Sticker** draws it on a transparent background.\n\n**Sticker Mask** shows the transparency the model returned; white marks the transparent area.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "**Write Logo Prompts** answers with three prompts as JSON, and Jev picks the strongest in **Best Prompt**. **Vector Logo** draws it as SVG for **Save Logo**, and **Sticker** draws it on a transparent background.\n\nThe picture and its transparency arrive separately: **Add Transparency** joins them, so the saved PNG keeps its transparent background. **Sticker Mask** shows the transparency; white marks the transparent area.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Using This Workflow"
     },
@@ -75,7 +75,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        264
+        276
       ],
       "size": [
         340,
@@ -117,7 +117,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         30,
-        416
+        428
       ],
       "size": [
         340,
@@ -183,7 +183,7 @@
       "type": "OpenRouterChatAsk",
       "pos": [
         460,
-        264
+        276
       ],
       "size": [
         340,
@@ -322,7 +322,7 @@
       "type": "StringFormat",
       "pos": [
         460,
-        772
+        784
       ],
       "size": [
         340,
@@ -384,7 +384,7 @@
       "type": "OpenRouterDecisionAsk",
       "pos": [
         840,
-        264
+        276
       ],
       "size": [
         340,
@@ -461,7 +461,7 @@
       "type": "OpenRouterDecisionReadAnswer",
       "pos": [
         840,
-        484
+        496
       ],
       "size": [
         340,
@@ -541,7 +541,7 @@
       "type": "JsonExtractString",
       "pos": [
         840,
-        730
+        742
       ],
       "size": [
         340,
@@ -592,7 +592,7 @@
       "type": "OpenRouterImageGenerate",
       "pos": [
         1270,
-        264
+        276
       ],
       "size": [
         340,
@@ -690,7 +690,7 @@
       "type": "OpenRouterImageGenerate",
       "pos": [
         1650,
-        264
+        276
       ],
       "size": [
         340,
@@ -760,7 +760,8 @@
           "type": "MASK",
           "shape": 6,
           "links": [
-            13
+            13,
+            15
           ]
         },
         {
@@ -793,7 +794,7 @@
       "type": "SaveSVGNode",
       "pos": [
         1270,
-        600
+        612
       ],
       "size": [
         340,
@@ -834,23 +835,64 @@
     },
     {
       "id": 13,
-      "type": "SaveImage",
+      "type": "JoinImageWithAlpha",
       "pos": [
         1650,
-        672
+        684
       ],
       "size": [
         340,
-        290
+        46
       ],
       "flags": {},
       "order": 12,
       "mode": 0,
       "inputs": [
         {
-          "name": "images",
+          "name": "image",
           "type": "IMAGE",
           "link": 12
+        },
+        {
+          "name": "alpha",
+          "type": "MASK",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JoinImageWithAlpha"
+      },
+      "widgets_values": [],
+      "title": "Add Transparency"
+    },
+    {
+      "id": 14,
+      "type": "SaveImage",
+      "pos": [
+        1650,
+        794
+      ],
+      "size": [
+        340,
+        290
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 14
         },
         {
           "name": "filename_prefix",
@@ -877,24 +919,24 @@
       "title": "Save Sticker"
     },
     {
-      "id": 14,
+      "id": 15,
       "type": "MaskToImage",
       "pos": [
         2030,
-        264
+        276
       ],
       "size": [
         340,
         26
       ],
       "flags": {},
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
           "name": "mask",
           "type": "MASK",
-          "link": 13
+          "link": 15
         }
       ],
       "outputs": [
@@ -902,7 +944,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            14
+            16
           ]
         }
       ],
@@ -913,24 +955,24 @@
       "title": "Mask as Image"
     },
     {
-      "id": 15,
+      "id": 16,
       "type": "PreviewImage",
       "pos": [
         2030,
-        354
+        366
       ],
       "size": [
         340,
         290
       ],
       "flags": {},
-      "order": 14,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 14
+          "link": 16
         }
       ],
       "outputs": [
@@ -1048,15 +1090,31 @@
       13,
       11,
       1,
-      14,
-      0,
+      13,
+      1,
       "MASK"
     ],
     [
       14,
+      13,
+      0,
       14,
       0,
+      "IMAGE"
+    ],
+    [
       15,
+      11,
+      1,
+      15,
+      0,
+      "MASK"
+    ],
+    [
+      16,
+      15,
+      0,
+      16,
       0,
       "IMAGE"
     ]
@@ -1067,7 +1125,7 @@
       "title": "Input",
       "bounding": [
         0,
-        154,
+        166,
         400,
         482
       ],
@@ -1080,7 +1138,7 @@
       "title": "Choose",
       "bounding": [
         430,
-        154,
+        166,
         780,
         796
       ],
@@ -1093,9 +1151,9 @@
       "title": "Logo",
       "bounding": [
         1240,
-        154,
+        166,
         1160,
-        838
+        948
       ],
       "color": "#68688c",
       "font_size": 24,

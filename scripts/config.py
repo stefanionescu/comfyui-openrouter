@@ -22,6 +22,7 @@ BATCH = "BatchImagesNode"
 FROM_BATCH = "ImageFromBatch"
 MASK_IMAGE = "MaskToImage"
 PREVIEW_IMAGE = "PreviewImage"
+JOIN_ALPHA = "JoinImageWithAlpha"
 # ComfyUI nodes the workflows place beside this extension's own.
 HOST_NODES = (
     IMAGE,
@@ -45,6 +46,7 @@ HOST_NODES = (
     FROM_BATCH,
     MASK_IMAGE,
     PREVIEW_IMAGE,
+    JOIN_ALPHA,
 )
 
 __all__ = [
@@ -57,6 +59,7 @@ __all__ = [
     "FROM_BATCH",
     "HOST_NODES",
     "IMAGE",
+    "JOIN_ALPHA",
     "MASK_IMAGE",
     "NOTE",
     "PREVIEW",
