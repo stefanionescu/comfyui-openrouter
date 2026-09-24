@@ -47,6 +47,7 @@ var TEXT = {
     perMillionCharacters: "per 1M characters",
     perRequest: "per request",
     perVideoSecond: "per video second",
+    range: "{lowest} to {highest}, by sound and resolution",
     rate: "{price} {unit}",
     rateOutdated: "This model was not in the latest list. Refresh OpenRouter models before relying on its price.",
     rateUnavailable: "OpenRouter lists no price for this model.",
@@ -219,12 +220,19 @@ function describePrice(price) {
   return `${price.label}: ${rate}`;
 }
 function estimatePrice(model, amounts) {
-  let total = 0;
-  for (const price of model.prices) {
+  const costs = model.prices.flatMap((price) => {
     const amount = price.unit === null ? void 0 : UNITS.get(price.unit)?.amount;
-    if (amount !== void 0) total += price.dollars * amounts[amount];
-  }
-  return total;
+    return amount === void 0 ? [] : [{ amount, dollars: price.dollars * amounts[amount] }];
+  });
+  const tokens = costs.filter((cost) => cost.amount !== "videoSeconds").reduce((total, cost) => total + cost.dollars, 0);
+  const videos = costs.filter((cost) => cost.amount === "videoSeconds").map((cost) => cost.dollars);
+  if (videos.length === 0) return [tokens, tokens];
+  return [tokens + Math.min(...videos), tokens + Math.max(...videos)];
+}
+function formatEstimate(estimate) {
+  const [lowest, highest] = estimate;
+  if (lowest === highest) return formatMoney(lowest);
+  return message("pricing.range", { lowest: formatMoney(lowest), highest: formatMoney(highest) });
 }
 function formatPriceSummary(model, amounts) {
   if (model.prices.length === 0) return [message("pricing.rateUnavailable")];
@@ -232,7 +240,7 @@ function formatPriceSummary(model, amounts) {
   if (!model.observed) summary.push(message("pricing.rateOutdated"));
   else if (amounts !== void 0)
     summary.push(
-      message("pricing.calculation", { amount: formatMoney(estimatePrice(model, amounts)) })
+      message("pricing.calculation", { amount: formatEstimate(estimatePrice(model, amounts)) })
     );
   return summary;
 }

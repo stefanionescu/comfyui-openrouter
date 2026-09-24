@@ -85,7 +85,9 @@ settings leave the previous file intact.
 Open **ComfyUI menu → Extensions → OpenRouter → OpenRouter models** for each
 model's prices. Token and character prices are shown per million; video prices
 per second of video. Expand **Calculate a price** and enter input tokens, output
-tokens, or video seconds to multiply the listed prices. The estimate is not a
+tokens, or video seconds to multiply the listed prices. Token prices add up. A
+video model lists one price per choice of sound and resolution, so its estimate
+is a range from the cheapest choice to the dearest. The estimate is not a
 quote; OpenRouter decides each charge. A model without a listed price, or with
 prices the dialog cannot estimate, shows none.
 

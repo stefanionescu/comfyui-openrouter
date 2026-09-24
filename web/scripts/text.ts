@@ -50,6 +50,7 @@ const TEXT = {
     perMillionCharacters: 'per 1M characters',
     perRequest: 'per request',
     perVideoSecond: 'per video second',
+    range: '{lowest} to {highest}, by sound and resolution',
     rate: '{price} {unit}',
     rateOutdated:
       'This model was not in the latest list. Refresh OpenRouter models before relying on its price.',
