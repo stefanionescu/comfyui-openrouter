@@ -43,7 +43,6 @@ sending, on a field its request type rejects:
 
 A node also refuses an extra field it sets itself, such as `model` or
 `messages`. Provider slugs and their options are on each model's page at
-openrouter.ai/models. Example:
-**chat-01-write-a-product-listing**.
+openrouter.ai/models. Example: **chat-01-write-a-product-listing**.
 
 [OpenRouter provider selection documentation](https://openrouter.ai/docs/guides/routing/provider-selection)

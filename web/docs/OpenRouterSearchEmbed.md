@@ -1,18 +1,18 @@
 # Search: Embed
 
 Turns lines of text and images into embeddings, and compares each one with the
-first. Each run is one paid request; prices are at openrouter.ai/models.
+first.
 
 ## Inputs
 
 | Input        | What it takes                                                                                     |
 | ------------ | ------------------------------------------------------------------------------------------------- |
-| `texts`      | One item per line. Blank lines are skipped.                                                       |
 | `model`      | Any embedding model ID from openrouter.ai/models; the default is `openai/text-embedding-3-small`. |
 | `images`     | Images, for models that read them. Each image in a list or batch is one item.                     |
 | `dimensions` | The embedding length, for models that can shorten it; 0 leaves it to the model.                   |
 | `input_type` | Whether the items are queries or documents, for models that treat them differently.               |
-| `variation`  | **run number**: change it to send the same request again.                                         |
+| `run_number` | Change it to send the same request again.                                                         |
+| `texts`      | One item per line. Blank lines are skipped.                                                       |
 | `options`    | Settings from **Request Options**.                                                                |
 
 ## Outputs

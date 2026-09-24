@@ -1,7 +1,7 @@
 # Video: Download
 
-Downloads a video that OpenRouter kept making after a run stopped: you
-cancelled it, ComfyUI restarted, or it waited too long. Downloading is free.
+Downloads a video that OpenRouter kept making after a run stopped: you cancelled
+it, ComfyUI restarted, or it waited too long.
 
 ## Inputs
 
@@ -22,9 +22,9 @@ cancelled it, ComfyUI restarted, or it waited too long. Downloading is free.
 2. Connect **video** to **Save Video**.
 3. Select **Run**.
 
-The list shows the jobs **Video: Generate** started that are still waiting to
-be downloaded. A job leaves the list once its video is downloaded, or when OpenRouter reports
-that it failed, was cancelled, or expired. Example:
+The list shows the jobs **Video: Generate** started that are still waiting to be
+downloaded. A job leaves the list once its video is downloaded, or when
+OpenRouter reports that it failed, was cancelled, or expired. Example:
 **video-02-recover-a-cancelled-video**.
 
 [OpenRouter video generation documentation](https://openrouter.ai/docs/guides/overview/multimodal/video-generation)

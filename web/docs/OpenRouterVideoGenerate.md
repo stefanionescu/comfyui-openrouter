@@ -1,32 +1,31 @@
 # Video: Generate
 
 Makes a video with any video model on OpenRouter, from a prompt, first and last
-frames, or reference media. Each run is one paid request, priced per second of
-video; prices are at openrouter.ai/models.
+frames, or reference media.
 
 ## Inputs
 
 | Input              | What it takes                                                                       |
 | ------------------ | ----------------------------------------------------------------------------------- |
-| `prompt`           | What the video shows. It can be empty when a first frame is connected.              |
 | `model`            | Any video model ID from openrouter.ai/models; the default is `google/veo-3.1-fast`. |
 | `duration`         | The length in seconds; 0 leaves it to the model.                                    |
 | `resolution`       | The resolution.                                                                     |
 | `aspect_ratio`     | The shape.                                                                          |
 | `generate_audio`   | Whether the video has sound.                                                        |
-| `first_frame`      | One image the video starts from.                                                    |
-| `last_frame`       | One image the video ends on.                                                        |
+| `upscale_factor`   | How much an upscaling model enlarges the video; 0 sends nothing.                    |
+| `creativity`       | How much detail an upscaling model adds; 0 sends nothing.                           |
 | `reference_images` | Images the video follows. Leave the frames empty to use them.                       |
 | `reference_videos` | Videos the video follows.                                                           |
 | `reference_audio`  | Audio the video follows.                                                            |
-| `upscale_factor`   | How much an upscaling model enlarges the video; 0 sends nothing.                    |
-| `creativity`       | How much detail an upscaling model adds; 0 sends nothing.                           |
 | `seed`             | Varies the output, for models that take a seed.                                     |
-| `variation`        | **run number**: change it to send the same request again.                           |
+| `run_number`       | Change it to send the same request again.                                           |
+| `prompt`           | What the video shows. It can be empty when a first frame is connected.              |
+| `first_frame`      | One image the video starts from.                                                    |
+| `last_frame`       | One image the video ends on.                                                        |
 | `options`          | Settings from **Request Options**.                                                  |
 
-A setting left at **model default** or 0 sends nothing, so the model uses its own
-default.
+A setting left at **model default** or 0 sends nothing, so the model uses its
+own default.
 
 ## Outputs
 
@@ -42,10 +41,10 @@ default.
 
 Example: **video-01-animate-a-product-shot**.
 
-A video job always runs to completion at OpenRouter and is billed, even if you
-cancel the run or ComfyUI restarts; download it with **Video: Download**.
-Running the identical request again picks up that job. If the connection closes before OpenRouter
-confirms a request, the identical request is refused for **resubmit hold
+A video job always runs to completion at OpenRouter, even if you cancel the run
+or ComfyUI restarts; download it with **Video: Download**. Running the identical
+request again picks up that job. If the connection closes before OpenRouter
+confirms a request, the identical request is refused for **video retry delay
 (minutes)**; check openrouter.ai/activity meanwhile. Reference videos count
 toward the maximum upload size.
 

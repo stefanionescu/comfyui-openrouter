@@ -1,19 +1,18 @@
 # Search: Rank
 
-Ranks lines of text and images by how well they match a query, best first. Each
-run is one paid request; prices are at openrouter.ai/models.
+Ranks lines of text and images by how well they match a query, best first.
 
 ## Inputs
 
-| Input       | What it takes                                                                     |
-| ----------- | --------------------------------------------------------------------------------- |
-| `query`     | What to rank against.                                                             |
-| `documents` | One document per line. Blank lines are skipped.                                   |
-| `model`     | Any rank model ID from openrouter.ai/models; the default is `cohere/rerank-v3.5`. |
-| `images`    | Images, for models that read them. Each image in a list or batch is one document. |
-| `top_n`     | How many results to keep; 0 keeps all.                                            |
-| `variation` | **run number**: change it to send the same request again.                         |
-| `options`   | Settings from **Request Options**.                                                |
+| Input        | What it takes                                                                     |
+| ------------ | --------------------------------------------------------------------------------- |
+| `model`      | Any rank model ID from openrouter.ai/models; the default is `cohere/rerank-v3.5`. |
+| `images`     | Images, for models that read them. Each image in a list or batch is one document. |
+| `top_n`      | How many results to keep; 0 keeps all.                                            |
+| `run_number` | Change it to send the same request again.                                         |
+| `query`      | What to rank against.                                                             |
+| `documents`  | One document per line. Blank lines are skipped.                                   |
+| `options`    | Settings from **Request Options**.                                                |
 
 ## Outputs
 
@@ -29,8 +28,8 @@ run is one paid request; prices are at openrouter.ai/models.
 2. Connect **texts** or **images** to the nodes that use the best results.
 3. Select **Run**.
 
-All documents go in one request, so ranking the four images of one **Image:
-Generate** run costs one request. Examples:
-**search-01-answer-from-help-articles** and **search-02-choose-a-hero-image**.
+All documents go in one request, so the four images of one **Image: Generate**
+run are ranked in one request. Examples: **search-01-answer-from-help-articles**
+and **search-02-choose-a-hero-image**.
 
 [OpenRouter rerank documentation](https://openrouter.ai/docs/api/api-reference/rerank/submit-a-rerank-request)

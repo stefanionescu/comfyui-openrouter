@@ -1,9 +1,7 @@
 # Audio: Transcribe
 
 Turns speech into text with any transcription model on OpenRouter, with timed
-segments, timed words, and subtitles if you ask for them. Each run is one paid
-request, priced per second of audio or per token, depending on the model. Prices
-are at openrouter.ai/models.
+segments, timed words, and subtitles if you ask for them.
 
 ## Inputs
 
@@ -14,7 +12,7 @@ are at openrouter.ai/models.
 | `language`    | The spoken language as a two-letter code, such as `en`. Leave it empty to detect it.                  |
 | `timestamps`  | `none`, `segments`, or `words and segments`, for models that return timestamps.                       |
 | `temperature` | 0 to 1; 0 leaves it to the model.                                                                     |
-| `variation`   | **run number**: change it to send the same request again.                                             |
+| `run_number`  | Change it to send the same request again.                                                             |
 | `options`     | Settings from **Request Options**.                                                                    |
 
 ## Outputs
@@ -32,7 +30,7 @@ are at openrouter.ai/models.
 2. Connect **text** to **Save Text** or **Preview as Text**.
 3. Select **Run**.
 
-Examples: **audio-01-triage-a-voicemail** and **audio-02-dub-a-clip**.
-Providers stop after about 60 seconds of processing, so split long recordings.
+Examples: **audio-01-triage-a-voicemail** and **audio-02-dub-a-clip**. Providers
+stop after about 60 seconds of processing, so split long recordings.
 
 [OpenRouter speech-to-text documentation](https://openrouter.ai/docs/guides/overview/multimodal/stt)

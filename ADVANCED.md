@@ -98,15 +98,17 @@ where the system supports them.
 Change these in **OpenRouter settings**. New requests use the saved values; a
 running request keeps its own. One MiB is 1,048,576 bytes.
 
-| Setting                        | Default | Range      | What it limits                                               |
-| ------------------------------ | ------- | ---------- | ------------------------------------------------------------ |
-| request timeout (seconds)      | 600     | 10 to 3600 | How long one paid request may take.                          |
-| maximum upload size (MiB)      | 64      | 1 to 512   | The media and documents in one request.                      |
-| maximum download size (MiB)    | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.          |
-| parallel requests              | 4       | 1 to 16    | Requests running at once in one ComfyUI run.                 |
-| video check interval (seconds) | 15      | 5 to 120   | The time between video status checks.                        |
-| maximum video wait (minutes)   | 30      | 1 to 240   | How long one run waits for a video.                          |
-| resubmit hold (minutes)        | 30      | 0 to 1440  | How long an uncertain video request blocks an identical one. |
+![The OpenRouter Settings dialog: the saved key's status, the API key field with Save Key and Clear Saved Key, the request timeout and maximum video wait, and a collapsed Advanced limits section.](docs/images/settings-dialog.png)
+
+| Setting                        | Default | Range      | What it limits                                                         |
+| ------------------------------ | ------- | ---------- | ---------------------------------------------------------------------- |
+| request timeout (seconds)      | 600     | 10 to 3600 | How long one paid request may take.                                    |
+| maximum upload size (MiB)      | 64      | 1 to 512   | The media and documents in one request.                                |
+| maximum download size (MiB)    | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.                    |
+| parallel requests              | 4       | 1 to 16    | Requests running at once in one ComfyUI run.                           |
+| video check interval (seconds) | 15      | 5 to 120   | The time between video status checks.                                  |
+| maximum video wait (minutes)   | 30      | 1 to 240   | How long one run waits for a video.                                    |
+| video retry delay (minutes)    | 30      | 0 to 1440  | How long an identical video request is refused after an uncertain one. |
 
 If another window saved the settings after you opened them, reload and make
 your change again. Invalid values are refused, and the saved settings are kept.
@@ -179,7 +181,7 @@ identical request again on **Video: Generate** also picks up the recorded job.
 
 If the connection closes before OpenRouter confirms a video request, the video
 may be running and billed. The extension records the request as uncertain and
-refuses an identical one for **resubmit hold (minutes)**; check
+refuses an identical one for **video retry delay (minutes)**; check
 openrouter.ai/activity meanwhile. A job is removed from the list once its video
 is downloaded, or when OpenRouter reports that it failed, was cancelled, or
 expired.
@@ -238,7 +240,7 @@ makes something the node does not return; see [models](#models).
 
 - There is no prompt and no first frame.
 - Frames and references are both connected, or a frame is a batch.
-- An identical request is on hold after an uncertain submission.
+- An identical request comes within the video retry delay of an uncertain submission.
 
 **Audio: Speak** stops when the text is empty or too long, or the voice sample
 is too large. **Audio: Transcribe** stops when the language is not a two-letter
@@ -315,7 +317,6 @@ mise trust && mise run repo:setup
 mise run repo:deps:export          # Regenerate requirements.txt from pyproject.toml
 mise run comfy:frontend:build      # Build the browser files
 mise run comfy:workflows:build     # Build the 13 example workflows
-mise run comfy:nodes:schema        # Print the node descriptions the workflow build reads
 ```
 
 The example workflows are generated from `scripts/workflows/descriptions/`.
@@ -462,17 +463,22 @@ module and class, private functions come first, `__all__` lists no private
 name, and a function only its own module uses is private. `repo:lint:policy`
 checks all four.
 
-### README images
+### Images
 
-The README's images are in `docs/images/`:
+The README's and this guide's images are in `docs/images/`:
 
 - `banner.svg` and `node-map.svg` are SVG files; edit them as text. They use two
   palettes: ComfyUI's ink `#211927`, panels `#312C34`, text `#C2BFB9`, and yellow
   `#F0FF41`, and OpenRouter's indigo `#6366F1`. In the node map, a paid node has
-  an indigo bar and a free one a grey bar, and links are yellow.
+  an indigo bar and a free one a grey bar, and links are yellow. The banner's
+  tags name the requirements and the license; update them when those change.
 - `workflow-choose-group.png` is the **Choose** group of image-01 at 100% zoom.
+- `chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels wide, at 100%
+  zoom.
+- `settings-dialog.png` is the **OpenRouter settings** dialog with its advanced
+  limits closed.
 
-Keep each image under 100 KB, and give it alt text in the README.
+Keep each image under 100 KB, and give it alt text.
 
 ### Change text
 
@@ -742,13 +748,13 @@ then choose a job.
 
 ### An earlier identical video request may have been accepted
 
-An identical request is on hold after an uncertain submission. Wait the minutes
+An identical request is refused for a while after an uncertain submission. Wait the minutes
 the message gives, or look for the job at openrouter.ai/activity.
 
 ### The connection closed before OpenRouter confirmed the video request
 
 The video may be running and billed; check openrouter.ai/activity. An identical
-request is refused for **resubmit hold (minutes)**.
+request is refused for **video retry delay (minutes)**.
 
 ### OpenRouter's video address was not on openrouter.ai
 

@@ -1,6 +1,4 @@
-# ComfyUI OpenRouter
-
-![ComfyUI OpenRouter: a ComfyUI extension that runs any OpenRouter model](docs/images/banner.svg)
+# ![comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model](docs/images/banner.svg)
 
 This is a ComfyUI extension that runs any OpenRouter model, with your own API
 key.
@@ -23,8 +21,7 @@ provider choices for the eight paid ones:
 
 Requests go from your ComfyUI server to OpenRouter, which passes them to the
 model's provider (the company that runs the model) and bills your OpenRouter
-account. Every run of a paid node is billed, so check the model's price at
-[openrouter.ai/models](https://openrouter.ai/models) before you run it.
+account.
 
 ## Contents
 
@@ -127,6 +124,22 @@ There are 13 example workflows, and together they use every node. In 12 of
 them, Jev decides something: which image to keep, whether a draft is distorted,
 or whether an answer is backed by its sources.
 
+| Workflow                                                                                                          | Input                               |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| [Chat: Write a Product Listing](example_workflows/chat-01-write-a-product-listing.json)                           | Two product photos and a spec sheet |
+| [Chat: Caption a Training Set](example_workflows/chat-02-caption-a-training-set.json)                             | A folder of images                  |
+| [Image: Pick the Best Image for an Occasion](example_workflows/image-01-pick-the-best-image-for-an-occasion.json) | A brief                             |
+| [Image: Reject Distorted Images](example_workflows/image-02-reject-distorted-images.json)                         | A subject                           |
+| [Image: Edit with the Best Idea](example_workflows/image-03-edit-with-the-best-idea.json)                         | A product photo and a campaign      |
+| [Image: Design a Logo](example_workflows/image-04-design-a-logo.json)                                             | A brand description                 |
+| [Video: Animate a Product Shot](example_workflows/video-01-animate-a-product-shot.json)                           | A brief                             |
+| [Video: Recover a Cancelled Video](example_workflows/video-02-recover-a-cancelled-video.json)                     | A cancelled video job               |
+| [Audio: Triage a Voicemail](example_workflows/audio-01-triage-a-voicemail.json)                                   | A voicemail                         |
+| [Audio: Dub a Clip](example_workflows/audio-02-dub-a-clip.json)                                                   | A short clip of one speaker         |
+| [Search: Answer from Help Articles](example_workflows/search-01-answer-from-help-articles.json)                   | A question and help articles        |
+| [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)                               | A brief                             |
+| [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json)         | Notes and a question                |
+
 Open one from **Browse Templates → comfyui-openrouter**, or drag its file onto
 ComfyUI. Each group has a note that says what it does; start with **Start
 Here**. Each step after the inputs is a subgraph: select the icon at its
@@ -136,52 +149,9 @@ audio, or document.
 ![Screenshot of the Choose group in image-01: a note explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/workflow-choose-group.png)
 
 Some workflows use ComfyUI's **If/Else Switch** (beta). It runs only the branch
-it picks, so you pay only for the paid nodes on that branch.
+it picks, so the nodes on the other branch send nothing.
 
 After an update, open the examples in a new tab to get the new versions.
-
-### Chat
-
-| Workflow                                                                                | Input                               | Node guide                                                        |
-| --------------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------- |
-| [Chat: Write a Product Listing](example_workflows/chat-01-write-a-product-listing.json) | Two product photos and a spec sheet | [Chat: Attach Document](web/docs/OpenRouterChatAttachDocument.md) |
-| [Chat: Caption a Training Set](example_workflows/chat-02-caption-a-training-set.json)   | A folder of images                  | [Chat: Ask](web/docs/OpenRouterChatAsk.md)                        |
-
-### Images
-
-| Workflow                                                                                                          | Input                          | Node guide                                                        |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------------- |
-| [Image: Pick the Best Image for an Occasion](example_workflows/image-01-pick-the-best-image-for-an-occasion.json) | A brief                        | [Image: Generate](web/docs/OpenRouterImageGenerate.md)            |
-| [Image: Reject Distorted Images](example_workflows/image-02-reject-distorted-images.json)                         | A subject                      | [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                |
-| [Image: Edit with the Best Idea](example_workflows/image-03-edit-with-the-best-idea.json)                         | A product photo and a campaign | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md) |
-| [Image: Design a Logo](example_workflows/image-04-design-a-logo.json)                                             | A brand description            | [Image: Generate](web/docs/OpenRouterImageGenerate.md)            |
-
-### Video
-
-| Workflow                                                                                      | Input                 | Node guide                                             |
-| --------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------ |
-| [Video: Animate a Product Shot](example_workflows/video-01-animate-a-product-shot.json)       | A brief               | [Video: Generate](web/docs/OpenRouterVideoGenerate.md) |
-| [Video: Recover a Cancelled Video](example_workflows/video-02-recover-a-cancelled-video.json) | A cancelled video job | [Video: Download](web/docs/OpenRouterVideoDownload.md) |
-
-### Audio
-
-| Workflow                                                                        | Input                       | Node guide                                                 |
-| ------------------------------------------------------------------------------- | --------------------------- | ---------------------------------------------------------- |
-| [Audio: Triage a Voicemail](example_workflows/audio-01-triage-a-voicemail.json) | A voicemail                 | [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md) |
-| [Audio: Dub a Clip](example_workflows/audio-02-dub-a-clip.json)                 | A short clip of one speaker | [Audio: Speak](web/docs/OpenRouterAudioSpeak.md)           |
-
-### Search
-
-| Workflow                                                                                        | Input                        | Node guide                                       |
-| ----------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------ |
-| [Search: Answer from Help Articles](example_workflows/search-01-answer-from-help-articles.json) | A question and help articles | [Search: Rank](web/docs/OpenRouterSearchRank.md) |
-| [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)             | A brief                      | [Search: Rank](web/docs/OpenRouterSearchRank.md) |
-
-### Decision
-
-| Workflow                                                                                                  | Input                | Node guide                                         |
-| --------------------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------------------- |
-| [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json) | Notes and a question | [Decision: Ask](web/docs/OpenRouterDecisionAsk.md) |
 
 **Request Options** is used in **Chat: Write a Product Listing**, to keep the
 listing away from providers that store data.
@@ -195,21 +165,21 @@ or read data and are free. ComfyUI's node help opens each node's guide.
 
 ![Node map. Chat: Attach Document feeds Chat: Ask. Video: Download collects a job that Video: Generate left running. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Paid nodes have an indigo bar.](docs/images/node-map.svg)
 
-| Group           | Node                                                                | What it does                                                           | Paid |
-| --------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
-| Chat            | [Chat: Ask](web/docs/OpenRouterChatAsk.md)                          | Asks a model a question, with images, video, audio, or documents.      | Yes  |
-| Chat            | [Chat: Attach Document](web/docs/OpenRouterChatAttachDocument.md)   | Attaches a PDF or text file from ComfyUI's input folder.               | No   |
-| Image           | [Image: Generate](web/docs/OpenRouterImageGenerate.md)              | Generates or edits images, with masks and SVG files.                   | Yes  |
-| Video           | [Video: Generate](web/docs/OpenRouterVideoGenerate.md)              | Makes a video from a prompt, frames, or reference media.               | Yes  |
-| Video           | [Video: Download](web/docs/OpenRouterVideoDownload.md)              | Downloads a video that OpenRouter kept making after a run stopped.     | No   |
-| Audio           | [Audio: Speak](web/docs/OpenRouterAudioSpeak.md)                    | Turns text into speech, optionally in a cloned voice.                  | Yes  |
-| Audio           | [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turns speech into text, with timed segments, words, and subtitles.     | Yes  |
-| Search          | [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turns text and images into embeddings and compares them.               | Yes  |
-| Search          | [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Ranks text and images by how well they match a query.                  | Yes  |
-| Decision        | [Decision: Add Question](web/docs/OpenRouterDecisionAddQuestion.md) | Adds a yes-or-no, one-choice, or score question.                       | No   |
-| Decision        | [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, the questions about a situation.   | Yes  |
-| Decision        | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                     | No   |
-| Request Options | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for paid nodes. | No   |
+| Node                                                                | What it does                                                           | Paid |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
+| [Chat: Ask](web/docs/OpenRouterChatAsk.md)                          | Asks a model a question, with images, video, audio, or documents.      | Yes  |
+| [Chat: Attach Document](web/docs/OpenRouterChatAttachDocument.md)   | Attaches a PDF or text file from ComfyUI's input folder.               | No   |
+| [Image: Generate](web/docs/OpenRouterImageGenerate.md)              | Generates or edits images, with masks and SVG files.                   | Yes  |
+| [Video: Generate](web/docs/OpenRouterVideoGenerate.md)              | Makes a video from a prompt, frames, or reference media.               | Yes  |
+| [Video: Download](web/docs/OpenRouterVideoDownload.md)              | Downloads a video that OpenRouter kept making after a run stopped.     | No   |
+| [Audio: Speak](web/docs/OpenRouterAudioSpeak.md)                    | Turns text into speech, optionally in a cloned voice.                  | Yes  |
+| [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turns speech into text, with timed segments, words, and subtitles.     | Yes  |
+| [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turns text and images into embeddings and compares them.               | Yes  |
+| [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Ranks text and images by how well they match a query.                  | Yes  |
+| [Decision: Add Question](web/docs/OpenRouterDecisionAddQuestion.md) | Adds a yes-or-no, one-choice, or score question.                       | No   |
+| [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, the questions about a situation.   | Yes  |
+| [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                     | No   |
+| [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for paid nodes. | No   |
 
 The decision nodes use OpenRouter's alpha decisions API
 (`/api/alpha/decisions`), which OpenRouter may still change.
@@ -220,6 +190,8 @@ Each paid node has a **model** field. Type any model ID from
 [openrouter.ai/models](https://openrouter.ai/models), such as
 `google/gemini-3.5-flash`; the same page lists each model's price. You can add
 a variant suffix, such as `:nitro` for the fastest providers.
+
+![Chat: Ask on the canvas: sockets for images, video, audio, a conversation, documents, and options; then the model field set to google/gemini-3.5-flash, the reasoning effort, max tokens, temperature, outputs, aspect ratio, voice, PDF engine, seed, and run number; and the answer schema, prompt, and system prompt boxes at the bottom.](docs/images/chat-ask-node.png)
 
 Before it sends, the node checks the ID with OpenRouter. It stops with an error
 if OpenRouter has no model with that ID, or if the model makes something else,

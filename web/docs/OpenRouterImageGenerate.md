@@ -1,13 +1,11 @@
 # Image: Generate
 
-Generates or edits images with any image model on OpenRouter. Each run is one
-paid request; prices are at openrouter.ai/models.
+Generates or edits images with any image model on OpenRouter.
 
 ## Inputs
 
 | Input                | What it takes                                                                                 |
 | -------------------- | --------------------------------------------------------------------------------------------- |
-| `prompt`             | What to draw or change.                                                                       |
 | `model`              | Any image model ID from openrouter.ai/models; the default is `google/gemini-3.1-flash-image`. |
 | `resolution`         | The size, such as `1K` or `4K`.                                                               |
 | `aspect_ratio`       | The shape, such as `16:9`.                                                                    |
@@ -18,7 +16,8 @@ paid request; prices are at openrouter.ai/models.
 | `count`              | How many images to make.                                                                      |
 | `references`         | Images to edit or combine, one per socket. Every image in a batch is sent.                    |
 | `seed`               | Varies the output, for models that take a seed.                                               |
-| `variation`          | **run number**: change it to send the same request again.                                     |
+| `run_number`         | Change it to send the same request again.                                                     |
+| `prompt`             | What to draw or change.                                                                       |
 | `options`            | Settings from **Request Options**.                                                            |
 
 **model default** sends nothing, so the model uses its own default.
@@ -40,6 +39,6 @@ paid request; prices are at openrouter.ai/models.
 
 Examples: **image-01-pick-the-best-image-for-an-occasion** and
 **image-04-design-a-logo**. FLUX models return JPEG unless you choose `png`, and
-JPEG is always opaque. OpenRouter bills only completed images.
+JPEG is always opaque.
 
 [OpenRouter image generation documentation](https://openrouter.ai/docs/guides/overview/multimodal/image-generation)
