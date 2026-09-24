@@ -7,13 +7,14 @@ from scripts.config import NOTE
 from dataclasses import dataclass
 from typing import cast, TYPE_CHECKING
 from scripts.workflows.page.graph import Node, Subgraph, NAMESPACE
-from scripts.workflows.page.layout import GUTTER, measure, place_stacks, place_columns
+from scripts.workflows.page.layout import GUTTER, measure, count_slots, place_stacks, place_columns
 from scripts.workflows.page.widgets import Item, Schema, read_widget_default, serialize_widget_values
 from scripts.workflows.page.config import (
     PORT_WIDTH,
     BYPASS_MODE,
     INNER_ORIGIN,
     PAID_COLOURS,
+    AUTOGROW_TYPE,
     SUBGRAPH_ID_STEP,
 )
 
@@ -21,9 +22,8 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 Json = dict[str, object]
-# A dropdown whose options add controls, a row of sockets that grows as they are linked, and the widget types.
+# A dropdown whose options add controls, and the widget types.
 DROPDOWN_TYPE = "COMFY_DYNAMICCOMBO_V3"
-AUTOGROW_TYPE = "COMFY_AUTOGROW_V3"
 # The any-type sockets of a switch, which take the type of the values linked into them.
 MATCH_TYPE = "COMFY_MATCHTYPE_V3"
 WIDGET_TYPES = frozenset({"INT", "FLOAT", "STRING", "BOOLEAN", "COMBO", DROPDOWN_TYPE})
@@ -114,7 +114,7 @@ def serialize_autogrow(name: str, settings: Mapping[str, object], linked: frozen
     """Serialize a growing row of sockets: every slot up to the last linked one, and one more."""
     template = cast("dict[str, object]", settings["template"])
     slots = [f"{name}.{slot}" for slot in cast("list[str]", template["names"])]
-    shown = max((index + 1 for index, slot in enumerate(slots) if slot in linked), default=0) + 1
+    shown = count_slots(name, settings, linked)
     socket = cast("dict[str, dict[str, list[object]]]", template["input"])
     slot_type = next(iter((socket.get("required") or socket.get("optional") or {}).values()))[0]
     return [
@@ -288,7 +288,13 @@ def link_subgraph_ports(subgraph: Subgraph, entries: dict[str, Json], records: l
 
 def serialize_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> Json:
     """Serialize one subgraph definition with its input and output ports."""
-    sizes = {node.key: measure(node.kind, palette.schema(node)) for node in subgraph.nodes}
+    targets = [end.split(".", 1) for _start, end in subgraph.links]
+    sizes = {
+        node.key: measure(
+            node.kind, palette.schema(node), frozenset(socket for key, socket in targets if key == node.key)
+        )
+        for node in subgraph.nodes
+    }
     if subgraph.stacks:
         placed, groups = place_stacks(subgraph.stacks, sizes, INNER_ORIGIN)
     else:

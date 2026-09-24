@@ -13,6 +13,7 @@ from scripts.workflows.page.config import (
     NODE_WIDTH,
     SLOT_HEIGHT,
     TITLE_HEIGHT,
+    AUTOGROW_TYPE,
     CANVAS_ORIGIN,
     WIDGET_HEIGHT,
     MULTILINE_HEIGHT,
@@ -45,14 +46,26 @@ class Box:
         return self.x + self.width
 
 
-def measure(kind: str, schema: Mapping[str, object]) -> tuple[int, int]:
+def count_slots(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> int:
+    """Count the sockets a growing row shows: every slot up to the last linked one, and one more."""
+    template = cast("dict[str, object]", settings["template"])
+    slots = [f"{name}.{slot}" for slot in cast("list[str]", template["names"])]
+    return min(len(slots), max((index + 1 for index, slot in enumerate(slots) if slot in linked), default=0) + 1)
+
+
+def measure(kind: str, schema: Mapping[str, object], linked: frozenset[str] = frozenset()) -> tuple[int, int]:
     """Size a node from its schema: a row per socket, then its widgets; nodes with their own panel are measured."""
     if kind in DOM_SIZES:
         return DOM_SIZES[kind]
     inputs = cast("list[dict[str, object]]", schema["inputs"])
     outputs = cast("list[object]", schema["outputs"])
     widgets = [item for item in inputs if item.get("widget")]
-    rows = max(len(inputs) - len(widgets), len(outputs))
+    sockets = sum(
+        count_slots(str(item["name"]), item, linked) if item["type"] == AUTOGROW_TYPE else 1
+        for item in inputs
+        if not item.get("widget")
+    )
+    rows = max(sockets, len(outputs))
     height = TITLE_HEIGHT + rows * SLOT_HEIGHT + sum(_measure_widget(item) for item in widgets)
     return NODE_WIDTH, height
 
@@ -129,4 +142,4 @@ def place_stacks(
     return boxes, frames
 
 
-__all__ = ["GUTTER", "measure", "place_columns", "place_stacks"]
+__all__ = ["GUTTER", "count_slots", "measure", "place_columns", "place_stacks"]

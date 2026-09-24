@@ -69,7 +69,14 @@ def serialize_workflow(workflow: Workflow, palette: Palette) -> Json:
     # The note is sized to its copy: each line wraps at the note width.
     lines = sum(max(1, math.ceil(len(line) / NOTE_CHARS_PER_LINE)) for line in text.splitlines())
     sizes = {note.key: (NOTE_WIDTH, NOTE_PADDING + lines * NOTE_LINE_HEIGHT)}
-    sizes |= {node.key: measure(node.kind, palette.schema(node)) for node in workflow.nodes}
+    # A growing row of sockets shows each linked slot and one more, so the links decide a node's height.
+    targets = [end.split(".", 1) for _start, end in workflow.links]
+    sizes |= {
+        node.key: measure(
+            node.kind, palette.schema(node), frozenset(socket for key, socket in targets if key == node.key)
+        )
+        for node in workflow.nodes
+    }
     boxes, groups = place_stacks(workflow.stacks, sizes)
     grouped = sum(len(column) for stack in workflow.stacks for group in stack for column in group.columns) + 1
     if set(boxes) != set(sizes) or len(boxes) != grouped:

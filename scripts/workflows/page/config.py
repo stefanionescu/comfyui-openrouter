@@ -1,6 +1,6 @@
 """The workflow page: distances, colours, node sizes and subgraph numbering."""
 
-from scripts.config import IMAGE, PREVIEW, SAVE_AUDIO, SAVE_IMAGE, SAVE_VIDEO, PREVIEW_AUDIO
+from scripts.config import AUDIO, IMAGE, PREVIEW, SAVE_TEXT, SAVE_AUDIO, SAVE_IMAGE, SAVE_VIDEO, PREVIEW_AUDIO
 
 # Page layout: distances in page pixels.
 GUTTER = 30
@@ -29,18 +29,22 @@ SLOT_HEIGHT = 20
 WIDGET_HEIGHT = 32
 # A child widget of a dynamic dropdown, a multi-line text and a multi-select list take these heights.
 CHILD_WIDGET_HEIGHT = 28
-MULTILINE_HEIGHT = 60
+MULTILINE_HEIGHT = 82
 MULTISELECT_HEIGHT = 62
 # The Start Here note: its width, the rows its title and padding take, one wrapped line and the characters per line.
 NOTE_WIDTH = 620
 NOTE_PADDING = 56
 NOTE_LINE_HEIGHT = 12
 NOTE_CHARS_PER_LINE = 115
+# A row of sockets that grows by one as its last socket is linked.
+AUTOGROW_TYPE = "COMFY_AUTOGROW_V3"
 # Nodes that draw their own panel, measured in the page. The save nodes are sized for their empty state;
 # ComfyUI grows them as their viewers fill.
 DOM_SIZES: dict[str, tuple[int, int]] = {
     IMAGE: (340, 350),
+    AUDIO: (340, 136),
     PREVIEW: (340, 240),
+    SAVE_TEXT: (340, 170),
     SAVE_IMAGE: (340, 290),
     PREVIEW_AUDIO: (340, 150),
     SAVE_AUDIO: (340, 250),
@@ -48,6 +52,7 @@ DOM_SIZES: dict[str, tuple[int, int]] = {
 }
 
 __all__ = [
+    "AUTOGROW_TYPE",
     "BYPASS_MODE",
     "CANVAS_ORIGIN",
     "CHILD_WIDGET_HEIGHT",
