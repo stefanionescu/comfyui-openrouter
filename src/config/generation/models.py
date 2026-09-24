@@ -7,7 +7,7 @@ DEFAULT_SPEECH_MODEL = "google/gemini-3.1-flash-tts-preview"
 DEFAULT_TRANSCRIPTION_MODEL = "openai/whisper-large-v3-turbo"
 DEFAULT_EMBEDDING_MODEL = "openai/text-embedding-3-small"
 DEFAULT_RANK_MODEL = "cohere/rerank-v3.5"
-# A pinned version, because OpenRouter recommends pinning Jev when thresholds are tuned.
+# A fixed version, so answers stay comparable while thresholds are tuned; ~typesafe/jev-latest follows new releases.
 DEFAULT_DECISION_MODEL = "typesafe/jev-1.13"
 
 __all__ = [

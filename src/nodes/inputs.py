@@ -50,7 +50,7 @@ def define_model_input[C: Choice](
         MODEL_ID_INPUT,
         display_name="model ID",
         default="",
-        tooltip="Any OpenRouter model ID, including variants such as :online.",
+        tooltip="Any OpenRouter model ID, including variants such as :nitro.",
     )
     options.append(io.DynamicCombo.Option(WRITTEN_CHOICE, [written, *written_children]))
     return io.DynamicCombo.Input(

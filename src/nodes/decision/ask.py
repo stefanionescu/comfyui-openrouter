@@ -1,4 +1,4 @@
-"""Answer typed questions about a situation with an OpenRouter decision model."""
+"""Answer typed questions about a situation with a decision model, such as TypeSafe's Jev, through OpenRouter."""
 
 from __future__ import annotations
 
@@ -66,8 +66,8 @@ class DecisionAsk(PaidNode):
             display_name="Decision: Ask",
             category=DECISION_MENU,
             description=(
-                "Answer typed questions about a situation with an OpenRouter decision model, "
-                "with probabilities instead of text."
+                "Answer typed questions about a situation with a decision model on OpenRouter, such as TypeSafe's "
+                "Jev. Each answer comes with its probabilities."
             ),
             inputs=[
                 io.String.Input(

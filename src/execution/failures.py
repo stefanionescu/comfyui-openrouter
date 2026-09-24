@@ -20,6 +20,7 @@ from ..config.messages.run import (
     MODEL_UNAVAILABLE,
     PAYLOAD_TOO_LARGE,
     MODERATION_REFUSED,
+    PROVIDER_OVERLOADED,
 )
 
 KEY = re.compile(KEY_PATTERN)
@@ -40,7 +41,7 @@ FIXED_FAILURES: dict[int, tuple[ErrorCode, str]] = {
     502: (ErrorCode.UNAVAILABLE, PROVIDER_FAILED),
     503: (ErrorCode.UNAVAILABLE, NO_PROVIDER),
     524: (ErrorCode.TIMEOUT, PROVIDER_TIMEOUT),
-    529: (ErrorCode.UNAVAILABLE, NO_PROVIDER),
+    529: (ErrorCode.UNAVAILABLE, PROVIDER_OVERLOADED),
 }
 
 

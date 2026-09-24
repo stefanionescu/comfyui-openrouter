@@ -4,7 +4,8 @@ MAX_QUESTIONS = 32
 MIN_CHOICE_OPTIONS = 2
 MAX_CHOICE_OPTIONS = 32
 MIN_SCORE_LEVELS = 2
-MAX_SCORE_LEVELS = 11
+# TypeSafe's decisions API accepts 2 to 10 score levels.
+MAX_SCORE_LEVELS = 10
 # Keeps the situation well inside Jev's 32,000-token context, at about four characters per token.
 MAX_SITUATION_CHARACTERS = 200_000
 DEFAULT_THRESHOLD = 0.5
