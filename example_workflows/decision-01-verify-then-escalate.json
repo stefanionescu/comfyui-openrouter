@@ -1799,12 +1799,14 @@
               {
                 "name": "on_false",
                 "type": "STRING",
-                "link": 1
+                "link": 1,
+                "shape": 7
               },
               {
                 "name": "on_true",
                 "type": "STRING",
-                "link": 3
+                "link": 3,
+                "shape": 7
               }
             ],
             "outputs": [

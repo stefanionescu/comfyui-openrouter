@@ -2062,12 +2062,14 @@
               {
                 "name": "on_false",
                 "type": "STRING",
-                "link": 7
+                "link": 7,
+                "shape": 7
               },
               {
                 "name": "on_true",
                 "type": "STRING",
-                "link": 6
+                "link": 6,
+                "shape": 7
               }
             ],
             "outputs": [

@@ -1923,12 +1923,14 @@
               {
                 "name": "on_false",
                 "type": "STRING",
-                "link": 2
+                "link": 2,
+                "shape": 7
               },
               {
                 "name": "on_true",
                 "type": "STRING",
-                "link": 1
+                "link": 1,
+                "shape": 7
               }
             ],
             "outputs": [
