@@ -1,8 +1,8 @@
 {
   "id": "0b2651aa-eada-5b8c-a569-df733c84cac4",
   "revision": 0,
-  "last_node_id": 4,
-  "last_link_id": 2,
+  "last_node_id": 3,
+  "last_link_id": 1,
   "nodes": [
     {
       "id": 1,
@@ -130,9 +130,7 @@
         {
           "name": "text",
           "type": "STRING",
-          "links": [
-            2
-          ]
+          "links": []
         },
         {
           "name": "reasoning",
@@ -162,7 +160,7 @@
         "Node name for S&R": "OpenRouterChatAsk"
       },
       "widgets_values": [
-        "Paint a watercolor fox, then describe the painting in one sentence.",
+        "Paint a watercolor fox.",
         "google/gemini-3.1-flash-image",
         "minimal",
         0,
@@ -221,39 +219,6 @@
       "widgets_values": [
         "image/openrouter/image-05-draw-with-a-chat-model"
       ]
-    },
-    {
-      "id": 4,
-      "type": "PreviewAny",
-      "pos": [
-        410,
-        628
-      ],
-      "size": [
-        340,
-        240
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "source",
-          "type": "*",
-          "link": 2
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "PreviewAny"
-      },
-      "widgets_values": []
     }
   ],
   "links": [
@@ -264,14 +229,6 @@
       3,
       0,
       "IMAGE"
-    ],
-    [
-      2,
-      2,
-      0,
-      4,
-      0,
-      "STRING"
     ]
   ],
   "groups": [
@@ -282,7 +239,7 @@
         0,
         164,
         780,
-        734
+        690
       ],
       "color": "#68688c",
       "font_size": 24,

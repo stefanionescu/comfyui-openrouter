@@ -28,13 +28,13 @@ Ask any OpenRouter chat model a question, with images, video, audio, and documen
 
 ## Outputs
 
-| Output         | What it carries                                                                                             |
-| -------------- | ----------------------------------------------------------------------------------------------------------- |
-| `text`         | The answer; for a spoken answer, the words spoken.                                                          |
-| `reasoning`    | The model's reasoning when it shares it; otherwise empty.                                                   |
-| `images`       | A list of generated images, each at its own size; the nodes connected to it do not run when there are none. |
-| `audio`        | The spoken or musical answer; the nodes connected to it do not run when there is none.                      |
-| `conversation` | The earlier turns with this question and answer added.                                                      |
+| Output         | What it carries                                                                                               |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| `text`         | The answer; for a spoken answer, the words spoken. Some models that draw return only the image, with no text. |
+| `reasoning`    | The model's reasoning when it shares it; otherwise empty.                                                     |
+| `images`       | A list of generated images, each at its own size; the nodes connected to it do not run when there are none.   |
+| `audio`        | The spoken or musical answer; the nodes connected to it do not run when there is none.                        |
+| `conversation` | The earlier turns with this question and answer added.                                                        |
 
 ## Run
 

@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from src.config.namespace import NODE_PREFIX
+from scripts.config import IMAGE, SAVE_SVG, SAVE_IMAGE
 from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.page.graph import Node, Group, Workflow
-from scripts.config import IMAGE, PREVIEW, SAVE_SVG, SAVE_IMAGE
 
 GENERATE = f"{NODE_PREFIX}ImageGenerate"
 
@@ -90,15 +90,14 @@ DRAW_IN_CHAT = Workflow(
             f"{NODE_PREFIX}ChatAsk",
             {
                 "model": "google/gemini-3.1-flash-image",
-                "prompt": "Paint a watercolor fox, then describe the painting in one sentence.",
+                "prompt": "Paint a watercolor fox.",
             },
             is_paid=True,
         ),
         Node("save", SAVE_IMAGE, {"filename_prefix": "image/openrouter/image-05-draw-with-a-chat-model"}),
-        Node("description", PREVIEW),
     ),
-    links=(("ask.images", "save.images"), ("ask.text", "description.source")),
-    stacks=((Group(SHARED_TEXTS["ask"], (("ask",), ("save", "description")), STAGE_COLOUR),),),
+    links=(("ask.images", "save.images"),),
+    stacks=((Group(SHARED_TEXTS["ask"], (("ask",), ("save",)), STAGE_COLOUR),),),
 )
 
 IMAGE_WORKFLOWS = (
