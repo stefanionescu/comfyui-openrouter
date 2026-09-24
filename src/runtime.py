@@ -1,0 +1,53 @@
+"""Create the shared stores when ComfyUI loads the extension."""
+
+from .storage import state_directory
+from .discovery.store import ModelStore
+from .execution.videos.jobs import JobStore
+from .errors import ErrorCode, ConnectorError
+from .config.discovery import LIST_FOLDER_NAME
+from .settings.store import ConfigurationStore
+from .config.generation.videos import JOB_FOLDER_NAME
+from .config.messages.settings import RUNTIME_NOT_READY
+
+
+class Runtime:
+    """State shared by this extension's nodes and routes across event loops.
+
+    Attributes:
+        configuration: Private settings and key store.
+        models: Saved model lists and the choices built from them.
+        jobs: Recorded video jobs and uncertain video requests.
+
+    """
+
+    __slots__ = ("configuration", "jobs", "models")
+
+    configuration: ConfigurationStore
+    models: ModelStore
+    jobs: JobStore
+
+    def __init__(self) -> None:
+        """Create the shared stores and place their state under one private directory."""
+        self.configuration = ConfigurationStore(state_directory())
+        self.models = ModelStore(self.configuration.directory / LIST_FOLDER_NAME)
+        self.jobs = JobStore(self.configuration.directory / JOB_FOLDER_NAME)
+
+
+_runtime: Runtime | None = None
+
+
+def initialize_runtime() -> None:
+    """Initialize once through the host's extension lifecycle, without network calls."""
+    global _runtime  # noqa: PLW0603 -- reason: ComfyUI initializes one shared runtime during loading.
+    if _runtime is None:
+        _runtime = Runtime()
+
+
+def get_runtime() -> Runtime:
+    """Reject execution before the host has loaded the extension."""
+    if _runtime is None:
+        raise ConnectorError(ErrorCode.CONFIGURATION, RUNTIME_NOT_READY)
+    return _runtime
+
+
+__all__ = ["Runtime", "get_runtime", "initialize_runtime"]
