@@ -21,7 +21,7 @@ class ErrorCode(StrEnum):
     MEDIA = "media"
 
 
-class ConnectorError(RuntimeError):
+class OpenRouterError(RuntimeError):
     """Show reviewed text; OpenRouter's cleaned reason, when there is one, is already part of it."""
 
     def __init__(self, code: ErrorCode, message: str) -> None:
@@ -30,4 +30,4 @@ class ConnectorError(RuntimeError):
         self.code = code
 
 
-__all__ = ["ConnectorError", "ErrorCode"]
+__all__ = ["ErrorCode", "OpenRouterError"]

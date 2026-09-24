@@ -6,7 +6,7 @@ import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
-from ...state.audio import SpeechRequest
+from ...types.audio import SpeechRequest
 from ..inputs import define_request_inputs
 from ...openrouter.speech import SpeechOperation
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
@@ -25,8 +25,8 @@ from ...config.generation.audio import (
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
-    from ...state.audio import SpeechResult
-    from ...state.options import RequestOptions
+    from ...types.audio import SpeechResult
+    from ...types.options import RequestOptions
 
 
 def _build_outputs(result: SpeechResult) -> io.NodeOutput:

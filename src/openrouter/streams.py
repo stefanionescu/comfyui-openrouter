@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from .failures import read_failure
-from ..state.parsing import parse_json
-from ..errors import ErrorCode, ConnectorError
+from ..types.parsing import parse_json
 from ..config.messages.media import DOWNLOAD_LIMIT
 from ..config.messages.run import REPLY_UNREADABLE
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.openrouter import REPLY_CHUNK_BYTES, BYTES_PER_MEBIBYTE
 
 if TYPE_CHECKING:
     import aiohttp
-    from ..state import Json
+    from ..types import Json
     from collections.abc import AsyncIterator
 
 
@@ -23,7 +23,7 @@ async def _read_lines(response: aiohttp.ClientResponse, max_bytes: int) -> Async
     async for chunk in response.content.iter_chunked(REPLY_CHUNK_BYTES):
         total += len(chunk)
         if total > max_bytes:
-            raise ConnectorError(ErrorCode.MEDIA, DOWNLOAD_LIMIT.format(maximum=max_bytes // BYTES_PER_MEBIBYTE))
+            raise OpenRouterError(ErrorCode.MEDIA, DOWNLOAD_LIMIT.format(maximum=max_bytes // BYTES_PER_MEBIBYTE))
         buffer.extend(chunk)
         while (end := buffer.find(b"\n")) >= 0:
             yield bytes(buffer[:end])
@@ -38,7 +38,7 @@ async def read_events(response: aiohttp.ClientResponse, max_bytes: int) -> Async
         try:
             text = line.decode("utf-8").strip()
         except UnicodeError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if not text.startswith("data:"):
             continue
         payload = text.removeprefix("data:").strip()
@@ -46,8 +46,8 @@ async def read_events(response: aiohttp.ClientResponse, max_bytes: int) -> Async
             return
         try:
             event = parse_json(payload, max_bytes=max_bytes)
-        except ConnectorError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        except OpenRouterError:
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if isinstance(event, dict) and "error" in event:
             raise read_failure(502, payload.encode())
         yield event

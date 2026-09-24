@@ -6,33 +6,33 @@ import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
-from ...state.parsing import parse_json
+from ...types.parsing import parse_json
 from ..inputs import define_request_inputs
-from ...errors import ErrorCode, ConnectorError
 from ...openrouter.decisions import DecisionOperation
+from ...types.errors import ErrorCode, OpenRouterError
 from ...comfy.execution import run_request, wait_for_execution
 from ...config.generation.models import DEFAULT_DECISION_MODEL
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.messages.inputs import SITUATION_EMPTY, SITUATION_LENGTH
-from ...state.decisions import AnswerSet, YesNoAnswer, ChoiceAnswer, DecisionRequest
+from ...types.decisions import AnswerSet, YesNoAnswer, ChoiceAnswer, DecisionRequest
 from ...config.generation.decisions import DEFAULT_THRESHOLD, MAX_SITUATION_CHARACTERS
 from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU, QUESTIONS_TYPE
 
 if TYPE_CHECKING:
-    from ...state import Json
-    from ...state.decisions import QuestionSet
-    from ...state.options import RequestOptions
+    from ...types import Json
+    from ...types.decisions import QuestionSet
+    from ...types.options import RequestOptions
 
 
 def _read_state(situation: str) -> Json:
     """Send a JSON object or array as JSON, and anything else as text, so a person can paste either."""
     if not situation.strip():
-        raise ConnectorError(ErrorCode.INVALID_INPUT, SITUATION_EMPTY)
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, SITUATION_EMPTY)
     if len(situation) > MAX_SITUATION_CHARACTERS:
-        raise ConnectorError(ErrorCode.INVALID_INPUT, SITUATION_LENGTH.format(maximum=MAX_SITUATION_CHARACTERS))
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, SITUATION_LENGTH.format(maximum=MAX_SITUATION_CHARACTERS))
     try:
         state = parse_json(situation)
-    except ConnectorError:
+    except OpenRouterError:
         return situation
     return state if isinstance(state, (dict, list)) else situation
 

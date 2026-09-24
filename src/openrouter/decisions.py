@@ -7,11 +7,11 @@ from .transport import post_json
 from typing import TYPE_CHECKING
 from .options import apply_options
 from pydantic import ValidationError
-from ..state.replies import DecisionReply
+from ..types.replies import DecisionReply
 from ..config.openrouter import DECISIONS_URL
-from ..errors import ErrorCode, ConnectorError
 from ..config.messages.run import REPLY_UNREADABLE
-from ..state.decisions import (
+from ..types.errors import ErrorCode, OpenRouterError
+from ..types.decisions import (
     AnswerSet,
     ScoreAnswer,
     YesNoAnswer,
@@ -22,10 +22,10 @@ from ..state.decisions import (
 )
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state.replies import AnswerReply
-    from ..state.settings import Settings, ExecutionConfiguration
-    from ..state.decisions import Answer, Question, DecisionRequest
+    from ..types import Json
+    from ..types.replies import AnswerReply
+    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.decisions import Answer, Question, DecisionRequest
 
 # The wire type of each question kind.
 WIRE_TYPES = {ChoiceQuestion: "choice", YesNoQuestion: "noul", ScoreQuestion: "score"}
@@ -46,7 +46,7 @@ def _describe_question(question: Question) -> dict[str, Json]:
 def _read_answer(question: Question, reply: AnswerReply | None) -> Answer:
     """Read the answer to one question, which must be of the question's own kind."""
     if reply is None or reply.type != WIRE_TYPES[type(question)]:
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
     if isinstance(question, YesNoQuestion) and reply.noul is not None:
         return YesNoAnswer(question.name, reply.noul)
     if isinstance(question, ChoiceQuestion) and reply.choice is not None:
@@ -54,7 +54,7 @@ def _read_answer(question: Question, reply: AnswerReply | None) -> Answer:
     if isinstance(question, ScoreQuestion) and reply.score is not None:
         legend = {key: value if isinstance(value, str) else str(value) for key, value in reply.legend.items()}
         return ScoreAnswer(question.name, reply.score, reply.confidence or 0.0, dict(reply.probabilities), legend)
-    raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
+    raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
 
 
 class DecisionOperation:
@@ -79,7 +79,7 @@ class DecisionOperation:
         try:
             reply = DecisionReply.model_validate(document)
         except ValidationError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         return AnswerSet(
             tuple(_read_answer(question, reply.answers.get(question.name)) for question in request.questions.questions)
         )

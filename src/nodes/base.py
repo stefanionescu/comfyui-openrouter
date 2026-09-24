@@ -3,7 +3,7 @@
 import asyncio
 from typing import ClassVar
 from comfy_api.latest import io
-from ..runtime import get_runtime
+from ..comfy.runtime import get_runtime
 from collections.abc import Callable, Awaitable
 from ..config.generation.inputs import VARIATION_INPUT
 

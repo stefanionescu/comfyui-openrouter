@@ -180,14 +180,11 @@ forbidden_modules = [ "scripts", "quality" ]
 name = "The packages stack in one order"
 type = "layers"
 layers = [
-  "src.extension",
   "src.nodes",
   "src.comfy",
-  "src.runtime",
   "src.openrouter | src.settings",
   "src.storage",
-  "src.state",
-  "src.errors",
+  "src.types",
   "src.config",
 ]
 
@@ -198,12 +195,10 @@ allow_indirect_imports = true
 # The node classes and the comfy package are the host boundary: ComfyUI calls them and they speak its types.
 source_modules = [
   "src.config",
-  "src.errors",
   "src.openrouter",
-  "src.runtime",
   "src.settings",
-  "src.state",
   "src.storage",
+  "src.types",
 ]
 forbidden_modules = [
   "comfy",
@@ -220,7 +215,7 @@ forbidden_modules = [
 [[tool.importlinter.contracts]]
 name = "Records must not import operations"
 type = "forbidden"
-source_modules = [ "src.state" ]
+source_modules = [ "src.types" ]
 forbidden_modules = [
   "src.comfy",
   "src.nodes",
@@ -233,4 +228,4 @@ forbidden_modules = [
 name = "Config must not import runtime code or tooling"
 type = "forbidden"
 source_modules = [ "src.config" ]
-forbidden_modules = [ "src.nodes", "src.comfy", "src.openrouter", "src.state", "scripts", "quality" ]
+forbidden_modules = [ "src.nodes", "src.comfy", "src.openrouter", "src.types", "scripts", "quality" ]

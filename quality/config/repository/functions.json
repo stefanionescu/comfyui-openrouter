@@ -5,16 +5,11 @@
         "allowlist": [
             {
                 "path": "__init__.py",
-                "names": ["comfy_entrypoint"],
-                "reason": "ComfyUI calls this hook itself."
-            },
-            {
-                "path": "src/extension.py",
-                "names": ["OpenRouterExtension.on_load", "OpenRouterExtension.get_node_list"],
+                "names": ["comfy_entrypoint", "Extension.on_load", "Extension.get_node_list"],
                 "reason": "ComfyUI calls these extension hooks itself."
             },
             {
-                "path": "src/state/credentials.py",
+                "path": "src/types/credentials.py",
                 "names": ["Credential.reveal"],
                 "reason": "Revealing the key is an explicit call at the OpenRouter boundary, so no caller reads it by accident."
             },

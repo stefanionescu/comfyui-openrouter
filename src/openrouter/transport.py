@@ -12,11 +12,11 @@ from http import HTTPStatus
 from .streams import read_events
 from typing import TYPE_CHECKING
 from .failures import read_failure
-from ..state.audio import AudioReply
-from ..state.parsing import parse_json
+from ..types.audio import AudioReply
+from ..types.parsing import parse_json
 from contextlib import asynccontextmanager
-from ..errors import ErrorCode, ConnectorError
 from ..config.messages.media import DOWNLOAD_LIMIT
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.videos import VIDEO_URL_UNEXPECTED
 from ..config.messages.run import REQUEST_TIMEOUT, REPLY_UNREADABLE, REQUEST_UNCERTAIN, OPENROUTER_UNREACHABLE
 from ..config.openrouter import (
@@ -35,8 +35,8 @@ from ..config.openrouter import (
 )
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state.settings import ExecutionConfiguration
+    from ..types import Json
+    from ..types.settings import ExecutionConfiguration
     from collections.abc import Mapping, AsyncIterator, AsyncGenerator
 
 
@@ -68,7 +68,7 @@ async def _read_body(response: aiohttp.ClientResponse, configuration: ExecutionC
     async for chunk in response.content.iter_chunked(REPLY_CHUNK_BYTES):
         content.extend(chunk)
         if len(content) > maximum * BYTES_PER_MEBIBYTE:
-            raise ConnectorError(ErrorCode.MEDIA, DOWNLOAD_LIMIT.format(maximum=maximum))
+            raise OpenRouterError(ErrorCode.MEDIA, DOWNLOAD_LIMIT.format(maximum=maximum))
     return bytes(content)
 
 
@@ -87,12 +87,12 @@ async def _paid_request(configuration: ExecutionConfiguration) -> AsyncGenerator
         yield
     except aiohttp.ClientConnectorError:
         # The connection failed before the request was sent, so nothing was billed.
-        raise ConnectorError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE) from None
+        raise OpenRouterError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE) from None
     except aiohttp.ClientError:
-        raise ConnectorError(ErrorCode.UNCERTAIN, REQUEST_UNCERTAIN) from None
+        raise OpenRouterError(ErrorCode.UNCERTAIN, REQUEST_UNCERTAIN) from None
     except TimeoutError:
         seconds = configuration.settings.request_timeout_seconds
-        raise ConnectorError(ErrorCode.TIMEOUT, REQUEST_TIMEOUT.format(seconds=seconds)) from None
+        raise OpenRouterError(ErrorCode.TIMEOUT, REQUEST_TIMEOUT.format(seconds=seconds)) from None
 
 
 def _parse_reply(content: bytes) -> Json:
@@ -100,8 +100,8 @@ def _parse_reply(content: bytes) -> Json:
     try:
         text = content.decode("utf-8")
         return parse_json(text, max_bytes=len(content) + 1)
-    except (UnicodeError, ConnectorError):
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+    except (UnicodeError, OpenRouterError):
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
 
 
 async def post_json(url: str, body: Mapping[str, Json], configuration: ExecutionConfiguration) -> Json:
@@ -168,10 +168,10 @@ async def _get(
                     return await _read_body(response, configuration)
         except (aiohttp.ClientError, TimeoutError):
             if is_last:
-                raise ConnectorError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE) from None
+                raise OpenRouterError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE) from None
         # A cancel ends the wait.
         await asyncio.sleep(delay)
-    raise ConnectorError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE)
+    raise OpenRouterError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE)
 
 
 def _read_retry_delay(header: str | None, delay: float) -> float:
@@ -186,7 +186,7 @@ def _read_retry_delay(header: str | None, delay: float) -> float:
 async def get_video(url: str, configuration: ExecutionConfiguration) -> bytes:
     """Read a video job's status or its finished video from OpenRouter, the only host the key is sent to."""
     if not url.startswith(VIDEO_CONTENT_PREFIX):
-        raise ConnectorError(ErrorCode.TRANSPORT, VIDEO_URL_UNEXPECTED)
+        raise OpenRouterError(ErrorCode.TRANSPORT, VIDEO_URL_UNEXPECTED)
     return await _get(url, configuration, is_authorized=True)
 
 
@@ -200,7 +200,7 @@ async def get_model(model_id: str, configuration: ExecutionConfiguration) -> byt
 async def download_public(url: str, configuration: ExecutionConfiguration) -> bytes:
     """Download media a reply links on a provider's host, without the key."""
     if not url.startswith("https://"):
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
     return await _get(url, configuration, is_authorized=False)
 
 

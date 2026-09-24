@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 from typing import override, TYPE_CHECKING
-from ...errors import ErrorCode, ConnectorError
 from ...config.messages.inputs import QUESTION_UNKNOWN
-from ...state.decisions import YesNoAnswer, ChoiceAnswer
+from ...types.errors import ErrorCode, OpenRouterError
+from ...types.decisions import YesNoAnswer, ChoiceAnswer
 from ...config.generation.decisions import DEFAULT_THRESHOLD
 from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU
 
 if TYPE_CHECKING:
-    from ...state.decisions import Answer, AnswerSet
+    from ...types.decisions import Answer, AnswerSet
 
 
 def read_values(answer: Answer, threshold: float) -> tuple[str, bool, float, float, int, float]:
@@ -75,7 +75,7 @@ class DecisionReadAnswer(io.ComfyNode):
         answer = next((answer for answer in answers.answers if answer.name == name), None)
         if answer is None:
             names = ", ".join(answer.name for answer in answers.answers)
-            raise ConnectorError(ErrorCode.INVALID_INPUT, QUESTION_UNKNOWN.format(name=name, names=names))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, QUESTION_UNKNOWN.format(name=name, names=names))
         return io.NodeOutput(*read_values(answer, threshold))
 
 

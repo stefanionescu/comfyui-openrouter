@@ -10,18 +10,18 @@ from .options import apply_options
 from pydantic import ValidationError
 from .operation import check_upload_size
 from ..config.patterns import LANGUAGE_PATTERN
-from ..errors import ErrorCode, ConnectorError
-from ..state.replies import TranscriptionReply
+from ..types.replies import TranscriptionReply
 from ..config.openrouter import TRANSCRIPTION_URL
 from ..config.messages.inputs import LANGUAGE_CODE
-from ..state.audio import Segment, TranscriptionResult
+from ..types.errors import ErrorCode, OpenRouterError
+from ..types.audio import Segment, TranscriptionResult
 from ..config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
 
 if TYPE_CHECKING:
-    from ..state import Json
+    from ..types import Json
     from collections.abc import Sequence
-    from ..state.audio import TranscriptionRequest
-    from ..state.settings import Settings, ExecutionConfiguration
+    from ..types.audio import TranscriptionRequest
+    from ..types.settings import Settings, ExecutionConfiguration
 
 LANGUAGE = re.compile(LANGUAGE_PATTERN)
 GRANULARITIES = {"segments": ["segment"], "words and segments": ["segment", "word"]}
@@ -53,7 +53,7 @@ class TranscriptionOperation:
         check_upload_size((self.request.clip,), settings)
         language = self.request.language
         if language and LANGUAGE.match(language) is None:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, LANGUAGE_CODE)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, LANGUAGE_CODE)
 
     async def send(self, configuration: ExecutionConfiguration) -> TranscriptionResult:
         """Check the model and send the clip; Whisper starts its text and segments with a space, so all is stripped."""
@@ -73,9 +73,9 @@ class TranscriptionOperation:
         try:
             reply = TranscriptionReply.model_validate(document)
         except ValidationError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if not reply.text.strip():
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
         segments = tuple(
             Segment(item.start or 0.0, item.end or 0.0, item.text.strip(), item.speaker) for item in reply.segments
         )

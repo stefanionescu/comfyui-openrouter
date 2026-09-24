@@ -7,7 +7,7 @@ import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
-from ...state.search import RankRequest
+from ...types.search import RankRequest
 from ...comfy.media import encode_images
 from ..inputs import define_request_inputs
 from .embed import read_images, define_images
@@ -21,8 +21,8 @@ from ...comfy.execution import owned_io, run_request, wait_for_execution
 
 if TYPE_CHECKING:
     import torch
-    from ...state.search import RankResult
-    from ...state.options import RequestOptions
+    from ...types.search import RankResult
+    from ...types.options import RequestOptions
 
 
 class SearchRank(PaidNode):

@@ -6,12 +6,12 @@ import torch
 import asyncio
 import io as memory
 from ..base import PaidNode
-from ...runtime import get_runtime
 from typing import cast, TYPE_CHECKING
-from ...state.videos import VideoRequest
-from ...errors import ErrorCode, ConnectorError
+from ...comfy.runtime import get_runtime
+from ...types.videos import VideoRequest
 from ...config.messages.videos import IMAGE_BATCH
 from comfy_api.latest import Input, InputImpl, io
+from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ..inputs import read_sockets, define_request_inputs
 from ...openrouter.videos.operation import VideoOperation
@@ -32,7 +32,7 @@ from ...config.generation.videos import (
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from ...state.options import RequestOptions
+    from ...types.options import RequestOptions
 
 
 def _define_media() -> list[io.Input]:
@@ -99,7 +99,7 @@ def _encode_frames(frames: Mapping[str, object]) -> dict[str, str]:
         if not isinstance(image, torch.Tensor):
             continue
         if image.shape[0] != 1:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, IMAGE_BATCH)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_BATCH)
         encoded[frame] = encode_images(image)[0]
     return encoded
 

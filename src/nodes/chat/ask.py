@@ -8,14 +8,14 @@ from ..base import PaidNode
 from comfy_api.latest import io
 from comfy_api.latest import Input
 from typing import cast, TYPE_CHECKING
-from ...state.parsing import parse_json
-from ...errors import ErrorCode, ConnectorError
+from ...types.parsing import parse_json
 from comfy_execution.graph import ExecutionBlocker
 from ...openrouter.chat.operation import ChatOperation
+from ...types.errors import ErrorCode, OpenRouterError
 from ..inputs import read_sockets, define_request_inputs
 from ...config.generation.models import DEFAULT_CHAT_MODEL
 from ...config.messages.inputs import ANSWER_SCHEMA_INVALID
-from ...state.chat import Turn, ChatRequest, ChatSettings, Conversation
+from ...types.chat import Turn, ChatRequest, ChatSettings, Conversation
 from ...comfy.execution import owned_io, run_request, wait_for_execution
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE, CONVERSATION_TYPE
@@ -38,10 +38,10 @@ from ...config.generation.chat import (
 )
 
 if TYPE_CHECKING:
-    from ...state import Json
+    from ...types import Json
     from collections.abc import Mapping
-    from ...state.options import RequestOptions
-    from ...state.chat import Document, ChatResult
+    from ...types.options import RequestOptions
+    from ...types.chat import Document, ChatResult
 
 
 def _define_media() -> list[io.Input]:
@@ -126,7 +126,7 @@ def _read_schema(text: str) -> Mapping[str, Json] | None:
         return None
     schema = parse_json(text)
     if not isinstance(schema, dict):
-        raise ConnectorError(ErrorCode.INVALID_INPUT, ANSWER_SCHEMA_INVALID)
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, ANSWER_SCHEMA_INVALID)
     return schema
 
 

@@ -8,15 +8,15 @@ from .transport import post_audio
 from .options import apply_options
 from .operation import check_upload_size
 from ..config.openrouter import SPEECH_URL
-from ..errors import ErrorCode, ConnectorError
-from ..state.audio import PcmFormat, SpeechResult
+from ..types.audio import PcmFormat, SpeechResult
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.inputs import PCM_RATE_MISSING, SPEECH_TEXT_EMPTY, VOICE_SAMPLE_SIZE, SPEECH_TEXT_LENGTH
 from ..config.generation.audio import DEFAULT_SPEED, PCM_MEDIA_TYPE, MAX_SPEECH_CHARACTERS, MAX_VOICE_SAMPLE_BYTES
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state.audio import SpeechRequest
-    from ..state.settings import Settings, ExecutionConfiguration
+    from ..types import Json
+    from ..types.audio import SpeechRequest
+    from ..types.settings import Settings, ExecutionConfiguration
 
 
 def _read_pcm_format(media_type: str) -> PcmFormat | None:
@@ -33,7 +33,7 @@ def _read_pcm_format(media_type: str) -> PcmFormat | None:
         values[name.strip().lower()] = value.strip()
     rate, channels = values.get("rate", ""), values.get("channels", "")
     if not rate.isdigit() or not channels.isdigit() or int(rate) == 0 or int(channels) == 0:
-        raise ConnectorError(ErrorCode.TRANSPORT, PCM_RATE_MISSING)
+        raise OpenRouterError(ErrorCode.TRANSPORT, PCM_RATE_MISSING)
     return PcmFormat(int(rate), int(channels))
 
 
@@ -48,12 +48,12 @@ class SpeechOperation:
         """Refuse empty or overlong text and an oversized voice sample."""
         request = self.request
         if not request.text.strip():
-            raise ConnectorError(ErrorCode.INVALID_INPUT, SPEECH_TEXT_EMPTY)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, SPEECH_TEXT_EMPTY)
         if len(request.text) > MAX_SPEECH_CHARACTERS:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, SPEECH_TEXT_LENGTH.format(maximum=MAX_SPEECH_CHARACTERS))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, SPEECH_TEXT_LENGTH.format(maximum=MAX_SPEECH_CHARACTERS))
         sample = request.sample or ""
         if len(sample.partition(",")[2]) * 3 // 4 > MAX_VOICE_SAMPLE_BYTES:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, VOICE_SAMPLE_SIZE)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, VOICE_SAMPLE_SIZE)
         check_upload_size((sample,), settings)
 
     async def send(self, configuration: ExecutionConfiguration) -> SpeechResult:

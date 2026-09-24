@@ -8,22 +8,22 @@ from .audio import stream_audio
 from .content import build_body
 from ..models import check_model
 from typing import TYPE_CHECKING
-from ...state.chat import ChatResult
+from ...types.chat import ChatResult
 from pydantic import ValidationError
 from ...config.openrouter import CHAT_URL
 from ..operation import check_upload_size
-from ...errors import ErrorCode, ConnectorError
 from ..failures import clean_reason, read_failure
 from ..transport import post_json, download_public
-from ...state.replies import ChatReply, ErrorReply, ChatMessage
+from ...types.errors import ErrorCode, OpenRouterError
+from ...types.replies import ChatReply, ErrorReply, ChatMessage
 from ...config.messages.run import REPLY_EMPTY, MODEL_REFUSED, REPLY_UNREADABLE
 from ...config.generation.chat import MAX_PROMPT_CHARACTERS, MAX_CONVERSATION_TURNS
 from ...config.messages.inputs import PROMPT_EMPTY, PROMPT_LENGTH, CONVERSATION_LIMIT
 
 if TYPE_CHECKING:
-    from ...state import Json
-    from ...state.chat import ChatRequest
-    from ...state.settings import Settings, ExecutionConfiguration
+    from ...types import Json
+    from ...types.chat import ChatRequest
+    from ...types.settings import Settings, ExecutionConfiguration
 
 
 class ChatOperation:
@@ -37,11 +37,11 @@ class ChatOperation:
         """Refuse an empty or oversized prompt, a long conversation, and too much media."""
         request = self.request
         if not request.prompt.strip():
-            raise ConnectorError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
         if len(request.prompt) > MAX_PROMPT_CHARACTERS:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, PROMPT_LENGTH.format(maximum=MAX_PROMPT_CHARACTERS))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_LENGTH.format(maximum=MAX_PROMPT_CHARACTERS))
         if len(request.conversation.turns) > MAX_CONVERSATION_TURNS:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, CONVERSATION_LIMIT.format(maximum=MAX_CONVERSATION_TURNS))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, CONVERSATION_LIMIT.format(maximum=MAX_CONVERSATION_TURNS))
         documents = (document.file_url or "" for document in request.documents)
         check_upload_size((*request.image_urls, *request.video_urls, *request.audio_clips, *documents), settings)
 
@@ -60,7 +60,7 @@ class ChatOperation:
         images = tuple([await _read_image(item.image_url.url, configuration) for item in message.images])
         images = tuple(image for image in images if image)
         if not text and not images:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
         return ChatResult(text=text, reasoning=message.reasoning or "", images=images, audio=None, is_pcm=False)
 
 
@@ -69,9 +69,9 @@ def _read_message(document: Json) -> ChatMessage:
     try:
         reply = ChatReply.model_validate(document)
     except ValidationError:
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
     if not reply.choices:
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
     choice = reply.choices[0]
     if choice.error is not None:
         status = choice.error.code if isinstance(choice.error.code, int) else 502
@@ -79,7 +79,7 @@ def _read_message(document: Json) -> ChatMessage:
     message = choice.message or ChatMessage()
     if message.refusal:
         reason = clean_reason(message.refusal)
-        raise ConnectorError(ErrorCode.REFUSED, MODEL_REFUSED.format(reason=reason))
+        raise OpenRouterError(ErrorCode.REFUSED, MODEL_REFUSED.format(reason=reason))
     return message
 
 
@@ -92,7 +92,7 @@ async def _read_image(url: str, configuration: ExecutionConfiguration) -> bytes:
     try:
         return base64.b64decode(url.split(",", 1)[1], validate=True)
     except binascii.Error:
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
 
 
 __all__ = ["ChatOperation"]

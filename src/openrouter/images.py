@@ -9,19 +9,19 @@ from .transport import post_json
 from typing import TYPE_CHECKING
 from .options import apply_options
 from pydantic import ValidationError
-from ..state.replies import ImageReply
+from ..types.replies import ImageReply
 from .operation import check_upload_size
 from ..config.openrouter import IMAGES_URL
-from ..errors import ErrorCode, ConnectorError
-from ..state.images import ImageOutput, ImageResult
+from ..types.images import ImageOutput, ImageResult
 from ..config.media import SVG_STARTS, SVG_MEDIA_TYPE
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
 from ..config.messages.inputs import PROMPT_EMPTY, TRANSPARENT_FORMAT
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state.images import ImageRequest
-    from ..state.settings import Settings, ExecutionConfiguration
+    from ..types import Json
+    from ..types.images import ImageRequest
+    from ..types.settings import Settings, ExecutionConfiguration
 
 
 class ImageOperation:
@@ -35,9 +35,9 @@ class ImageOperation:
         """Refuse an empty prompt, a transparent JPEG, and too much media."""
         request = self.request
         if not request.prompt.strip():
-            raise ConnectorError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
         if request.fields.get("background") == "transparent" and request.fields.get("output_format") == "jpeg":
-            raise ConnectorError(ErrorCode.INVALID_INPUT, TRANSPARENT_FORMAT)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, TRANSPARENT_FORMAT)
         check_upload_size(request.reference_urls, settings)
 
     async def send(self, configuration: ExecutionConfiguration) -> ImageResult:
@@ -58,9 +58,9 @@ class ImageOperation:
             reply = ImageReply.model_validate(document)
             files = [(base64.b64decode(item.b64_json, validate=True), item.media_type) for item in reply.images]
         except (ValidationError, binascii.Error):
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if not files:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
         return ImageResult(
             tuple(
                 ImageOutput(content, SVG_MEDIA_TYPE if content.lstrip().startswith(SVG_STARTS) else media or "")

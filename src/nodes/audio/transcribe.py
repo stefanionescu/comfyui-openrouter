@@ -10,7 +10,7 @@ from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...comfy.media import encode_audio
 from ..inputs import define_request_inputs
-from ...state.audio import TranscriptionRequest
+from ...types.audio import TranscriptionRequest
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.generation.models import DEFAULT_TRANSCRIPTION_MODEL
@@ -20,7 +20,7 @@ from ...config.generation.audio import TIMESTAMP_CHOICES, MAX_TRANSCRIPTION_TEMP
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
-    from ...state.options import RequestOptions
+    from ...types.options import RequestOptions
 
 
 class AudioTranscribe(PaidNode):

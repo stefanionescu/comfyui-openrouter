@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import asyncio
 import weakref
+from .runtime import get_runtime
 from typing import TYPE_CHECKING
-from ..runtime import get_runtime
 from comfy_api.latest import ComfyAPI
-from ..errors import ErrorCode, ConnectorError
 from ..config.messages.run import REQUEST_TIMEOUT
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.openrouter import CANCELLATION_POLL_SECONDS
 from comfy.model_management import InterruptProcessingException, throw_exception_if_processing_interrupted
 
@@ -86,13 +86,13 @@ async def run_request[Result](
         await progress.set_progress(2, 3)
         outputs = await owned_io(lambda: build_outputs(result))
         await progress.set_progress(3, 3)
-    except ConnectorError as error:
+    except OpenRouterError as error:
         if error.code is ErrorCode.INTERRUPTED:
             raise InterruptProcessingException from None
         raise
     except TimeoutError:
         seconds = configuration.settings.request_timeout_seconds
-        raise ConnectorError(ErrorCode.TIMEOUT, REQUEST_TIMEOUT.format(seconds=seconds)) from None
+        raise OpenRouterError(ErrorCode.TIMEOUT, REQUEST_TIMEOUT.format(seconds=seconds)) from None
     return outputs
 
 

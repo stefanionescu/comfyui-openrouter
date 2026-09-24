@@ -1,11 +1,11 @@
 """Create the shared stores when ComfyUI loads the extension."""
 
-from .storage.files import state_directory
-from .openrouter.videos.jobs import JobStore
-from .errors import ErrorCode, ConnectorError
-from .settings.store import ConfigurationStore
-from .config.generation.videos import JOB_FOLDER_NAME
-from .config.messages.settings import RUNTIME_NOT_READY
+from ..storage.files import state_directory
+from ..openrouter.videos.jobs import JobStore
+from ..settings.store import ConfigurationStore
+from ..types.errors import ErrorCode, OpenRouterError
+from ..config.generation.videos import JOB_FOLDER_NAME
+from ..config.messages.settings import RUNTIME_NOT_READY
 
 
 class Runtime:
@@ -41,7 +41,7 @@ def initialize_runtime() -> None:
 def get_runtime() -> Runtime:
     """Reject execution before the host has loaded the extension."""
     if _runtime is None:
-        raise ConnectorError(ErrorCode.CONFIGURATION, RUNTIME_NOT_READY)
+        raise OpenRouterError(ErrorCode.CONFIGURATION, RUNTIME_NOT_READY)
     return _runtime
 
 

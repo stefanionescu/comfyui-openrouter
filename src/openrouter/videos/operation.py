@@ -13,13 +13,13 @@ from typing import TYPE_CHECKING
 from datetime import UTC, datetime
 from ..failures import clean_reason
 from ..options import apply_options
-from ...state.videos import VideoJob
+from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ..operation import check_upload_size
-from ...state.replies import VideoJobReply
+from ...types.replies import VideoJobReply
 from ..transport import get_video, post_json
 from ...config.patterns import JOB_ID_PATTERN
-from ...errors import ErrorCode, ConnectorError
+from ...types.errors import ErrorCode, OpenRouterError
 from ...config.openrouter import VIDEOS_URL, VIDEO_JOB_URL
 from ...config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
 from ...config.generation.videos import DONE_STATUSES, UNCERTAIN_PREFIX, SECONDS_PER_MINUTE
@@ -37,10 +37,10 @@ from ...config.messages.videos import (
 )
 
 if TYPE_CHECKING:
-    from ...state import Json
+    from ...types import Json
     from .jobs import JobStore
-    from ...state.videos import VideoRequest
-    from ...state.settings import Settings, ExecutionConfiguration
+    from ...types.videos import VideoRequest
+    from ...types.settings import Settings, ExecutionConfiguration
 
 JOB_ID = re.compile(JOB_ID_PATTERN)
 REFERENCE_LIMITS = {"image": MAX_REFERENCE_IMAGES, "video": MAX_REFERENCE_VIDEOS, "audio": MAX_REFERENCE_AUDIO}
@@ -69,19 +69,19 @@ class VideoDownloadOperation:
             try:
                 reply = VideoJobReply.model_validate_json(content)
             except ValidationError:
-                raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+                raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
             if reply.status in DONE_STATUSES:
                 break
             if time.monotonic() >= deadline:
-                raise ConnectorError(ErrorCode.TIMEOUT, JOB_WAIT_LIMIT.format(minutes=settings.video_wait_minutes))
+                raise OpenRouterError(ErrorCode.TIMEOUT, JOB_WAIT_LIMIT.format(minutes=settings.video_wait_minutes))
             await asyncio.sleep(settings.video_poll_seconds)
         if reply.status != "completed":
             await asyncio.to_thread(self.jobs.remove, self.job.name)
             reason = clean_reason(reply.error or "")
             ended = {"failed": JOB_FAILED, "cancelled": JOB_CANCELLED}.get(reply.status, JOB_EXPIRED)
-            raise ConnectorError(ErrorCode.UNAVAILABLE, ended.format(reason=reason))
+            raise OpenRouterError(ErrorCode.UNAVAILABLE, ended.format(reason=reason))
         if not reply.unsigned_urls:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
         video = await get_video(reply.unsigned_urls[0], configuration)
         # The record goes only after the download, so a failed download can be collected again.
         await asyncio.to_thread(self.jobs.remove, self.job.name)
@@ -100,13 +100,13 @@ class VideoOperation:
         """Refuse a request with nothing to animate, frames beside references, and too much media."""
         request = self.request
         if not request.prompt.strip() and "first_frame" not in request.frame_urls:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, PROMPT_REQUIRED)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_REQUIRED)
         if request.frame_urls and request.references:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, FRAMES_BESIDE_REFERENCES)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, FRAMES_BESIDE_REFERENCES)
         check_upload_size((*request.frame_urls.values(), *(url for _kind, url in request.references)), settings)
         for kind, limit in REFERENCE_LIMITS.items():
             if sum(item == kind for item, _url in request.references) > limit:
-                raise ConnectorError(ErrorCode.INVALID_INPUT, VIDEO_REFERENCES_RANGE.format(maximum=limit, kind=kind))
+                raise OpenRouterError(ErrorCode.INVALID_INPUT, VIDEO_REFERENCES_RANGE.format(maximum=limit, kind=kind))
 
     def build_body(self, parameters: frozenset[str]) -> dict[str, Json]:
         """Build the job request, sending each control only when set and the seed only when the model takes it."""
@@ -146,7 +146,7 @@ class VideoOperation:
         if found is not None:
             elapsed = (datetime.now(UTC) - datetime.fromisoformat(found.submitted_at)).total_seconds()
             minutes = max(1, math.ceil(settings.resubmit_hold_minutes - elapsed / SECONDS_PER_MINUTE))
-            raise ConnectorError(ErrorCode.UNCERTAIN, SUBMIT_HOLD.format(minutes=minutes))
+            raise OpenRouterError(ErrorCode.UNCERTAIN, SUBMIT_HOLD.format(minutes=minutes))
         job = VideoJob(
             version=1,
             name=UNCERTAIN_PREFIX + request_hash,
@@ -158,20 +158,20 @@ class VideoOperation:
         )
         try:
             document = await post_json(VIDEOS_URL, body, configuration)
-        except ConnectorError as error:
+        except OpenRouterError as error:
             # The request may have been accepted and billed, so an identical one is held back for a while.
             if error.code not in {ErrorCode.UNCERTAIN, ErrorCode.TIMEOUT}:
                 raise
             await asyncio.to_thread(self.jobs.record, job)
-            raise ConnectorError(
+            raise OpenRouterError(
                 ErrorCode.UNCERTAIN, SUBMIT_UNCERTAIN.format(minutes=settings.resubmit_hold_minutes)
             ) from None
         try:
             reply = VideoJobReply.model_validate(document)
         except ValidationError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if JOB_ID.match(reply.id) is None:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
         # The record is written before the first wait, so a cancel one moment later still leaves it.
         accepted = job.model_copy(update={"name": reply.id, "job_id": reply.id, "status": "accepted"})
         await asyncio.to_thread(self.jobs.record, accepted)

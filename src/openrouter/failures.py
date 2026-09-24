@@ -4,9 +4,9 @@ import re
 import json
 from typing import cast
 from pydantic import ValidationError
-from ..state.replies import ErrorReply
-from ..errors import ErrorCode, ConnectorError
+from ..types.replies import ErrorReply
 from ..config.openrouter import MAX_REASON_CHARACTERS
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.patterns import KEY_PATTERN, URL_PATTERN
 from ..config.messages.run import (
     NO_PROVIDER,
@@ -45,7 +45,7 @@ FIXED_FAILURES: dict[int, tuple[ErrorCode, str]] = {
 }
 
 
-def read_failure(status: int, body: bytes) -> ConnectorError:
+def read_failure(status: int, body: bytes) -> OpenRouterError:
     """Map a failed reply to one reviewed message, adding OpenRouter's reason for the statuses that explain."""
     if status in EXPLAINED_FAILURES:
         code, message = EXPLAINED_FAILURES[status]
@@ -53,9 +53,9 @@ def read_failure(status: int, body: bytes) -> ConnectorError:
             reason = clean_reason(_read_reason(ErrorReply.model_validate_json(body)))
         except ValidationError:
             reason = NO_REASON
-        return ConnectorError(code, message.format(reason=reason))
+        return OpenRouterError(code, message.format(reason=reason))
     code, message = FIXED_FAILURES.get(status, (ErrorCode.TRANSPORT, REQUEST_FAILED))
-    return ConnectorError(code, message.format(status=status))
+    return OpenRouterError(code, message.format(status=status))
 
 
 def _read_reason(reply: ErrorReply) -> str:

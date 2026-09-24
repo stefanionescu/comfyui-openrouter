@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from ..errors import ErrorCode, ConnectorError
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.inputs import OPTION_UNSUPPORTED, OPTION_RESERVED_FIELD
 from ..config.openrouter import ENDPOINT_LABELS, ROUTING_FIELDS, RESERVED_FIELDS
 
 if TYPE_CHECKING:
-    from ..state import Json, Endpoint
+    from ..types import Json, Endpoint
     from collections.abc import Mapping
-    from ..state.options import RequestOptions
+    from ..types.options import RequestOptions
 
 
 def apply_options(body: Mapping[str, Json], options: RequestOptions | None, endpoint: Endpoint) -> dict[str, Json]:
@@ -33,10 +33,10 @@ def apply_options(body: Mapping[str, Json], options: RequestOptions | None, endp
     for field in provider:
         if field not in ROUTING_FIELDS[endpoint]:
             label = ENDPOINT_LABELS[endpoint]
-            raise ConnectorError(ErrorCode.INVALID_INPUT, OPTION_UNSUPPORTED.format(endpoint=label, field=field))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_UNSUPPORTED.format(endpoint=label, field=field))
     for field in options.extra_fields:
         if field in RESERVED_FIELDS[endpoint]:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, OPTION_RESERVED_FIELD.format(field=field))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_RESERVED_FIELD.format(field=field))
     merged.update(options.extra_fields)
     if provider:
         merged["provider"] = provider

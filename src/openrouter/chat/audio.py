@@ -4,17 +4,17 @@ from __future__ import annotations
 
 import base64
 import binascii
-from ...state.chat import ChatResult
+from ...types.chat import ChatResult
 from ..transport import stream_events
 from typing import cast, TYPE_CHECKING
 from ...config.openrouter import CHAT_URL
-from ...errors import ErrorCode, ConnectorError
 from ...config.messages.run import REPLY_UNREADABLE
+from ...types.errors import ErrorCode, OpenRouterError
 
 if TYPE_CHECKING:
-    from ...state import Json
+    from ...types import Json
     from collections.abc import Mapping
-    from ...state.settings import ExecutionConfiguration
+    from ...types.settings import ExecutionConfiguration
 
 
 async def stream_audio(body: Mapping[str, Json], configuration: ExecutionConfiguration) -> ChatResult:
@@ -42,7 +42,7 @@ async def stream_audio(body: Mapping[str, Json], configuration: ExecutionConfigu
     try:
         content = base64.b64decode("".join(chunks), validate=True) if chunks else None
     except binascii.Error:
-        raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
     # The spoken words arrive only as the transcript, so they stand in for empty text.
     answer = "".join(text) or "".join(transcript)
     return ChatResult(text=answer, reasoning="", images=(), audio=content, is_pcm="audio" in body)

@@ -6,11 +6,11 @@ import re
 import asyncio
 import io as memory
 from typing import override
-from ...runtime import get_runtime
+from ...comfy.runtime import get_runtime
 from comfy_api.latest import InputImpl, io
 from ...config.patterns import JOB_ID_PATTERN
-from ...errors import ErrorCode, ConnectorError
 from ...config.messages.videos import JOB_UNKNOWN
+from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ...comfy.execution import run_request, wait_for_execution
 from ...openrouter.videos.operation import VideoDownloadOperation
@@ -62,7 +62,7 @@ class VideoDownload(io.ComfyNode):
         """Read the job's record, wait for it, and download its video."""
         job_id = job.split(" ", 1)[0]
         if JOB_ID.match(job_id) is None:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, JOB_UNKNOWN)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, JOB_UNKNOWN)
         jobs = get_runtime().jobs
         record = await asyncio.to_thread(jobs.read, job_id)
         # ComfyUI reads the MP4 from memory, so no temporary file is written.

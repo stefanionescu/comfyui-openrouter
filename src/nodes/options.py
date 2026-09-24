@@ -6,18 +6,18 @@ import re
 from decimal import Decimal
 from comfy_api.latest import io
 from types import MappingProxyType
-from ..state.parsing import parse_json
+from ..types.parsing import parse_json
 from typing import override, TYPE_CHECKING
-from ..errors import ErrorCode, ConnectorError
 from ..config.patterns import PROVIDER_SLUG_PATTERN
 from ..config.generation.inputs import MODEL_DEFAULT
-from ..state.options import RequestOptions as OptionsRecord
+from ..types.errors import ErrorCode, OpenRouterError
+from ..types.options import RequestOptions as OptionsRecord
 from ..config.namespace import NODE_PREFIX, SHARED_MENU, OPTIONS_TYPE
 from ..config.messages.inputs import OPTIONS_JSON, OPTIONS_SIZE, PROVIDER_SLUG
 from ..config.openrouter import SORT_CHOICES, MAX_PROVIDERS, YES_NO_CHOICES, MAX_OPTION_BYTES, COLLECTION_CHOICES
 
 if TYPE_CHECKING:
-    from ..state import Json
+    from ..types import Json
 
 PROVIDER = re.compile(PROVIDER_SLUG_PATTERN)
 # The routing dropdowns: input, label, choices, and tooltip.
@@ -53,7 +53,7 @@ def _read_providers(text: str) -> tuple[str, ...]:
     """Split a comma-separated provider list, checking each slug and the count."""
     slugs = tuple(slug.strip() for slug in text.split(",") if slug.strip())
     if len(slugs) > MAX_PROVIDERS or any(PROVIDER.match(slug) is None for slug in slugs):
-        raise ConnectorError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
     return slugs
 
 
@@ -62,13 +62,13 @@ def _read_fields(text: str, field: str) -> dict[str, Json]:
     if not text.strip():
         return {}
     if len(text.encode()) > MAX_OPTION_BYTES:
-        raise ConnectorError(ErrorCode.INVALID_INPUT, OPTIONS_SIZE.format(field=field))
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTIONS_SIZE.format(field=field))
     try:
         value = parse_json(text, max_bytes=MAX_OPTION_BYTES)
-    except ConnectorError:
+    except OpenRouterError:
         value = None
     if not isinstance(value, dict):
-        raise ConnectorError(ErrorCode.INVALID_INPUT, OPTIONS_JSON.format(field=field))
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTIONS_JSON.format(field=field))
     return value
 
 
@@ -137,7 +137,7 @@ class RequestOptions(io.ComfyNode):
         """Check each field before any request; the endpoint checks happen when a paid node merges them."""
         per_provider = _read_fields(provider_options, "provider options")
         if any(PROVIDER.match(slug) is None for slug in per_provider):
-            raise ConnectorError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
         prices = {"prompt": max_prompt_price, "completion": max_completion_price}
         options = OptionsRecord(
             order=_read_providers(order),

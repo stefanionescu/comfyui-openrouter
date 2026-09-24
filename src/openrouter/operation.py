@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import math
 from typing import Protocol, TYPE_CHECKING
-from ..errors import ErrorCode, ConnectorError
 from ..config.messages.media import UPLOAD_LIMIT
 from ..config.openrouter import BYTES_PER_MEBIBYTE
+from ..types.errors import ErrorCode, OpenRouterError
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-    from ..state.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, ExecutionConfiguration
 
 
 class Operation[Result](Protocol):
@@ -30,7 +30,7 @@ def check_upload_size(media: Iterable[str], settings: Settings) -> None:
     size = sum(len(item) for item in media)
     if size > settings.max_upload_megabytes * BYTES_PER_MEBIBYTE:
         shown = math.ceil(size * 10 / BYTES_PER_MEBIBYTE) / 10
-        raise ConnectorError(
+        raise OpenRouterError(
             ErrorCode.INVALID_INPUT, UPLOAD_LIMIT.format(size=shown, maximum=settings.max_upload_megabytes)
         )
 

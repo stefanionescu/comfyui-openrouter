@@ -10,11 +10,11 @@ import re
 import threading
 from typing import TYPE_CHECKING
 from datetime import UTC, datetime
-from ...state.videos import VideoJob
+from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ...config.patterns import JOB_ID_PATTERN
-from ...errors import ErrorCode, ConnectorError
 from ...config.messages.videos import JOB_UNKNOWN
+from ...types.errors import ErrorCode, OpenRouterError
 from ...storage.files import atomic_write, read_private
 from ...config.generation.videos import MAX_LISTED_JOBS, SECONDS_PER_MINUTE, MAX_JOB_FILE_BYTES
 
@@ -75,7 +75,7 @@ class JobStore:
         with self._lock:
             job = next((job for job in self._read_all() if job.job_id == job_id and JOB_ID.match(job_id)), None)
         if job is None or job.status != "accepted":
-            raise ConnectorError(ErrorCode.INVALID_INPUT, JOB_UNKNOWN)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, JOB_UNKNOWN)
         return job
 
     def _read_all(self) -> list[VideoJob]:
@@ -86,7 +86,7 @@ class JobStore:
         for path in sorted(self.directory.glob("*.json")):
             try:
                 jobs.append(VideoJob.model_validate_json(read_private(path, max_bytes=MAX_JOB_FILE_BYTES)))
-            except (OSError, ValidationError, ConnectorError):
+            except (OSError, ValidationError, OpenRouterError):
                 continue
         return jobs
 

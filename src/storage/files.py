@@ -4,7 +4,7 @@ import os
 import sys
 import tempfile
 from pathlib import Path
-from ..errors import ErrorCode, ConnectorError
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import STATE_FILE_SIZE, STATE_DIRECTORY_ABSOLUTE
 
 
@@ -14,7 +14,7 @@ def state_directory() -> Path:
     if override:
         path = Path(override).expanduser()
         if not path.is_absolute():
-            raise ConnectorError(ErrorCode.CONFIGURATION, STATE_DIRECTORY_ABSOLUTE)
+            raise OpenRouterError(ErrorCode.CONFIGURATION, STATE_DIRECTORY_ABSOLUTE)
         return path
     if sys.platform == "darwin":
         return Path.home() / "Library" / "Application Support" / "OpenRouterComfyUI"
@@ -45,7 +45,7 @@ def read_private(path: Path, *, max_bytes: int) -> bytes:
     with path.open("rb") as stream:
         content = stream.read(max_bytes + 1)
     if len(content) > max_bytes:
-        raise ConnectorError(ErrorCode.CONFIGURATION, STATE_FILE_SIZE)
+        raise OpenRouterError(ErrorCode.CONFIGURATION, STATE_FILE_SIZE)
     return content
 
 

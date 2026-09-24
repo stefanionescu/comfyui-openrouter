@@ -7,19 +7,19 @@ from .transport import post_json
 from typing import TYPE_CHECKING
 from .options import apply_options
 from pydantic import ValidationError
-from ..state.replies import RankReply
+from ..types.replies import RankReply
 from .operation import check_upload_size
 from ..config.openrouter import RERANK_URL
 from .embeddings import check_search_items
-from ..errors import ErrorCode, ConnectorError
 from ..config.messages.inputs import QUERY_EMPTY
-from ..state.search import RankResult, RankedItem
+from ..types.search import RankResult, RankedItem
 from ..config.messages.run import REPLY_UNREADABLE
+from ..types.errors import ErrorCode, OpenRouterError
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state.search import RankRequest
-    from ..state.settings import Settings, ExecutionConfiguration
+    from ..types import Json
+    from ..types.search import RankRequest
+    from ..types.settings import Settings, ExecutionConfiguration
 
 
 class RankOperation:
@@ -33,7 +33,7 @@ class RankOperation:
         """Refuse an empty query, no documents, too many, and too much media."""
         request = self.request
         if not request.query.strip():
-            raise ConnectorError(ErrorCode.INVALID_INPUT, QUERY_EMPTY)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, QUERY_EMPTY)
         check_search_items(request.texts, request.image_urls)
         check_upload_size(request.image_urls, settings)
 
@@ -49,9 +49,9 @@ class RankOperation:
         try:
             reply = RankReply.model_validate(document)
         except ValidationError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if any(not 0 <= item.index < len(documents) for item in reply.results):
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
         return RankResult(tuple(RankedItem(item.index, item.relevance_score) for item in reply.results))
 
 

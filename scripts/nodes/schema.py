@@ -18,7 +18,7 @@ from comfy_api.latest import io
 from src.nodes import NODE_TYPES
 from src.nodes.base import PaidNode
 from scripts.config import HOST_NODES
-from src.runtime import initialize_runtime
+from src.comfy.runtime import initialize_runtime
 from src.config.generation.inputs import VARIATION_INPUT
 
 

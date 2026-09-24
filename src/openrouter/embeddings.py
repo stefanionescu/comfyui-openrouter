@@ -9,28 +9,28 @@ from typing import TYPE_CHECKING
 from .options import apply_options
 from pydantic import ValidationError
 from .operation import check_upload_size
-from ..state.replies import EmbeddingReply
-from ..state.search import EmbeddingResult
+from ..types.replies import EmbeddingReply
+from ..types.search import EmbeddingResult
 from ..config.openrouter import EMBEDDINGS_URL
-from ..errors import ErrorCode, ConnectorError
 from ..config.messages.run import REPLY_UNREADABLE
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.generation.search import MAX_SEARCH_ITEMS
 from ..config.messages.inputs import SEARCH_ITEMS_EMPTY, SEARCH_ITEMS_LIMIT
 
 if TYPE_CHECKING:
-    from ..state import Json
+    from ..types import Json
     from collections.abc import Sequence
-    from ..state.search import EmbeddingRequest
-    from ..state.settings import Settings, ExecutionConfiguration
+    from ..types.search import EmbeddingRequest
+    from ..types.settings import Settings, ExecutionConfiguration
 
 
 def check_search_items(texts: Sequence[str], image_urls: Sequence[str]) -> None:
     """Refuse no items and too many."""
     count = len(texts) + len(image_urls)
     if count == 0:
-        raise ConnectorError(ErrorCode.INVALID_INPUT, SEARCH_ITEMS_EMPTY)
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, SEARCH_ITEMS_EMPTY)
     if count > MAX_SEARCH_ITEMS:
-        raise ConnectorError(ErrorCode.INVALID_INPUT, SEARCH_ITEMS_LIMIT.format(maximum=MAX_SEARCH_ITEMS))
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, SEARCH_ITEMS_LIMIT.format(maximum=MAX_SEARCH_ITEMS))
 
 
 class EmbeddingOperation:
@@ -67,10 +67,10 @@ class EmbeddingOperation:
         try:
             reply = EmbeddingReply.model_validate(document)
         except ValidationError:
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         vectors = tuple(item.embedding for item in sorted(reply.vectors, key=lambda item: item.index))
         if len(vectors) != len(items):
-            raise ConnectorError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
+            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
         first = vectors[0]
         first_length = math.sqrt(math.fsum(value * value for value in first))
         similarities: list[float] = []

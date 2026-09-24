@@ -7,8 +7,8 @@ from ..options import apply_options
 from ...config.generation.chat import AUDIO_FORMAT, ANSWER_SCHEMA_NAME
 
 if TYPE_CHECKING:
-    from ...state import Json
-    from ...state.chat import ChatRequest, ChatSettings
+    from ...types import Json
+    from ...types.chat import ChatRequest, ChatSettings
 
 
 def _build_messages(request: ChatRequest) -> list[Json]:

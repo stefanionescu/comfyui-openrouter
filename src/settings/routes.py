@@ -3,11 +3,11 @@
 import re
 import asyncio
 from aiohttp import web
-from ..state import Json
+from ..types import Json
 from .access import local_route
 from .body import read_document
 from .store import ConfigurationStore
-from ..state.parsing import mapping_value
+from ..types.parsing import mapping_value
 from ..config.security import SETTINGS_PREFIX
 from ..config.patterns import REVISION_PATTERN
 from ..config.messages.requests import CLEAR_KEY_BODY, SINGLE_KEY_REQUIRED, SETTINGS_REVISION_REQUIRED

@@ -3,11 +3,11 @@
 import ipaddress
 from aiohttp import web
 from typing import cast
-from ..state import Json
+from ..types import Json
 from ..config.security import PRIVATE_HEADERS
-from ..errors import ErrorCode, ConnectorError
 from urllib.parse import SplitResult, urlsplit
 from collections.abc import Callable, Awaitable
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import STATE_UNREADABLE
 from ..config.messages.requests import LOCAL_CONNECTION_REQUIRED
 
@@ -87,7 +87,7 @@ def local_route(
         try:
             _require_local_request(request, is_mutation=is_mutation, is_multi_user=is_multi_user)
             return web.json_response(await callback(request), headers=PRIVATE_HEADERS)
-        except ConnectorError as error:
+        except OpenRouterError as error:
             # A stale revision is a conflict the page resolves by reloading; every other failure is a bad request.
             message, status = str(error), 409 if error.code is ErrorCode.CONFLICT else 400
         except web.HTTPException as error:

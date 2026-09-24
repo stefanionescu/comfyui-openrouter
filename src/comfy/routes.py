@@ -4,9 +4,9 @@ import folder_paths
 from pathlib import Path
 from comfy.cli_args import args
 from server import PromptServer
-from ..runtime import get_runtime
-from ..errors import ErrorCode, ConnectorError
+from .runtime import get_runtime
 from ..settings.routes import ConfigurationRoutes
+from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import PRIVATE_STATE_LOCATION
 
 # The installed extension, which the private state must stay out of.
@@ -26,7 +26,7 @@ def register_routes() -> None:
         str(EXTENSION_ROOT),
     )
     if any(directory.is_relative_to(Path(root).resolve()) for root in public_roots):
-        raise ConnectorError(ErrorCode.CONFIGURATION, PRIVATE_STATE_LOCATION)
+        raise OpenRouterError(ErrorCode.CONFIGURATION, PRIVATE_STATE_LOCATION)
     ConfigurationRoutes(store, is_multi_user=args.multi_user).register(PromptServer.instance.routes)
 
 

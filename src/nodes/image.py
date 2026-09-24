@@ -8,7 +8,7 @@ import io as memory
 from .base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
-from ..state.images import ImageRequest
+from ..types.images import ImageRequest
 from ..config.media import SVG_MEDIA_TYPE
 from ..openrouter.images import ImageOperation
 from comfy_execution.graph import ExecutionBlocker
@@ -28,9 +28,9 @@ from ..config.generation.images import (
 )
 
 if TYPE_CHECKING:
-    from ..state import Json
-    from ..state.images import ImageResult
-    from ..state.options import RequestOptions
+    from ..types import Json
+    from ..types.images import ImageResult
+    from ..types.options import RequestOptions
 
 
 # Every image field, each starting at the model's default, which sends nothing, then the compression, the count,

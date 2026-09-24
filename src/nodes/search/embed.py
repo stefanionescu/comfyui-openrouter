@@ -8,7 +8,7 @@ from ..base import PaidNode
 from comfy_api.latest import io
 from typing import cast, TYPE_CHECKING
 from ...comfy.media import encode_images
-from ...state.search import EmbeddingRequest
+from ...types.search import EmbeddingRequest
 from ...openrouter.embeddings import EmbeddingOperation
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ..inputs import read_sockets, define_request_inputs
@@ -19,7 +19,7 @@ from ...config.generation.search import INPUT_TYPES, MAX_DIMENSIONS, MAX_SEARCH_
 
 if TYPE_CHECKING:
     import torch
-    from ...state.options import RequestOptions
+    from ...types.options import RequestOptions
 
 
 def define_images() -> io.Autogrow.Input:
