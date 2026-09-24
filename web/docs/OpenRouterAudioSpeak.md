@@ -1,6 +1,6 @@
 # Audio: Speak
 
-Turn text into speech with any OpenRouter speech model. Connect **audio** to **Save Audio** or **Preview Audio**. Each run sends one paid OpenRouter request with your OpenRouter key.
+Turn text into speech with any OpenRouter speech model. Connect **audio** to **Save Audio (Advanced)** or **Preview Audio**. Each run sends one paid OpenRouter request with your OpenRouter key.
 
 ## Inputs
 
