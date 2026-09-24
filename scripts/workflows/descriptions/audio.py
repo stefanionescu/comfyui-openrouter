@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.page.config import STAGE_COLOUR, AUDIO_PREVIEW
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
-from scripts.config import TEXT, AUDIO, FORMAT, SWITCH, PREVIEW, SAVE_TEXT, SAVE_AUDIO
 
 ASK = f"{NODE_PREFIX}ChatAsk"
 SPEAK = f"{NODE_PREFIX}AudioSpeak"
@@ -23,7 +23,7 @@ TRANSCRIBE_VOICEMAIL = Subgraph(
     name=SHARED_TEXTS["transcribe"],
     nodes=(
         Node("transcribe", TRANSCRIBE, {"model": TRANSCRIBER}, is_paid=True),
-        Node("save", SAVE_TEXT, {"filename_prefix": "voicemail/transcript"}),
+        Node("save", HostNode.SAVE_TEXT, {"filename_prefix": "voicemail/transcript"}),
     ),
     links=(("transcribe.text", "save.text"),),
     columns=(("transcribe",), ("save",)),
@@ -50,7 +50,7 @@ REPLY = Subgraph(
     nodes=(
         Node(
             "request",
-            FORMAT,
+            HostNode.FORMAT,
             {
                 "f_string": (
                     "You work in the {b} team. Write what you say when you call this customer back: under 60 words, "
@@ -60,7 +60,7 @@ REPLY = Subgraph(
         ),
         Node("script", ASK, {"model": "openai/gpt-6-luna"}, is_paid=True),
         Node("speak", SPEAK, {"model": "google/gemini-3.8-flash-tts", "voice": "Kore"}, is_paid=True),
-        Node("save", SAVE_AUDIO, {"filename_prefix": "voicemail/reply"}),
+        Node("save", HostNode.SAVE_AUDIO, {"filename_prefix": "voicemail/reply"}),
     ),
     links=(
         ("request.STRING", "script.prompt"),
@@ -76,7 +76,7 @@ REPLY = Subgraph(
 TRIAGE_VOICEMAIL = Workflow(
     slug="audio-01-triage-a-voicemail",
     nodes=(
-        Node("voicemail", AUDIO, {"audio": ""}),
+        Node("voicemail", HostNode.AUDIO, {"audio": ""}),
         Node("transcribe", TRANSCRIBE_VOICEMAIL.name),
         Node(
             "department",
@@ -108,7 +108,7 @@ TRIAGE_VOICEMAIL = Workflow(
             },
         ),
         Node("triage", TRIAGE.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
         Node("reply", REPLY.name),
     ),
     links=(
@@ -141,7 +141,7 @@ TRANSCRIBE_CLIP = Subgraph(
     name=SHARED_TEXTS["transcribe"],
     nodes=(
         Node("transcribe", TRANSCRIBE, {"model": TRANSCRIBER, "timestamps": "segments"}, is_paid=True),
-        Node("save", SAVE_TEXT, {"filename_prefix": "dub/subtitles"}),
+        Node("save", HostNode.SAVE_TEXT, {"filename_prefix": "dub/subtitles"}),
     ),
     links=(("transcribe.subtitles", "save.text"),),
     columns=(("transcribe",), ("save",)),
@@ -153,10 +153,10 @@ TRANSCRIBE_CLIP = Subgraph(
 TRANSLATE = Subgraph(
     name=SHARED_TEXTS["translate"],
     nodes=(
-        Node("language", TEXT, {"value": "Spanish"}, title=SHARED_TEXTS["language"]),
+        Node("language", HostNode.TEXT, {"value": "Spanish"}, title=SHARED_TEXTS["language"]),
         Node(
             "request",
-            FORMAT,
+            HostNode.FORMAT,
             {
                 "f_string": (
                     "Translate this text into natural {a}. Keep the meaning and the tone, and answer with the "
@@ -165,7 +165,7 @@ TRANSLATE = Subgraph(
             },
         ),
         Node("translate", ASK, {"model": "openai/gpt-6-sol"}, is_paid=True),
-        Node("situation", FORMAT, {"f_string": "Original:\n{a}\n\n{b} translation:\n{c}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Original:\n{a}\n\n{b} translation:\n{c}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("accurate", READ, {"question": "accurate"}),
     ),
@@ -196,10 +196,10 @@ SPEAK_DUB = Subgraph(
     name=SHARED_TEXTS["speak"],
     nodes=(
         Node("speak", SPEAK, {"model": "fish-audio/s2.1-pro", "voice": ""}, is_paid=True),
-        Node("approved", TEXT, {"value": "dub/approved"}, title=SHARED_TEXTS["approved"]),
-        Node("review", TEXT, {"value": "dub/review"}, title=SHARED_TEXTS["review"]),
-        Node("folder", SWITCH),
-        Node("save", SAVE_AUDIO),
+        Node("approved", HostNode.TEXT, {"value": "dub/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", HostNode.TEXT, {"value": "dub/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", HostNode.SWITCH),
+        Node("save", HostNode.SAVE_AUDIO),
     ),
     links=(
         ("approved.STRING", "folder.on_true"),
@@ -223,7 +223,7 @@ SPEAK_DUB = Subgraph(
 DUB_CLIP = Workflow(
     slug="audio-02-dub-a-clip",
     nodes=(
-        Node("clip", AUDIO, {"audio": ""}),
+        Node("clip", HostNode.AUDIO, {"audio": ""}),
         Node("transcribe", TRANSCRIBE_CLIP.name),
         Node(
             "accurate",
@@ -234,7 +234,7 @@ DUB_CLIP = Workflow(
             },
         ),
         Node("translate", TRANSLATE.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
         Node("speak", SPEAK_DUB.name),
     ),
     links=(

@@ -2,26 +2,13 @@
 
 from __future__ import annotations
 
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
-from scripts.workflows.descriptions.schemas import numbered_schema
 from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
+from scripts.workflows.descriptions.schemas import build_numbered_schema
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
-from scripts.config import (
-    TEXT,
-    FIELD,
-    IMAGE,
-    FORMAT,
-    SWITCH,
-    PREVIEW,
-    SAVE_SVG,
-    JOIN_ALPHA,
-    MASK_IMAGE,
-    SAVE_IMAGE,
-    TEXT_BLOCK,
-    PREVIEW_IMAGE,
-)
 
 ASK = f"{NODE_PREFIX}ChatAsk"
 GENERATE = f"{NODE_PREFIX}ImageGenerate"
@@ -38,7 +25,7 @@ IDEAS = Subgraph(
     nodes=(
         Node(
             "request",
-            FORMAT,
+            HostNode.FORMAT,
             {
                 "f_string": (
                     "Campaign: {a}\n\nWrite three different ideas for editing this product photo into a campaign "
@@ -46,7 +33,7 @@ IDEAS = Subgraph(
                 )
             },
         ),
-        Node("ideas", ASK, {"model": WRITER, "answer_schema": numbered_schema("idea", 3)}, is_paid=True),
+        Node("ideas", ASK, {"model": WRITER, "answer_schema": build_numbered_schema("idea", 3)}, is_paid=True),
     ),
     links=(("request.STRING", "ideas.prompt"),),
     columns=(("request",), ("ideas",)),
@@ -58,11 +45,11 @@ IDEAS = Subgraph(
 CHOOSE_IDEA = Subgraph(
     name=SHARED_TEXTS["choose"],
     nodes=(
-        Node("situation", FORMAT, {"f_string": "Campaign:\n{a}\n\nIdeas:\n{b}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Campaign:\n{a}\n\nIdeas:\n{b}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("best", READ, {"question": "best"}),
         Node("on_brief", READ, {"question": "on_brief"}),
-        Node("idea", FIELD),
+        Node("idea", HostNode.FIELD),
     ),
     links=(
         ("situation.STRING", "decide.situation"),
@@ -85,10 +72,10 @@ EDIT = Subgraph(
     name=SHARED_TEXTS["edit"],
     nodes=(
         Node("edit", GENERATE, {"model": GPT_IMAGE, "quality": "medium"}, is_paid=True),
-        Node("approved", TEXT, {"value": "campaign/approved"}, title=SHARED_TEXTS["approved"]),
-        Node("review", TEXT, {"value": "campaign/review"}, title=SHARED_TEXTS["review"]),
-        Node("folder", SWITCH),
-        Node("save", SAVE_IMAGE),
+        Node("approved", HostNode.TEXT, {"value": "campaign/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", HostNode.TEXT, {"value": "campaign/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", HostNode.SWITCH),
+        Node("save", HostNode.SAVE_IMAGE),
     ),
     links=(
         ("approved.STRING", "folder.on_true"),
@@ -111,10 +98,10 @@ EDIT = Subgraph(
 EDIT_BEST_IDEA = Workflow(
     slug="image-03-edit-with-the-best-idea",
     nodes=(
-        Node("photo", IMAGE, {"image": ""}),
+        Node("photo", HostNode.IMAGE, {"image": ""}),
         Node(
             "campaign",
-            TEXT_BLOCK,
+            HostNode.TEXT_BLOCK,
             {"value": "Autumn sale for young city commuters. Warm evening light, a sense of movement, premium feel."},
             title=SHARED_TEXTS["campaign"],
         ),
@@ -135,8 +122,8 @@ EDIT_BEST_IDEA = Workflow(
             {"name": "on_brief", "instructions": "Does the chosen idea suit the campaign?"},
         ),
         Node("choose", CHOOSE_IDEA.name),
-        Node("idea", PREVIEW, title=SHARED_TEXTS["idea"]),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("idea", HostNode.PREVIEW, title=SHARED_TEXTS["idea"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
         Node("edit", EDIT.name),
     ),
     links=(
@@ -176,7 +163,7 @@ PROMPTS = Subgraph(
             ASK,
             {
                 "model": WRITER,
-                "answer_schema": numbered_schema("prompt", 3),
+                "answer_schema": build_numbered_schema("prompt", 3),
                 "system": (
                     "Write three different prompts for a flat, two-colour logo mark for the brand the person "
                     "describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
@@ -184,10 +171,10 @@ PROMPTS = Subgraph(
             },
             is_paid=True,
         ),
-        Node("situation", FORMAT, {"f_string": "Brand:\n{a}\n\nPrompts:\n{b}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Brand:\n{a}\n\nPrompts:\n{b}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("best", READ, {"question": "best"}),
-        Node("prompt", FIELD),
+        Node("prompt", HostNode.FIELD),
     ),
     links=(
         ("prompts.text", "situation.values.b"),
@@ -211,7 +198,7 @@ VECTOR = Subgraph(
             {"model": "recraft/recraft-v4.1-vector", "aspect_ratio": "1:1"},
             is_paid=True,
         ),
-        Node("save", SAVE_SVG, {"filename_prefix": "logo/fernwood"}),
+        Node("save", HostNode.SAVE_SVG, {"filename_prefix": "logo/fernwood"}),
     ),
     links=(("vector.svg", "save.svg"),),
     columns=(("vector",), ("save",)),
@@ -233,10 +220,10 @@ STICKER = Subgraph(
             },
             is_paid=True,
         ),
-        Node("join", JOIN_ALPHA),
-        Node("save", SAVE_IMAGE, {"filename_prefix": "logo/fernwood-sticker"}),
-        Node("mask", MASK_IMAGE),
-        Node("preview", PREVIEW_IMAGE, title=SHARED_TEXTS["mask"]),
+        Node("join", HostNode.JOIN_ALPHA),
+        Node("save", HostNode.SAVE_IMAGE, {"filename_prefix": "logo/fernwood-sticker"}),
+        Node("mask", HostNode.MASK_IMAGE),
+        Node("preview", HostNode.PREVIEW_IMAGE, title=SHARED_TEXTS["mask"]),
     ),
     links=(
         ("sticker.images", "join.image"),
@@ -256,7 +243,7 @@ DESIGN_LOGO = Workflow(
     nodes=(
         Node(
             "brand",
-            TEXT_BLOCK,
+            HostNode.TEXT_BLOCK,
             {
                 "value": (
                     "Fernwood, a small tea shop in an old greenhouse. Calm, hand-made, a little botanical. "
@@ -276,8 +263,8 @@ DESIGN_LOGO = Workflow(
             },
         ),
         Node("prompts", PROMPTS.name),
-        Node("prompt", PREVIEW, title=SHARED_TEXTS["prompt"]),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("prompt", HostNode.PREVIEW, title=SHARED_TEXTS["prompt"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
         Node("vector", VECTOR.name),
         Node("sticker", STICKER.name),
     ),

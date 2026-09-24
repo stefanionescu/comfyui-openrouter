@@ -32,6 +32,21 @@ class Box:
         return self.x + self.width
 
 
+def _place_group(
+    group: Group, sizes: Mapping[str, tuple[int, int]], origin: tuple[int, int], note: str | None
+) -> tuple[dict[str, Box], Box]:
+    """Place a group's note across its top and its columns below, and return the frame."""
+    boxes: dict[str, Box] = {}
+    top = origin[1] + GROUP_TOP
+    if note is not None:
+        boxes[note] = Box(origin[0] + GUTTER, top, *sizes[note])
+        top = boxes[note].bottom + STACK_GAP
+    boxes |= place_columns(group.columns, sizes, (origin[0] + GUTTER, top))
+    right = max(box.right for box in boxes.values()) + GUTTER
+    bottom = max(box.bottom for box in boxes.values()) + GUTTER
+    return boxes, Box(origin[0], origin[1], right - origin[0], bottom - origin[1])
+
+
 def place_columns(
     columns: Sequence[Sequence[str]], sizes: Mapping[str, tuple[int, int]], origin: tuple[int, int]
 ) -> dict[str, Box]:
@@ -46,21 +61,6 @@ def place_columns(
             y = boxes[key].bottom + STACK_GAP
         x += width + NODE_GAP
     return boxes
-
-
-def place_group(
-    group: Group, sizes: Mapping[str, tuple[int, int]], origin: tuple[int, int], note: str | None
-) -> tuple[dict[str, Box], Box]:
-    """Place a group's note across its top and its columns below, and return the frame."""
-    boxes: dict[str, Box] = {}
-    top = origin[1] + GROUP_TOP
-    if note is not None:
-        boxes[note] = Box(origin[0] + GUTTER, top, *sizes[note])
-        top = boxes[note].bottom + STACK_GAP
-    boxes |= place_columns(group.columns, sizes, (origin[0] + GUTTER, top))
-    right = max(box.right for box in boxes.values()) + GUTTER
-    bottom = max(box.bottom for box in boxes.values()) + GUTTER
-    return boxes, Box(origin[0], origin[1], right - origin[0], bottom - origin[1])
 
 
 def place_stacks(
@@ -80,7 +80,7 @@ def place_stacks(
         y = origin[1]
         width = 0
         for group in stack:
-            placed, frame = place_group(group, sizes, (x, y), notes.get(group.title))
+            placed, frame = _place_group(group, sizes, (x, y), notes.get(group.title))
             boxes |= placed
             frames.append(
                 {

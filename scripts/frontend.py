@@ -6,7 +6,7 @@ import sys
 import asyncio
 import argparse
 from typing import TYPE_CHECKING
-from scripts.config import REPO_ROOT
+from scripts.paths import WEB_DIR, REPO_ROOT, FRONTEND_CHECK_DIR
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -17,7 +17,7 @@ STYLES = "extension.css"
 HOST_MODULES = ("../../scripts/app.js", "../../scripts/api.js")
 
 
-async def build_bundle(destination: Path) -> None:
+async def _build_bundle(destination: Path) -> None:
     """Run esbuild into the given folder."""
     process = await asyncio.create_subprocess_exec(
         "bun",
@@ -45,15 +45,15 @@ def main() -> int:
     parser.add_argument("--check", action="store_true")
     arguments = parser.parse_args()
     if not arguments.check:
-        asyncio.run(build_bundle(REPO_ROOT / "web"))
+        asyncio.run(_build_bundle(WEB_DIR))
         return 0
-    scratch = REPO_ROOT / ".artifacts" / "frontend"
+    scratch = FRONTEND_CHECK_DIR
     scratch.mkdir(parents=True, exist_ok=True)
-    asyncio.run(build_bundle(scratch))
+    asyncio.run(_build_bundle(scratch))
     problems = [
         f"Rebuild {name} with mise run comfy:frontend:build."
         for name in (BUNDLE, STYLES)
-        if not (built := REPO_ROOT / "web" / name).is_file() or built.read_bytes() != (scratch / name).read_bytes()
+        if not (built := WEB_DIR / name).is_file() or built.read_bytes() != (scratch / name).read_bytes()
     ]
     for problem in problems:
         sys.stderr.write(problem + "\n")

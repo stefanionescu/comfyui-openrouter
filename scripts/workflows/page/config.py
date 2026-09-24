@@ -1,17 +1,9 @@
 """The workflow page: distances, colours, node sizes and subgraph numbering."""
 
-from scripts.config import (
-    AUDIO,
-    IMAGE,
-    PREVIEW,
-    SAVE_TEXT,
-    SAVE_AUDIO,
-    SAVE_IMAGE,
-    SAVE_VIDEO,
-    PREVIEW_AUDIO,
-    PREVIEW_IMAGE,
-)
+from scripts.nodes.host import HostNode
 
+# The note node the page draws each group's text in.
+NOTE = "MarkdownNote"
 # The previews a save node draws, which a placed subgraph can show: an image, an audio player, and a text.
 IMAGE_PREVIEW = "$$canvas-image-preview"
 AUDIO_PREVIEW = "audioUI"
@@ -70,15 +62,15 @@ ANY_TYPE = "*"
 # Nodes that draw their own panel, measured in the page. The save nodes are sized for their empty state;
 # ComfyUI grows them as their viewers fill.
 DOM_SIZES: dict[str, tuple[int, int]] = {
-    IMAGE: (340, 350),
-    AUDIO: (340, 136),
-    PREVIEW: (340, 240),
-    SAVE_TEXT: (340, 170),
-    SAVE_IMAGE: (340, 290),
-    PREVIEW_IMAGE: (340, 290),
-    PREVIEW_AUDIO: (340, 150),
-    SAVE_AUDIO: (340, 136),
-    SAVE_VIDEO: (340, 106),
+    HostNode.IMAGE: (340, 350),
+    HostNode.AUDIO: (340, 136),
+    HostNode.PREVIEW: (340, 240),
+    HostNode.SAVE_TEXT: (340, 170),
+    HostNode.SAVE_IMAGE: (340, 290),
+    HostNode.PREVIEW_IMAGE: (340, 290),
+    HostNode.PREVIEW_AUDIO: (340, 150),
+    HostNode.SAVE_AUDIO: (340, 136),
+    HostNode.SAVE_VIDEO: (340, 106),
 }
 
 __all__ = [
@@ -100,6 +92,7 @@ __all__ = [
     "NODE_GAP",
     "NODE_PADDING",
     "NODE_WIDTH",
+    "NOTE",
     "NOTE_CHARACTER_WIDTH",
     "NOTE_CODE_CHARACTER_WIDTH",
     "NOTE_LINE_HEIGHT",

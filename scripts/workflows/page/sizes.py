@@ -31,59 +31,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 
-def read_slots(name: str, settings: Mapping[str, object]) -> list[str]:
-    """Name every slot of a growing row: listed by name, or numbered from 0 after a prefix."""
-    template = cast("dict[str, object]", settings["template"])
-    if "names" in template:
-        return [f"{name}.{slot}" for slot in cast("list[str]", template["names"])]
-    return [f"{name}.{template['prefix']}{number}" for number in range(cast("int", template["max"]))]
-
-
-def count_slots(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> int:
-    """Count the sockets a growing row shows: every slot up to the last linked one and one more, or its minimum."""
-    slots = read_slots(name, settings)
-    shown = max((index + 1 for index, slot in enumerate(slots) if slot in linked), default=0) + 1
-    minimum = cast("int", cast("dict[str, object]", settings["template"]).get("min", 0))
-    return min(len(slots), max(shown, minimum))
-
-
-def measure(
-    kind: str, schema: Mapping[str, object], values: Mapping[str, object], linked: frozenset[str]
-) -> tuple[int, int]:
-    """Size a node as the page does: a row per socket, then each widget and its gap; panels are measured.
-
-    A dropdown adds the widgets of its chosen option, and a growing row shows its linked slots and one more.
-    """
-    if kind in DOM_SIZES:
-        return DOM_SIZES[kind]
-    sockets, widgets = _count_inputs(cast("list[dict[str, object]]", schema["inputs"]), values, linked)
-    rows = max(sockets, len(cast("list[object]", schema["outputs"])), 1)
-    height = rows * SLOT_HEIGHT + NODE_PADDING
-    if widgets:
-        height += sum(widget + WIDGET_GAP for widget in widgets) + WIDGETS_PADDING
-    return NODE_WIDTH, height
-
-
-def measure_note(text: str, width: int) -> int:
-    """Height of a note that fits its text: each line wraps at the note's width, and a blank line is a gap.
-
-    A numbered step wraps sooner, since the list is indented.
-    """
-    height = NOTE_PADDING
-    for line in text.splitlines():
-        if not line:
-            height += NOTE_PARAGRAPH_GAP
-            continue
-        # Bold and code marks take no space once the page renders them, and code is set in a wider font.
-        code = sum(len(span) for span in re.findall(r"`([^`]*)`", line))
-        shown = len(re.sub(r"\*\*|`", "", line))
-        drawn = (shown - code) * NOTE_CHARACTER_WIDTH + code * NOTE_CODE_CHARACTER_WIDTH
-        indent = NOTE_LIST_INDENT if re.match(r"\d+\. ", line) else 0
-        height += NOTE_LINE_HEIGHT * math.ceil(drawn / (width - NOTE_SIDE_PADDING - indent))
-    return max(height, NOTE_MIN_HEIGHT)
-
-
-def _count_inputs(
+def _measure_inputs(
     inputs: list[dict[str, object]], values: Mapping[str, object], linked: frozenset[str]
 ) -> tuple[int, list[int]]:
     """Count a node's socket rows and list its widget heights, a seed's control widget included."""
@@ -93,7 +41,7 @@ def _count_inputs(
         name = str(item["name"])
         if not item.get("widget"):
             # The page keeps a row free below a node's own growing row, one more than it computes.
-            sockets += count_slots(name, item, linked) + 1 if item["type"] == AUTOGROW_TYPE else 1
+            sockets += len(list_shown_slots(name, item, linked)) + 1 if item["type"] == AUTOGROW_TYPE else 1
             continue
         widgets.append(_measure_widget(item))
         if item.get("control_after_generate"):
@@ -124,4 +72,56 @@ def _measure_widget(item: Mapping[str, object]) -> int:
     return WIDGET_HEIGHT
 
 
-__all__ = ["count_slots", "measure", "measure_note", "read_slots"]
+def _read_slots(name: str, settings: Mapping[str, object]) -> list[str]:
+    """Name every slot of a growing row: listed by name, or numbered from 0 after a prefix."""
+    template = cast("dict[str, object]", settings["template"])
+    if "names" in template:
+        return [f"{name}.{slot}" for slot in cast("list[str]", template["names"])]
+    return [f"{name}.{template['prefix']}{number}" for number in range(cast("int", template["max"]))]
+
+
+def list_shown_slots(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> list[str]:
+    """List the sockets a growing row shows: every slot up to the last linked one and one more, or its minimum."""
+    slots = _read_slots(name, settings)
+    shown = max((index + 1 for index, slot in enumerate(slots) if slot in linked), default=0) + 1
+    minimum = cast("int", cast("dict[str, object]", settings["template"]).get("min", 0))
+    return slots[: max(shown, minimum)]
+
+
+def measure(
+    kind: str, schema: Mapping[str, object], values: Mapping[str, object], linked: frozenset[str]
+) -> tuple[int, int]:
+    """Size a node as the page does: a row per socket, then each widget and its gap; panels are measured.
+
+    A dropdown adds the widgets of its chosen option, and a growing row shows its linked slots and one more.
+    """
+    if kind in DOM_SIZES:
+        return DOM_SIZES[kind]
+    sockets, widgets = _measure_inputs(cast("list[dict[str, object]]", schema["inputs"]), values, linked)
+    rows = max(sockets, len(cast("list[object]", schema["outputs"])), 1)
+    height = rows * SLOT_HEIGHT + NODE_PADDING
+    if widgets:
+        height += sum(widget + WIDGET_GAP for widget in widgets) + WIDGETS_PADDING
+    return NODE_WIDTH, height
+
+
+def measure_note(text: str, width: int) -> int:
+    """Height of a note that fits its text: each line wraps at the note's width, and a blank line is a gap.
+
+    A numbered step wraps sooner, since the list is indented.
+    """
+    height = NOTE_PADDING
+    for line in text.splitlines():
+        if not line:
+            height += NOTE_PARAGRAPH_GAP
+            continue
+        # Bold and code marks take no space once the page renders them, and code is set in a wider font.
+        code = sum(len(span) for span in re.findall(r"`([^`]*)`", line))
+        shown = len(re.sub(r"\*\*|`", "", line))
+        drawn = (shown - code) * NOTE_CHARACTER_WIDTH + code * NOTE_CODE_CHARACTER_WIDTH
+        indent = NOTE_LIST_INDENT if re.match(r"\d+\. ", line) else 0
+        height += NOTE_LINE_HEIGHT * math.ceil(drawn / (width - NOTE_SIDE_PADDING - indent))
+    return max(height, NOTE_MIN_HEIGHT)
+
+
+__all__ = ["list_shown_slots", "measure", "measure_note"]

@@ -7,11 +7,12 @@ import json
 import uuid
 import argparse
 from typing import cast, TYPE_CHECKING
-from scripts.config import NOTE, REPO_ROOT
 from scripts.nodes.check import read_schemas
+from scripts.workflows.page.config import NOTE
 from scripts.workflows.page.palette import Palette
 from scripts.workflows.page.graph import Node, NAMESPACE
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
+from scripts.paths import REPO_ROOT, README_PATH, EXAMPLES_DIR
 from scripts.workflows.descriptions.chat import CHAT_WORKFLOWS
 from scripts.workflows.page.sizes import measure, measure_note
 from scripts.workflows.descriptions.audio import AUDIO_WORKFLOWS
@@ -22,15 +23,15 @@ from scripts.workflows.descriptions.search import SEARCH_WORKFLOWS
 from scripts.workflows.page.layout import place_stacks, place_columns
 from scripts.workflows.descriptions.decision import DECISION_WORKFLOWS
 from scripts.workflows.page.serialize import (
-    Json,
-    link_nodes,
-    serialize_nodes,
-    serialize_subgraph,
+    encode_links,
+    encode_nodes,
+    encode_subgraph,
     read_preview_exposures,
 )
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from scripts.types import Json
     from collections.abc import Mapping, Iterable
     from scripts.workflows.page.graph import Workflow
 
@@ -45,7 +46,7 @@ WORKFLOWS = (
 )
 
 
-def build_palette(export: dict[str, object], workflow: Workflow) -> Palette:
+def _build_palette(export: dict[str, object], workflow: Workflow) -> Palette:
     """Build the table of every node one workflow may place.
 
     A subgraph's ID comes from its workflow and name, so two workflows can each define their own Check.
@@ -58,9 +59,9 @@ def build_palette(export: dict[str, object], workflow: Workflow) -> Palette:
     return Palette(schemas, subgraphs, ids)
 
 
-def check_coverage(node_ids: Iterable[str]) -> list[str]:
+def _list_coverage_problems(node_ids: Iterable[str]) -> list[str]:
     """Report every workflow the README does not link and every node no workflow places."""
-    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    readme = README_PATH.read_text(encoding="utf-8")
     problems = [
         f"Link example_workflows/{workflow.slug}.json from README.md."
         for workflow in WORKFLOWS
@@ -72,7 +73,7 @@ def check_coverage(node_ids: Iterable[str]) -> list[str]:
     return problems
 
 
-def make_notes(
+def _build_notes(
     workflow: Workflow, sizes: Mapping[str, tuple[int, int]]
 ) -> tuple[dict[str, Node], dict[str, tuple[int, int]]]:
     """Make each group's note, keyed by the group's title, with its size.
@@ -101,33 +102,33 @@ def make_notes(
     return notes, {notes[title].key: (width, height) for title, width in widths.items()}
 
 
-def serialize_workflow(workflow: Workflow, palette: Palette) -> Json:
+def _encode_workflow(workflow: Workflow, palette: Palette) -> Json:
     """Serialize one workflow: a note in every group, the placed nodes, links, group frames and subgraphs."""
     # A growing row of sockets shows each linked slot and one more, so the links decide a node's height.
     targets = [end.split(".", 1) for _start, end in workflow.links]
     sizes = {
         node.key: measure(
             node.kind,
-            palette.schema(node),
+            palette.find_schema(node),
             node.values,
             frozenset(socket for key, socket in targets if key == node.key),
         )
         for node in workflow.nodes
     }
-    notes, note_sizes = make_notes(workflow, sizes)
+    notes, note_sizes = _build_notes(workflow, sizes)
     sizes |= note_sizes
     boxes, groups = place_stacks(workflow.stacks, sizes, notes={title: note.key for title, note in notes.items()})
     grouped = sum(len(column) for stack in workflow.stacks for group in stack for column in group.columns)
     if set(boxes) != set(sizes) or len(boxes) != grouped + len(notes):
         message = f"Place every node of {workflow.slug} in exactly one group."
         raise ValueError(message)
-    entries = serialize_nodes(
+    entries = encode_nodes(
         (*notes.values(), *workflow.nodes),
         palette,
         {key: (box.x, box.y, box.width, box.height) for key, box in boxes.items()},
         [end for _start, end in workflow.links],
     )
-    records = link_nodes(entries, workflow.links)
+    records = encode_links(entries, workflow.links)
     links = [[r["id"], r["origin_id"], r["origin_slot"], r["target_id"], r["target_slot"], r["type"]] for r in records]
     serialized: Json = {
         "id": str(uuid.uuid5(NAMESPACE, workflow.slug)),
@@ -142,7 +143,7 @@ def serialize_workflow(workflow: Workflow, palette: Palette) -> Json:
         "version": 0.4,
     }
     if workflow.subgraphs:
-        subgraphs = [serialize_subgraph(s, palette, position) for position, s in enumerate(workflow.subgraphs, 1)]
+        subgraphs = [encode_subgraph(s, palette, position) for position, s in enumerate(workflow.subgraphs, 1)]
         serialized["definitions"] = {"subgraphs": subgraphs}
     # A placed subgraph shows the results saved inside it, so a run can be read without opening it.
     for position, subgraph in enumerate(workflow.subgraphs, 1):
@@ -153,7 +154,7 @@ def serialize_workflow(workflow: Workflow, palette: Palette) -> Json:
     return serialized
 
 
-def compare_shipped_file(path: Path, content: Json) -> str | None:
+def _find_file_problem(path: Path, content: Json) -> str | None:
     """Say whether a shipped file matches its build."""
     if not path.is_file():
         return f"Build {path.relative_to(REPO_ROOT)} with mise run comfy:workflows:build."
@@ -168,20 +169,18 @@ def main() -> int:
     arguments = parser.parse_args()
     export = read_schemas()
     outputs: dict[Path, Json] = {
-        REPO_ROOT / "example_workflows" / f"{workflow.slug}.json": serialize_workflow(
-            workflow, build_palette(export, workflow)
-        )
+        EXAMPLES_DIR / f"{workflow.slug}.json": _encode_workflow(workflow, _build_palette(export, workflow))
         for workflow in WORKFLOWS
     }
     problems = [
         f"Remove or describe {path.relative_to(REPO_ROOT)}."
-        for path in (REPO_ROOT / "example_workflows").glob("*.json")
+        for path in EXAMPLES_DIR.glob("*.json")
         if path not in outputs
     ]
-    problems += check_coverage(cast("dict[str, object]", export["nodes"]))
+    problems += _list_coverage_problems(cast("dict[str, object]", export["nodes"]))
     for path, content in outputs.items():
         if arguments.check:
-            problem = compare_shipped_file(path, content)
+            problem = _find_file_problem(path, content)
             if problem:
                 problems.append(problem)
             continue

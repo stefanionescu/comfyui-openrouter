@@ -9,8 +9,8 @@ from scripts.workflows.page.config import INPUT_COLOUR
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+    from scripts.types import WidgetValue
 
-WidgetValue = str | int | float | bool | list[str]
 NO_VALUES: Mapping[str, WidgetValue] = MappingProxyType({})
 NAMESPACE = uuid.UUID("6f1c0c7e-3b2a-4f7e-9d3a-2f0b4e6a8c10")
 
@@ -64,12 +64,4 @@ class Workflow:
     subgraphs: tuple[Subgraph, ...] = ()
 
 
-__all__ = [
-    "NAMESPACE",
-    "NO_VALUES",
-    "Group",
-    "Node",
-    "Subgraph",
-    "WidgetValue",
-    "Workflow",
-]
+__all__ = ["NAMESPACE", "NO_VALUES", "Group", "Node", "Subgraph", "Workflow"]

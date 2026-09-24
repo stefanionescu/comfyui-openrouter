@@ -8,9 +8,9 @@ import sys
 import json
 import asyncio
 import argparse
-from typing import cast
 from pathlib import Path
-from scripts.config import REPO_ROOT
+from typing import cast, TYPE_CHECKING
+from scripts.paths import HELP_DIR, REPO_ROOT, SCHEMA_SCRIPT_PATH
 from src.config.namespace import (
     CHAT_MENU,
     AUDIO_MENU,
@@ -21,12 +21,31 @@ from src.config.namespace import (
     DECISION_MENU,
 )
 
-Schema = dict[str, object]
+if TYPE_CHECKING:
+    from scripts.types import Schema
+
 SOCKET_ROW = re.compile(r"^\| `([a-z_.]+)` \|")
 MENUS = (SHARED_MENU, CHAT_MENU, IMAGE_MENU, VIDEO_MENU, AUDIO_MENU, SEARCH_MENU, DECISION_MENU)
 
 
-def read_host_installation() -> tuple[Path, Path]:
+async def _read_schema_export(interpreter: Path, environment: dict[str, str]) -> str:
+    """Run the schema script in ComfyUI's interpreter."""
+    process = await asyncio.create_subprocess_exec(
+        str(interpreter),
+        str(SCHEMA_SCRIPT_PATH),
+        cwd=REPO_ROOT,
+        env=environment,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    stdout, stderr = await process.communicate()
+    if process.returncode != 0:
+        message = f"The schema export failed:\n{stderr.decode()}"
+        raise RuntimeError(message)
+    return stdout.decode()
+
+
+def _read_host_installation() -> tuple[Path, Path]:
     """Return the ComfyUI folder and its Python interpreter."""
     chosen = os.environ.get("COMFYUI_PATH", "")
     if not chosen:
@@ -43,34 +62,10 @@ def read_host_installation() -> tuple[Path, Path]:
     return host, interpreter
 
 
-def read_schemas() -> dict[str, object]:
-    """Describe the nodes and the host nodes the workflows place."""
-    host, interpreter = read_host_installation()
-    environment = dict(os.environ, PYTHONPATH=os.pathsep.join((str(host), str(REPO_ROOT))))
-    return cast("dict[str, object]", json.loads(asyncio.run(_describe(interpreter, environment))))
-
-
-async def _describe(interpreter: Path, environment: dict[str, str]) -> str:
-    """Run the schema script in ComfyUI's interpreter."""
-    process = await asyncio.create_subprocess_exec(
-        str(interpreter),
-        str(REPO_ROOT / "scripts/nodes/schema.py"),
-        cwd=REPO_ROOT,
-        env=environment,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout, stderr = await process.communicate()
-    if process.returncode != 0:
-        message = f"The schema export failed:\n{stderr.decode()}"
-        raise RuntimeError(message)
-    return stdout.decode()
-
-
-def check_help_pages(schemas: dict[str, Schema]) -> list[str]:
+def _list_help_problems(schemas: dict[str, Schema]) -> list[str]:
     """Check that every node has a help page naming real inputs."""
     problems: list[str] = []
-    pages = {path.stem: path for path in (REPO_ROOT / "web/docs").glob("*.md")}
+    pages = {path.stem: path for path in HELP_DIR.glob("*.md")}
     problems.extend(f"Add web/docs/{node_id}.md." for node_id in schemas if node_id not in pages)
     for stem, path in sorted(pages.items()):
         schema = schemas.get(stem)
@@ -86,6 +81,13 @@ def check_help_pages(schemas: dict[str, Schema]) -> list[str]:
     return problems
 
 
+def read_schemas() -> dict[str, object]:
+    """Describe the nodes and the host nodes the workflows place."""
+    host, interpreter = _read_host_installation()
+    environment = dict(os.environ, PYTHONPATH=os.pathsep.join((str(host), str(REPO_ROOT))))
+    return cast("dict[str, object]", json.loads(asyncio.run(_read_schema_export(interpreter, environment))))
+
+
 def main() -> int:
     """Check the help pages and menus, or print the schemas."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -96,7 +98,7 @@ def main() -> int:
         sys.stdout.write(json.dumps(export, indent=2) + "\n")
         return 0
     schemas = cast("dict[str, Schema]", export["nodes"])
-    problems = check_help_pages(schemas)
+    problems = _list_help_problems(schemas)
     problems += [
         f"Put {node_id} in an OpenRouter menu."
         for node_id, schema in schemas.items()

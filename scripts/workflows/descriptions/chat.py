@@ -3,21 +3,12 @@
 from __future__ import annotations
 
 import json
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.page.config import STAGE_COLOUR, TEXT_PREVIEW
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
-from scripts.config import (
-    TEXT,
-    IMAGE,
-    FORMAT,
-    SWITCH,
-    PREVIEW,
-    SAVE_TEXT,
-    FOLDER_IMAGES,
-    SAVE_CAPTIONS,
-)
 
 ASK = f"{NODE_PREFIX}ChatAsk"
 DECIDE = f"{NODE_PREFIX}DecisionAsk"
@@ -82,13 +73,13 @@ WRITE = Subgraph(
 CHECK_LISTING = Subgraph(
     name=SHARED_TEXTS["check"],
     nodes=(
-        Node("situation", FORMAT, {"f_string": "Spec facts:\n{a}\n\nListing:\n{b}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Spec facts:\n{a}\n\nListing:\n{b}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("read", READ, {"question": "supported"}),
-        Node("approved", TEXT, {"value": "listings/approved"}, title=SHARED_TEXTS["approved"]),
-        Node("review", TEXT, {"value": "listings/review"}, title=SHARED_TEXTS["review"]),
-        Node("folder", SWITCH),
-        Node("save", SAVE_TEXT, {"format": "json"}),
+        Node("approved", HostNode.TEXT, {"value": "listings/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", HostNode.TEXT, {"value": "listings/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", HostNode.SWITCH),
+        Node("save", HostNode.SAVE_TEXT, {"format": "json"}),
     ),
     links=(
         ("situation.STRING", "decide.situation"),
@@ -115,8 +106,8 @@ CHECK_LISTING = Subgraph(
 WRITE_LISTING = Workflow(
     slug="chat-01-write-a-product-listing",
     nodes=(
-        Node("front", IMAGE, {"image": ""}, title=SHARED_TEXTS["front"]),
-        Node("detail", IMAGE, {"image": ""}, title=SHARED_TEXTS["detail"]),
+        Node("front", HostNode.IMAGE, {"image": ""}, title=SHARED_TEXTS["front"]),
+        Node("detail", HostNode.IMAGE, {"image": ""}, title=SHARED_TEXTS["detail"]),
         Node("spec", f"{NODE_PREFIX}ChatAttachDocument", {"file": ""}),
         Node("private", f"{NODE_PREFIX}RequestOptions", {"data_collection": "deny"}),
         Node("write", WRITE.name),
@@ -141,7 +132,7 @@ WRITE_LISTING = Workflow(
             },
         ),
         Node("check", CHECK_LISTING.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
         ("front.IMAGE", "write.front"),
@@ -184,7 +175,7 @@ CAPTION = Subgraph(
             },
             is_paid=True,
         ),
-        Node("save", SAVE_CAPTIONS, {"folder_name": "captions"}),
+        Node("save", HostNode.SAVE_CAPTIONS, {"folder_name": "captions"}),
     ),
     links=(("caption.text", "save.texts"),),
     columns=(("caption",), ("save",)),
@@ -196,7 +187,7 @@ CAPTION = Subgraph(
 CAPTION_SET = Workflow(
     slug="chat-02-caption-a-training-set",
     nodes=(
-        Node("folder", FOLDER_IMAGES, {"folder": ""}),
+        Node("folder", HostNode.FOLDER_IMAGES, {"folder": ""}),
         Node("caption", CAPTION.name),
         Node(
             "valid",
@@ -209,7 +200,7 @@ CAPTION_SET = Workflow(
             },
         ),
         Node("decide", DECIDE, is_paid=True),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
         ("folder.images", "caption.images"),

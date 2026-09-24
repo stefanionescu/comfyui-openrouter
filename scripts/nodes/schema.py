@@ -17,12 +17,12 @@ from typing import cast
 from comfy_api.latest import io
 from src.nodes import NODE_TYPES
 from src.nodes.base import PaidNode
-from scripts.config import HOST_NODES
+from scripts.nodes.host import HostNode
 from src.comfy.runtime import create_runtime
 from src.config.generation.inputs import VARIATION_INPUT
 
 
-def build_node_schema(schema: io.Schema) -> dict[str, object]:
+def _build_node_schema(schema: io.Schema) -> dict[str, object]:
     """Describe one node's public metadata and outputs, and each input with its type, widget flag and limits."""
     inputs: list[dict[str, object]] = []
     for item in schema.inputs:
@@ -42,12 +42,12 @@ def build_node_schema(schema: io.Schema) -> dict[str, object]:
     }
 
 
-def build_host_schema(name: str) -> dict[str, object]:
+def _build_host_schema(name: str) -> dict[str, object]:
     """Describe a ComfyUI node by its schema or input table."""
     node_class = cast("type[object]", host.NODE_CLASS_MAPPINGS[name])
     define_schema = getattr(node_class, "define_schema", None)
     if callable(define_schema):
-        return build_node_schema(cast("io.Schema", define_schema()))
+        return _build_node_schema(cast("io.Schema", define_schema()))
     inputs: list[dict[str, object]] = []
     table = cast("dict[str, dict[str, tuple[object, ...]]]", getattr(node_class, "INPUT_TYPES")())  # noqa: B009 -- reason: The host class is typed as an arbitrary class here.
     for group in ("required", "optional"):
@@ -73,7 +73,7 @@ def build_host_schema(name: str) -> dict[str, object]:
     return {"inputs": inputs, "outputs": outputs}
 
 
-def build_registered_schemas() -> dict[str, dict[str, object]]:
+def _build_registered_schemas() -> dict[str, dict[str, object]]:
     """Describe every registered node, refusing a mismatched schema.
 
     A paid node receives its inputs through send, and the run number through its base class.
@@ -91,7 +91,7 @@ def build_registered_schemas() -> dict[str, dict[str, object]]:
         if parameters != {item.id for item in schema.inputs}:
             message = f"Match the execute parameters of {schema.node_id} to its inputs."
             raise ValueError(message)
-        schemas[schema.node_id] = build_node_schema(schema)
+        schemas[schema.node_id] = _build_node_schema(schema)
     return schemas
 
 
@@ -106,8 +106,8 @@ def main() -> None:
         os.environ["OPENROUTER_COMFY_STATE_DIRECTORY"] = choose_state_directory
         create_runtime()
         export: dict[str, object] = {
-            "nodes": build_registered_schemas(),
-            "host": {name: build_host_schema(name) for name in HOST_NODES},
+            "nodes": _build_registered_schemas(),
+            "host": {name: _build_host_schema(name) for name in HostNode},
         }
     sys.stdout.write(json.dumps(export) + "\n")
 

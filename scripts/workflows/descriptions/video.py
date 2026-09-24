@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
-from scripts.workflows.descriptions.schemas import numbered_schema
+from scripts.workflows.descriptions.schemas import build_numbered_schema
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
-from scripts.config import FIELD, FORMAT, PREVIEW, SAVE_VIDEO, TEXT_BLOCK, PREVIEW_IMAGE
 
 ANIMATE_TEXTS = WORKFLOW_TEXTS["video-01-animate-a-product-shot"]
 RECOVER_TEXTS = WORKFLOW_TEXTS["video-02-recover-a-cancelled-video"]
@@ -21,7 +21,7 @@ MOVE = Subgraph(
             f"{NODE_PREFIX}ChatAsk",
             {
                 "model": "openai/gpt-6-sol",
-                "answer_schema": numbered_schema("move", 3),
+                "answer_schema": build_numbered_schema("move", 3),
                 "prompt": (
                     "This still is the first frame of a six-second product teaser. Write three different camera "
                     "moves for it. Each is one sentence a video model can follow, such as a slow push-in."
@@ -29,10 +29,10 @@ MOVE = Subgraph(
             },
             is_paid=True,
         ),
-        Node("situation", FORMAT, {"f_string": "Product shot:\n{a}\n\nCamera moves:\n{b}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Product shot:\n{a}\n\nCamera moves:\n{b}"}),
         Node("decide", f"{NODE_PREFIX}DecisionAsk", is_paid=True),
         Node("best", f"{NODE_PREFIX}DecisionReadAnswer", {"question": "best"}),
-        Node("move", FIELD),
+        Node("move", HostNode.FIELD),
     ),
     links=(
         ("moves.text", "situation.values.b"),
@@ -65,7 +65,7 @@ ANIMATE = Subgraph(
             },
             is_paid=True,
         ),
-        Node("save", SAVE_VIDEO, {"filename_prefix": "video/openrouter/product-teaser"}),
+        Node("save", HostNode.SAVE_VIDEO, {"filename_prefix": "video/openrouter/product-teaser"}),
     ),
     links=(("animate.video", "save.video"),),
     columns=(("animate",), ("save",)),
@@ -78,7 +78,7 @@ ANIMATE_PRODUCT = Workflow(
     nodes=(
         Node(
             "brief",
-            TEXT_BLOCK,
+            HostNode.TEXT_BLOCK,
             {
                 "value": (
                     "A matte black espresso machine on a marble counter, soft morning light from a window, steam "
@@ -93,7 +93,7 @@ ANIMATE_PRODUCT = Workflow(
             {"model": "microsoft/mai-image-2.6-flash", "aspect_ratio": "16:9"},
             is_paid=True,
         ),
-        Node("frame", PREVIEW_IMAGE, title=SHARED_TEXTS["frame"]),
+        Node("frame", HostNode.PREVIEW_IMAGE, title=SHARED_TEXTS["frame"]),
         Node(
             "best",
             f"{NODE_PREFIX}DecisionAddQuestion",
@@ -107,8 +107,8 @@ ANIMATE_PRODUCT = Workflow(
             },
         ),
         Node("move", MOVE.name),
-        Node("chosen", PREVIEW, title=SHARED_TEXTS["move"]),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("chosen", HostNode.PREVIEW, title=SHARED_TEXTS["move"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
         Node("animate", ANIMATE.name),
     ),
     links=(
@@ -142,7 +142,7 @@ RECOVER_VIDEO = Workflow(
     slug="video-02-recover-a-cancelled-video",
     nodes=(
         Node("download", f"{NODE_PREFIX}VideoDownload", {"job": ""}),
-        Node("save", SAVE_VIDEO, {"filename_prefix": "video/openrouter/recovered"}),
+        Node("save", HostNode.SAVE_VIDEO, {"filename_prefix": "video/openrouter/recovered"}),
     ),
     links=(("download.video", "save.video"),),
     stacks=((Group(SHARED_TEXTS["recover"], (("download",), ("save",)), STAGE_COLOUR, RECOVER_TEXTS["recover"]),),),

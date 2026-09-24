@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.page.config import STAGE_COLOUR
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
-from scripts.config import TEXT, FORMAT, SWITCH, PREVIEW, TEXT_BLOCK
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 
 ASK = f"{NODE_PREFIX}ChatAsk"
@@ -22,7 +22,7 @@ ANSWER = Subgraph(
     nodes=(
         Node(
             "request",
-            FORMAT,
+            HostNode.FORMAT,
             {"f_string": "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"},
         ),
         Node("quick", ASK, {"model": "openai/gpt-6-luna"}, is_paid=True),
@@ -37,7 +37,7 @@ ANSWER = Subgraph(
 CHECK = Subgraph(
     name=SHARED_TEXTS["check"],
     nodes=(
-        Node("situation", FORMAT, {"f_string": "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"}),
         Node("decide", f"{NODE_PREFIX}DecisionAsk", is_paid=True),
         Node("read", f"{NODE_PREFIX}DecisionReadAnswer", {"question": "supported", "threshold": 0.8}),
     ),
@@ -62,7 +62,7 @@ ESCALATE = Subgraph(
             {"model": "anthropic/claude-opus-5.5", "reasoning": "medium"},
             is_paid=True,
         ),
-        Node("pick", SWITCH),
+        Node("pick", HostNode.SWITCH),
     ),
     links=(("careful.text", "pick.on_false"),),
     columns=(("careful",), ("pick",)),
@@ -74,10 +74,10 @@ ESCALATE = Subgraph(
 VERIFY_ESCALATE = Workflow(
     slug="decision-01-verify-then-escalate",
     nodes=(
-        Node("notes", TEXT_BLOCK, {"value": NOTES}, title=SHARED_TEXTS["notes"]),
+        Node("notes", HostNode.TEXT_BLOCK, {"value": NOTES}, title=SHARED_TEXTS["notes"]),
         Node(
             "question",
-            TEXT,
+            HostNode.TEXT,
             {"value": "Until what time can I return an item on the first Saturday of the month?"},
             title=SHARED_TEXTS["question"],
         ),
@@ -91,9 +91,9 @@ VERIFY_ESCALATE = Workflow(
             },
         ),
         Node("check", CHECK.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
         Node("escalate", ESCALATE.name),
-        Node("result", PREVIEW, title=SHARED_TEXTS["answer"]),
+        Node("result", HostNode.PREVIEW, title=SHARED_TEXTS["answer"]),
     ),
     links=(
         ("notes.STRING", "answer.notes"),

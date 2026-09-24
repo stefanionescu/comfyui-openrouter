@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from scripts.config import NOTE
 from dataclasses import dataclass
 from typing import cast, TYPE_CHECKING
+from scripts.workflows.page.config import NOTE
+from scripts.workflows.page.widgets import read_widget_default
 from scripts.workflows.page.config import MATCH_TYPE, AUTOGROW_TYPE
-from scripts.workflows.page.widgets import Item, Schema, read_widget_default
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+    from scripts.types import Item, Schema
     from scripts.workflows.page.graph import Node, Subgraph
 
 # The page defines these nodes itself, so the schema export cannot describe them.
@@ -26,10 +27,10 @@ class Palette:
     subgraphs: Mapping[str, Subgraph]
     ids: Mapping[str, str]
 
-    def schema(self, node: Node) -> Schema:
+    def find_schema(self, node: Node) -> Schema:
         """Describe one node or placed subgraph."""
         if node.kind in self.subgraphs:
-            return build_subgraph_schema(self.subgraphs[node.kind], self)
+            return _build_subgraph_schema(self.subgraphs[node.kind], self)
         if node.kind in self.schemas:
             return self.schemas[node.kind]
         if node.kind in BUILT_IN:
@@ -38,7 +39,7 @@ class Palette:
         raise KeyError(message)
 
 
-def find_socket(schema: Schema, side: str, name: str, owner: str) -> tuple[int, Item]:
+def _find_socket(schema: Schema, side: str, name: str, owner: str) -> tuple[int, Item]:
     """Find an input or output by name, with its position."""
     for index, item in enumerate(cast("list[Item]", schema[side])):
         if item["name"] == name:
@@ -47,13 +48,58 @@ def find_socket(schema: Schema, side: str, name: str, owner: str) -> tuple[int, 
     raise KeyError(message)
 
 
-def find_node(subgraph: Subgraph, key: str) -> Node:
+def _find_node(subgraph: Subgraph, key: str) -> Node:
     """Find one node of a subgraph by its key."""
     node = next((node for node in subgraph.nodes if node.key == key), None)
     if node is None:
         message = f"{subgraph.name} has no node keyed {key}."
         raise KeyError(message)
     return node
+
+
+def _find_input(node: Node, schema: Schema, socket: str) -> Item:
+    """Find an input by its full name: the node's own, or a slot of a growing row."""
+    parent, _, rest = socket.partition(".")
+    _, item = _find_socket(schema, "inputs", parent, node.kind)
+    if not rest:
+        return item
+    if item["type"] == AUTOGROW_TYPE:
+        return {"name": socket, "type": read_slot_type(item), "optional": True}
+    message = f"{node.kind} has no input named {socket}."
+    raise KeyError(message)
+
+
+def _build_subgraph_schema(subgraph: Subgraph, palette: Palette) -> Schema:
+    """Describe a subgraph as one node; an input linked to a widget inside shows as that widget."""
+    inputs: list[Item] = []
+    for name, target in subgraph.inputs:
+        if any(item["name"] == name for item in inputs):
+            continue
+        key, socket = target.split(".", 1)
+        node = _find_node(subgraph, key)
+        item = _find_input(node, palette.find_schema(node), socket)
+        default = node.values.get(socket, read_widget_default(item))
+        inputs.append({**item, "name": name, "default": default, "optional": False})
+    outputs: list[Item] = []
+    for name, source in subgraph.outputs:
+        key, socket = source.split(".", 1)
+        node = _find_node(subgraph, key)
+        _, item = _find_socket(palette.find_schema(node), "outputs", socket, node.kind)
+        outputs.append({**item, "name": name, "type": _read_output_type(subgraph, palette, key, item)})
+    return {"inputs": inputs, "outputs": outputs}
+
+
+def _read_output_type(subgraph: Subgraph, palette: Palette, key: str, item: Item) -> object:
+    """Read an output's type; a switch passes on the type of a node linked into it inside the subgraph."""
+    if item["type"] != MATCH_TYPE:
+        return item["type"]
+    for start, end in subgraph.links:
+        source_key, output = start.split(".", 1)
+        if end.startswith(f"{key}.") and not end.endswith(".switch"):
+            source = _find_node(subgraph, source_key)
+            _, source_item = _find_socket(palette.find_schema(source), "outputs", output, source.kind)
+            return source_item["type"]
+    return item["type"]
 
 
 def read_slot_type(settings: Mapping[str, object]) -> object:
@@ -63,49 +109,4 @@ def read_slot_type(settings: Mapping[str, object]) -> object:
     return next(iter((socket.get("required") or socket.get("optional") or {}).values()))[0]
 
 
-def find_input(node: Node, schema: Schema, socket: str) -> Item:
-    """Find an input by its full name: the node's own, or a slot of a growing row."""
-    parent, _, rest = socket.partition(".")
-    _, item = find_socket(schema, "inputs", parent, node.kind)
-    if not rest:
-        return item
-    if item["type"] == AUTOGROW_TYPE:
-        return {"name": socket, "type": read_slot_type(item), "optional": True}
-    message = f"{node.kind} has no input named {socket}."
-    raise KeyError(message)
-
-
-def build_subgraph_schema(subgraph: Subgraph, palette: Palette) -> Schema:
-    """Describe a subgraph as one node; an input linked to a widget inside shows as that widget."""
-    inputs: list[Item] = []
-    for name, target in subgraph.inputs:
-        if any(item["name"] == name for item in inputs):
-            continue
-        key, socket = target.split(".", 1)
-        node = find_node(subgraph, key)
-        item = find_input(node, palette.schema(node), socket)
-        default = node.values.get(socket, read_widget_default(item))
-        inputs.append({**item, "name": name, "default": default, "optional": False})
-    outputs: list[Item] = []
-    for name, source in subgraph.outputs:
-        key, socket = source.split(".", 1)
-        node = find_node(subgraph, key)
-        _, item = find_socket(palette.schema(node), "outputs", socket, node.kind)
-        outputs.append({**item, "name": name, "type": read_output_type(subgraph, palette, key, item)})
-    return {"inputs": inputs, "outputs": outputs}
-
-
-def read_output_type(subgraph: Subgraph, palette: Palette, key: str, item: Item) -> object:
-    """Read an output's type; a switch passes on the type of a node linked into it inside the subgraph."""
-    if item["type"] != MATCH_TYPE:
-        return item["type"]
-    for start, end in subgraph.links:
-        source_key, output = start.split(".", 1)
-        if end.startswith(f"{key}.") and not end.endswith(".switch"):
-            source = find_node(subgraph, source_key)
-            _, source_item = find_socket(palette.schema(source), "outputs", output, source.kind)
-            return source_item["type"]
-    return item["type"]
-
-
-__all__ = ["Palette", "find_node", "read_slot_type"]
+__all__ = ["Palette", "read_slot_type"]

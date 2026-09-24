@@ -5,14 +5,12 @@ from typing import cast, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from scripts.workflows.page.graph import WidgetValue
+    from scripts.types import Item, Schema, WidgetValue
 
 # A node's schema as the export describes it, and one of its inputs or outputs.
-Schema = dict[str, object]
-Item = dict[str, object]
 
 
-def validate_widget_value(item: Item, value: object, owner: str) -> None:
+def _validate_widget_value(item: Item, value: object, owner: str) -> None:
     """Refuse a widget value its input does not accept."""
     kind = item["type"]
     options = cast("list[object]", item.get("options") or [])
@@ -36,7 +34,7 @@ def validate_widget_value(item: Item, value: object, owner: str) -> None:
         raise ValueError(message)
 
 
-def serialize_dropdown_values(item: Item, values: Mapping[str, WidgetValue], owner: str) -> list[object]:
+def _encode_dropdown_values(item: Item, values: Mapping[str, WidgetValue], owner: str) -> list[object]:
     """Serialize a dynamic dropdown with the values of its option."""
     name = str(item["name"])
     options = cast("list[dict[str, object]]", item["options"])
@@ -54,7 +52,7 @@ def serialize_dropdown_values(item: Item, values: Mapping[str, WidgetValue], own
                 continue
             child_item = {"name": f"{name}.{child}", "type": kind, **cast("dict[str, object]", settings)}
             value = values.get(f"{name}.{child}", read_widget_default(child_item))
-            validate_widget_value(child_item, value, owner)
+            _validate_widget_value(child_item, value, owner)
             result.append(value)
             if child_item.get("control_after_generate"):
                 result.append("fixed")
@@ -72,7 +70,7 @@ def read_widget_default(item: Item) -> object:
     return {"STRING": "", "BOOLEAN": False}.get(str(item["type"]), item.get("min", 0))
 
 
-def serialize_widget_values(schema: Schema, values: Mapping[str, WidgetValue], owner: str) -> list[object]:
+def encode_widget_values(schema: Schema, values: Mapping[str, WidgetValue], owner: str) -> list[object]:
     """Serialize a node's widget values in schema order."""
     # ComfyUI builds a node's widgets from its required inputs first, then its optional ones.
     widgets = sorted(
@@ -87,10 +85,10 @@ def serialize_widget_values(schema: Schema, values: Mapping[str, WidgetValue], o
     result: list[object] = []
     for item in widgets:
         if item["type"] == "COMFY_DYNAMICCOMBO_V3":
-            result.extend(serialize_dropdown_values(item, values, owner))
+            result.extend(_encode_dropdown_values(item, values, owner))
             continue
         value = values.get(str(item["name"]), read_widget_default(item))
-        validate_widget_value(item, value, owner)
+        _validate_widget_value(item, value, owner)
         result.append(value)
         if item.get("control_after_generate"):
             # A paid node's seed ships fixed, so opening an example never sends a new request by itself.
@@ -101,4 +99,4 @@ def serialize_widget_values(schema: Schema, values: Mapping[str, WidgetValue], o
     return result
 
 
-__all__ = ["Item", "Schema", "read_widget_default", "serialize_widget_values", "validate_widget_value"]
+__all__ = ["encode_widget_values", "read_widget_default"]

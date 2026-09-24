@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
-from scripts.config import TEXT, FORMAT, SWITCH, PREVIEW, SAVE_IMAGE, TEXT_BLOCK
 
 ASK = f"{NODE_PREFIX}ChatAsk"
 RANK = f"{NODE_PREFIX}SearchRank"
@@ -33,7 +33,7 @@ ANSWER = Subgraph(
     nodes=(
         Node(
             "request",
-            FORMAT,
+            HostNode.FORMAT,
             {
                 "f_string": (
                     "Answer the customer in three sentences or fewer, using only these help articles.\n\n"
@@ -53,11 +53,11 @@ ANSWER = Subgraph(
 CHECK_ANSWER = Subgraph(
     name=SHARED_TEXTS["check"],
     nodes=(
-        Node("situation", FORMAT, {"f_string": "Articles:\n{a}\n\nCustomer: {b}\n\nAnswer: {c}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Articles:\n{a}\n\nCustomer: {b}\n\nAnswer: {c}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("read", READ, {"question": "supported"}),
-        Node("escalation", FORMAT, {"f_string": "Pass this customer to a person. They asked: {a}"}),
-        Node("pick", SWITCH),
+        Node("escalation", HostNode.FORMAT, {"f_string": "Pass this customer to a person. They asked: {a}"}),
+        Node("pick", HostNode.SWITCH),
     ),
     links=(
         ("situation.STRING", "decide.situation"),
@@ -83,11 +83,11 @@ ANSWER_FROM_ARTICLES = Workflow(
     nodes=(
         Node(
             "question",
-            TEXT,
+            HostNode.TEXT,
             {"value": "My kettle stopped heating after 18 months. Can I get it fixed for free?"},
             title=SHARED_TEXTS["question"],
         ),
-        Node("articles", TEXT_BLOCK, {"value": ARTICLES}, title=SHARED_TEXTS["articles"]),
+        Node("articles", HostNode.TEXT_BLOCK, {"value": ARTICLES}, title=SHARED_TEXTS["articles"]),
         Node("rank", RANK, {"model": "cohere/rerank-4-pro", "top_n": 3}, is_paid=True),
         Node("answer", ANSWER.name),
         Node(
@@ -96,8 +96,8 @@ ANSWER_FROM_ARTICLES = Workflow(
             {"name": "supported", "instructions": "Does every sentence of the answer come from the articles?"},
         ),
         Node("check", CHECK_ANSWER.name),
-        Node("reply", PREVIEW, title=SHARED_TEXTS["reply"]),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("reply", HostNode.PREVIEW, title=SHARED_TEXTS["reply"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
         ("question.STRING", "rank.query"),
@@ -160,13 +160,13 @@ CHECK_HERO = Subgraph(
             },
             is_paid=True,
         ),
-        Node("situation", FORMAT, {"f_string": "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("read", READ, {"question": "ready"}),
-        Node("approved", TEXT, {"value": "hero/approved"}, title=SHARED_TEXTS["approved"]),
-        Node("review", TEXT, {"value": "hero/review"}, title=SHARED_TEXTS["review"]),
-        Node("folder", SWITCH),
-        Node("save", SAVE_IMAGE),
+        Node("approved", HostNode.TEXT, {"value": "hero/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", HostNode.TEXT, {"value": "hero/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", HostNode.SWITCH),
+        Node("save", HostNode.SAVE_IMAGE),
     ),
     links=(
         ("describe.text", "situation.values.b"),
@@ -197,7 +197,7 @@ CHOOSE_HERO_IMAGE = Workflow(
     nodes=(
         Node(
             "brief",
-            TEXT_BLOCK,
+            HostNode.TEXT_BLOCK,
             {
                 "value": (
                     "Homepage hero for an outdoor gear shop's spring sale: a hiker on a ridge at sunrise, wide "
@@ -219,7 +219,7 @@ CHOOSE_HERO_IMAGE = Workflow(
             },
         ),
         Node("check", CHECK_HERO.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
         ("brief.STRING", "rank.brief"),

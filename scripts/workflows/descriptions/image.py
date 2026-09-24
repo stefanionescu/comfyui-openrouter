@@ -2,21 +2,12 @@
 
 from __future__ import annotations
 
+from scripts.nodes.host import HostNode
 from src.config.namespace import NODE_PREFIX
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
-from scripts.config import (
-    TEXT,
-    BATCH,
-    FORMAT,
-    SWITCH,
-    PREVIEW,
-    FROM_BATCH,
-    SAVE_IMAGE,
-    TEXT_BLOCK,
-)
 
 ASK = f"{NODE_PREFIX}ChatAsk"
 GENERATE = f"{NODE_PREFIX}ImageGenerate"
@@ -41,7 +32,7 @@ DRAW = Subgraph(
         ),
         Node("second", GENERATE, {"model": "microsoft/mai-image-2.6-flash", "aspect_ratio": "1:1"}, is_paid=True),
         Node("third", GENERATE, {"model": "recraft/recraft-v4.1-flash", "aspect_ratio": "1:1"}, is_paid=True),
-        Node("batch", BATCH),
+        Node("batch", HostNode.BATCH),
         Node(
             "describe",
             ASK,
@@ -72,15 +63,15 @@ DRAW = Subgraph(
 CHOOSE = Subgraph(
     name=SHARED_TEXTS["choose"],
     nodes=(
-        Node("situation", FORMAT, {"f_string": "Brief:\n{a}\n\nCandidates:\n{b}"}),
+        Node("situation", HostNode.FORMAT, {"f_string": "Brief:\n{a}\n\nCandidates:\n{b}"}),
         Node("decide", DECIDE, is_paid=True),
         Node("best", READ, {"question": "best"}),
         Node("ready", READ, {"question": "ready"}),
-        Node("chosen", FROM_BATCH),
-        Node("approved", TEXT, {"value": "occasion/approved"}, title=SHARED_TEXTS["approved"]),
-        Node("review", TEXT, {"value": "occasion/review"}, title=SHARED_TEXTS["review"]),
-        Node("folder", SWITCH),
-        Node("save", SAVE_IMAGE),
+        Node("chosen", HostNode.FROM_BATCH),
+        Node("approved", HostNode.TEXT, {"value": "occasion/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("review", HostNode.TEXT, {"value": "occasion/review"}, title=SHARED_TEXTS["review"]),
+        Node("folder", HostNode.SWITCH),
+        Node("save", HostNode.SAVE_IMAGE),
     ),
     links=(
         ("situation.STRING", "decide.situation"),
@@ -112,7 +103,7 @@ PICK_OCCASION_IMAGE = Workflow(
     nodes=(
         Node(
             "brief",
-            TEXT_BLOCK,
+            HostNode.TEXT_BLOCK,
             {
                 "value": (
                     "Cover image for a six-year-old's dinosaur birthday party invitation. Bright and friendly, "
@@ -143,7 +134,7 @@ PICK_OCCASION_IMAGE = Workflow(
             },
         ),
         Node("choose", CHOOSE.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
         ("brief.STRING", "draw.brief"),
@@ -174,7 +165,7 @@ INSPECT = Subgraph(
     nodes=(
         Node(
             "description",
-            FORMAT,
+            HostNode.FORMAT,
             {"f_string": "A clean, sharp, undistorted photo of {a}, with natural hands, faces, and objects"},
         ),
         Node("clean", EMBED, {"model": EMBEDDER}, title=SHARED_TEXTS["clean"], is_paid=True),
@@ -221,7 +212,7 @@ CHECK_DRAFT = Subgraph(
     nodes=(
         Node(
             "situation",
-            FORMAT,
+            HostNode.FORMAT,
             {
                 "f_string": (
                     "Subject: {a}\n\nImage embedding similarity, as [description, draft], to a clean description: "
@@ -231,10 +222,10 @@ CHECK_DRAFT = Subgraph(
         ),
         Node("decide", DECIDE, is_paid=True),
         Node("read", READ, {"question": "distorted"}),
-        Node("rejected", TEXT, {"value": "drafts/rejected"}, title=SHARED_TEXTS["rejected"]),
-        Node("approved", TEXT, {"value": "drafts/approved"}, title=SHARED_TEXTS["approved"]),
-        Node("folder", SWITCH),
-        Node("save", SAVE_IMAGE),
+        Node("rejected", HostNode.TEXT, {"value": "drafts/rejected"}, title=SHARED_TEXTS["rejected"]),
+        Node("approved", HostNode.TEXT, {"value": "drafts/approved"}, title=SHARED_TEXTS["approved"]),
+        Node("folder", HostNode.SWITCH),
+        Node("save", HostNode.SAVE_IMAGE),
     ),
     links=(
         ("situation.STRING", "decide.situation"),
@@ -265,7 +256,7 @@ REJECT_DISTORTED = Workflow(
     nodes=(
         Node(
             "subject",
-            TEXT_BLOCK,
+            HostNode.TEXT_BLOCK,
             {"value": "A violinist playing on a city rooftop at sunset, both hands and the bow clearly visible"},
             title=SHARED_TEXTS["subject"],
         ),
@@ -287,7 +278,7 @@ REJECT_DISTORTED = Workflow(
             },
         ),
         Node("check", CHECK_DRAFT.name),
-        Node("summary", PREVIEW, title=SHARED_TEXTS["summary"]),
+        Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
     ),
     links=(
         ("subject.STRING", "draft.prompt"),
