@@ -256,7 +256,7 @@ class ChatAsk(PaidNode):
                 io.Custom(DOCUMENTS_TYPE).Input(
                     "documents",
                     optional=True,
-                    tooltip="Connect Chat: Attach Document. OpenRouter reads PDFs for models without file input.",
+                    tooltip="Connect Chat: Attach Document. OpenRouter converts PDFs for models that read only text.",
                 ),
                 io.Combo.Input(
                     "pdf_engine",

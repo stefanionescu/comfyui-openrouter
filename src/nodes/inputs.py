@@ -92,7 +92,7 @@ def define_request_inputs(*, has_seed: bool) -> list[io.Input]:
     variation = io.Int.Input(
         VARIATION_INPUT,
         display_name="run number",
-        tooltip="Change this number to run again with unchanged inputs. This does not change the seed.",
+        tooltip="Change this number to send the same request again. The seed stays as it is.",
         default=DEFAULT_VARIATION,
         min=MIN_VARIATION,
         max=MAX_VARIATION,

@@ -106,7 +106,7 @@ class RequestOptions(io.ComfyNode):
             "zdr",
             display_name="zero data retention",
             default=False,
-            tooltip="Use only providers that keep no data. Video cannot use it.",
+            tooltip="Use only providers with zero data retention.",
         )
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",

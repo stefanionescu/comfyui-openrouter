@@ -40,7 +40,7 @@ if TYPE_CHECKING:
 def _define_media(frame_types: tuple[str, ...], reference_types: frozenset[str]) -> list[io.Input]:
     """Offer the frames and the reference sockets the model accepts."""
     media: list[io.Input] = [
-        io.Image.Input(frame, display_name=frame.replace("_", " "), optional=True, tooltip="One image, not a batch.")
+        io.Image.Input(frame, display_name=frame.replace("_", " "), optional=True, tooltip="One image.")
         for frame in ("first_frame", "last_frame")
         if frame in frame_types
     ]
