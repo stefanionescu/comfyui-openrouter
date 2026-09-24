@@ -7,14 +7,16 @@ from ..types import Json
 from pathlib import Path
 from dataclasses import asdict, fields
 from ..types.credentials import Credential
+from ..config.settings import SETTING_RANGES
 from ..storage.files import save_file, read_file
+from ..config.security import GENERATION_TOKEN_BYTES
 from ..types.settings import Settings, Configuration
 from .schema import DEFAULT_SETTINGS, parse_settings
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.security import MAX_CREDENTIAL_CHARACTERS
 from ..types.parsing import parse_json, validate_fields
-from ..config.settings import SETTING_RANGES, MAX_SETTINGS_FILE_BYTES
 from ..storage.credentials import parse_credential, read_credential, read_credential_source
+from ..config.storage import SETTINGS_FILE_NAME, CREDENTIAL_FILE_NAME, MAX_SETTINGS_FILE_BYTES
 from ..config.messages.settings import SETTINGS_CHANGED, SETTING_READ_ONLY, SETTINGS_UNREADABLE
 
 EDITABLE_SETTINGS = frozenset(item.name for item in fields(Settings))
@@ -37,9 +39,9 @@ class ConfigurationStore:
         no new token.
         """
         previous = self._previous
-        generation = previous.generation if previous is not None else secrets.token_hex(16)
+        generation = previous.generation if previous is not None else secrets.token_hex(GENERATION_TOKEN_BYTES)
         if previous is not None and previous.credential != credential:
-            generation = secrets.token_hex(16)
+            generation = secrets.token_hex(GENERATION_TOKEN_BYTES)
         self._previous = Configuration(settings, credential, generation)
         return self._previous
 
@@ -82,14 +84,14 @@ class ConfigurationStore:
             if revision != current.revision:
                 raise OpenRouterError(ErrorCode.CONFLICT, SETTINGS_CHANGED)
             updated = parse_settings(asdict(current) | changes)
-            save_file(self.directory / "settings.json", (json.dumps(asdict(updated), indent=2) + "\n").encode())
+            save_file(self.directory / SETTINGS_FILE_NAME, (json.dumps(asdict(updated), indent=2) + "\n").encode())
         return self.read_status()
 
     def save_credential(self, value: str) -> dict[str, Json]:
         """Save a validated secret and return only the effective source."""
         credential = parse_credential(value)
         with self.lock:
-            save_file(self.directory / "credential", credential.reveal().encode("utf-8"))
+            save_file(self.directory / CREDENTIAL_FILE_NAME, credential.reveal().encode("utf-8"))
             previous = self._previous
             # A key saved again unchanged keeps the cache, so it causes no second billed request.
             if (
@@ -103,7 +105,7 @@ class ConfigurationStore:
     def delete_credential(self) -> dict[str, Json]:
         """Remove only the saved key; the server environment takes precedence."""
         with self.lock:
-            (self.directory / "credential").unlink(missing_ok=True)
+            (self.directory / CREDENTIAL_FILE_NAME).unlink(missing_ok=True)
             if read_credential_source(self.directory) != "environment":
                 self._previous = None
         return self.read_status()
@@ -111,7 +113,7 @@ class ConfigurationStore:
 
 def read_settings(directory: Path) -> Settings:
     """Read settings without creating files or directories."""
-    path = directory / "settings.json"
+    path = directory / SETTINGS_FILE_NAME
     if not path.exists():
         return DEFAULT_SETTINGS
     return parse_settings(validate_fields(parse_json(read_file(path, max_bytes=MAX_SETTINGS_FILE_BYTES).decode())))

@@ -15,6 +15,7 @@ from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ..inputs import read_sockets, build_request_inputs
 from ...openrouter.videos.operation import VideoOperation
+from ...config.media import MP4_URL_PREFIX, WAV_URL_PREFIX
 from ...config.generation.models import DEFAULT_VIDEO_MODEL
 from ...comfy.media import encode_audio, encode_video, encode_images
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
@@ -22,8 +23,11 @@ from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTI
 from ...config.generation.videos import (
     RESOLUTIONS,
     MAX_DURATION,
+    UPSCALE_STEP,
     ASPECT_RATIOS,
     AUDIO_CHOICES,
+    MAX_CREATIVITY,
+    CREATIVITY_STEP,
     MAX_UPSCALE_FACTOR,
     MAX_REFERENCE_AUDIO,
     MAX_REFERENCE_IMAGES,
@@ -76,7 +80,7 @@ CONTROLS = (
         default=0.0,
         min=0.0,
         max=MAX_UPSCALE_FACTOR,
-        step=0.1,
+        step=UPSCALE_STEP,
         advanced=True,
         tooltip="How much an upscaling model enlarges the video; 0 sends nothing.",
     ),
@@ -84,8 +88,8 @@ CONTROLS = (
         "creativity",
         default=0.0,
         min=0.0,
-        max=1.0,
-        step=0.05,
+        max=MAX_CREATIVITY,
+        step=CREATIVITY_STEP,
         advanced=True,
         tooltip="How freely an upscaling model adds detail; 0 sends nothing.",
     ),
@@ -112,9 +116,9 @@ def _encode_references(sockets: Mapping[str, Mapping[str, object] | None]) -> tu
             if isinstance(value, torch.Tensor):
                 references += [(kind, url) for url in encode_images(value)]
             elif isinstance(value, Input.Video):
-                references.append((kind, f"data:video/mp4;base64,{encode_video(value)}"))
+                references.append((kind, MP4_URL_PREFIX + encode_video(value)))
             else:
-                references.append((kind, f"data:audio/wav;base64,{encode_audio(cast('Input.Audio', value))}"))
+                references.append((kind, WAV_URL_PREFIX + encode_audio(cast("Input.Audio", value))))
     return tuple(references)
 
 

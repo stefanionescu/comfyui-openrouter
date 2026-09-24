@@ -14,7 +14,16 @@ from ..config.generation.inputs import MODEL_DEFAULT
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.namespace import NODE_PREFIX, SHARED_MENU, OPTIONS_TYPE
 from ..config.messages.inputs import OPTIONS_JSON, OPTIONS_SIZE, PROVIDER_SLUG
-from ..config.openrouter import SORT_CHOICES, MAX_PROVIDERS, YES_NO_CHOICES, MAX_OPTION_BYTES, COLLECTION_CHOICES
+from ..config.openrouter import (
+    MAX_PRICE,
+    PRICE_STEP,
+    SORT_CHOICES,
+    MAX_PROVIDERS,
+    YES_NO_CHOICES,
+    PRICE_PRECISION,
+    MAX_OPTION_BYTES,
+    COLLECTION_CHOICES,
+)
 
 if TYPE_CHECKING:
     from ..types import Json
@@ -91,8 +100,8 @@ class RequestOptions(io.ComfyNode):
                 display_name=f"max {kind} price",
                 default=0.0,
                 min=0.0,
-                max=1000.0,
-                step=0.01,
+                max=MAX_PRICE,
+                step=PRICE_STEP,
                 advanced=True,
                 tooltip=f"Skip providers that charge more than this, in USD per 1M {kind} tokens; 0 sets no cap.",
             )
@@ -149,7 +158,7 @@ class RequestOptions(io.ComfyNode):
             zdr=True if zdr else None,
             max_price=MappingProxyType(
                 {
-                    line: format(Decimal(str(price)).quantize(Decimal("0.000001")).normalize(), "f")
+                    line: format(Decimal(str(price)).quantize(Decimal(PRICE_PRECISION)).normalize(), "f")
                     for line, price in prices.items()
                     if price > 0
                 }

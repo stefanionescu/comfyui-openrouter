@@ -3,7 +3,7 @@
 import folder_paths
 from pathlib import Path
 from ..types.chat import Document
-from ..config.openrouter import BYTES_PER_MEBIBYTE
+from ..config.units import BYTES_PER_MEBIBYTE
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.generation.chat import DOCUMENT_TYPES, PDF_MEDIA_TYPE
 from comfy_api_nodes.util.conversions import text_filepath_to_data_uri

@@ -16,6 +16,7 @@ from ..config.messages.inputs import LANGUAGE_CODE
 from ..types.errors import ErrorCode, OpenRouterError
 from ..types.audio import Segment, TranscriptionResult
 from ..config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
+from ..config.units import MINUTES_PER_HOUR, SECONDS_PER_MINUTE, MILLISECONDS_PER_SECOND
 
 if TYPE_CHECKING:
     from ..types import Json
@@ -24,6 +25,7 @@ if TYPE_CHECKING:
     from ..types.settings import Settings, Configuration
 
 LANGUAGE = re.compile(LANGUAGE_PATTERN)
+MILLISECONDS_PER_MINUTE = SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND
 GRANULARITIES = {"segments": ["segment"], "words and segments": ["segment", "word"]}
 
 
@@ -33,9 +35,10 @@ def format_subtitles(segments: Sequence[Segment]) -> str:
     for number, segment in enumerate(segments, 1):
         times: list[str] = []
         for seconds in (segment.start, segment.end):
-            minutes, milliseconds = divmod(round(seconds * 1000), 60_000)
-            hours, minutes = divmod(minutes, 60)
-            times.append(f"{hours:02}:{minutes:02}:{milliseconds // 1000:02},{milliseconds % 1000:03}")
+            minutes, milliseconds = divmod(round(seconds * MILLISECONDS_PER_SECOND), MILLISECONDS_PER_MINUTE)
+            hours, minutes = divmod(minutes, MINUTES_PER_HOUR)
+            whole_seconds, rest = divmod(milliseconds, MILLISECONDS_PER_SECOND)
+            times.append(f"{hours:02}:{minutes:02}:{whole_seconds:02},{rest:03}")
         text = f"[{segment.speaker}] {segment.text}" if segment.speaker else segment.text
         blocks.append(f"{number}\n{times[0]} --> {times[1]}\n{text}\n")
     return "\n".join(blocks)

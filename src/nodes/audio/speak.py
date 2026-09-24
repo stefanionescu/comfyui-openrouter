@@ -8,6 +8,7 @@ from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.audio import SpeechRequest
 from ..inputs import build_request_inputs
+from ...config.media import WAV_URL_PREFIX
 from ...openrouter.speech import SpeechOperation
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.models import DEFAULT_SPEECH_MODEL
@@ -17,6 +18,7 @@ from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.audio import (
     MAX_SPEED,
     MIN_SPEED,
+    SPEED_STEP,
     DEFAULT_SPEED,
     SPEECH_FORMATS,
     DEFAULT_SPEECH_VOICE,
@@ -67,7 +69,7 @@ class AudioSpeak(PaidNode):
                     default=DEFAULT_SPEED,
                     min=MIN_SPEED,
                     max=MAX_SPEED,
-                    step=0.05,
+                    step=SPEED_STEP,
                     advanced=True,
                     tooltip="Some providers ignore the speed.",
                 ),
@@ -109,7 +111,7 @@ class AudioSpeak(PaidNode):
             sample = None
             if voice_sample is not None:
                 clip = voice_sample
-                sample = "data:audio/wav;base64," + await wait_for_thread(lambda: encode_audio(clip))
+                sample = WAV_URL_PREFIX + await wait_for_thread(lambda: encode_audio(clip))
             request = SpeechRequest(
                 model_id=model.strip(),
                 text=text,

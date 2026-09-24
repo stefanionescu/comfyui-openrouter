@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from comfy_api.latest import ComfyAPI
 from ..config.messages.run import REQUEST_TIMEOUT
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.openrouter import CANCELLATION_POLL_SECONDS
+from ..config.openrouter import PROGRESS_STEPS, CANCELLATION_POLL_SECONDS
 from comfy.model_management import InterruptProcessingException, throw_exception_if_processing_interrupted
 
 if TYPE_CHECKING:
@@ -76,16 +76,16 @@ async def send_request[Result](
     Building the outputs decodes media, which blocks, so it runs in a worker thread.
     """
     progress = ComfyAPI().execution
-    await progress.set_progress(0, 3)
+    await progress.set_progress(0, PROGRESS_STEPS)
     configuration = await asyncio.to_thread(get_runtime().configuration.read_snapshot)
     operation.validate(configuration.settings)
-    await progress.set_progress(1, 3)
+    await progress.set_progress(1, PROGRESS_STEPS)
     try:
         async with _read_request_limit(configuration.settings.parallel_requests):
             result = await wait_for_task(asyncio.create_task(operation.send(configuration)))
-        await progress.set_progress(2, 3)
+        await progress.set_progress(2, PROGRESS_STEPS)
         outputs = await wait_for_thread(lambda: build_outputs(result))
-        await progress.set_progress(3, 3)
+        await progress.set_progress(PROGRESS_STEPS, PROGRESS_STEPS)
     except OpenRouterError as error:
         if error.code is ErrorCode.INTERRUPTED:
             raise InterruptProcessingException from None

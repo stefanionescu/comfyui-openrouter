@@ -7,8 +7,8 @@ from typing import override, TYPE_CHECKING
 from ...config.messages.inputs import QUESTION_UNKNOWN
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.decisions import YesNoAnswer, ChoiceAnswer
-from ...config.generation.decisions import DEFAULT_THRESHOLD
 from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU
+from ...config.generation.decisions import THRESHOLD_STEP, DEFAULT_THRESHOLD
 
 if TYPE_CHECKING:
     from ...types.decisions import Answer, AnswerSet
@@ -51,7 +51,7 @@ class DecisionReadAnswer(io.ComfyNode):
                     default=DEFAULT_THRESHOLD,
                     min=0.0,
                     max=1.0,
-                    step=0.01,
+                    step=THRESHOLD_STEP,
                     tooltip="The probability or confidence at which is_yes becomes true.",
                 ),
             ],

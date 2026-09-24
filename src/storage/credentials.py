@@ -6,6 +6,7 @@ from .files import read_file
 from ..types.credentials import Credential
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.security import MAX_CREDENTIAL_CHARACTERS
+from ..config.storage import KEY_VARIABLE, CREDENTIAL_FILE_NAME
 from ..config.messages.settings import KEY_EMPTY, KEY_REQUIRED, KEY_UNREADABLE, KEY_WHITESPACE
 
 
@@ -20,9 +21,9 @@ def parse_credential(value: str) -> Credential:
 
 def read_credential(directory: Path) -> Credential:
     """Prefer the server environment over the private saved key."""
-    if "OPENROUTER_API_KEY" in os.environ:
-        return parse_credential(os.environ["OPENROUTER_API_KEY"])
-    path = directory / "credential"
+    if KEY_VARIABLE in os.environ:
+        return parse_credential(os.environ[KEY_VARIABLE])
+    path = directory / CREDENTIAL_FILE_NAME
     if path.exists():
         try:
             return parse_credential(read_file(path, max_bytes=MAX_CREDENTIAL_CHARACTERS).decode("utf-8"))
@@ -33,9 +34,9 @@ def read_credential(directory: Path) -> Credential:
 
 def read_credential_source(directory: Path) -> str:
     """Report presence and source without reading or returning the secret."""
-    if "OPENROUTER_API_KEY" in os.environ:
+    if KEY_VARIABLE in os.environ:
         return "environment"
-    return "saved" if (directory / "credential").is_file() else "missing"
+    return "saved" if (directory / CREDENTIAL_FILE_NAME).is_file() else "missing"
 
 
 __all__ = ["parse_credential", "read_credential", "read_credential_source"]

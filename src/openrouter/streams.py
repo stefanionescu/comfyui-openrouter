@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from http import HTTPStatus
 from typing import TYPE_CHECKING
 from .failures import read_failure
 from ..types.parsing import parse_json
+from ..config.units import BYTES_PER_MEBIBYTE
+from ..config.openrouter import REPLY_CHUNK_BYTES
 from ..config.messages.media import DOWNLOAD_LIMIT
 from ..config.messages.run import REPLY_UNREADABLE
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.openrouter import REPLY_CHUNK_BYTES, BYTES_PER_MEBIBYTE
 
 if TYPE_CHECKING:
     import aiohttp
@@ -49,7 +51,7 @@ async def read_events(response: aiohttp.ClientResponse, max_bytes: int) -> Async
         except OpenRouterError:
             raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if isinstance(event, dict) and "error" in event:
-            raise read_failure(502, payload.encode())
+            raise read_failure(HTTPStatus.BAD_GATEWAY, payload.encode())
         yield event
 
 

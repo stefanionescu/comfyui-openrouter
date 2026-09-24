@@ -16,7 +16,11 @@ from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.generation.models import DEFAULT_TRANSCRIPTION_MODEL
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...openrouter.transcription import TranscriptionOperation, format_subtitles
-from ...config.generation.audio import TIMESTAMP_CHOICES, MAX_TRANSCRIPTION_TEMPERATURE
+from ...config.generation.audio import (
+    TIMESTAMP_CHOICES,
+    MAX_TRANSCRIPTION_TEMPERATURE,
+    TRANSCRIPTION_TEMPERATURE_STEP,
+)
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
@@ -59,7 +63,7 @@ class AudioTranscribe(PaidNode):
                     default=0.0,
                     min=0.0,
                     max=MAX_TRANSCRIPTION_TEMPERATURE,
-                    step=0.05,
+                    step=TRANSCRIPTION_TEMPERATURE_STEP,
                     advanced=True,
                     tooltip="0 leaves it to the model.",
                 ),

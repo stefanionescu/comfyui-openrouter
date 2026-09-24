@@ -7,6 +7,8 @@ CREDITS_REQUIRED = (
 KEY_REJECTED = "OpenRouter did not accept the API key. Check the key in OpenRouter settings."
 MODEL_REFUSED = "The model refused to answer: {reason}"
 MODEL_UNAVAILABLE = "OpenRouter could not serve this model: {reason}"
+# Stands in for a reason when OpenRouter gives none.
+NO_REASON = "no reason given"
 MODERATION_REFUSED = "OpenRouter blocked this request: {reason}"
 NO_PROVIDER = (
     "No provider is available for this request. Loosen Request Options if one is connected, try again later, or "
@@ -36,6 +38,7 @@ __all__ = [
     "MODEL_UNAVAILABLE",
     "MODERATION_REFUSED",
     "NO_PROVIDER",
+    "NO_REASON",
     "OPENROUTER_UNREACHABLE",
     "PAYLOAD_TOO_LARGE",
     "PROVIDER_FAILED",

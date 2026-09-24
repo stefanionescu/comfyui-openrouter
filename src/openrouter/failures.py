@@ -9,6 +9,7 @@ from ..config.openrouter import MAX_REASON_CHARACTERS
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.patterns import KEY_PATTERN, URL_PATTERN
 from ..config.messages.run import (
+    NO_REASON,
     NO_PROVIDER,
     KEY_REJECTED,
     RATE_LIMITED,
@@ -25,7 +26,6 @@ from ..config.messages.run import (
 
 KEY = re.compile(KEY_PATTERN)
 URL = re.compile(URL_PATTERN)
-NO_REASON = "no reason given"
 # Statuses whose reason tells the person what to change, such as the durations a video model accepts.
 EXPLAINED_FAILURES: dict[int, tuple[ErrorCode, str]] = {
     400: (ErrorCode.INVALID_INPUT, REQUEST_REJECTED),

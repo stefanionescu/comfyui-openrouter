@@ -13,10 +13,11 @@ from datetime import UTC, datetime
 from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ...config.patterns import JOB_ID_PATTERN
+from ...config.units import SECONDS_PER_MINUTE
 from ...config.messages.videos import JOB_UNKNOWN
 from ...storage.files import save_file, read_file
 from ...types.errors import ErrorCode, OpenRouterError
-from ...config.generation.videos import MAX_LISTED_JOBS, SECONDS_PER_MINUTE, MAX_JOB_FILE_BYTES
+from ...config.storage import JOB_FILE_SUFFIX, MAX_LISTED_JOBS, MAX_JOB_FILE_BYTES
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -37,7 +38,7 @@ class JobStore:
         if not self.directory.is_dir():
             return []
         jobs: list[VideoJob] = []
-        for path in sorted(self.directory.glob("*.json")):
+        for path in sorted(self.directory.glob(f"*{JOB_FILE_SUFFIX}")):
             try:
                 jobs.append(VideoJob.model_validate_json(read_file(path, max_bytes=MAX_JOB_FILE_BYTES)))
             except (OSError, ValidationError, OpenRouterError):
@@ -46,13 +47,13 @@ class JobStore:
 
     def save(self, job: VideoJob) -> None:
         """Write one record atomically, named by its job ID or its uncertain request hash."""
-        path = self.directory / f"{job.name}.json"
+        path = self.directory / f"{job.name}{JOB_FILE_SUFFIX}"
         with self._lock:
             save_file(path, (job.model_dump_json(indent=2) + "\n").encode())
 
     def delete(self, name: str) -> None:
         """Delete one record; a record already gone needs no removal."""
-        path = self.directory / f"{name}.json"
+        path = self.directory / f"{name}{JOB_FILE_SUFFIX}"
         with self._lock:
             # reason: Record names are validated job IDs or request hashes inside the private jobs folder.
             # bearer:disable python_lang_path_traversal
@@ -73,7 +74,7 @@ class JobStore:
                 age = (now - datetime.fromisoformat(job.submitted_at)).total_seconds()
                 if age < hold_minutes * SECONDS_PER_MINUTE:
                     return job
-                (self.directory / f"{job.name}.json").unlink(missing_ok=True)
+                (self.directory / f"{job.name}{JOB_FILE_SUFFIX}").unlink(missing_ok=True)
         return None
 
     def list_accepted(self) -> list[VideoJob]:

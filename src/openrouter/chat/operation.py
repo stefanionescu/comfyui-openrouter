@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+from http import HTTPStatus
 from .content import build_body
 from typing import TYPE_CHECKING
 from .audio import send_audio_chat
@@ -74,7 +75,7 @@ def _read_message(document: Json) -> ChatMessage:
         raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
     choice = reply.choices[0]
     if choice.error is not None:
-        status = choice.error.code if isinstance(choice.error.code, int) else 502
+        status = choice.error.code if isinstance(choice.error.code, int) else HTTPStatus.BAD_GATEWAY
         raise read_failure(status, ErrorReply(error=choice.error).model_dump_json().encode())
     message = choice.message or ChatMessage()
     if message.refusal:

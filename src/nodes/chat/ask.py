@@ -9,6 +9,7 @@ from comfy_api.latest import io
 from comfy_api.latest import Input
 from typing import cast, TYPE_CHECKING
 from ...types.parsing import parse_json
+from ...config.media import MP4_URL_PREFIX
 from comfy_execution.graph import ExecutionBlocker
 from ...openrouter.chat.operation import ChatOperation
 from ...types.errors import ErrorCode, OpenRouterError
@@ -29,7 +30,7 @@ from ...config.generation.chat import (
     DEFAULT_VOICE,
     AUDIO_CHANNELS,
     MAX_TEMPERATURE,
-    STEP_TEMPERATURE,
+    TEMPERATURE_STEP,
     MAX_AUDIO_SOCKETS,
     MAX_IMAGE_SOCKETS,
     MAX_OUTPUT_TOKENS,
@@ -87,7 +88,7 @@ CONTROLS = (
         default=DEFAULT_TEMPERATURE,
         min=0,
         max=MAX_TEMPERATURE,
-        step=STEP_TEMPERATURE,
+        step=TEMPERATURE_STEP,
         advanced=True,
         tooltip="Higher values vary the answer more. Sent only to models that take a temperature.",
     ),
@@ -139,7 +140,7 @@ def _encode_media(
     clips = cast("list[Input.Audio]", read_sockets(sockets.get("audio")))
     return (
         tuple(url for image in images for url in encode_images(image)),
-        tuple(f"data:video/mp4;base64,{encode_video(video)}" for video in videos),
+        tuple(MP4_URL_PREFIX + encode_video(video) for video in videos),
         tuple(encode_audio(clip) for clip in clips),
     )
 

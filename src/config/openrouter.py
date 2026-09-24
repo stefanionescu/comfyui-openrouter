@@ -23,7 +23,6 @@ ATTRIBUTION_CATEGORIES = "image-gen,video-gen"
 
 REPLY_CHUNK_BYTES = 65_536
 MAX_ERROR_BYTES = 65_536
-BYTES_PER_MEBIBYTE = 1_048_576
 
 # Only requests that bill nothing are retried: model checks, video status, and video content.
 GET_ATTEMPTS = 3
@@ -33,6 +32,8 @@ RETRY_STATUSES = (408, 429, 500, 502, 503, 504, 524, 529)
 
 MAX_REASON_CHARACTERS = 300
 CANCELLATION_POLL_SECONDS = 0.1
+# A paid node's progress bar: validated, sent, answered, and outputs built.
+PROGRESS_STEPS = 3
 
 # The provider fields each endpoint accepts.
 ROUTING_FIELDS = {
@@ -82,13 +83,16 @@ MODEL_OUTPUTS = {
     "decisions": ("decisions",),
 }
 MAX_PROVIDERS = 32
+# The price caps of Request Options, in USD per million tokens, and the precision OpenRouter accepts.
+MAX_PRICE = 1000.0
+PRICE_STEP = 0.01
+PRICE_PRECISION = "0.000001"
 MAX_OPTION_BYTES = 65_536
 
 __all__ = [
     "ATTRIBUTION_CATEGORIES",
     "ATTRIBUTION_TITLE",
     "ATTRIBUTION_URL",
-    "BYTES_PER_MEBIBYTE",
     "CANCELLATION_POLL_SECONDS",
     "CHAT_URL",
     "COLLECTION_CHOICES",
@@ -99,12 +103,16 @@ __all__ = [
     "IMAGES_URL",
     "MAX_ERROR_BYTES",
     "MAX_OPTION_BYTES",
+    "MAX_PRICE",
     "MAX_PROVIDERS",
     "MAX_REASON_CHARACTERS",
     "MAX_RETRY_SECONDS",
     "MIN_RETRY_SECONDS",
     "MODEL_OUTPUTS",
     "MODEL_URL",
+    "PRICE_PRECISION",
+    "PRICE_STEP",
+    "PROGRESS_STEPS",
     "REPLY_CHUNK_BYTES",
     "RERANK_URL",
     "RESERVED_FIELDS",

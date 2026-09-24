@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import math
 from typing import Protocol, TYPE_CHECKING
+from ..config.units import BYTES_PER_MEBIBYTE
 from ..config.messages.media import UPLOAD_LIMIT
-from ..config.openrouter import BYTES_PER_MEBIBYTE
 from ..types.errors import ErrorCode, OpenRouterError
 
 if TYPE_CHECKING:

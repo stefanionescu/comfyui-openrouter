@@ -1,10 +1,10 @@
 """Create the shared stores when ComfyUI loads the extension."""
 
+from ..config.storage import JOB_FOLDER_NAME
 from ..openrouter.videos.jobs import JobStore
 from ..settings.store import ConfigurationStore
 from ..storage.files import choose_state_directory
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.generation.videos import JOB_FOLDER_NAME
 from ..config.messages.settings import RUNTIME_NOT_READY
 
 

@@ -15,6 +15,7 @@ from .failures import read_failure
 from ..types.audio import AudioReply
 from ..types.parsing import parse_json
 from contextlib import asynccontextmanager
+from ..config.units import BYTES_PER_MEBIBYTE
 from ..config.messages.media import DOWNLOAD_LIMIT
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.videos import VIDEO_URL_UNEXPECTED
@@ -29,7 +30,6 @@ from ..config.openrouter import (
     MAX_RETRY_SECONDS,
     MIN_RETRY_SECONDS,
     REPLY_CHUNK_BYTES,
-    BYTES_PER_MEBIBYTE,
     VIDEO_CONTENT_PREFIX,
     ATTRIBUTION_CATEGORIES,
 )

@@ -3,6 +3,7 @@
 import asyncio
 from aiohttp import web
 from ..types import Json
+from ..config.security import JSON_MEDIA_TYPE
 from ..types.parsing import parse_json, validate_fields
 from ..config.messages.requests import JSON_SIZE, JSON_TYPE, JSON_SYNTAX, REQUEST_TIMEOUT
 from ..config.settings import MAX_SETTINGS_BYTES, REQUEST_CHUNK_BYTES, SETTINGS_TIMEOUT_SECONDS
@@ -10,7 +11,7 @@ from ..config.settings import MAX_SETTINGS_BYTES, REQUEST_CHUNK_BYTES, SETTINGS_
 
 async def read_body(request: web.Request, *, max_bytes: int = MAX_SETTINGS_BYTES) -> dict[str, Json]:
     """Read a size-limited JSON body, including without Content-Length."""
-    if request.content_type != "application/json":
+    if request.content_type != JSON_MEDIA_TYPE:
         raise web.HTTPUnsupportedMediaType(text=JSON_TYPE)
     if request.content_length is not None and request.content_length > max_bytes:
         raise web.HTTPRequestEntityTooLarge(max_size=max_bytes, actual_size=request.content_length, text=JSON_SIZE)

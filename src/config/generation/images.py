@@ -2,6 +2,7 @@
 
 MAX_REFERENCE_SOCKETS = 16
 DEFAULT_COMPRESSION = 90
+MAX_COMPRESSION = 100
 COMPRESSED_FORMATS = ("jpeg", "webp")
 MAX_IMAGES = 10
 # The image fields in the order the node shows them, with every value OpenRouter's image models take.
@@ -44,6 +45,7 @@ __all__ = [
     "DEFAULT_COMPRESSION",
     "FIELD_LABELS",
     "FIELD_VALUES",
+    "MAX_COMPRESSION",
     "MAX_IMAGES",
     "MAX_REFERENCE_SOCKETS",
 ]

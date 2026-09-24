@@ -14,6 +14,7 @@ from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ...comfy.execution import send_request, wait_for_task
 from ...openrouter.videos.operation import VideoDownloadOperation
+from ...config.generation.videos import JOB_LABEL_SEPARATOR, JOB_TIME_CHARACTERS
 
 JOB_ID = re.compile(JOB_ID_PATTERN)
 
@@ -29,7 +30,9 @@ class VideoDownload(io.ComfyNode):
     def define_schema(cls) -> io.Schema:
         """List the recorded jobs when ComfyUI builds the node definitions; the R key reads them again."""
         labels = [
-            f"{job.job_id} · {job.model_id} · {job.submitted_at[:16].replace('T', ' ')}"
+            JOB_LABEL_SEPARATOR.join(
+                (job.job_id or "", job.model_id, job.submitted_at[:JOB_TIME_CHARACTERS].replace("T", " "))
+            )
             for job in get_runtime().jobs.list_accepted()
         ]
         return io.Schema(
