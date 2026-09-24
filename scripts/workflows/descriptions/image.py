@@ -24,7 +24,6 @@ DECIDE = f"{NODE_PREFIX}DecisionAsk"
 QUESTION = f"{NODE_PREFIX}DecisionAddQuestion"
 READ = f"{NODE_PREFIX}DecisionReadAnswer"
 READER = "openai/gpt-6-luna"
-WRITER = "openai/gpt-6-sol"
 GPT_IMAGE = "openai/gpt-image-2.5-flare"
 
 
