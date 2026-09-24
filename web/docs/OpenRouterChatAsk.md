@@ -8,10 +8,10 @@ model reads them. Returns text, and images or speech from models that make them.
 | Input              | What it takes                                                                                                                                                   |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `model`            | Any chat model ID from openrouter.ai/models; the default is `google/gemini-3.5-flash`. A suffix such as `:nitro` picks a variant.                               |
-| `images`           | Images, one per socket, up to 16. Every image in a batch is sent.                                                                                               |
-| `videos`           | Videos, one per socket, up to 4. Each is sent as MP4.                                                                                                           |
-| `audio`            | Audio clips, one per socket, up to 4. Each is sent as WAV.                                                                                                      |
-| `reasoning_effort` | How much a reasoning model thinks before answering.                                                                                                             |
+| `images`           | Images: one, a batch, or a list. Each goes in the request at its own size.                                                                                      |
+| `videos`           | Videos: one or a list. Each is sent as MP4.                                                                                                                     |
+| `audio`            | Audio clips: one, a batch, or a list. Each is sent as WAV.                                                                                                      |
+| `reasoning_effort` | How much a reasoning model thinks before answering. Sent only to models that reason.                                                                            |
 | `max_tokens`       | The longest answer in tokens; 0 leaves it to the model.                                                                                                         |
 | `temperature`      | 0 to 2. Higher values vary the answer more. Sent only to models that take a temperature.                                                                        |
 | `outputs`          | **text**, **image and text**, or **audio and text**. Images and audio need a model that makes them.                                                             |
@@ -20,7 +20,7 @@ model reads them. Returns text, and images or speech from models that make them.
 | `pdf_engine`       | How OpenRouter reads PDFs: `native`, `cloudflare-ai`, or `mistral-ocr`. **model default** uses the model's own file reading, or `mistral-ocr` when it has none. |
 | `seed`             | Varies the output, for models that take a seed.                                                                                                                 |
 | `run_number`       | Change it to send the same request again.                                                                                                                       |
-| `answer_schema`    | A JSON schema the answer must follow. Leave it empty for free text.                                                                                             |
+| `answer_schema`    | A JSON schema the answer must follow; only providers that follow it answer. Leave it empty for free text.                                                       |
 | `prompt`           | The question or instruction.                                                                                                                                    |
 | `conversation`     | Earlier turns, from another **Chat: Ask**.                                                                                                                      |
 | `documents`        | Files from **Chat: Attach Document**.                                                                                                                           |
@@ -46,11 +46,17 @@ model reads them. Returns text, and images or speech from models that make them.
 Examples: **chat-01-write-a-product-listing** and
 **chat-02-caption-a-training-set** in **Browse Templates → comfyui-openrouter**.
 
-A list of images, such as from **Load Image (from Folder)**, runs the node once
-per image. To send several images in one request, connect each to its own
-socket.
+Everything connected to **images**, **videos**, and **audio** goes in one
+request: one item, a batch, a list such as **Load Image (from Folder)** makes,
+or several **Load Image** nodes joined by **Create List**. Images keep their own
+sizes.
 
-An answer that stops mid-sentence hit the token limit; raise **max tokens**.
+Before anything is paid, the node refuses media the model does not read,
+outputs it does not make, an answer schema it cannot follow, and max tokens
+above its longest answer.
+
+An answer that stops mid-sentence hit the token limit; raise **max tokens**. An
+empty answer says whether the token limit or a content filter stopped it.
 Cancelling stops the wait. For factual answers, attach the documents the model
 should answer from.
 

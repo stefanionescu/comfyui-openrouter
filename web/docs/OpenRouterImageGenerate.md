@@ -14,13 +14,16 @@ Generates or edits images with any image model on OpenRouter.
 | `output_format`      | `png`, `jpeg`, `webp`, or `svg` for vector models.                                            |
 | `output_compression` | JPEG and WebP quality.                                                                        |
 | `count`              | How many images to make.                                                                      |
-| `references`         | Images to edit or combine, one per socket. Every image in a batch is sent.                    |
-| `seed`               | Varies the output, for models that take a seed.                                               |
+| `references`         | Images to edit or combine: one, a batch, or a list, each at its own size.                     |
+| `seed`               | Varies the output, for models that list a seed.                                               |
 | `run_number`         | Change it to send the same request again.                                                     |
 | `prompt`             | What to draw or change.                                                                       |
 | `options`            | Settings from **Request Options**.                                                            |
 
-**model default** sends nothing, so the model uses its own default.
+**model default** sends nothing, so the model uses its own default. Before
+anything is paid, the node reads the model's entry in OpenRouter's image list
+and refuses a value, count, or number of references the model does not take,
+naming what it does take.
 
 ## Outputs
 
@@ -33,7 +36,8 @@ Generates or edits images with any image model on OpenRouter.
 ## Use
 
 1. Write the prompt and type the model ID.
-2. Connect any reference images.
+2. Connect any reference images. **Create List** joins several **Load Image**
+   nodes.
 3. Connect **images** to **Save Image**, or **svg** to **Save SVG**, and select
    **Run**.
 

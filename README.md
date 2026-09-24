@@ -1,5 +1,10 @@
 # ![comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model](docs/images/banner.svg)
 
+[![ComfyUI 0.34.6 or later](docs/images/badge-comfyui.svg)](#requirements)
+[![Frontend 1.49.6 or later](docs/images/badge-frontend.svg)](#requirements)
+[![Python 3.12 or later](docs/images/badge-python.svg)](#requirements)
+[![MIT license](docs/images/badge-license.svg)](LICENSE.md)
+
 This is a ComfyUI extension that runs any OpenRouter model, with your own API
 key.
 
@@ -163,7 +168,7 @@ Chat, Image, Video, Audio, Search, and Decision, and **Request Options** at the
 top. Eight nodes send a paid request each time they run; the other five prepare
 or read data and are free. ComfyUI's node help opens each node's guide.
 
-![Node map. Chat: Attach Document feeds Chat: Ask. Video: Download collects a job that Video: Generate left running. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Paid nodes have an indigo bar.](docs/images/node-map.svg)
+![Node map. Chat: Attach Document feeds Chat: Ask. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Video: Download collects a job Video: Generate left running, so no link joins them. Paid nodes have an indigo bar.](docs/images/node-map.svg)
 
 | Node                                                                | What it does                                                           | Paid |
 | ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
@@ -191,13 +196,20 @@ Each paid node has a **model** field. Type any model ID from
 `google/gemini-3.5-flash`; the same page lists each model's price. You can add
 a variant suffix, such as `:nitro` for the fastest providers.
 
-![Chat: Ask on the canvas: sockets for images, video, audio, a conversation, documents, and options; then the model field set to google/gemini-3.5-flash, the reasoning effort, max tokens, temperature, outputs, aspect ratio, voice, PDF engine, seed, and run number; and the answer schema, prompt, and system prompt boxes at the bottom.](docs/images/chat-ask-node.png)
+![Chat: Ask on the canvas: sockets for a conversation, documents, images, videos, audio, and options; then the model field set to google/gemini-3.5-flash, the reasoning effort, max tokens, temperature, outputs, aspect ratio, voice, PDF engine, seed, and run number; and the answer schema, prompt, and system prompt boxes at the bottom.](docs/images/chat-ask-node.png)
 
-Before it sends, the node checks the ID with OpenRouter. It stops with an error
-if OpenRouter has no model with that ID, or if the model makes something else,
-such as a video model in **Image: Generate**. The check is free and runs once
-per model each time ComfyUI starts. The [advanced guide](ADVANCED.md#models)
-lists each node's default model.
+Before it sends, the node checks the model with OpenRouter's public listings.
+It stops with an error if OpenRouter has no model with that ID, if the model
+makes something else, such as a video model in **Image: Generate**, or if the
+model does not take what you connected or chose, such as an image on a
+text-only model or a duration the video model does not make. The error names
+what the model does take. The check is free and runs once per model each time
+ComfyUI starts. The [advanced guide](ADVANCED.md#models) lists every check and
+each node's default model.
+
+Each media socket, such as **images**, takes one item, a batch, or a list, and
+everything connected goes in one request, each image at its own size. To send
+several **Load Image** nodes, join them with ComfyUI's **Create List**.
 
 ## How a run works
 

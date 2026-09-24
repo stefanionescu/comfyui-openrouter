@@ -117,19 +117,29 @@ your change again. Invalid values are refused, and the saved settings are kept.
 
 Each paid node has a **model** field that takes any model ID from
 openrouter.ai/models, with an optional variant suffix such as `:nitro`. Before
-it sends, the node reads OpenRouter's public page for that model, without the
-key, and stops with an error when:
+it sends, the node reads OpenRouter's public listings, without the key, and
+stops with an error, before anything is paid, when:
 
-- the field is empty;
-- OpenRouter has no model with that ID;
+- the field is empty, or OpenRouter has no model with that ID;
 - the model makes something the node does not return, such as a video model in
-  **Image: Generate**.
+  **Image: Generate**;
+- connected images, video, or audio are media the model does not read;
+- **Chat: Ask** asks for images or audio the model does not make, an answer
+  schema it cannot follow, or more max tokens than its longest answer;
+- **Audio: Speak** has a voice sample and the model cannot clone voices;
+- **Image: Generate** asks for a value, count, or number of references the
+  model's entry in OpenRouter's image list does not take;
+- **Video: Generate** asks for a duration, resolution, aspect ratio, frame,
+  sound, or upscale setting the model's entry in OpenRouter's video list does
+  not take.
 
-The check runs once per model each time ComfyUI starts. It also tells the node
-whether the model's providers take a seed, and for **Chat: Ask** a temperature;
-the node sends them only then. Every other setting is sent only when you change
-it from **model default** or 0. OpenRouter ignores or refuses a setting the
-model does not take, and a refusal shows its reason.
+The message names what the model does take. Each listing is read once per model
+each time ComfyUI starts; the video list is read once for every model.
+
+The listings also decide what is sent: the seed only to a model that takes one,
+the temperature and reasoning effort only to a chat model that takes them, and
+with an answer schema only providers that follow it answer. Every other setting
+is sent only when you change it from **model default** or 0.
 
 The default model of each node is:
 
@@ -223,6 +233,8 @@ makes something the node does not return; see [models](#models).
 - The prompt is empty or too long, or the conversation is too long.
 - The media are over the upload limit.
 - The answer schema is not a JSON object.
+- A field other than **images**, **videos**, or **audio** receives a list of
+  several values. The same holds for the media nodes below.
 
 **Chat: Attach Document** stops when:
 
@@ -239,7 +251,8 @@ makes something the node does not return; see [models](#models).
 **Video: Generate** stops when:
 
 - There is no prompt and no first frame.
-- Frames and references are both connected, or a frame is a batch.
+- Frames and references are both connected, or a frame receives more than one
+  image.
 - An identical request comes within the video retry delay of an uncertain submission.
 
 **Audio: Speak** stops when the text is empty or too long, or the voice sample
@@ -262,19 +275,21 @@ accept.
 
 Once a request is sent, OpenRouter's answer decides:
 
-| Status   | Meaning                                                          |
-| -------- | ---------------------------------------------------------------- |
-| 400      | OpenRouter refused the request; the message gives the reason.    |
-| 401      | The key is missing or invalid.                                   |
-| 402      | The account or key is out of credit.                             |
-| 403      | OpenRouter blocked the request; the message gives the reason.    |
-| 404      | OpenRouter cannot serve the model; the message gives the reason. |
-| 408, 524 | The provider took too long.                                      |
-| 413      | The request is too large.                                        |
-| 429      | OpenRouter is limiting requests.                                 |
-| 502      | The provider failed. Failed image requests are free.             |
-| 503      | No provider meets the request's routing requirements.            |
-| 529      | The provider is overloaded.                                      |
+| Status    | Meaning                                                                    |
+| --------- | -------------------------------------------------------------------------- |
+| 400       | OpenRouter refused the request; the message gives the reason.              |
+| 401       | The key is missing or invalid.                                             |
+| 402       | The credit does not cover the request; the reason says how much it covers. |
+| 403       | OpenRouter blocked the request; the message gives the reason.              |
+| 404       | OpenRouter cannot serve the model; the message gives the reason.           |
+| 408, 524  | The provider took too long.                                                |
+| 413       | The request is too large.                                                  |
+| 429       | OpenRouter is limiting requests; the reason names the limit.               |
+| 502       | The provider failed; the reason says how. Failed image requests are free.  |
+| 503       | No provider meets the request; the reason names the requirement.           |
+| 529       | The provider is overloaded.                                                |
+| Other 4xx | OpenRouter refused the request; the message gives the reason.              |
+| Other 5xx | OpenRouter failed; the message gives the reason when there is one.         |
 
 ## Update or remove
 
@@ -467,12 +482,17 @@ checks all four.
 
 The README's and this guide's images are in `docs/images/`:
 
-- `banner.svg` and `node-map.svg` are SVG files; edit them as text. They use two
-  palettes: ComfyUI's ink `#211927`, panels `#312C34`, text `#C2BFB9`, and yellow
-  `#F0FF41`, and OpenRouter's indigo `#6366F1`. In the node map, a paid node has
-  an indigo bar and a free one a grey bar, and links are yellow. The banner's
-  tags name the requirements and the license; update them when those change.
-- `workflow-choose-group.png` is the **Choose** group of image-01 at 100% zoom.
+- `banner.svg`, `node-map.svg`, and the four `badge-*.svg` files are SVG files;
+  edit them as text. They use two palettes: ComfyUI's ink `#211927`, panels
+  `#312C34`, edges `#413B45`, text `#C2BFB9`, and yellow `#F0FF41`, and
+  OpenRouter's indigo `#6366F1`.
+- In the node map, a paid node has an indigo bar and a free one a grey bar. An
+  arrow is a solid yellow line from an output to the input it feeds; nodes that
+  share no link have no arrow.
+- The badges under the banner name the ComfyUI, frontend, and Python versions
+  and the license, on ink and grey; update them when those change.
+- `workflow-choose-group.png` is the **Choose** group of image-01 at 100% zoom,
+  with link midpoint markers off.
 - `chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels wide, at 100%
   zoom.
 - `settings-dialog.png` is the **OpenRouter settings** dialog with its advanced
@@ -554,10 +574,11 @@ OpenRouter answered 401. Check the key in **OpenRouter settings**, or in
 `OPENROUTER_API_KEY`, which takes precedence. If the key was revoked, create a
 new one at openrouter.ai.
 
-### Your OpenRouter account or key has no credit left for this request
+### OpenRouter needs more credit for this request
 
-OpenRouter answered 402. Add credit at openrouter.ai/credits, or raise the key's
-credit limit.
+OpenRouter answered 402; the reason says how many tokens the credit covers. Add
+credit at openrouter.ai/credits, raise the key's credit limit, or lower **max
+tokens** so the request fits.
 
 ### OpenRouter refused the request
 
@@ -580,9 +601,9 @@ model.
 OpenRouter answered 404. The model is unavailable now, or the key cannot use
 it. Choose another model.
 
-### No provider is available for this request
+### No provider can take this request
 
-OpenRouter answered 503: no provider meets the request's routing requirements.
+OpenRouter answered 503; the reason names the requirement no provider meets.
 If **Request Options** is connected, loosen it, for example the provider lists,
 **zero data retention**, or the price limits. Otherwise, try again later or
 choose another model.
@@ -593,8 +614,8 @@ OpenRouter answered 529. Try again later, or choose another model.
 
 ### The model's provider failed to answer
 
-OpenRouter answered 502. Run again, or choose another model. A failed image
-request is not billed.
+OpenRouter answered 502, or the reply failed while it streamed; the reason says
+how. Run again, or choose another model. A failed image request is not billed.
 
 ### The model's provider took too long to answer
 
@@ -602,17 +623,23 @@ OpenRouter answered 408 or 524. Try again later, or send a smaller request.
 
 ### OpenRouter is limiting requests
 
-OpenRouter answered 429. Wait a moment, or lower **parallel requests** in
-**OpenRouter settings**.
+OpenRouter answered 429; the reason names the limit, such as a free model's
+daily requests. Wait a moment, or lower **parallel requests** in **OpenRouter
+settings**.
 
 ### The request is too large for OpenRouter
 
 OpenRouter answered 413. Send fewer or smaller files.
 
+### OpenRouter failed with HTTP
+
+OpenRouter answered with a server error it does not describe further; the
+message gives the reason when there is one. Try again later.
+
 ### OpenRouter returned HTTP
 
-OpenRouter answered with a status the extension does not recognize. Try again
-later.
+OpenRouter answered with a status that is neither a refusal nor a server error.
+Try again later.
 
 ### ComfyUI could not reach OpenRouter
 
@@ -633,6 +660,16 @@ timeout, or send a smaller request.
 
 The model returned no text, images, or audio. Run again, or choose another
 model.
+
+### The model used up max tokens before answering
+
+The answer is empty because the model spent **max tokens**, often on reasoning.
+Raise **max tokens**, or lower **reasoning effort**.
+
+### The provider's content filter stopped the answer
+
+The provider's filter ended the answer before any text. Change the prompt, or
+choose another model.
 
 ### OpenRouter's reply could not be read
 
@@ -713,14 +750,14 @@ an image to **first frame**.
 **Video: Generate** has both frames and references connected. OpenRouter would
 use the frames and ignore the references, so disconnect one kind.
 
-### Connect one image for each frame, not a batch
+### Connect one image to each frame, not a batch or a list
 
 A frame of **Video: Generate** received several images. Connect one image.
 
-### Connect at most this many references
+### Connect one value to this input, not a list
 
-**Video: Generate** has too many references of one kind. The limits are 8
-images, 2 videos, and 2 audio clips.
+A node that takes lists in its media inputs received several values in another
+input, such as a list of prompts. Connect one value.
 
 ### The video was not ready within the maximum video wait
 
@@ -748,8 +785,9 @@ then choose a job.
 
 ### An earlier identical video request may have been accepted
 
-An identical request is refused for a while after an uncertain submission. Wait the minutes
-the message gives, or look for the job at openrouter.ai/activity.
+An identical request is refused for a while after an uncertain submission.
+Wait the minutes the message gives, or look for the job at
+openrouter.ai/activity.
 
 ### The connection closed before OpenRouter confirmed the video request
 
@@ -775,3 +813,56 @@ at openrouter.ai/models; IDs are lowercase, in the form `author/model`.
 
 The model makes something else, such as a video model in **Image: Generate**.
 Choose a model of the node's kind at openrouter.ai/models.
+
+### This model does not read this media
+
+Images, video, or audio are connected that the model does not read, such as an
+image on a text-only embedding model. Disconnect them, or choose a model that
+reads them.
+
+### This model does not make images or audio
+
+**outputs** asks **Chat: Ask** for images or audio the model does not make. Set
+**outputs** to **text**, or choose a model that makes them.
+
+### This model cannot follow an answer schema
+
+No provider of the model lists structured outputs. Clear **answer schema**, or
+choose another model.
+
+### This model answers with at most this many tokens
+
+**max tokens** is above the longest answer any provider of the model gives. Set
+it to that number or less, or to 0.
+
+### This model cannot copy a voice
+
+**Audio: Speak** has a voice sample, and no provider of the model clones voices.
+Disconnect the sample, or choose a model that clones voices.
+
+### This model takes these values
+
+A setting of **Image: Generate** or **Video: Generate** has a value the model's
+listing does not include, such as a duration of 5 on a model that makes 4, 6, or
+8 seconds. The message lists the values it takes; choose one, or the model's
+default.
+
+### This model takes this setting from one number to another
+
+A number is outside the model's range, such as the upscale factor, or the
+number of references on an image model. Choose a number in the range.
+
+### This model takes a count of at most this many
+
+**Image: Generate** asks for more images than the model makes in one request.
+Lower **count**.
+
+### This model does not take this setting
+
+The model's listing does not include the setting, such as **quality** on a
+model with one quality. Leave it unset, or choose a model that takes it.
+
+### This model does not take a first or last frame
+
+**Video: Generate** has a frame connected that the model does not start or end
+on. Disconnect it, or choose a model that takes it.

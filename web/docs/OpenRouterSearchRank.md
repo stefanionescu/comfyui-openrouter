@@ -29,7 +29,8 @@ Ranks lines of text and images by how well they match a query, best first.
 3. Select **Run**.
 
 All documents go in one request, so the four images of one **Image: Generate**
-run are ranked in one request. Examples: **search-01-answer-from-help-articles**
+run are ranked in one request. A model that reads only text refuses images
+before anything is paid. Examples: **search-01-answer-from-help-articles**
 and **search-02-choose-a-hero-image**.
 
 [OpenRouter rerank documentation](https://openrouter.ai/docs/api/api-reference/rerank/submit-a-rerank-request)

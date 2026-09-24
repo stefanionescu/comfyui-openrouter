@@ -29,7 +29,8 @@ first.
 3. Select **Run**.
 
 All items go in one request, up to 256, so the images from one **Image:
-Generate** run are compared together. Example:
+Generate** run are compared together. A model that reads only text refuses
+images before anything is paid. Example:
 **image-02-reject-distorted-images**.
 
 [OpenRouter embeddings documentation](https://openrouter.ai/docs/api_reference/embeddings)

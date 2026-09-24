@@ -14,7 +14,7 @@ a voice from a sample.
 | `sample_transcript` | The words spoken in the sample.                                                                                                           |
 | `run_number`        | Change it to send the same request again.                                                                                                 |
 | `text`              | What to say, up to 100,000 characters.                                                                                                    |
-| `voice_sample`      | A short clip of the voice to copy, up to 15 MiB, for models that clone voices.                                                            |
+| `voice_sample`      | A short clip of the voice to copy, up to 15 MiB. A model that cannot clone voices refuses it.                                             |
 | `options`           | Settings from **Request Options**.                                                                                                        |
 
 ## Outputs
