@@ -39,8 +39,8 @@ teaser video (video-01).
 
 Requests go from your ComfyUI server to OpenRouter, which passes them to the
 model's provider (the company that runs the model) and bills your OpenRouter
-account. Every run of a paid node is billed, so check the model's price in
-**OpenRouter models** before you run it.
+account. Every run of a paid node is billed, so check the model's price at
+[openrouter.ai/models](https://openrouter.ai/models) before you run it.
 
 ## Contents
 
@@ -232,24 +232,22 @@ The decision nodes use OpenRouter's alpha decisions API
 
 ## Models
 
-The extension ships with a copy of OpenRouter's model list. To get the current
-list and prices, open **Extensions → OpenRouter → OpenRouter models** and select
-**Refresh Models**. The node dropdowns update after a refresh. The same dialog
-estimates prices.
+Each paid node has a **model** field. Type any model ID from
+[openrouter.ai/models](https://openrouter.ai/models), such as
+`google/gemini-3.5-flash`; the same page lists each model's price. You can add
+a variant suffix, such as `:nitro` for the fastest providers.
 
-To use a model that is not in the list, choose **other model ID** in a node's
-model dropdown and type its ID. You can add a variant suffix, such as `:nitro`
-for the fastest providers.
-
-Automatic checks tell you when OpenRouter's list has changed; select
-**Refresh Models** to take the new list. See
-[model updates](ADVANCED.md#model-updates).
+Before it sends, the node checks the ID with OpenRouter. It stops with an error
+if OpenRouter has no model with that ID, or if the model makes something else,
+such as a video model in **Image: Generate**. The check is free and runs once
+per model each time ComfyUI starts. The [advanced guide](ADVANCED.md#models)
+lists each node's default model.
 
 ## How a run works
 
 ```text
 Node inputs ──▶ ComfyUI server (the key and settings stay here)
-                  │ checks the inputs against the chosen model
+                  │ checks the inputs and the model ID
                   ▼
                OpenRouter ──▶ the model's provider
                   │
@@ -257,13 +255,13 @@ Node inputs ──▶ ComfyUI server (the key and settings stay here)
 Node outputs ◀── text, images, video, audio, and answers
 ```
 
-1. The node checks its inputs against the chosen model's capabilities and
-   stops with an error on an input the model cannot take. This happens before
-   anything is sent or billed.
+1. The node checks its inputs, such as an empty prompt or media over the upload
+   limit, and stops with an error before anything is sent or billed.
 2. It waits for a free slot. At most **parallel requests** requests run at
    once; the default is 4.
-3. It sends one request from your ComfyUI server to OpenRouter with your key.
-   OpenRouter passes it to the model's provider and bills your account.
+3. It checks the model ID with OpenRouter, which is free, then sends one
+   request from your ComfyUI server to OpenRouter with your key. OpenRouter
+   passes it to the model's provider and bills your account.
 4. For video, the node records the job, checks it until the video is ready, and
    downloads it. The checks and the download are free.
 5. The node turns the reply into ComfyUI outputs. Nodes connected to an empty
@@ -306,8 +304,8 @@ lists every task.
 | No **OpenRouter** entry under **Extensions** | Check that `web/extension.js` exists in the extension's folder, then reload the window.                                                |
 | "Set your OpenRouter API key..."             | Save the key in **OpenRouter settings**, or set `OPENROUTER_API_KEY` and restart ComfyUI.                                              |
 | The settings cannot be changed               | ComfyUI runs in multi-user mode or is open from another computer. Set `OPENROUTER_API_KEY` where ComfyUI starts instead.               |
-| A model is missing from a dropdown           | Select **Refresh Models** in **OpenRouter models**, or choose **other model ID** and type it.                                          |
-| "Value not in list" for a model              | OpenRouter no longer lists the model. Choose another, or type its ID in **other model ID**.                                            |
+| "OpenRouter has no model named..."           | Copy the model ID from its page at openrouter.ai/models. IDs are lowercase, in the form `author/model`.                                |
+| "... does not take image requests"           | The model makes something else. Choose a model of the node's kind at openrouter.ai/models.                                             |
 | A video was not ready in time                | OpenRouter keeps making it. Add **Video: Download**, choose the job, and select **Run**.                                               |
 | `pydantic` cannot be imported                | Install `requirements.txt` with the Python that runs ComfyUI, then restart.                                                            |
 | Node help is missing                         | Reinstall the whole extension, including `web/docs`.                                                                                   |
@@ -315,8 +313,8 @@ lists every task.
 | Nodes or menus appear twice                  | Keep one `comfyui-openrouter` folder in `custom_nodes`; move copies elsewhere.                                                         |
 
 For the messages a node shows, see [troubleshooting](ADVANCED.md#troubleshooting).
-The [advanced guide](ADVANCED.md) also covers keys, settings, limits, prices,
-model updates, caching, and video recovery.
+The [advanced guide](ADVANCED.md) also covers keys, settings, limits, models,
+caching, and video recovery.
 
 ## License
 

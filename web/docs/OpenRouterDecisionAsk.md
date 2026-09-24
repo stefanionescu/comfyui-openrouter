@@ -7,13 +7,13 @@ models**.
 
 ## Inputs
 
-| Input       | What it takes                                                                                    |
-| ----------- | ------------------------------------------------------------------------------------------------ |
-| `situation` | What to decide on, up to 200,000 characters. A JSON object or array is sent as JSON.             |
-| `questions` | The questions, from **Decision: Add Question**.                                                  |
-| `model`     | Any decision model; the default is `typesafe/jev-1.13`. Choose **other model ID** to type an ID. |
-| `variation` | **run number**: change it to send the same request again.                                        |
-| `options`   | Settings from **Request Options**.                                                               |
+| Input       | What it takes                                                                        |
+| ----------- | ------------------------------------------------------------------------------------ |
+| `situation` | What to decide on, up to 200,000 characters. A JSON object or array is sent as JSON. |
+| `questions` | The questions, from **Decision: Add Question**.                                      |
+| `model`     | Any decision model ID from openrouter.ai/models; the default is `typesafe/jev-1.13`. |
+| `variation` | **run number**: change it to send the same request again.                            |
+| `options`   | Settings from **Request Options**.                                                   |
 
 ## Outputs
 
@@ -33,8 +33,7 @@ Examples: **decision-01-verify-then-escalate** and
 **audio-01-triage-a-voicemail**.
 
 The default model, `typesafe/jev-1.13`, is a fixed version. To follow
-TypeSafe's newest release, choose **other model ID** and type
-`~typesafe/jev-latest`. Jev reads up to 32,000 tokens per request. TypeSafe
+TypeSafe's newest release, type `~typesafe/jev-latest` in **model**. Jev reads up to 32,000 tokens per request. TypeSafe
 advises choosing thresholds from your own labeled examples.
 
 This node uses OpenRouter's alpha decisions API (`/api/alpha/decisions`),

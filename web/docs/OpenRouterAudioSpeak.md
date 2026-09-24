@@ -2,21 +2,21 @@
 
 Turns text into speech with any speech model on OpenRouter. Some models can
 copy a voice from a sample. Each run is one paid request, priced per character;
-prices are in **OpenRouter models**.
+prices are at openrouter.ai/models.
 
 ## Inputs
 
-| Input                | What it takes                                                                                                    |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `text`               | What to say, up to 100,000 characters.                                                                           |
-| `model`              | Any speech model; the default is `google/gemini-3.1-flash-tts-preview`. Choose **other model ID** to type an ID. |
-| `model.voice`        | The voice, from the model's voice list; otherwise the model's default voice.                                     |
-| `model.audio_format` | `pcm` or `mp3`. If the model refuses one, choose the other.                                                      |
-| `speed`              | Speaking speed. Some providers ignore it.                                                                        |
-| `voice_sample`       | A short clip of the voice to copy, up to 15 MiB, for models that clone voices.                                   |
-| `sample_transcript`  | The words spoken in the sample.                                                                                  |
-| `variation`          | **run number**: change it to send the same request again.                                                        |
-| `options`            | Settings from **Request Options**.                                                                               |
+| Input               | What it takes                                                                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `text`              | What to say, up to 100,000 characters.                                                                                                    |
+| `model`             | Any speech model ID from openrouter.ai/models; the default is `google/gemini-3.1-flash-tts-preview`.                                      |
+| `voice`             | The voice ID, such as `Kore` for Gemini or `alloy` for OpenAI. The default, `Kore`, suits the default model; leave it empty to send none. |
+| `audio_format`      | `pcm` or `mp3`. If the model refuses one, choose the other; MiniMax models send only `mp3`.                                               |
+| `speed`             | Speaking speed. Some providers ignore it.                                                                                                 |
+| `voice_sample`      | A short clip of the voice to copy, up to 15 MiB, for models that clone voices.                                                            |
+| `sample_transcript` | The words spoken in the sample.                                                                                                           |
+| `variation`         | **run number**: change it to send the same request again.                                                                                 |
+| `options`           | Settings from **Request Options**.                                                                                                        |
 
 ## Outputs
 
@@ -26,7 +26,7 @@ prices are in **OpenRouter models**.
 
 ## Use
 
-1. Write the text, and choose the model and voice.
+1. Write the text, and type the model ID and voice.
 2. Connect **audio** to **Save Audio (Advanced)** or **Preview Audio**.
 3. Select **Run**.
 
