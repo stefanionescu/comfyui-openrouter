@@ -5,7 +5,6 @@ from __future__ import annotations
 from scripts.config import NOTE
 from dataclasses import dataclass
 from typing import cast, TYPE_CHECKING
-from scripts.workflows.page.sizes import read_option_inputs
 from scripts.workflows.page.config import MATCH_TYPE, AUTOGROW_TYPE
 from scripts.workflows.page.widgets import Item, Schema, read_widget_default
 
@@ -65,19 +64,13 @@ def read_slot_type(settings: Mapping[str, object]) -> object:
 
 
 def find_input(node: Node, schema: Schema, socket: str) -> Item:
-    """Find an input by its full name: the node's own, a slot of a growing row, or a dropdown option's socket."""
+    """Find an input by its full name: the node's own, or a slot of a growing row."""
     parent, _, rest = socket.partition(".")
     _, item = find_socket(schema, "inputs", parent, node.kind)
     if not rest:
         return item
     if item["type"] == AUTOGROW_TYPE:
         return {"name": socket, "type": read_slot_type(item), "optional": True}
-    child = rest.split(".", 1)[0]
-    for group in read_option_inputs(item, node.values.get(parent)).values():
-        if child in group:
-            kind, settings = group[child]
-            slot_type = read_slot_type(cast("dict[str, object]", settings)) if kind == AUTOGROW_TYPE else kind
-            return {"name": socket, "type": slot_type, "optional": True}
     message = f"{node.kind} has no input named {socket}."
     raise KeyError(message)
 

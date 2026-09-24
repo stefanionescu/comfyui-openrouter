@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Type the customer's question in **Question**, and your help articles in **Articles**, one per line.\n3. Press **Run**. **Reply** shows the answer, or a note to pass the customer to a person.\n\nThree paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Type the customer's question in **Question**, and your help articles in **Articles**, one per line.\n3. Press **Run**. **Reply** shows the answer, or a note to pass the customer to a person.\n\nThree paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -253,11 +253,18 @@
         },
         {
           "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
+          "type": "STRING",
           "link": null,
           "widget": {
             "name": "model"
           }
+        },
+        {
+          "label": "image_1",
+          "name": "images.image_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
         },
         {
           "name": "top_n",
@@ -837,7 +844,7 @@
             ],
             "size": [
               340,
-              444
+              620
             ],
             "flags": {},
             "order": 101,
@@ -853,18 +860,11 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
-              },
-              {
-                "label": "image_1",
-                "name": "model.images.image_1",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
               },
               {
                 "name": "system",
@@ -885,6 +885,83 @@
                 "type": "CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "label": "image_1",
+                "name": "images.image_1",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "video_1",
+                "name": "videos.video_1",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "audio_1",
+                "name": "audio.audio_1",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning"
+                }
+              },
+              {
+                "name": "max_output_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_output_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
               },
               {
                 "name": "pdf_engine",
@@ -953,9 +1030,13 @@
             "widgets_values": [
               "",
               "openai/gpt-6-luna",
-              "medium",
+              "model default",
               0,
+              1.0,
               "",
+              "text",
+              "model default",
+              "alloy",
               "model default",
               42,
               "fixed",
@@ -1213,7 +1294,7 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"

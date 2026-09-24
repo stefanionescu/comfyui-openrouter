@@ -133,12 +133,12 @@ RANK_IMAGES = Subgraph(
         Node(
             "candidates",
             f"{NODE_PREFIX}ImageGenerate",
-            {"model": "recraft/recraft-v4.1-flash", "model.aspect_ratio": "16:9", "model.count": 4},
+            {"model": "recraft/recraft-v4.1-flash", "aspect_ratio": "16:9", "count": 4},
             is_paid=True,
         ),
         Node("rank", RANK, {"model": "nvidia/llama-nemotron-rerank-vl-1b-v2:free", "top_n": 1}, is_paid=True),
     ),
-    links=(("candidates.images", "rank.model.images.image_1"),),
+    links=(("candidates.images", "rank.images.image_1"),),
     columns=(("candidates",), ("rank",)),
     inputs=(("brief", "candidates.prompt"), ("brief", "rank.query")),
     outputs=(("image", "rank.images"), ("scores", "rank.scores")),
@@ -180,7 +180,7 @@ CHECK_HERO = Subgraph(
     columns=(("describe",), ("situation", "decide", "read"), ("approved", "review", "folder"), ("save",)),
     inputs=(
         ("brief", "situation.values.a"),
-        ("image", "describe.model.images.image_1"),
+        ("image", "describe.images.image_1"),
         ("image", "save.images"),
         ("scores", "situation.values.c"),
         ("questions", "decide.questions"),

@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload the product photo in **Load Image**, and describe the campaign in **Campaign**.\n3. Press **Run**. The edited photo is saved under `campaign/approved` or `campaign/review`.\n\nThree paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload the product photo in **Load Image**, and describe the campaign in **Campaign**.\n3. Press **Run**. The edited photo is saved under `campaign/approved` or `campaign/review`.\n\nThree paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -891,7 +891,7 @@
             ],
             "size": [
               340,
-              444
+              640
             ],
             "flags": {},
             "order": 101,
@@ -907,25 +907,11 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
-              },
-              {
-                "label": "image_1",
-                "name": "model.images.image_1",
-                "type": "IMAGE",
-                "link": 2,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "model.images.image_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
               },
               {
                 "name": "system",
@@ -946,6 +932,90 @@
                 "type": "CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "label": "image_1",
+                "name": "images.image_1",
+                "type": "IMAGE",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "images.image_2",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "video_1",
+                "name": "videos.video_1",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "audio_1",
+                "name": "audio.audio_1",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning"
+                }
+              },
+              {
+                "name": "max_output_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_output_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
               },
               {
                 "name": "pdf_engine",
@@ -1014,9 +1084,13 @@
             "widgets_values": [
               "",
               "openai/gpt-6-sol",
-              "medium",
+              "model default",
               0,
+              1.0,
               "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"idea_1\": {\n      \"type\": \"string\"\n    },\n    \"idea_2\": {\n      \"type\": \"string\"\n    },\n    \"idea_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"idea_1\",\n    \"idea_2\",\n    \"idea_3\"\n  ],\n  \"additionalProperties\": false\n}",
+              "text",
+              "model default",
+              "alloy",
               "model default",
               42,
               "fixed",
@@ -1042,7 +1116,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 2,
+            "target_slot": 5,
             "type": "IMAGE"
           },
           {
@@ -1266,7 +1340,7 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
@@ -1722,7 +1796,7 @@
             ],
             "size": [
               340,
-              344
+              412
             ],
             "flags": {},
             "order": 300,
@@ -1738,22 +1812,78 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
               },
               {
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "quality",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "quality"
+                }
+              },
+              {
+                "name": "background",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "background"
+                }
+              },
+              {
+                "name": "output_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "output_format"
+                }
+              },
+              {
+                "name": "output_compression",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "output_compression"
+                }
+              },
+              {
+                "name": "count",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "count"
+                }
+              },
+              {
                 "label": "reference_1",
-                "name": "model.references.reference_1",
+                "name": "references.reference_1",
                 "type": "IMAGE",
                 "link": 5,
                 "shape": 7
               },
               {
                 "label": "reference_2",
-                "name": "model.references.reference_2",
+                "name": "references.reference_2",
                 "type": "IMAGE",
                 "link": null,
                 "shape": 7
@@ -1809,7 +1939,9 @@
               "",
               "openai/gpt-image-2.5-flare",
               "model default",
+              "model default",
               "medium",
+              "model default",
               "model default",
               90,
               1,
@@ -2035,7 +2167,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 301,
-            "target_slot": 2,
+            "target_slot": 9,
             "type": "IMAGE"
           },
           {

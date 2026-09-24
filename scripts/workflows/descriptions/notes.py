@@ -1,7 +1,7 @@
 """The group notes and subgraph descriptions of the shipped workflows, in plain language."""
 
 KEY_STEP = "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n"
-PRICES = "Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+PRICES = "See prices at openrouter.ai/models and charges at openrouter.ai/activity."
 
 WORKFLOW_TEXTS = {
     "chat-01-write-a-product-listing": {
@@ -149,7 +149,7 @@ WORKFLOW_TEXTS = {
         "input": (
             KEY_STEP + "2. Describe the shot in **Brief**.\n"
             "3. Press **Run**. The video is saved under `video/openrouter`.\n\n"
-            "Four paid requests per run. Video is billed per second, so check its price in **OpenRouter models** "
+            "Four paid requests per run. Video is billed per second, so check its price at openrouter.ai/models "
             "first."
         ),
         "frame": (

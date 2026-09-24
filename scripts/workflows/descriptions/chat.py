@@ -49,7 +49,7 @@ WRITE = Subgraph(
             ASK,
             {
                 "model": WRITER,
-                "model.answer_schema": LISTING_SCHEMA,
+                "answer_schema": LISTING_SCHEMA,
                 "prompt": (
                     "Write a marketplace listing for this product from the photos and the spec sheet. Use only "
                     "facts you can see or read. Keep the title under 80 characters and write five bullet points."
@@ -69,8 +69,8 @@ WRITE = Subgraph(
     links=(),
     columns=(("listing",), ("facts",)),
     inputs=(
-        ("front", "listing.model.images.image_1"),
-        ("detail", "listing.model.images.image_2"),
+        ("front", "listing.images.image_1"),
+        ("detail", "listing.images.image_2"),
         ("documents", "listing.documents"),
         ("documents", "facts.documents"),
         ("options", "listing.options"),
@@ -188,7 +188,7 @@ CAPTION = Subgraph(
     ),
     links=(("caption.text", "save.texts"),),
     columns=(("caption",), ("save",)),
-    inputs=(("images", "caption.model.images.image_1"), ("images", "save.images")),
+    inputs=(("images", "caption.images.image_1"), ("images", "save.images")),
     outputs=(("captions", "caption.text"),),
     description=CAPTION_TEXTS["caption_description"],
 )

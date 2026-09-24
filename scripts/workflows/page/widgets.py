@@ -49,7 +49,7 @@ def serialize_dropdown_values(item: Item, values: Mapping[str, WidgetValue], own
     children = cast("dict[str, dict[str, list[object]]]", option["inputs"])
     for group in ("required", "optional"):
         for child, (kind, settings) in children.get(group, {}).items():
-            # A child socket, such as an image or a growing row of them, holds no widget value.
+            # Only plain widgets are saved here; a nested dropdown, such as Save Video's codec, is left to the page.
             if kind not in {"INT", "FLOAT", "STRING", "BOOLEAN", "COMBO"}:
                 continue
             child_item = {"name": f"{name}.{child}", "type": kind, **cast("dict[str, object]", settings)}

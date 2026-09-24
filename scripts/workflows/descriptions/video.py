@@ -21,7 +21,7 @@ MOVE = Subgraph(
             f"{NODE_PREFIX}ChatAsk",
             {
                 "model": "openai/gpt-6-sol",
-                "model.answer_schema": numbered_schema("move", 3),
+                "answer_schema": numbered_schema("move", 3),
                 "prompt": (
                     "This still is the first frame of a six-second product teaser. Write three different camera "
                     "moves for it. Each is one sentence a video model can follow, such as a slow push-in."
@@ -44,7 +44,7 @@ MOVE = Subgraph(
     columns=(("moves",), ("situation", "decide"), ("best", "move")),
     inputs=(
         ("brief", "situation.values.a"),
-        ("image", "moves.model.images.image_1"),
+        ("image", "moves.images.image_1"),
         ("questions", "decide.questions"),
     ),
     outputs=(("move", "move.STRING"), ("summary", "decide.summary")),
@@ -59,9 +59,9 @@ ANIMATE = Subgraph(
             f"{NODE_PREFIX}VideoGenerate",
             {
                 "model": "minimax/hailuo-3-max",
-                "model.duration": "6",
-                "model.resolution": "768p",
-                "model.aspect_ratio": "16:9",
+                "duration": 6,
+                "resolution": "768p",
+                "aspect_ratio": "16:9",
             },
             is_paid=True,
         ),
@@ -69,7 +69,7 @@ ANIMATE = Subgraph(
     ),
     links=(("animate.video", "save.video"),),
     columns=(("animate",), ("save",)),
-    inputs=(("image", "animate.model.first_frame"), ("move", "animate.prompt")),
+    inputs=(("image", "animate.first_frame"), ("move", "animate.prompt")),
     description=ANIMATE_TEXTS["animate_description"],
 )
 
@@ -90,7 +90,7 @@ ANIMATE_PRODUCT = Workflow(
         Node(
             "draw",
             f"{NODE_PREFIX}ImageGenerate",
-            {"model": "microsoft/mai-image-2.6-flash", "model.aspect_ratio": "16:9"},
+            {"model": "microsoft/mai-image-2.6-flash", "aspect_ratio": "16:9"},
             is_paid=True,
         ),
         Node("frame", PREVIEW_IMAGE, title=SHARED_TEXTS["frame"]),

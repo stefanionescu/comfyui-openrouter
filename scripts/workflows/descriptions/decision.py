@@ -59,7 +59,7 @@ ESCALATE = Subgraph(
         Node(
             "careful",
             ASK,
-            {"model": "anthropic/claude-opus-5.5", "model.reasoning": "medium"},
+            {"model": "anthropic/claude-opus-5.5", "reasoning": "medium"},
             is_paid=True,
         ),
         Node("pick", SWITCH),

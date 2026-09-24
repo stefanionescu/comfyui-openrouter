@@ -7,8 +7,8 @@ from typing import cast, TYPE_CHECKING
 from scripts.workflows.page.graph import NAMESPACE
 from scripts.workflows.page.palette import Palette, read_slot_type
 from scripts.workflows.page.layout import place_stacks, place_columns
+from scripts.workflows.page.sizes import measure, read_slots, count_slots
 from scripts.workflows.page.widgets import Item, Schema, serialize_widget_values
-from scripts.workflows.page.sizes import measure, read_slots, count_slots, read_option_inputs
 from scripts.workflows.page.config import (
     ANY_TYPE,
     PORT_GAP,
@@ -17,9 +17,7 @@ from scripts.workflows.page.config import (
     BYPASS_MODE,
     INNER_ORIGIN,
     PAID_COLOURS,
-    WIDGET_TYPES,
     AUTOGROW_TYPE,
-    DROPDOWN_TYPE,
     SUBGRAPH_ID_STEP,
 )
 
@@ -30,35 +28,19 @@ if TYPE_CHECKING:
 Json = dict[str, object]
 
 
-def serialize_option_sockets(item: Item, chosen: object, linked: frozenset[str]) -> list[Json]:
-    """Serialize the sockets of a dropdown's chosen option: each growing row shows its linked slots and one more."""
-    sockets: list[Json] = []
-    children = read_option_inputs(item, chosen)
-    for group in ("required", "optional"):
-        for child, (kind, settings) in children.get(group, {}).items():
-            name = f"{item['name']}.{child}"
-            if kind in WIDGET_TYPES:
-                continue
-            if kind == AUTOGROW_TYPE:
-                sockets += serialize_autogrow(name, cast("dict[str, object]", settings), linked)
-            else:
-                sockets.append({"name": name, "type": kind, "link": None, "shape": 7})
-    return sockets
-
-
-def serialize_autogrow(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> list[Json]:
+def serialize_autogrow(name: str, item: Item, linked: frozenset[str]) -> list[Json]:
     """Serialize a growing row of sockets: every slot up to the last linked one and one more, or its minimum."""
-    slots = read_slots(name, settings)
-    shown = count_slots(name, settings, linked)
-    slot_type = read_slot_type(settings)
+    slots = read_slots(name, item)
+    shown = count_slots(name, item, linked)
+    slot_type = read_slot_type(item)
     return [
         {"label": slot.rsplit(".", 1)[1], "name": slot, "type": slot_type, "link": None, "shape": 7}
         for slot in slots[:shown]
     ]
 
 
-def serialize_inputs(node: Node, schema: Schema, linked: frozenset[str]) -> list[Json]:
-    """Serialize a node's inputs; a dropdown's chosen option adds the sockets it shows after it."""
+def serialize_inputs(schema: Schema, linked: frozenset[str]) -> list[Json]:
+    """Serialize a node's inputs; a growing row shows its linked slots and one more."""
     inputs: list[Json] = []
     for item in cast("list[Item]", schema["inputs"]):
         if item["type"] == AUTOGROW_TYPE:
@@ -70,20 +52,16 @@ def serialize_inputs(node: Node, schema: Schema, linked: frozenset[str]) -> list
         elif item.get("optional"):
             entry["shape"] = 7
         inputs.append(entry)
-        if item["type"] == DROPDOWN_TYPE:
-            options = cast("list[dict[str, object]]", item.get("options") or [])
-            chosen = node.values.get(str(item["name"]), options[0]["key"] if options else "")
-            inputs += serialize_option_sockets(item, chosen, linked)
     return inputs
 
 
 def serialize_node(
     node: Node, number: int, palette: Palette, box: tuple[int, int, int, int], linked: frozenset[str]
 ) -> Json:
-    """Serialize one node with nothing linked; a dropdown's chosen option adds the sockets it shows."""
+    """Serialize one node with nothing linked."""
     schema = palette.schema(node)
     is_subgraph = node.kind in palette.subgraphs
-    inputs = serialize_inputs(node, schema, linked)
+    inputs = serialize_inputs(schema, linked)
     outputs: list[Json] = [
         {"name": item["name"], "type": item["type"], **({"shape": 6} if item.get("is_list") else {}), "links": []}
         for item in cast("list[Item]", schema["outputs"])
@@ -149,7 +127,7 @@ def link_nodes(entries: Mapping[str, Json], links: tuple[tuple[str, str], ...]) 
     records: list[Json] = []
     matched = match_types(entries, links)
     for number, (start, end) in enumerate(links, 1):
-        # The node key comes first; the rest is the socket's full name, which can hold a dropdown's child.
+        # The node key comes first; the rest is the socket's full name, which can name a slot of a growing row.
         source_key, output = start.split(".", 1)
         target_key, input_name = end.split(".", 1)
         origin, target = entries[source_key], entries[target_key]

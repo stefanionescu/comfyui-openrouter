@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a front photo in **Front** and a close-up in **Detail**.\n3. In **Chat: Attach Document**, choose the spec sheet: a PDF or text file in ComfyUI's input folder.\n4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`.\n\n**Request Options** keeps the listing away from providers that store or train on requests. Three paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a front photo in **Front** and a close-up in **Detail**.\n3. In **Chat: Attach Document**, choose the spec sheet: a PDF or text file in ComfyUI's input folder.\n4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`.\n\n**Request Options** keeps the listing away from providers that store or train on requests. Three paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -912,7 +912,7 @@
             ],
             "size": [
               340,
-              464
+              660
             ],
             "flags": {},
             "order": 100,
@@ -928,32 +928,11 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
-              },
-              {
-                "label": "image_1",
-                "name": "model.images.image_1",
-                "type": "IMAGE",
-                "link": 1,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "model.images.image_2",
-                "type": "IMAGE",
-                "link": 2,
-                "shape": 7
-              },
-              {
-                "label": "image_3",
-                "name": "model.images.image_3",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
               },
               {
                 "name": "system",
@@ -974,6 +953,97 @@
                 "type": "CHAT_DOCUMENTS",
                 "link": 3,
                 "shape": 7
+              },
+              {
+                "label": "image_1",
+                "name": "images.image_1",
+                "type": "IMAGE",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "images.image_2",
+                "type": "IMAGE",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "image_3",
+                "name": "images.image_3",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "video_1",
+                "name": "videos.video_1",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "audio_1",
+                "name": "audio.audio_1",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning"
+                }
+              },
+              {
+                "name": "max_output_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_output_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
               },
               {
                 "name": "pdf_engine",
@@ -1042,9 +1112,13 @@
             "widgets_values": [
               "Write a marketplace listing for this product from the photos and the spec sheet. Use only facts you can see or read. Keep the title under 80 characters and write five bullet points.",
               "openai/gpt-6-sol",
-              "medium",
+              "model default",
               0,
+              1.0,
               "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"bullets\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"title\",\n    \"bullets\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
+              "text",
+              "model default",
+              "alloy",
               "model default",
               42,
               "fixed",
@@ -1064,7 +1138,7 @@
             ],
             "size": [
               340,
-              444
+              620
             ],
             "flags": {},
             "order": 101,
@@ -1080,18 +1154,11 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
-              },
-              {
-                "label": "image_1",
-                "name": "model.images.image_1",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
               },
               {
                 "name": "system",
@@ -1112,6 +1179,83 @@
                 "type": "CHAT_DOCUMENTS",
                 "link": 4,
                 "shape": 7
+              },
+              {
+                "label": "image_1",
+                "name": "images.image_1",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "video_1",
+                "name": "videos.video_1",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "audio_1",
+                "name": "audio.audio_1",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning"
+                }
+              },
+              {
+                "name": "max_output_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_output_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
               },
               {
                 "name": "pdf_engine",
@@ -1180,9 +1324,13 @@
             "widgets_values": [
               "List every fact in this spec sheet, one short line each. Add nothing else.",
               "openai/gpt-6-luna",
-              "medium",
+              "model default",
               0,
+              1.0,
               "",
+              "text",
+              "model default",
+              "alloy",
               "model default",
               42,
               "fixed",
@@ -1201,7 +1349,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 2,
+            "target_slot": 5,
             "type": "IMAGE"
           },
           {
@@ -1209,7 +1357,7 @@
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 101,
-            "target_slot": 3,
+            "target_slot": 6,
             "type": "IMAGE"
           },
           {
@@ -1217,7 +1365,7 @@
             "origin_id": -10,
             "origin_slot": 2,
             "target_id": 101,
-            "target_slot": 7,
+            "target_slot": 4,
             "type": "CHAT_DOCUMENTS"
           },
           {
@@ -1225,7 +1373,7 @@
             "origin_id": -10,
             "origin_slot": 2,
             "target_id": 102,
-            "target_slot": 5,
+            "target_slot": 4,
             "type": "CHAT_DOCUMENTS"
           },
           {
@@ -1233,7 +1381,7 @@
             "origin_id": -10,
             "origin_slot": 3,
             "target_id": 101,
-            "target_slot": 11,
+            "target_slot": 20,
             "type": "REQUEST_OPTIONS"
           },
           {
@@ -1457,7 +1605,7 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"

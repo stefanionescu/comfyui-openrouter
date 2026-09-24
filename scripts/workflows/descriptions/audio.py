@@ -59,7 +59,7 @@ REPLY = Subgraph(
             },
         ),
         Node("script", ASK, {"model": "openai/gpt-6-luna"}, is_paid=True),
-        Node("speak", SPEAK, {"model": "google/gemini-3.8-flash-tts", "model.voice": "Kore"}, is_paid=True),
+        Node("speak", SPEAK, {"model": "google/gemini-3.8-flash-tts", "voice": "Kore"}, is_paid=True),
         Node("save", SAVE_AUDIO, {"filename_prefix": "voicemail/reply"}),
     ),
     links=(
@@ -195,7 +195,7 @@ TRANSLATE = Subgraph(
 SPEAK_DUB = Subgraph(
     name=SHARED_TEXTS["speak"],
     nodes=(
-        Node("speak", SPEAK, {"model": "fish-audio/s2.1-pro"}, is_paid=True),
+        Node("speak", SPEAK, {"model": "fish-audio/s2.1-pro", "voice": ""}, is_paid=True),
         Node("approved", TEXT, {"value": "dub/approved"}, title=SHARED_TEXTS["approved"]),
         Node("review", TEXT, {"value": "dub/review"}, title=SHARED_TEXTS["review"]),
         Node("folder", SWITCH),

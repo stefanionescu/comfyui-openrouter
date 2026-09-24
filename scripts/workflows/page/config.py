@@ -60,15 +60,13 @@ NOTE_SIDE_PADDING = 20
 NOTE_LIST_INDENT = 40
 NOTE_CHARACTER_WIDTH = 5
 NOTE_CODE_CHARACTER_WIDTH = 7
-# A dropdown whose options add controls, a row of sockets that grows by one as its last socket is linked,
-# and the input types the page draws as widgets.
+# A dropdown whose options add widgets, and a row of sockets that grows by one as its last socket is linked.
 DROPDOWN_TYPE = "COMFY_DYNAMICCOMBO_V3"
 AUTOGROW_TYPE = "COMFY_AUTOGROW_V3"
 # A switch's sockets, which take the type of the values linked into them, and a socket that takes any type,
 # such as Format Text's.
 MATCH_TYPE = "COMFY_MATCHTYPE_V3"
 ANY_TYPE = "*"
-WIDGET_TYPES = frozenset({"INT", "FLOAT", "STRING", "BOOLEAN", "COMBO", DROPDOWN_TYPE})
 # Nodes that draw their own panel, measured in the page. The save nodes are sized for their empty state;
 # ComfyUI grows them as their viewers fill.
 DOM_SIZES: dict[str, tuple[int, int]] = {
@@ -121,5 +119,4 @@ __all__ = [
     "WIDGETS_PADDING",
     "WIDGET_GAP",
     "WIDGET_HEIGHT",
-    "WIDGET_TYPES",
 ]

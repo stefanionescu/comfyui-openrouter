@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the shot in **Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`.\n\nFour paid requests per run. Video is billed per second, so check its price in **OpenRouter models** first."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the shot in **Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`.\n\nFour paid requests per run. Video is billed per second, so check its price at openrouter.ai/models first."
       ],
       "title": "Start Here"
     },
@@ -187,7 +187,7 @@
       ],
       "size": [
         340,
-        248
+        392
       ],
       "flags": {},
       "order": 5,
@@ -203,15 +203,71 @@
         },
         {
           "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
+          "type": "STRING",
           "link": null,
           "widget": {
             "name": "model"
           }
         },
         {
+          "name": "resolution",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "resolution"
+          }
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "aspect_ratio"
+          }
+        },
+        {
+          "name": "quality",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "quality"
+          }
+        },
+        {
+          "name": "background",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "background"
+          }
+        },
+        {
+          "name": "output_format",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "output_format"
+          }
+        },
+        {
+          "name": "output_compression",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "output_compression"
+          }
+        },
+        {
+          "name": "count",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "count"
+          }
+        },
+        {
           "label": "reference_1",
-          "name": "model.references.reference_1",
+          "name": "references.reference_1",
           "type": "IMAGE",
           "link": null,
           "shape": 7
@@ -268,7 +324,13 @@
       "widgets_values": [
         "",
         "microsoft/mai-image-2.6-flash",
+        "model default",
         "16:9",
+        "model default",
+        "model default",
+        "model default",
+        90,
+        1,
         42,
         "fixed",
         0
@@ -627,7 +689,7 @@
         430,
         30,
         780,
-        614
+        716
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -778,7 +840,7 @@
             ],
             "size": [
               340,
-              444
+              640
             ],
             "flags": {},
             "order": 100,
@@ -794,25 +856,11 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
-              },
-              {
-                "label": "image_1",
-                "name": "model.images.image_1",
-                "type": "IMAGE",
-                "link": 7,
-                "shape": 7
-              },
-              {
-                "label": "image_2",
-                "name": "model.images.image_2",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
               },
               {
                 "name": "system",
@@ -833,6 +881,90 @@
                 "type": "CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "label": "image_1",
+                "name": "images.image_1",
+                "type": "IMAGE",
+                "link": 7,
+                "shape": 7
+              },
+              {
+                "label": "image_2",
+                "name": "images.image_2",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "video_1",
+                "name": "videos.video_1",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "audio_1",
+                "name": "audio.audio_1",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning"
+                }
+              },
+              {
+                "name": "max_output_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_output_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
               },
               {
                 "name": "pdf_engine",
@@ -902,9 +1034,13 @@
             "widgets_values": [
               "This still is the first frame of a six-second product teaser. Write three different camera moves for it. Each is one sentence a video model can follow, such as a slow push-in.",
               "openai/gpt-6-sol",
-              "medium",
+              "model default",
               0,
+              1.0,
               "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"move_1\": {\n      \"type\": \"string\"\n    },\n    \"move_2\": {\n      \"type\": \"string\"\n    },\n    \"move_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"move_1\",\n    \"move_2\",\n    \"move_3\"\n  ],\n  \"additionalProperties\": false\n}",
+              "text",
+              "model default",
+              "alloy",
               "model default",
               42,
               "fixed",
@@ -1005,7 +1141,7 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
@@ -1237,7 +1373,7 @@
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 101,
-            "target_slot": 2,
+            "target_slot": 5,
             "type": "IMAGE"
           },
           {
@@ -1337,7 +1473,7 @@
             ],
             "size": [
               340,
-              340
+              488
             ],
             "flags": {},
             "order": 200,
@@ -1353,28 +1489,90 @@
               },
               {
                 "name": "model",
-                "type": "COMFY_DYNAMICCOMBO_V3",
+                "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
                 }
               },
               {
-                "label": "reference_image_1",
-                "name": "model.reference_images.reference_image_1",
-                "type": "IMAGE",
+                "name": "duration",
+                "type": "INT",
                 "link": null,
-                "shape": 7
+                "widget": {
+                  "name": "duration"
+                }
               },
               {
-                "name": "model.first_frame",
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "generate_audio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "generate_audio"
+                }
+              },
+              {
+                "name": "upscale_factor",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "upscale_factor"
+                }
+              },
+              {
+                "name": "creativity",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "creativity"
+                }
+              },
+              {
+                "name": "first_frame",
                 "type": "IMAGE",
                 "link": 2,
                 "shape": 7
               },
               {
-                "name": "model.last_frame",
+                "name": "last_frame",
                 "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "reference_image_1",
+                "name": "reference_images.reference_image_1",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "reference_video_1",
+                "name": "reference_videos.reference_video_1",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "label": "reference_audio_1",
+                "name": "reference_audio.reference_audio_1",
+                "type": "AUDIO",
                 "link": null,
                 "shape": 7
               },
@@ -1416,10 +1614,12 @@
             "widgets_values": [
               "",
               "minimax/hailuo-3-max",
-              "6",
+              6,
               "768p",
               "16:9",
-              false,
+              "model default",
+              0.0,
+              0.0,
               42,
               "fixed",
               0
@@ -1504,7 +1704,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 201,
-            "target_slot": 3,
+            "target_slot": 8,
             "type": "IMAGE"
           },
           {

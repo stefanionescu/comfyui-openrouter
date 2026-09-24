@@ -46,11 +46,11 @@ IDEAS = Subgraph(
                 )
             },
         ),
-        Node("ideas", ASK, {"model": WRITER, "model.answer_schema": numbered_schema("idea", 3)}, is_paid=True),
+        Node("ideas", ASK, {"model": WRITER, "answer_schema": numbered_schema("idea", 3)}, is_paid=True),
     ),
     links=(("request.STRING", "ideas.prompt"),),
     columns=(("request",), ("ideas",)),
-    inputs=(("image", "ideas.model.images.image_1"), ("campaign", "request.values.a")),
+    inputs=(("image", "ideas.images.image_1"), ("campaign", "request.values.a")),
     outputs=(("ideas", "ideas.text"),),
     description=EDIT_TEXTS["ideas_description"],
 )
@@ -84,7 +84,7 @@ CHOOSE_IDEA = Subgraph(
 EDIT = Subgraph(
     name=SHARED_TEXTS["edit"],
     nodes=(
-        Node("edit", GENERATE, {"model": GPT_IMAGE, "model.quality": "medium"}, is_paid=True),
+        Node("edit", GENERATE, {"model": GPT_IMAGE, "quality": "medium"}, is_paid=True),
         Node("approved", TEXT, {"value": "campaign/approved"}, title=SHARED_TEXTS["approved"]),
         Node("review", TEXT, {"value": "campaign/review"}, title=SHARED_TEXTS["review"]),
         Node("folder", SWITCH),
@@ -98,7 +98,7 @@ EDIT = Subgraph(
     ),
     columns=(("edit",), ("approved", "review", "folder"), ("save",)),
     inputs=(
-        ("image", "edit.model.references.reference_1"),
+        ("image", "edit.references.reference_1"),
         ("idea", "edit.prompt"),
         ("on_brief", "folder.switch"),
         ("approved", "approved.value"),
@@ -176,7 +176,7 @@ PROMPTS = Subgraph(
             ASK,
             {
                 "model": WRITER,
-                "model.answer_schema": numbered_schema("prompt", 3),
+                "answer_schema": numbered_schema("prompt", 3),
                 "system": (
                     "Write three different prompts for a flat, two-colour logo mark for the brand the person "
                     "describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
@@ -208,7 +208,7 @@ VECTOR = Subgraph(
         Node(
             "vector",
             GENERATE,
-            {"model": "recraft/recraft-v4.1-vector", "model.aspect_ratio": "1:1"},
+            {"model": "recraft/recraft-v4.1-vector", "aspect_ratio": "1:1"},
             is_paid=True,
         ),
         Node("save", SAVE_SVG, {"filename_prefix": "logo/fernwood"}),
@@ -227,9 +227,9 @@ STICKER = Subgraph(
             GENERATE,
             {
                 "model": GPT_IMAGE,
-                "model.aspect_ratio": "1:1",
-                "model.background": "transparent",
-                "model.quality": "medium",
+                "aspect_ratio": "1:1",
+                "background": "transparent",
+                "quality": "medium",
             },
             is_paid=True,
         ),

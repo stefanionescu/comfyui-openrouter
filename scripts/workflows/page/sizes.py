@@ -12,7 +12,6 @@ from scripts.workflows.page.config import (
     SLOT_HEIGHT,
     NODE_PADDING,
     NOTE_PADDING,
-    WIDGET_TYPES,
     AUTOGROW_TYPE,
     DROPDOWN_TYPE,
     WIDGET_HEIGHT,
@@ -48,22 +47,12 @@ def count_slots(name: str, settings: Mapping[str, object], linked: frozenset[str
     return min(len(slots), max(shown, minimum))
 
 
-def read_option_inputs(item: Mapping[str, object], chosen: object) -> dict[str, dict[str, list[object]]]:
-    """Read the inputs a dropdown's chosen option adds, or its first option's when the value names none."""
-    options = cast("list[dict[str, object]]", item.get("options") or [])
-    option = next((option for option in options if option["key"] == chosen), options[0] if options else None)
-    if option is None:
-        return {}
-    return cast("dict[str, dict[str, list[object]]]", option["inputs"])
-
-
 def measure(
     kind: str, schema: Mapping[str, object], values: Mapping[str, object], linked: frozenset[str]
 ) -> tuple[int, int]:
     """Size a node as the page does: a row per socket, then each widget and its gap; panels are measured.
 
-    A dropdown adds the sockets and widgets of its chosen option, and a growing row shows its linked slots
-    and one more.
+    A dropdown adds the widgets of its chosen option, and a growing row shows its linked slots and one more.
     """
     if kind in DOM_SIZES:
         return DOM_SIZES[kind]
@@ -110,27 +99,20 @@ def _count_inputs(
         if item.get("control_after_generate"):
             widgets.append(WIDGET_HEIGHT)
         if item["type"] == DROPDOWN_TYPE:
-            option_sockets, option_widgets = _count_option(item, values.get(name), linked)
-            sockets += option_sockets
-            widgets += option_widgets
+            widgets += _measure_option(item, values.get(name))
     return sockets, widgets
 
 
-def _count_option(item: Mapping[str, object], chosen: object, linked: frozenset[str]) -> tuple[int, list[int]]:
-    """Count the socket rows and list the widget heights of a dropdown's chosen option."""
-    sockets = 0
-    widgets: list[int] = []
-    children = read_option_inputs(item, chosen)
-    for group in ("required", "optional"):
-        for child, (kind, settings) in children.get(group, {}).items():
-            fields = cast("dict[str, object]", settings)
-            if kind in WIDGET_TYPES:
-                widgets.append(_measure_widget(fields))
-            elif kind == AUTOGROW_TYPE:
-                sockets += count_slots(f"{item['name']}.{child}", fields, linked)
-            else:
-                sockets += 1
-    return sockets, widgets
+def _measure_option(item: Mapping[str, object], chosen: object) -> list[int]:
+    """List the widget heights of a dropdown's chosen option, or of its first option when the value names none."""
+    options = cast("list[dict[str, object]]", item.get("options") or [])
+    option = next((option for option in options if option["key"] == chosen), options[0] if options else None)
+    children = cast("dict[str, dict[str, list[object]]]", option["inputs"]) if option else {}
+    return [
+        _measure_widget(cast("dict[str, object]", settings))
+        for group in ("required", "optional")
+        for _kind, settings in children.get(group, {}).values()
+    ]
 
 
 def _measure_widget(item: Mapping[str, object]) -> int:
@@ -142,4 +124,4 @@ def _measure_widget(item: Mapping[str, object]) -> int:
     return WIDGET_HEIGHT
 
 
-__all__ = ["count_slots", "measure", "measure_note", "read_option_inputs", "read_slots"]
+__all__ = ["count_slots", "measure", "measure_note", "read_slots"]
