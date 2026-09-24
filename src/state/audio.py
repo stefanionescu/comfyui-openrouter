@@ -124,16 +124,18 @@ class Segment:
 
 @dataclass(frozen=True, slots=True)
 class TranscriptionResult:
-    """A transcript and its timed segments.
+    """A transcript, its timed segments, and its timed words.
 
     Attributes:
         text: The whole transcript.
         segments: Timed parts, empty without timestamps.
+        words: Timed words, with no speaker; empty unless word timestamps were requested.
 
     """
 
     text: str
     segments: tuple[Segment, ...]
+    words: tuple[Segment, ...]
 
 
 __all__ = [

@@ -189,7 +189,7 @@ The nodes appear under **OpenRouter**, **OpenRouter/Chat**, **OpenRouter/Image**
 | [Video: Generate](web/docs/OpenRouterVideoGenerate.md)              | Make a video from a prompt, frames, or references.                                        |
 | [Video: Download](web/docs/OpenRouterVideoDownload.md)              | Collect a video job that kept running after a cancel or a restart.                        |
 | [Audio: Speak](web/docs/OpenRouterAudioSpeak.md)                    | Turn text into speech, optionally in a copied voice.                                      |
-| [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turn speech into text, timed segments, and subtitles.                                     |
+| [Audio: Transcribe](web/docs/OpenRouterAudioTranscribe.md)          | Turn speech into text, timed segments and words, and subtitles.                           |
 | [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turn text and images into vectors and compare them.                                       |
 | [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Order text and images by how well they match a query.                                     |
 | [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Answer typed questions about a situation with probabilities.                              |

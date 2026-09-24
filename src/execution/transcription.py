@@ -1,4 +1,4 @@
-"""Send one transcription request and turn its segments into subtitles."""
+"""Send one transcription request and turn its segments into subtitles and its words into timed words."""
 
 from __future__ import annotations
 
@@ -77,7 +77,8 @@ class TranscriptionOperation:
         segments = tuple(
             Segment(item.start or 0.0, item.end or 0.0, item.text.strip(), item.speaker) for item in reply.segments
         )
-        return TranscriptionResult(reply.text.strip(), segments)
+        words = tuple(Segment(item.start or 0.0, item.end or 0.0, item.word.strip(), None) for item in reply.words)
+        return TranscriptionResult(reply.text.strip(), segments, words)
 
 
 __all__ = ["TranscriptionOperation", "format_subtitles"]

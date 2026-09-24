@@ -319,7 +319,7 @@
       ],
       "size": [
         340,
-        194
+        214
       ],
       "flags": {},
       "order": 6,
@@ -396,6 +396,11 @@
           "name": "subtitles",
           "type": "STRING",
           "links": []
+        },
+        {
+          "name": "words",
+          "type": "STRING",
+          "links": []
         }
       ],
       "properties": {
@@ -417,7 +422,7 @@
       "type": "SaveText",
       "pos": [
         840,
-        534
+        554
       ],
       "size": [
         340,

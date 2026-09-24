@@ -188,7 +188,7 @@
       ],
       "size": [
         340,
-        194
+        214
       ],
       "flags": {},
       "order": 4,
@@ -267,6 +267,11 @@
           "links": [
             4
           ]
+        },
+        {
+          "name": "words",
+          "type": "STRING",
+          "links": []
         }
       ],
       "properties": {
@@ -288,7 +293,7 @@
       "type": "SaveText",
       "pos": [
         460,
-        534
+        554
       ],
       "size": [
         340,

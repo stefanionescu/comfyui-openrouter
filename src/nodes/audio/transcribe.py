@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 
 class AudioTranscribe(PaidNode):
-    """Send one audio clip for transcription and return the text, segments, and subtitles."""
+    """Send one audio clip for transcription and return the text, segments, subtitles, and words."""
 
     contract: ClassVar[str] = "audio-transcribe-v1"
 
@@ -36,7 +36,10 @@ class AudioTranscribe(PaidNode):
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Audio: Transcribe",
             category=AUDIO_MENU,
-            description="Turn speech into text, timed segments, and subtitles with any OpenRouter transcription model.",
+            description=(
+                "Turn speech into text, timed segments and words, and subtitles with any OpenRouter "
+                "transcription model."
+            ),
             inputs=[
                 io.Audio.Input("audio", tooltip="One clip. Providers stop after about 60 seconds of processing."),
                 define_model_input("transcription", DEFAULT_TRANSCRIPTION_MODEL, lambda _choice: [], []),
@@ -50,7 +53,10 @@ class AudioTranscribe(PaidNode):
                     "timestamps",
                     options=list(TIMESTAMP_CHOICES),
                     default=TIMESTAMP_CHOICES[0],
-                    tooltip="Timed segments for subtitles. Not every model returns them.",
+                    tooltip=(
+                        "Timed segments for subtitles, and timed words with words and segments. Not every model "
+                        "returns them."
+                    ),
                 ),
                 io.Float.Input(
                     "temperature",
@@ -67,6 +73,7 @@ class AudioTranscribe(PaidNode):
                 io.String.Output("text", display_name="text"),
                 io.String.Output("segments", display_name="segments"),
                 io.String.Output("subtitles", display_name="subtitles"),
+                io.String.Output("words", display_name="words"),
             ],
         )
 
@@ -102,6 +109,10 @@ class AudioTranscribe(PaidNode):
                     result.text,
                     json.dumps([asdict(segment) for segment in result.segments], ensure_ascii=False),
                     format_subtitles(result.segments),
+                    json.dumps(
+                        [{"start": word.start, "end": word.end, "text": word.text} for word in result.words],
+                        ensure_ascii=False,
+                    ),
                 ),
             )
 

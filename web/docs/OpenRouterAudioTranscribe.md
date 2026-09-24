@@ -1,6 +1,6 @@
 # Audio: Transcribe
 
-Turn speech into text, timed segments, and subtitles with any OpenRouter transcription model. Connect **text** to **Save Text** or **Preview as Text**. Each run sends one paid OpenRouter request with your OpenRouter key.
+Turn speech into text, timed segments and words, and subtitles with any OpenRouter transcription model. Connect **text** to **Save Text** or **Preview as Text**. Each run sends one paid OpenRouter request with your OpenRouter key.
 
 ## Inputs
 
@@ -9,18 +9,19 @@ Turn speech into text, timed segments, and subtitles with any OpenRouter transcr
 | `audio`       | One clip, from **Load Audio** or another node. It is sent as WAV.                                                           |
 | `model`       | Every OpenRouter transcription model; by default `openai/whisper-large-v3-turbo`. Choose **other model ID** to type any ID. |
 | `language`    | The spoken language as two letters, such as `en`; leave empty to let the model detect it.                                   |
-| `timestamps`  | `none`, `segments`, or `words and segments`. Not every model returns timestamps.                                            |
+| `timestamps`  | `none`, `segments`, or `words and segments`, which also times each word. Not every model returns timestamps.                |
 | `temperature` | From 0 to 1; 0 leaves it to the model.                                                                                      |
 | `variation`   | The **run number**. Change this number to send the request again with unchanged inputs. Each run is billed.                 |
 | `options`     | From **Request Options**, to pass provider options.                                                                         |
 
 ## Outputs
 
-| Output      | What it carries                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------ |
-| `text`      | The whole transcript.                                                                      |
-| `segments`  | A JSON list of `start`, `end`, `text`, and `speaker` per segment; `[]` without timestamps. |
-| `subtitles` | SRT subtitles built from the segments; empty without timestamps.                           |
+| Output      | What it carries                                                                                     |
+| ----------- | --------------------------------------------------------------------------------------------------- |
+| `text`      | The whole transcript.                                                                               |
+| `segments`  | A JSON list of `start`, `end`, `text`, and `speaker` per segment; `[]` without timestamps.          |
+| `subtitles` | SRT subtitles built from the segments; empty without timestamps.                                    |
+| `words`     | A JSON list of `start`, `end`, and `text` per word; `[]` unless timestamps is `words and segments`. |
 
 ## Run
 

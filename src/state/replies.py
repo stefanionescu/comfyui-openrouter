@@ -90,13 +90,22 @@ class SegmentReply(Reply):
     speaker: str | None = None
 
 
+class WordReply(Reply):
+    """One timed word of a transcript."""
+
+    word: str
+    start: float | None = None
+    end: float | None = None
+
+
 class TranscriptionReply(Reply):
-    """A transcription; timestamps come only with segments requested."""
+    """A transcription; segments and words come only when their timestamps are requested."""
 
     text: str
     language: str | None = None
     duration: float | None = None
     segments: tuple[SegmentReply, ...] = ()
+    words: tuple[WordReply, ...] = ()
 
 
 class EmbeddingItem(Reply):
@@ -163,4 +172,5 @@ __all__ = [
     "SegmentReply",
     "TranscriptionReply",
     "VideoJobReply",
+    "WordReply",
 ]
