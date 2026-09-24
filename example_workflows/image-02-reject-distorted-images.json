@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it distorted.\n\nFive paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev, TypeSafe's decision model, finds it distorted.\n\nFive paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "MAI Image 2.6 draws the subject at 4:3. For another draft, change **seed** and run again. One paid request."
+        "MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change **seed** and run again. One paid request."
       ],
       "title": "Note"
     },

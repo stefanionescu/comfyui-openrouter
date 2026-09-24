@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev picks the one that will make the simplest, most memorable mark in **best**, and **Prompt** shows it. Two paid requests."
+        "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev, TypeSafe's decision model, picks the one that will make the simplest, most memorable mark in **best**, and **Prompt** shows it. Two paid requests."
       ],
       "title": "Note"
     },
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT Image 2.5 draws the prompt on a transparent background. The picture and its transparency arrive separately, so **Join Image with Alpha** puts them together before saving. **Mask** shows the transparency; white marks the transparent area. One paid request."
+        "GPT Image 2.5 Flare draws the prompt on a transparent background. The picture and its transparency arrive separately, so **Join Image with Alpha** puts them together before saving. **Mask** shows the transparency; white marks the transparent area. One paid request."
       ],
       "title": "Note"
     },

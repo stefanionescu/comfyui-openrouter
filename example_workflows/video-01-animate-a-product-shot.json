@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "MAI Image 2.6 draws the first frame at 16:9, and **Frame** shows it. For another frame, change **seed** and run again. One paid request."
+        "MAI-Image-2.6 Flash draws the first frame at 16:9, and **Frame** shows it. For another frame, change **seed** and run again. One paid request."
       ],
       "title": "Note"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev picks the one that best suits a six-second teaser in **best**, and **Move** shows it. Two paid requests."
+        "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev, TypeSafe's decision model, picks the one that best suits a six-second teaser in **best**, and **Move** shows it. Two paid requests."
       ],
       "title": "Note"
     },
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Hailuo 3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel, OpenRouter still makes the video and bills it; download it with **video-02-recover-a-cancelled-video**. One paid request."
+        "MiniMax H3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel, OpenRouter still makes the video and bills it; download it with **video-02-recover-a-cancelled-video**. One paid request."
       ],
       "title": "Note"
     },

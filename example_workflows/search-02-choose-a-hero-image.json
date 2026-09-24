@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Recraft V4.1 draws four images in one request. Nemotron Rerank VL, a vision reranker, scores each against the brief and keeps the best. Two paid requests; the reranker is free."
+        "Recraft V4.1 Flash draws four images in one request. Llama Nemotron Rerank VL, a vision reranker, scores each against the brief and keeps the best. Two paid requests; the reranker is free."
       ],
       "title": "Note"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Luna describes the winner. Jev then answers **ready**: does it work as a homepage hero, with a clear subject, room for a headline, and no defects? The image is saved in the **approved** folder when it is ready, and in **review** otherwise. Two paid requests."
+        "GPT-6 Luna describes the winner. Jev, TypeSafe's decision model, then answers **ready**: does it work as a homepage hero, with a clear subject, room for a headline, and no defects? The image is saved in the **approved** folder when it is ready, and in **review** otherwise. Two paid requests."
       ],
       "title": "Note"
     },

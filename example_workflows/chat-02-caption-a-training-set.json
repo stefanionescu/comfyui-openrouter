@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads each caption and answers **valid**: is it one sentence about visible content, without opinions or guesses?\n\n**Summary** lists one verdict per image, so you can fix the captions that fail before training."
+        "Jev, TypeSafe's decision model, reads each caption and answers **valid**: is it one sentence about visible content, without opinions or guesses?\n\n**Summary** lists one verdict per image, so you can fix the captions that fail before training."
       ],
       "title": "Note"
     },

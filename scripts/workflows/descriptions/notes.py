@@ -19,7 +19,8 @@ WORKFLOW_TEXTS = {
         ),
         "write_description": "Writes the listing from the photos and the spec sheet, and lists the spec's facts.",
         "check": (
-            "Jev compares the listing with the spec facts and answers two questions: **supported** asks whether "
+            "Jev, TypeSafe's decision model, compares the listing with the spec facts and answers two questions: "
+            "**supported** asks whether "
             "every claim is backed, and **persuasive** scores the copy.\n\n"
             "The listing is saved in the **approved** folder when every claim is supported, and in **review** "
             "otherwise. One paid request."
@@ -39,7 +40,8 @@ WORKFLOW_TEXTS = {
         ),
         "caption_description": "Writes one caption per image and saves each image with its caption.",
         "check": (
-            "Jev reads each caption and answers **valid**: is it one sentence about visible content, without "
+            "Jev, TypeSafe's decision model, reads each caption and answers **valid**: is it one sentence about "
+            "visible content, without "
             "opinions or guesses?\n\n"
             "**Summary** lists one verdict per image, so you can fix the captions that fail before training."
         ),
@@ -47,12 +49,14 @@ WORKFLOW_TEXTS = {
     "image-01-pick-the-best-image-for-an-occasion": {
         "input": (
             KEY_STEP + "2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n"
-            "3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev "
+            "3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev, "
+            "TypeSafe's decision model, "
             "finds a flaw.\n\n"
             "Five paid requests per run. " + PRICES
         ),
         "draw": (
-            "GPT Image 2.5, MAI Image 2.6, and Recraft V4.1 each draw one image from the brief. GPT-6 Luna then "
+            "GPT Image 2.5 Flare, MAI-Image-2.6 Flash, and Recraft V4.1 Flash each draw one image from the brief. "
+            "GPT-6 Luna then "
             "describes all three in one request, as candidate_1 to candidate_3, and names any flaw.\n\n"
             "Open **Draw** to change a model. Four paid requests."
         ),
@@ -68,12 +72,13 @@ WORKFLOW_TEXTS = {
     "image-02-reject-distorted-images": {
         "input": (
             KEY_STEP + "2. Describe the picture in **Subject**.\n"
-            "3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it "
+            "3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev, TypeSafe's "
+            "decision model, finds it "
             "distorted.\n\n"
             "Five paid requests per run. " + PRICES
         ),
         "draw": (
-            "MAI Image 2.6 draws the subject at 4:3. For another draft, change **seed** and run again. One paid "
+            "MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change **seed** and run again. One paid "
             "request."
         ),
         "inspect": (
@@ -102,12 +107,14 @@ WORKFLOW_TEXTS = {
         ),
         "ideas_description": "Writes three editing ideas for the photo.",
         "choose": (
-            "Jev reads the campaign and the ideas. **best** picks one, and **on_brief** asks whether it suits the "
+            "Jev, TypeSafe's decision model, reads the campaign and the ideas. **best** picks one, and **on_brief** "
+            "asks whether it suits the "
             "campaign at all. **Idea** shows the chosen instruction. One paid request."
         ),
         "choose_description": "Asks Jev for the best idea and whether it suits the campaign.",
         "edit": (
-            "GPT Image 2.5 edits the photo with the chosen idea, keeping the photo as its reference. The result is "
+            "GPT Image 2.5 Flare edits the photo with the chosen idea, keeping the photo as its reference. The "
+            "result is "
             "saved in the **approved** folder when the idea is on brief, and in **review** otherwise. One paid "
             "request."
         ),
@@ -121,7 +128,8 @@ WORKFLOW_TEXTS = {
             "Four paid requests per run. " + PRICES
         ),
         "prompts": (
-            "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev picks the one that will make the "
+            "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev, TypeSafe's decision model, picks the "
+            "one that will make the "
             "simplest, most memorable mark in **best**, and **Prompt** shows it. Two paid requests."
         ),
         "prompts_description": "Writes three logo prompts and asks Jev for the best one.",
@@ -131,7 +139,7 @@ WORKFLOW_TEXTS = {
         ),
         "vector_description": "Draws the logo as SVG and saves it.",
         "sticker": (
-            "GPT Image 2.5 draws the prompt on a transparent background. The picture and its transparency arrive "
+            "GPT Image 2.5 Flare draws the prompt on a transparent background. The picture and its transparency arrive "
             "separately, so **Join Image with Alpha** puts them together before saving. **Mask** shows the "
             "transparency; white marks the transparent area. One paid request."
         ),
@@ -145,16 +153,17 @@ WORKFLOW_TEXTS = {
             "first."
         ),
         "frame": (
-            "MAI Image 2.6 draws the first frame at 16:9, and **Frame** shows it. For another frame, change "
+            "MAI-Image-2.6 Flash draws the first frame at 16:9, and **Frame** shows it. For another frame, change "
             "**seed** and run again. One paid request."
         ),
         "move": (
-            "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev picks the one "
+            "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev, TypeSafe's "
+            "decision model, picks the one "
             "that best suits a six-second teaser in **best**, and **Move** shows it. Two paid requests."
         ),
         "move_description": "Writes three camera moves for the frame and asks Jev for the best one.",
         "animate": (
-            "Hailuo 3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel, "
+            "MiniMax H3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel, "
             "OpenRouter still makes the video and bills it; download it with **video-02-recover-a-cancelled-video**. "
             "One paid request."
         ),
@@ -177,12 +186,13 @@ WORKFLOW_TEXTS = {
             "Four paid requests per run. " + PRICES
         ),
         "transcribe": (
-            "Universal 3.5 Pro turns the recording into text, and the transcript is saved under "
+            "Universal-3.5 Pro turns the recording into text, and the transcript is saved under "
             "`voicemail/transcript`. One paid request."
         ),
         "transcribe_description": "Transcribes the recording and saves the transcript.",
         "triage": (
-            "Jev reads the transcript and answers three questions: **department** picks sales, support, or "
+            "Jev, TypeSafe's decision model, reads the transcript and answers three questions: **department** picks "
+            "sales, support, or "
             "billing; **callback** asks whether the caller wants a call back; **urgency** scores how soon. "
             "**Summary** shows all three. One paid request."
         ),
@@ -202,12 +212,13 @@ WORKFLOW_TEXTS = {
             "Four paid requests per run. " + PRICES
         ),
         "transcribe": (
-            "Universal 3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`. One paid "
+            "Universal-3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`. One paid "
             "request."
         ),
         "transcribe_description": "Transcribes the clip and saves its subtitles.",
         "translate": (
-            "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and "
+            "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev, TypeSafe's decision "
+            "model, compares the two and "
             "answers **accurate**: does the translation say the same, with nothing added or left out? Two paid "
             "requests."
         ),
@@ -236,7 +247,8 @@ WORKFLOW_TEXTS = {
         ),
         "answer_description": "Answers the customer from the ranked articles.",
         "check": (
-            "Jev reads the articles and the answer and answers **supported**: does every sentence come from the "
+            "Jev, TypeSafe's decision model, reads the articles and the answer and answers **supported**: does every "
+            "sentence come from the "
             "articles? When it does, **Reply** shows the answer; when it does not, a note to pass the customer to "
             "a person. One paid request."
         ),
@@ -249,12 +261,14 @@ WORKFLOW_TEXTS = {
             "Four paid requests per run. " + PRICES
         ),
         "rank": (
-            "Recraft V4.1 draws four images in one request. Nemotron Rerank VL, a vision reranker, scores each "
+            "Recraft V4.1 Flash draws four images in one request. Llama Nemotron Rerank VL, a vision reranker, "
+            "scores each "
             "against the brief and keeps the best. Two paid requests; the reranker is free."
         ),
         "rank_description": "Draws four candidates and keeps the one that best matches the brief.",
         "check": (
-            "GPT-6 Luna describes the winner. Jev then answers **ready**: does it work as a homepage hero, with a "
+            "GPT-6 Luna describes the winner. Jev, TypeSafe's decision model, then answers **ready**: does it work "
+            "as a homepage hero, with a "
             "clear subject, room for a headline, and no defects? The image is saved in the **approved** folder "
             "when it is ready, and in **review** otherwise. Two paid requests."
         ),
@@ -263,7 +277,8 @@ WORKFLOW_TEXTS = {
     "decision-01-verify-then-escalate": {
         "input": (
             KEY_STEP + "2. Paste your notes in **Notes** and type the question in **Question**.\n"
-            "3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev doubts it.\n\n"
+            "3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev, TypeSafe's decision "
+            "model, doubts it.\n\n"
             "Two or three paid requests per run. " + PRICES
         ),
         "answer": (

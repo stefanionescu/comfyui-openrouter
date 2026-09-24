@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev finds a flaw.\n\nFive paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev, TypeSafe's decision model, finds a flaw.\n\nFive paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
       "title": "Start Here"
     },
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT Image 2.5, MAI Image 2.6, and Recraft V4.1 each draw one image from the brief. GPT-6 Luna then describes all three in one request, as candidate_1 to candidate_3, and names any flaw.\n\nOpen **Draw** to change a model. Four paid requests."
+        "GPT Image 2.5 Flare, MAI-Image-2.6 Flash, and Recraft V4.1 Flash each draw one image from the brief. GPT-6 Luna then describes all three in one request, as candidate_1 to candidate_3, and names any flaw.\n\nOpen **Draw** to change a model. Four paid requests."
       ],
       "title": "Note"
     },

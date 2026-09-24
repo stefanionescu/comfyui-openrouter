@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Universal 3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`. One paid request."
+        "Universal-3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`. One paid request."
       ],
       "title": "Note"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and answers **accurate**: does the translation say the same, with nothing added or left out? Two paid requests."
+        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev, TypeSafe's decision model, compares the two and answers **accurate**: does the translation say the same, with nothing added or left out? Two paid requests."
       ],
       "title": "Note"
     },

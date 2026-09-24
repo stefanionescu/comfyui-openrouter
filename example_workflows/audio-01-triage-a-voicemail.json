@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Universal 3.5 Pro turns the recording into text, and the transcript is saved under `voicemail/transcript`. One paid request."
+        "Universal-3.5 Pro turns the recording into text, and the transcript is saved under `voicemail/transcript`. One paid request."
       ],
       "title": "Note"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads the transcript and answers three questions: **department** picks sales, support, or billing; **callback** asks whether the caller wants a call back; **urgency** scores how soon. **Summary** shows all three. One paid request."
+        "Jev, TypeSafe's decision model, reads the transcript and answers three questions: **department** picks sales, support, or billing; **callback** asks whether the caller wants a call back; **urgency** scores how soon. **Summary** shows all three. One paid request."
       ],
       "title": "Note"
     },

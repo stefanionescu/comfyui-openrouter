@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads the articles and the answer and answers **supported**: does every sentence come from the articles? When it does, **Reply** shows the answer; when it does not, a note to pass the customer to a person. One paid request."
+        "Jev, TypeSafe's decision model, reads the articles and the answer and answers **supported**: does every sentence come from the articles? When it does, **Reply** shows the answer; when it does not, a note to pass the customer to a person. One paid request."
       ],
       "title": "Note"
     },

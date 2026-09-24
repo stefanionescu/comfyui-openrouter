@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads the campaign and the ideas. **best** picks one, and **on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction. One paid request."
+        "Jev, TypeSafe's decision model, reads the campaign and the ideas. **best** picks one, and **on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction. One paid request."
       ],
       "title": "Note"
     },
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT Image 2.5 edits the photo with the chosen idea, keeping the photo as its reference. The result is saved in the **approved** folder when the idea is on brief, and in **review** otherwise. One paid request."
+        "GPT Image 2.5 Flare edits the photo with the chosen idea, keeping the photo as its reference. The result is saved in the **approved** folder when the idea is on brief, and in **review** otherwise. One paid request."
       ],
       "title": "Note"
     },
