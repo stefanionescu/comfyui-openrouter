@@ -18,6 +18,10 @@ FORMAT = "StringFormat"
 COMPARE = "StringCompare"
 FIELD = "JsonExtractString"
 SWITCH = "ComfySwitchNode"
+BATCH = "BatchImagesNode"
+FROM_BATCH = "ImageFromBatch"
+MASK_IMAGE = "MaskToImage"
+PREVIEW_IMAGE = "PreviewImage"
 # ComfyUI nodes the workflows place beside this extension's own.
 HOST_NODES = (
     IMAGE,
@@ -37,19 +41,27 @@ HOST_NODES = (
     COMPARE,
     FIELD,
     SWITCH,
+    BATCH,
+    FROM_BATCH,
+    MASK_IMAGE,
+    PREVIEW_IMAGE,
 )
 
 __all__ = [
     "AUDIO",
+    "BATCH",
     "COMPARE",
     "FIELD",
     "FOLDER_IMAGES",
     "FORMAT",
+    "FROM_BATCH",
     "HOST_NODES",
     "IMAGE",
+    "MASK_IMAGE",
     "NOTE",
     "PREVIEW",
     "PREVIEW_AUDIO",
+    "PREVIEW_IMAGE",
     "SAVE_AUDIO",
     "SAVE_CAPTIONS",
     "SAVE_IMAGE",

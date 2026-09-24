@@ -1,0 +1,1063 @@
+{
+  "id": "aff6f82a-58ed-5a2d-877d-0f768a32402d",
+  "revision": 0,
+  "last_node_id": 13,
+  "last_link_id": 13,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        30
+      ],
+      "size": [
+        620,
+        88
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the product shot in **Product Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`."
+      ],
+      "title": "Start Here"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        650,
+        30
+      ],
+      "size": [
+        620,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "**First Frame** draws a 16:9 still. **Write Camera Moves** looks at it and answers with three camera moves as JSON. Jev picks the one that suits a six-second teaser in **Best Move**, and **Animate** turns the still into video with that move.\n\nVideo is the costly step and is billed per second; check the price in **OpenRouter models** first. If you cancel, the job keeps running and is billed; collect it with the **Video: Collect a Video** workflow.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+      ],
+      "title": "Using This Workflow"
+    },
+    {
+      "id": 3,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        30,
+        276
+      ],
+      "size": [
+        340,
+        88
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1,
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "A matte black espresso machine on a marble counter, soft morning light from a window, steam rising from a small cup, shallow depth of field"
+      ],
+      "title": "Product Brief"
+    },
+    {
+      "id": 4,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        30,
+        428
+      ],
+      "size": [
+        340,
+        190
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "best_move",
+        "Which camera move best shows the product in a six-second teaser, keeping it sharp and centred?",
+        "one choice",
+        "move_1\nmove_2\nmove_3"
+      ],
+      "title": "Best Move"
+    },
+    {
+      "id": 5,
+      "type": "OpenRouterImageGenerate",
+      "pos": [
+        460,
+        276
+      ],
+      "size": [
+        340,
+        248
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 1,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "reference_1",
+          "name": "model.references.reference_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            3,
+            12
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterImageGenerate"
+      },
+      "widgets_values": [
+        "",
+        "microsoft/mai-image-2.6-flash",
+        "16:9",
+        42,
+        "fixed",
+        0
+      ],
+      "title": "First Frame",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 6,
+      "type": "OpenRouterChatAsk",
+      "pos": [
+        460,
+        588
+      ],
+      "size": [
+        340,
+        444
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 3,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "system",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "system"
+          }
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "documents",
+          "type": "CHAT_DOCUMENTS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "pdf_engine",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "pdf_engine"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            4,
+            8
+          ]
+        },
+        {
+          "name": "reasoning",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterChatAsk"
+      },
+      "widgets_values": [
+        "This still is the first frame of a six-second product teaser. Write three different camera moves for it. Each is one sentence a video model can follow, such as a slow push-in.",
+        "openai/gpt-6-sol",
+        "medium",
+        0,
+        "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"move_1\": {\n      \"type\": \"string\"\n    },\n    \"move_2\": {\n      \"type\": \"string\"\n    },\n    \"move_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"move_1\",\n    \"move_2\",\n    \"move_3\"\n  ],\n  \"additionalProperties\": false\n}",
+        "model default",
+        42,
+        "fixed",
+        0,
+        ""
+      ],
+      "title": "Write Camera Moves",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 7,
+      "type": "StringFormat",
+      "pos": [
+        890,
+        276
+      ],
+      "size": [
+        340,
+        148
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 2,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": 4,
+          "shape": 7
+        },
+        {
+          "label": "c",
+          "name": "values.c",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "Product shot:\n{a}\n\nCamera moves:\n{b}"
+      ],
+      "title": "Shot and Moves"
+    },
+    {
+      "id": 8,
+      "type": "OpenRouterDecisionAsk",
+      "pos": [
+        890,
+        488
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "situation",
+          "type": "STRING",
+          "link": 5,
+          "widget": {
+            "name": "situation"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 6
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAsk"
+      },
+      "widgets_values": [
+        "",
+        "typesafe/jev-1.13",
+        0
+      ],
+      "title": "Choose a Move",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 9,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1270,
+        276
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 7
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": []
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "best_move",
+        0.5
+      ],
+      "title": "Read Best Move"
+    },
+    {
+      "id": 10,
+      "type": "JsonExtractString",
+      "pos": [
+        1270,
+        522
+      ],
+      "size": [
+        340,
+        112
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "json_string",
+          "type": "STRING",
+          "link": 8,
+          "widget": {
+            "name": "json_string"
+          }
+        },
+        {
+          "name": "key",
+          "type": "STRING",
+          "link": 9,
+          "widget": {
+            "name": "key"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            10,
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JsonExtractString"
+      },
+      "widgets_values": [
+        "",
+        ""
+      ],
+      "title": "Extract the Move"
+    },
+    {
+      "id": 11,
+      "type": "PreviewAny",
+      "pos": [
+        1270,
+        698
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Chosen Move"
+    },
+    {
+      "id": 12,
+      "type": "OpenRouterVideoGenerate",
+      "pos": [
+        1700,
+        276
+      ],
+      "size": [
+        340,
+        340
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 11,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "reference_image_1",
+          "name": "model.reference_images.reference_image_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "model.first_frame",
+          "type": "IMAGE",
+          "link": 12,
+          "shape": 7
+        },
+        {
+          "name": "model.last_frame",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterVideoGenerate"
+      },
+      "widgets_values": [
+        "",
+        "minimax/hailuo-3-max",
+        "6",
+        "768p",
+        "16:9",
+        false,
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Animate",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 13,
+      "type": "SaveVideo",
+      "pos": [
+        1700,
+        680
+      ],
+      "size": [
+        340,
+        106
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 13
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/openrouter/product-teaser",
+        "auto",
+        "auto"
+      ],
+      "title": "Save the Teaser"
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      3,
+      0,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      5,
+      0,
+      6,
+      2,
+      "IMAGE"
+    ],
+    [
+      4,
+      6,
+      0,
+      7,
+      1,
+      "STRING"
+    ],
+    [
+      5,
+      7,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      6,
+      4,
+      0,
+      8,
+      1,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      7,
+      8,
+      0,
+      9,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      8,
+      6,
+      0,
+      10,
+      0,
+      "STRING"
+    ],
+    [
+      9,
+      9,
+      0,
+      10,
+      1,
+      "STRING"
+    ],
+    [
+      10,
+      10,
+      0,
+      11,
+      0,
+      "STRING"
+    ],
+    [
+      11,
+      10,
+      0,
+      12,
+      0,
+      "STRING"
+    ],
+    [
+      12,
+      5,
+      0,
+      12,
+      3,
+      "IMAGE"
+    ],
+    [
+      13,
+      12,
+      0,
+      13,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Input",
+      "bounding": [
+        0,
+        166,
+        400,
+        482
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "First Frame",
+      "bounding": [
+        430,
+        166,
+        400,
+        896
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Choose",
+      "bounding": [
+        860,
+        166,
+        780,
+        802
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Video",
+      "bounding": [
+        1670,
+        166,
+        400,
+        650
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        30,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

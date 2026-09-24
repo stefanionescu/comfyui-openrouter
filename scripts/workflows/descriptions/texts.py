@@ -1,253 +1,210 @@
 """The titles, notes and group names of the shipped workflows."""
 
 KEY_STEP = "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n"
+PRICES = "Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
 
 SHARED_TEXTS = {
     "start": "Start Here",
+    "using": "Using This Workflow",
     "input": "Input",
-    "ask": "Ask",
-    "image": "Image",
+    "write": "Write",
+    "check": "Check",
+    "save": "Save",
+    "candidates": "Candidates",
+    "choose": "Choose",
+    "draft": "Draft",
+    "edit": "Edit",
+    "logo": "Logo",
+    "frame": "First Frame",
     "video": "Video",
-    "speech": "Speech",
     "transcript": "Transcript",
+    "reply": "Reply",
+    "dub": "Dub",
     "search": "Search",
-    "decision": "Decision",
     "answer": "Answer",
+    "escalate": "Escalate",
 }
 WORKFLOW_TEXTS = {
-    "chat-01-ask-a-question": {
+    "chat-01-write-a-product-listing": {
         "start": (
-            KEY_STEP + "2. Edit **prompt** on **Chat: Ask**. It sends one paid OpenRouter request.\n"
-            "3. Press **Run**. The answer appears in **Preview as Text**."
+            KEY_STEP + "2. Upload two photos in **Product Photo (Front)** and **Product Photo (Detail)**.\n"
+            "3. Choose the spec sheet, a PDF or text file in ComfyUI's input folder, in **Spec Sheet**.\n"
+            "4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`."
+        ),
+        "using": (
+            "**Write the Listing** reads both photos and the spec sheet and answers in a fixed JSON shape: "
+            "title, bullet points, and price. **Keep Data Private** sends it only to providers that do not store "
+            "or train on requests.\n\n"
+            "**List the Spec Facts** turns the spec sheet into plain facts. Jev compares them with the listing: "
+            "**Supported** asks whether every claim is backed, and **Persuasive** scores the copy. The listing "
+            "goes to `listings/approved` only when Jev finds every claim supported.\n\n"
+            "Three paid requests per run. " + PRICES
         ),
     },
-    "chat-02-describe-an-image": {
+    "chat-02-caption-a-training-set": {
         "start": (
-            KEY_STEP + "2. Upload an image in **Load Image**.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request with the image.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Choose a folder of images in **Training Images**.\n"
+            "3. Press **Run**. **Save Captions** writes each image and its caption to `output/captions`."
+        ),
+        "using": (
+            "**Caption Each Image** runs once per image, so a folder of 20 images sends 20 paid requests. Each "
+            "caption is one sentence that names only what is visible.\n\n"
+            "Jev then checks every caption in **Caption Rules**: one sentence, visible content only, no opinions. "
+            "**Caption Verdicts** lists Jev's answer for each image, so you can fix the few that fail before "
+            "training.\n\n" + PRICES
         ),
     },
-    "chat-03-caption-a-folder": {
+    "image-01-pick-the-best-image-for-an-occasion": {
         "start": (
-            KEY_STEP + "2. Put the images in a folder inside ComfyUI's input folder and choose it in **Load Image "
-            "(from Folder)**.\n"
-            "3. **Chat: Ask** runs once per image, so each image is one paid OpenRouter request. The captions are "
-            "saved beside copies of the images in `output/openrouter-captions`.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Describe the occasion in **Occasion Brief**.\n"
+            "3. Press **Run**. Three image models draw a candidate each, and Jev picks one.\n"
+            "4. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev is unsure."
+        ),
+        "using": (
+            "**Candidate 1**, **Candidate 2**, and **Candidate 3** use three of the newest image models on the same "
+            "brief. **Describe the Candidates** looks at all three in one request and describes each by number.\n\n"
+            "Jev reads the brief and the descriptions. **Best Candidate** picks one, and its position chooses the "
+            "image in **Chosen Image**. **Ready to Send** decides whether it can go to the client as it is.\n\n"
+            "Five paid requests per run. " + PRICES
         ),
     },
-    "chat-04-compare-two-images": {
+    "image-02-reject-distorted-images": {
         "start": (
-            KEY_STEP + "2. Upload the first image in **Before** and the second in **After**.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request with both images, each at its own size.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Describe the picture in **Subject**.\n"
+            "3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it "
+            "distorted."
+        ),
+        "using": (
+            "Two signals reach Jev, which reads text only. **Match a Clean Picture** and **Match a Distorted "
+            "Picture** compare the draft with two descriptions using image embeddings; the second number in each "
+            "is the draft's similarity. **Find Defects** lists what a vision model sees, such as extra fingers or "
+            "garbled text.\n\n"
+            "**Distorted** asks Jev for a yes or no from both signals. A run that fails the check can be retried "
+            "with a new **seed** on **Draft**.\n\n"
+            "Five paid requests per run. " + PRICES
         ),
     },
-    "chat-05-summarize-a-document": {
+    "image-03-edit-with-the-best-idea": {
         "start": (
-            KEY_STEP + "2. Put a PDF or text file in ComfyUI's input folder, press R, and choose it in **Chat: "
-            "Attach Document**.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request with the document.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Upload the photo in **Product Photo** and describe the campaign in **Campaign**.\n"
+            "3. Press **Run**. The edited image is saved under `campaign/approved` or `campaign/review`."
+        ),
+        "using": (
+            "**Write Edit Ideas** looks at the photo and answers with three editing ideas as JSON. Jev picks the "
+            "one that fits the campaign in **Best Idea**, and **Extract the Idea** passes its text to **Apply the "
+            "Idea**, which edits the photo.\n\n"
+            "**On Brief** asks Jev whether the chosen idea suits the campaign at all; when it does not, the result "
+            "goes to `campaign/review`. **Chosen Idea** shows the instruction that was used.\n\n"
+            "Three paid requests per run. " + PRICES
         ),
     },
-    "chat-06-improve-a-prompt": {
+    "image-04-design-a-logo": {
         "start": (
-            KEY_STEP + "2. Describe the picture in **prompt** on **Chat: Ask**. It sends one paid OpenRouter "
-            "request that writes an image prompt.\n"
-            "3. **Image: Generate** sends one paid OpenRouter request that draws it.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Describe the brand in **Brand Brief**.\n"
+            "3. Press **Run**. The logo is saved as an SVG file and as a PNG sticker with a transparent background."
+        ),
+        "using": (
+            "**Write Logo Prompts** answers with three prompts as JSON, and Jev picks the strongest in **Best "
+            "Prompt**. **Vector Logo** draws it as SVG for **Save Logo**, and **Sticker** draws it on a "
+            "transparent background.\n\n"
+            "**Sticker Mask** shows the transparency the model returned; white marks the transparent area.\n\n"
+            "Four paid requests per run. " + PRICES
         ),
     },
-    "chat-07-read-fields-from-a-photo": {
+    "video-01-animate-a-product-shot": {
         "start": (
-            KEY_STEP + "2. Upload a photo of a product with its price in **Load Image**.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request. Its **answer schema** asks for a JSON answer "
-            "with the fields `name` and `price`, which **Extract JSON String** reads.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Describe the product shot in **Product Brief**.\n"
+            "3. Press **Run**. The video is saved under `video/openrouter`."
+        ),
+        "using": (
+            "**First Frame** draws a 16:9 still. **Write Camera Moves** looks at it and answers with three camera "
+            "moves as JSON. Jev picks the one that suits a six-second teaser in **Best Move**, and **Animate** "
+            "turns the still into video with that move.\n\n"
+            "Video is the costly step and is billed per second; check the price in **OpenRouter models** first. "
+            "If you cancel, the job keeps running and is billed; collect it with the **Video: Collect a Video** "
+            "workflow.\n\n"
+            "Four paid requests per run. " + PRICES
         ),
     },
-    "chat-08-hold-a-conversation": {
+    "video-02-collect-a-video": {
         "start": (
-            KEY_STEP + "2. The second **Chat: Ask** continues the first one's conversation. Each sends one paid "
-            "OpenRouter request.\n"
-            "3. Press **Run**."
+            "1. Choose the job in **Unfinished Job**. Press R in ComfyUI to list jobs recorded after the page "
+            "loaded.\n"
+            "2. Press **Run**. The video is saved under `video/openrouter`."
+        ),
+        "using": (
+            "OpenRouter keeps making a video after a cancel, a restart, or a run that stopped waiting, and bills it. "
+            "**Video: Generate** records every job it starts, and **Unfinished Job** lists them.\n\n"
+            "Collecting a job sends only status and download requests, which bill nothing. The job leaves the list "
+            "once its video is saved."
         ),
     },
-    "chat-09-answer-out-loud": {
+    "audio-01-triage-a-voicemail": {
         "start": (
-            KEY_STEP + "2. The model answers in speech. Its **outputs** choice is **audio and text**; choose "
-            "**text** for a written answer only.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request.\n"
-            "4. Press **Run** and play the answer in **Preview Audio**."
+            KEY_STEP + "2. Upload the voicemail in **Voicemail**.\n"
+            "3. Press **Run**. The transcript and a spoken callback script are saved under `voicemail`."
+        ),
+        "using": (
+            "**Transcribe** turns the recording into text. Jev answers three questions about it: **Department** "
+            "(one choice), **Call Back** (yes or no), and **Urgency** (a score). **Triage Summary** shows all "
+            "three.\n\n"
+            "**Write the Script** drafts what the chosen department says when it calls back, and **Speak the "
+            "Script** reads it aloud. Calls that need a callback are saved under `voicemail/call-back`.\n\n"
+            "Four paid requests per run. " + PRICES
         ),
     },
-    "image-01-generate-an-image": {
+    "audio-02-dub-a-clip-in-your-voice": {
         "start": (
-            KEY_STEP + "2. Edit **prompt** on **Image: Generate**. It sends one paid OpenRouter request.\n"
-            "3. Press **Run**. **Save Image** shows and saves the result."
+            KEY_STEP + "2. Upload a short clip of one speaker in **Your Clip**. The same clip is the voice sample.\n"
+            "3. Press **Run**. The Spanish dub is saved under `dub/approved` or `dub/review`."
+        ),
+        "using": (
+            "**Transcribe** writes the words and subtitles. **Translate** turns the words into Spanish, and Jev "
+            "checks in **Faithful** that nothing was added or left out. **Speak in Your Voice** reads the "
+            "translation in the voice of your clip, using its transcript as the sample text.\n\n"
+            "Use a clip of your own voice, or one you have permission to copy. The subtitles are saved as text.\n\n"
+            "Four paid requests per run. " + PRICES
         ),
     },
-    "image-02-edit-an-image": {
+    "search-01-answer-from-help-articles": {
         "start": (
-            KEY_STEP + "2. Upload the photo in **Load Image** and describe the change in **prompt**.\n"
-            "3. **Image: Generate** sends one paid OpenRouter request.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Type the customer's question in **Customer Question**, and your articles in **Help "
+            "Articles**, one per line.\n"
+            "3. Press **Run**. **Reply** shows the answer, or an escalation note."
+        ),
+        "using": (
+            "**Find Relevant Articles** ranks every article against the question and keeps the best three. **Draft "
+            "the Answer** answers from those three only.\n\n"
+            "Jev checks the draft: **Supported** asks whether every sentence comes from the articles, and **Needs a "
+            "Person** asks whether a person should handle it. An unsupported draft is replaced by an escalation "
+            "note.\n\n"
+            "Three paid requests per run. " + PRICES
         ),
     },
-    "image-03-combine-two-images": {
+    "search-02-choose-a-hero-image": {
         "start": (
-            KEY_STEP + "2. Upload the product in **Product** and the room in **Scene**.\n"
-            "3. **Image: Generate** sends one paid OpenRouter request with both images.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Describe the page and the picture you need in **Hero Brief**.\n"
+            "3. Press **Run**. The best of four images is saved under `hero/approved` or `hero/review`."
+        ),
+        "using": (
+            "**Four Candidates** draws four images in one request. **Rank the Images** scores each against the "
+            "brief with a vision reranker and keeps the best.\n\n"
+            "**Describe the Winner** writes what the winning image shows, and Jev decides in **Hero Ready** whether "
+            "it works as a homepage hero: clear subject, room for a headline, and no defects.\n\n"
+            "Four paid requests per run. " + PRICES
         ),
     },
-    "image-04-draw-a-vector-logo": {
+    "decision-01-verify-then-escalate": {
         "start": (
-            KEY_STEP + "2. Describe the logo in **prompt**. The vector model returns SVG, which **Save SVG** "
-            "saves.\n"
-            "3. **Image: Generate** sends one paid OpenRouter request.\n"
-            "4. Press **Run**."
+            KEY_STEP + "2. Paste your notes in **Notes** and type the question in **Question**.\n"
+            "3. Press **Run**. **Answer** shows the cheap model's answer, or the strong model's when Jev doubts it."
         ),
-    },
-    "image-05-draw-with-a-chat-model": {
-        "start": (
-            KEY_STEP + "2. A chat model that draws returns the image and a description together.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "video-01-make-a-video": {
-        "start": (
-            KEY_STEP + "2. Describe the video in **prompt** and choose its **duration (seconds)**. Video is "
-            "priced per second.\n"
-            "3. **Video: Generate** sends one paid OpenRouter request and waits for the video.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "video-02-animate-an-image": {
-        "start": (
-            KEY_STEP + "2. Upload the first frame in **Load Image** and describe the motion in **prompt**.\n"
-            "3. **Video: Generate** sends one paid OpenRouter request and waits for the video.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "video-03-draw-then-animate": {
-        "start": (
-            KEY_STEP + "2. **Image: Generate** sends one paid OpenRouter request that draws the first frame.\n"
-            "3. **Video: Generate** sends one paid OpenRouter request that animates it.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "video-04-download-a-video": {
-        "start": (
-            KEY_STEP + "2. Run **Video: Generate** first and cancel it, or close ComfyUI while it waits; then "
-            "choose the job in **unfinished job** and press R to refresh the list if it is missing.\n"
-            "3. **Video: Download** only checks and downloads the job, which costs nothing more.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "audio-01-read-text-aloud": {
-        "start": (
-            KEY_STEP + "2. Write the text in **text to speak** on **Audio: Speak**. It sends one paid "
-            "OpenRouter request.\n"
-            "3. Press **Run**. **Save Audio** plays and saves the speech."
-        ),
-    },
-    "audio-02-transcribe-a-recording": {
-        "start": (
-            KEY_STEP + "2. Upload a recording of at most about a minute in **Load Audio**.\n"
-            "3. **Audio: Transcribe** sends one paid OpenRouter request. **Save Text** saves the transcript, and "
-            "**Preview as Text** shows the subtitles.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "audio-03-clone-a-voice": {
-        "start": (
-            KEY_STEP + "2. Upload a clean 10 to 30 second recording of one voice, and write what it says in "
-            "**what the sample says**.\n"
-            "3. **Audio: Speak** sends one paid OpenRouter request.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "audio-04-translate-a-recording": {
-        "start": (
-            KEY_STEP + "2. Upload a recording in **Load Audio**.\n"
-            "3. **Audio: Transcribe**, **Chat: Ask**, and **Audio: Speak** each send one paid OpenRouter "
-            "request: transcript, translation, then speech.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "search-01-compare-texts": {
-        "start": (
-            KEY_STEP + "2. Write one item per line in **texts**; the first line is compared with every other.\n"
-            "3. **Search: Embed** sends one paid OpenRouter request.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "search-02-rank-documents": {
-        "start": (
-            KEY_STEP + "2. Write the **query**, and one document per line in **documents**.\n"
-            "3. **Search: Rank** sends one paid OpenRouter request.\n"
-            "4. Press **Run**. The documents come back best first."
-        ),
-    },
-    "search-03-pick-the-best-image": {
-        "start": (
-            KEY_STEP + "2. **Image: Generate** sends one paid OpenRouter request that draws four images.\n"
-            "3. **Search: Rank** gathers all four into one paid OpenRouter request and keeps the best.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "decision-01-sort-a-ticket": {
-        "start": (
-            KEY_STEP + "2. Edit the ticket in **situation** and the three questions: which team, whether it is a "
-            "bug, and how urgent it is.\n"
-            "3. **Decision: Ask** sends one paid OpenRouter request and answers with probabilities.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "decision-02-sort-a-voicemail": {
-        "start": (
-            KEY_STEP + "2. Upload a voicemail in **Load Audio**.\n"
-            "3. **Audio: Transcribe** and **Decision: Ask** each send one paid OpenRouter request.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "decision-03-check-an-image-before-saving": {
-        "start": (
-            KEY_STEP + "2. Write the brief. **Image: Generate**, **Chat: Ask**, and **Decision: Ask** each send "
-            "one paid OpenRouter request: the image, its description, and the check.\n"
-            "3. **If/Else Switch** is a ComfyUI node marked as a beta. Only the branch it picks runs; here it "
-            "picks the folder the image is saved in.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "decision-04-route-a-request": {
-        "start": (
-            KEY_STEP + "2. Write the request. **Decision: Ask** sends one paid OpenRouter request that decides "
-            "whether it wants a photo or an illustration.\n"
-            "3. **If/Else Switch** is a ComfyUI node marked as a beta. Only the branch it picks runs, so only one "
-            "**Image: Generate** sends a paid OpenRouter request.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "decision-05-verify-then-escalate": {
-        "start": (
-            KEY_STEP + "2. Write the notes and the question. The first **Chat: Ask** answers with a cheap model, "
-            "and **Decision: Ask** checks the answer against the notes; each sends one paid OpenRouter request.\n"
-            "3. **If/Else Switch** is a ComfyUI node marked as a beta. Only the branch it picks runs, so the "
-            "strong model's **Chat: Ask** sends a paid request only when the check fails.\n"
-            "4. Press **Run**."
-        ),
-    },
-    "options-01-choose-providers": {
-        "start": (
-            KEY_STEP + "2. **Request Options** asks OpenRouter for the cheapest provider and allows others as a "
-            "fallback.\n"
-            "3. **Chat: Ask** sends one paid OpenRouter request with those options.\n"
-            "4. Press **Run**."
+        "using": (
+            "**Quick Answer** uses a fast, inexpensive model. Jev checks in **Supported** that every fact in it "
+            "comes from the notes, with a threshold of 0.8.\n\n"
+            "**If/Else Switch** runs only the branch it picks, so **Careful Answer**, a stronger and dearer model, "
+            "runs only when the quick answer fails the check.\n\n"
+            "Two or three paid requests per run. " + PRICES
         ),
     },
 }

@@ -7,14 +7,17 @@ from scripts.config import NOTE
 from dataclasses import dataclass
 from typing import cast, TYPE_CHECKING
 from scripts.workflows.page.graph import Node, Subgraph, NAMESPACE
-from scripts.workflows.page.layout import GUTTER, measure, count_slots, place_stacks, place_columns
+from scripts.workflows.page.layout import GUTTER, place_stacks, place_columns
+from scripts.workflows.page.sizes import measure, read_slots, count_slots, read_option_inputs
 from scripts.workflows.page.widgets import Item, Schema, read_widget_default, serialize_widget_values
 from scripts.workflows.page.config import (
     PORT_WIDTH,
     BYPASS_MODE,
     INNER_ORIGIN,
     PAID_COLOURS,
+    WIDGET_TYPES,
     AUTOGROW_TYPE,
+    DROPDOWN_TYPE,
     SUBGRAPH_ID_STEP,
 )
 
@@ -22,11 +25,8 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 Json = dict[str, object]
-# A dropdown whose options add controls, and the widget types.
-DROPDOWN_TYPE = "COMFY_DYNAMICCOMBO_V3"
 # The any-type sockets of a switch, which take the type of the values linked into them.
 MATCH_TYPE = "COMFY_MATCHTYPE_V3"
-WIDGET_TYPES = frozenset({"INT", "FLOAT", "STRING", "BOOLEAN", "COMBO", DROPDOWN_TYPE})
 # The page defines these nodes itself, so the schema export cannot describe them.
 BUILT_IN: dict[str, Schema] = {
     NOTE: {"inputs": [{"name": "text", "type": "STRING", "widget": True, "default": ""}], "outputs": []},
@@ -92,12 +92,8 @@ def build_subgraph_schema(subgraph: Subgraph, palette: Palette) -> Schema:
 
 def serialize_option_sockets(item: Item, chosen: object, linked: frozenset[str]) -> list[Json]:
     """Serialize the sockets of a dropdown's chosen option: each growing row shows its linked slots and one more."""
-    options = cast("list[dict[str, object]]", item.get("options") or [])
-    option = next((option for option in options if option["key"] == chosen), options[0] if options else None)
-    if option is None:
-        return []
     sockets: list[Json] = []
-    children = cast("dict[str, dict[str, list[object]]]", option["inputs"])
+    children = read_option_inputs(item, chosen)
     for group in ("required", "optional"):
         for child, (kind, settings) in children.get(group, {}).items():
             name = f"{item['name']}.{child}"
@@ -111,9 +107,9 @@ def serialize_option_sockets(item: Item, chosen: object, linked: frozenset[str])
 
 
 def serialize_autogrow(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> list[Json]:
-    """Serialize a growing row of sockets: every slot up to the last linked one, and one more."""
+    """Serialize a growing row of sockets: every slot up to the last linked one and one more, or its minimum."""
     template = cast("dict[str, object]", settings["template"])
-    slots = [f"{name}.{slot}" for slot in cast("list[str]", template["names"])]
+    slots = read_slots(name, settings)
     shown = count_slots(name, settings, linked)
     socket = cast("dict[str, dict[str, list[object]]]", template["input"])
     slot_type = next(iter((socket.get("required") or socket.get("optional") or {}).values()))[0]
@@ -291,7 +287,10 @@ def serialize_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> J
     targets = [end.split(".", 1) for _start, end in subgraph.links]
     sizes = {
         node.key: measure(
-            node.kind, palette.schema(node), frozenset(socket for key, socket in targets if key == node.key)
+            node.kind,
+            palette.schema(node),
+            node.values,
+            frozenset(socket for key, socket in targets if key == node.key),
         )
         for node in subgraph.nodes
     }

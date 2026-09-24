@@ -100,12 +100,12 @@ package changes. Install only runtime requirements into ComfyUI's environment.
 1. Select the Comfy logo, then **Extensions → OpenRouter → OpenRouter settings**.
    Save your OpenRouter API key there. It stays on the server and out of workflows.
 2. Open native **Browse Templates → comfyui-openrouter** and select
-   **chat-01-ask-a-question**. You can also drag the
-   [Chat: Ask a Question](example_workflows/chat-01-ask-a-question.json)
-   workflow onto the canvas.
-3. Read **Start Here** and edit the prompt.
+   **decision-01-verify-then-escalate**. You can also drag the
+   [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json)
+   workflow onto the canvas. It needs no uploads.
+3. Read **Start Here** and **Using This Workflow**, then edit **Notes** and **Question**.
 4. Select **Run**.
-5. Read the answer in **Preview as Text**.
+5. Read the result in **Answer**, and Jev's check in **Check Summary**.
 
 Use ComfyUI's cancel control to stop a run. Change **run number** to request
 another run with unchanged inputs. OpenRouter lists each request's charge at
@@ -113,9 +113,15 @@ openrouter.ai/activity.
 
 ## Choose a workflow
 
-The `example_workflows` folder holds 31 editable graphs. Open one from native
-**Browse Templates → comfyui-openrouter**, or drag its JSON file onto ComfyUI.
-Each graph has connected nodes and a **Start Here** note. Examples need only
+The `example_workflows` folder holds 13 editable workflows built on real tasks.
+Each one uses the newest models for its job and lets Jev, OpenRouter's decision
+model, make the call that a person would otherwise make: which image to keep,
+whether a draft is distorted, whether an answer is supported. Together they use
+every node.
+
+Open one from native **Browse Templates → comfyui-openrouter**, or drag its JSON
+file onto ComfyUI. Each workflow has a **Start Here** note with the steps and a
+**Using This Workflow** note that explains how it decides. Examples need only
 native ComfyUI nodes and this extension. Media inputs start empty; select your
 own image, audio, or document.
 
@@ -125,69 +131,49 @@ English; changing the interface language does not translate them.
 
 ### Chat
 
-| Workflow JSON                                                                             | Input             | Guide                                                  |
-| ----------------------------------------------------------------------------------------- | ----------------- | ------------------------------------------------------ |
-| [Chat: Ask a Question](example_workflows/chat-01-ask-a-question.json)                     | Prompt            | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Describe an Image](example_workflows/chat-02-describe-an-image.json)               | Image             | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Caption a Folder of Images](example_workflows/chat-03-caption-a-folder.json)       | Folder of images  | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Compare Two Images](example_workflows/chat-04-compare-two-images.json)             | Two images        | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Summarize a Document](example_workflows/chat-05-summarize-a-document.json)         | PDF or text file  | [Node guide](web/docs/OpenRouterChatAttachDocument.md) |
-| [Chat: Improve a Prompt, Then Draw It](example_workflows/chat-06-improve-a-prompt.json)   | Short description | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Read Fields from a Photo](example_workflows/chat-07-read-fields-from-a-photo.json) | Product photo     | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Hold a Conversation](example_workflows/chat-08-hold-a-conversation.json)           | Two prompts       | [Node guide](web/docs/OpenRouterChatAsk.md)            |
-| [Chat: Answer Out Loud](example_workflows/chat-09-answer-out-loud.json)                   | Prompt            | [Node guide](web/docs/OpenRouterChatAsk.md)            |
+| Workflow JSON                                                                           | Input                               | Guide                                                  |
+| --------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------ |
+| [Chat: Write a Product Listing](example_workflows/chat-01-write-a-product-listing.json) | Two product photos and a spec sheet | [Node guide](web/docs/OpenRouterChatAttachDocument.md) |
+| [Chat: Caption a Training Set](example_workflows/chat-02-caption-a-training-set.json)   | A folder of images                  | [Node guide](web/docs/OpenRouterChatAsk.md)            |
 
 ### Images
 
-| Workflow JSON                                                                           | Input                      | Guide                                             |
-| --------------------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------- |
-| [Image: Generate an Image](example_workflows/image-01-generate-an-image.json)           | Prompt                     | [Node guide](web/docs/OpenRouterImageGenerate.md) |
-| [Image: Edit an Image](example_workflows/image-02-edit-an-image.json)                   | Photo and prompt           | [Node guide](web/docs/OpenRouterImageGenerate.md) |
-| [Image: Combine Two Images](example_workflows/image-03-combine-two-images.json)         | Product, scene, and prompt | [Node guide](web/docs/OpenRouterImageGenerate.md) |
-| [Image: Draw a Vector Logo](example_workflows/image-04-draw-a-vector-logo.json)         | Prompt                     | [Node guide](web/docs/OpenRouterImageGenerate.md) |
-| [Image: Draw with a Chat Model](example_workflows/image-05-draw-with-a-chat-model.json) | Prompt                     | [Node guide](web/docs/OpenRouterChatAsk.md)       |
+| Workflow JSON                                                                                                     | Input                      | Guide                                                  |
+| ----------------------------------------------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------ |
+| [Image: Pick the Best Image for an Occasion](example_workflows/image-01-pick-the-best-image-for-an-occasion.json) | Occasion brief             | [Node guide](web/docs/OpenRouterImageGenerate.md)      |
+| [Image: Reject Distorted Images](example_workflows/image-02-reject-distorted-images.json)                         | Subject                    | [Node guide](web/docs/OpenRouterSearchEmbed.md)        |
+| [Image: Edit with the Best Idea](example_workflows/image-03-edit-with-the-best-idea.json)                         | Product photo and campaign | [Node guide](web/docs/OpenRouterDecisionReadAnswer.md) |
+| [Image: Design a Logo](example_workflows/image-04-design-a-logo.json)                                             | Brand brief                | [Node guide](web/docs/OpenRouterImageGenerate.md)      |
 
 ### Video
 
-| Workflow JSON                                                                              | Input                  | Guide                                             |
-| ------------------------------------------------------------------------------------------ | ---------------------- | ------------------------------------------------- |
-| [Video: Make a Video](example_workflows/video-01-make-a-video.json)                        | Prompt                 | [Node guide](web/docs/OpenRouterVideoGenerate.md) |
-| [Video: Animate an Image](example_workflows/video-02-animate-an-image.json)                | First frame and prompt | [Node guide](web/docs/OpenRouterVideoGenerate.md) |
-| [Video: Draw an Image, Then Animate It](example_workflows/video-03-draw-then-animate.json) | Two prompts            | [Node guide](web/docs/OpenRouterVideoGenerate.md) |
-| [Video: Download a Video](example_workflows/video-04-download-a-video.json)                | A recorded video job   | [Node guide](web/docs/OpenRouterVideoDownload.md) |
+| Workflow JSON                                                                           | Input                | Guide                                             |
+| --------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------- |
+| [Video: Animate a Product Shot](example_workflows/video-01-animate-a-product-shot.json) | Product brief        | [Node guide](web/docs/OpenRouterVideoGenerate.md) |
+| [Video: Collect a Video](example_workflows/video-02-collect-a-video.json)               | A recorded video job | [Node guide](web/docs/OpenRouterVideoDownload.md) |
 
 ### Audio
 
-| Workflow JSON                                                                           | Input                 | Guide                                               |
-| --------------------------------------------------------------------------------------- | --------------------- | --------------------------------------------------- |
-| [Audio: Read Text Aloud](example_workflows/audio-01-read-text-aloud.json)               | Text                  | [Node guide](web/docs/OpenRouterAudioSpeak.md)      |
-| [Audio: Transcribe a Recording](example_workflows/audio-02-transcribe-a-recording.json) | Recording             | [Node guide](web/docs/OpenRouterAudioTranscribe.md) |
-| [Audio: Clone a Voice](example_workflows/audio-03-clone-a-voice.json)                   | Voice sample and text | [Node guide](web/docs/OpenRouterAudioSpeak.md)      |
-| [Audio: Translate a Recording](example_workflows/audio-04-translate-a-recording.json)   | Recording             | [Node guide](web/docs/OpenRouterAudioTranscribe.md) |
+| Workflow JSON                                                                               | Input                   | Guide                                               |
+| ------------------------------------------------------------------------------------------- | ----------------------- | --------------------------------------------------- |
+| [Audio: Triage a Voicemail](example_workflows/audio-01-triage-a-voicemail.json)             | Voicemail recording     | [Node guide](web/docs/OpenRouterAudioTranscribe.md) |
+| [Audio: Dub a Clip in Your Voice](example_workflows/audio-02-dub-a-clip-in-your-voice.json) | A short clip of a voice | [Node guide](web/docs/OpenRouterAudioSpeak.md)      |
 
 ### Search
 
-| Workflow JSON                                                                       | Input               | Guide                                           |
-| ----------------------------------------------------------------------------------- | ------------------- | ----------------------------------------------- |
-| [Search: Compare Texts](example_workflows/search-01-compare-texts.json)             | Lines of text       | [Node guide](web/docs/OpenRouterSearchEmbed.md) |
-| [Search: Rank Documents](example_workflows/search-02-rank-documents.json)           | Query and documents | [Node guide](web/docs/OpenRouterSearchRank.md)  |
-| [Search: Pick the Best Image](example_workflows/search-03-pick-the-best-image.json) | Prompt              | [Node guide](web/docs/OpenRouterSearchRank.md)  |
+| Workflow JSON                                                                                   | Input                          | Guide                                          |
+| ----------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
+| [Search: Answer from Help Articles](example_workflows/search-01-answer-from-help-articles.json) | Customer question and articles | [Node guide](web/docs/OpenRouterSearchRank.md) |
+| [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)             | Hero brief                     | [Node guide](web/docs/OpenRouterSearchRank.md) |
 
 ### Decisions
 
-| Workflow JSON                                                                                             | Input                | Guide                                                   |
-| --------------------------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------- |
-| [Decision: Sort a Ticket](example_workflows/decision-01-sort-a-ticket.json)                               | Ticket and questions | [Node guide](web/docs/OpenRouterDecisionAsk.md)         |
-| [Decision: Sort a Voicemail](example_workflows/decision-02-sort-a-voicemail.json)                         | Voicemail recording  | [Node guide](web/docs/OpenRouterDecisionAddQuestion.md) |
-| [Decision: Check an Image Before Saving](example_workflows/decision-03-check-an-image-before-saving.json) | Brief                | [Node guide](web/docs/OpenRouterDecisionReadAnswer.md)  |
-| [Decision: Route a Request](example_workflows/decision-04-route-a-request.json)                           | Request              | [Node guide](web/docs/OpenRouterDecisionAsk.md)         |
-| [Decision: Verify a Cheap Answer, Then Escalate](example_workflows/decision-05-verify-then-escalate.json) | Notes and question   | [Node guide](web/docs/OpenRouterDecisionReadAnswer.md)  |
+| Workflow JSON                                                                                             | Input              | Guide                                           |
+| --------------------------------------------------------------------------------------------------------- | ------------------ | ----------------------------------------------- |
+| [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json) | Notes and question | [Node guide](web/docs/OpenRouterDecisionAsk.md) |
 
-### Request options
-
-| Workflow JSON                                                                           | Input  | Guide                                              |
-| --------------------------------------------------------------------------------------- | ------ | -------------------------------------------------- |
-| [Request Options: Choose Providers](example_workflows/options-01-choose-providers.json) | Prompt | [Node guide](web/docs/OpenRouterRequestOptions.md) |
+**Request Options** appears in **Chat: Write a Product Listing**, where it keeps
+the listing request away from providers that store data.
 
 ## Nodes
 

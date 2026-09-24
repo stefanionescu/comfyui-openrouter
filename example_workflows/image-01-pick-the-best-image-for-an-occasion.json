@@ -1,0 +1,1588 @@
+{
+  "id": "d1f611e3-3d64-5cb6-8155-d49e3a7baef1",
+  "revision": 0,
+  "last_node_id": 20,
+  "last_link_id": 24,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        30
+      ],
+      "size": [
+        620,
+        88
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the occasion in **Occasion Brief**.\n3. Press **Run**. Three image models draw a candidate each, and Jev picks one.\n4. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev is unsure."
+      ],
+      "title": "Start Here"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        650,
+        30
+      ],
+      "size": [
+        620,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "**Candidate 1**, **Candidate 2**, and **Candidate 3** use three of the newest image models on the same brief. **Describe the Candidates** looks at all three in one request and describes each by number.\n\nJev reads the brief and the descriptions. **Best Candidate** picks one, and its position chooses the image in **Chosen Image**. **Ready to Send** decides whether it can go to the client as it is.\n\nFive paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+      ],
+      "title": "Using This Workflow"
+    },
+    {
+      "id": 3,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        30,
+        276
+      ],
+      "size": [
+        340,
+        88
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "Cover image for a six-year-old's dinosaur birthday party invitation. Bright and friendly, one cartoon dinosaur with a party hat, plenty of empty space for text, no lettering."
+      ],
+      "title": "Occasion Brief"
+    },
+    {
+      "id": 4,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        410,
+        276
+      ],
+      "size": [
+        340,
+        190
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "best",
+        "Which candidate suits the occasion best?",
+        "one choice",
+        "candidate_1\ncandidate_2\ncandidate_3"
+      ],
+      "title": "Best Candidate"
+    },
+    {
+      "id": 5,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        410,
+        530
+      ],
+      "size": [
+        340,
+        184
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 10,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "ready",
+        "Can the chosen candidate go to the client as it is, with no visible flaws?",
+        "yes or no",
+        "",
+        ""
+      ],
+      "title": "Ready to Send"
+    },
+    {
+      "id": 6,
+      "type": "OpenRouterImageGenerate",
+      "pos": [
+        840,
+        276
+      ],
+      "size": [
+        340,
+        344
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 1,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "reference_1",
+          "name": "model.references.reference_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            5,
+            15
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterImageGenerate"
+      },
+      "widgets_values": [
+        "",
+        "openai/gpt-image-2.5-flare",
+        "1:1",
+        "medium",
+        "model default",
+        90,
+        1,
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Candidate 1 (GPT Image 2.5)",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 7,
+      "type": "OpenRouterImageGenerate",
+      "pos": [
+        840,
+        684
+      ],
+      "size": [
+        340,
+        248
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 2,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "reference_1",
+          "name": "model.references.reference_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            6,
+            16
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterImageGenerate"
+      },
+      "widgets_values": [
+        "",
+        "microsoft/mai-image-2.6-flash",
+        "1:1",
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Candidate 2 (MAI Image 2.6)",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 8,
+      "type": "OpenRouterImageGenerate",
+      "pos": [
+        840,
+        996
+      ],
+      "size": [
+        340,
+        272
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            7,
+            17
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterImageGenerate"
+      },
+      "widgets_values": [
+        "",
+        "recraft/recraft-v4.1-flash",
+        "1:1",
+        1,
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Candidate 3 (Recraft V4.1)",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 9,
+      "type": "OpenRouterChatAsk",
+      "pos": [
+        1270,
+        276
+      ],
+      "size": [
+        340,
+        484
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 5,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": 6,
+          "shape": 7
+        },
+        {
+          "label": "image_3",
+          "name": "model.images.image_3",
+          "type": "IMAGE",
+          "link": 7,
+          "shape": 7
+        },
+        {
+          "label": "image_4",
+          "name": "model.images.image_4",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "system",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "system"
+          }
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "documents",
+          "type": "CHAT_DOCUMENTS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "pdf_engine",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "pdf_engine"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "reasoning",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterChatAsk"
+      },
+      "widgets_values": [
+        "Describe each image in two sentences, as candidate_1, candidate_2, and candidate_3 in the order given. Mention any visible flaw, such as warped shapes or stray lettering.",
+        "openai/gpt-6-luna",
+        "medium",
+        0,
+        "",
+        "model default",
+        42,
+        "fixed",
+        0,
+        ""
+      ],
+      "title": "Describe the Candidates",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 10,
+      "type": "StringFormat",
+      "pos": [
+        1270,
+        824
+      ],
+      "size": [
+        340,
+        148
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 4,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": 8,
+          "shape": 7
+        },
+        {
+          "label": "c",
+          "name": "values.c",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "Brief:\n{a}\n\nCandidates:\n{b}"
+      ],
+      "title": "Brief and Candidates"
+    },
+    {
+      "id": 11,
+      "type": "OpenRouterDecisionAsk",
+      "pos": [
+        1650,
+        276
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "situation",
+          "type": "STRING",
+          "link": 9,
+          "widget": {
+            "name": "situation"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 11
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "links": [
+            12,
+            13
+          ]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAsk"
+      },
+      "widgets_values": [
+        "",
+        "typesafe/jev-1.13",
+        0
+      ],
+      "title": "Choose a Candidate",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1650,
+        496
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 12
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": []
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": [
+            19
+          ]
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "best",
+        0.5
+      ],
+      "title": "Read Best"
+    },
+    {
+      "id": 13,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1650,
+        742
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 13
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "ready",
+        0.5
+      ],
+      "title": "Read Ready"
+    },
+    {
+      "id": 14,
+      "type": "BatchImagesNode",
+      "pos": [
+        2080,
+        276
+      ],
+      "size": [
+        340,
+        106
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "image0",
+          "name": "images.image0",
+          "type": "IMAGE",
+          "link": 15,
+          "shape": 7
+        },
+        {
+          "label": "image1",
+          "name": "images.image1",
+          "type": "IMAGE",
+          "link": 16,
+          "shape": 7
+        },
+        {
+          "label": "image2",
+          "name": "images.image2",
+          "type": "IMAGE",
+          "link": 17,
+          "shape": 7
+        },
+        {
+          "label": "image3",
+          "name": "images.image3",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BatchImagesNode"
+      },
+      "widgets_values": [],
+      "title": "All Candidates"
+    },
+    {
+      "id": 15,
+      "type": "ImageFromBatch",
+      "pos": [
+        2080,
+        446
+      ],
+      "size": [
+        340,
+        82
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 18
+        },
+        {
+          "name": "batch_index",
+          "type": "INT",
+          "link": 19,
+          "widget": {
+            "name": "batch_index"
+          }
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "length"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageFromBatch"
+      },
+      "widgets_values": [
+        0,
+        1
+      ],
+      "title": "Chosen Image"
+    },
+    {
+      "id": 16,
+      "type": "PrimitiveString",
+      "pos": [
+        2080,
+        592
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "occasion/approved"
+      ],
+      "title": "Approved Folder"
+    },
+    {
+      "id": 17,
+      "type": "PrimitiveString",
+      "pos": [
+        2080,
+        714
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            22
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "occasion/review"
+      ],
+      "title": "Review Folder"
+    },
+    {
+      "id": 18,
+      "type": "ComfySwitchNode",
+      "pos": [
+        2080,
+        836
+      ],
+      "size": [
+        340,
+        78
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "link": 20,
+          "widget": {
+            "name": "switch"
+          }
+        },
+        {
+          "name": "on_false",
+          "type": "STRING",
+          "link": 22
+        },
+        {
+          "name": "on_true",
+          "type": "STRING",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "title": "Choose the Folder"
+    },
+    {
+      "id": 19,
+      "type": "SaveImage",
+      "pos": [
+        2460,
+        276
+      ],
+      "size": [
+        340,
+        290
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 24
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 23,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "title": "Save the Chosen Image"
+    },
+    {
+      "id": 20,
+      "type": "PreviewAny",
+      "pos": [
+        2460,
+        630
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Decision Summary"
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      6,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      3,
+      0,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      3,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      3,
+      0,
+      10,
+      0,
+      "STRING"
+    ],
+    [
+      5,
+      6,
+      0,
+      9,
+      2,
+      "IMAGE"
+    ],
+    [
+      6,
+      7,
+      0,
+      9,
+      3,
+      "IMAGE"
+    ],
+    [
+      7,
+      8,
+      0,
+      9,
+      4,
+      "IMAGE"
+    ],
+    [
+      8,
+      9,
+      0,
+      10,
+      1,
+      "STRING"
+    ],
+    [
+      9,
+      10,
+      0,
+      11,
+      0,
+      "STRING"
+    ],
+    [
+      10,
+      4,
+      0,
+      5,
+      0,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      11,
+      5,
+      0,
+      11,
+      1,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      12,
+      11,
+      0,
+      12,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      13,
+      11,
+      0,
+      13,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      14,
+      11,
+      1,
+      20,
+      0,
+      "STRING"
+    ],
+    [
+      15,
+      6,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      16,
+      7,
+      0,
+      14,
+      1,
+      "IMAGE"
+    ],
+    [
+      17,
+      8,
+      0,
+      14,
+      2,
+      "IMAGE"
+    ],
+    [
+      18,
+      14,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ],
+    [
+      19,
+      12,
+      4,
+      15,
+      1,
+      "INT"
+    ],
+    [
+      20,
+      13,
+      1,
+      18,
+      0,
+      "BOOLEAN"
+    ],
+    [
+      21,
+      16,
+      0,
+      18,
+      2,
+      "STRING"
+    ],
+    [
+      22,
+      17,
+      0,
+      18,
+      1,
+      "STRING"
+    ],
+    [
+      23,
+      18,
+      0,
+      19,
+      1,
+      "STRING"
+    ],
+    [
+      24,
+      15,
+      0,
+      19,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Input",
+      "bounding": [
+        0,
+        166,
+        780,
+        578
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Candidates",
+      "bounding": [
+        810,
+        166,
+        400,
+        1132
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Choose",
+      "bounding": [
+        1240,
+        166,
+        780,
+        836
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Save",
+      "bounding": [
+        2050,
+        166,
+        780,
+        778
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        30,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

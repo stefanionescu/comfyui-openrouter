@@ -1,0 +1,1357 @@
+{
+  "id": "d403463d-e448-54c4-9a8b-1850ae55eee0",
+  "revision": 0,
+  "last_node_id": 17,
+  "last_link_id": 19,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        30
+      ],
+      "size": [
+        620,
+        88
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it distorted."
+      ],
+      "title": "Start Here"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        650,
+        30
+      ],
+      "size": [
+        620,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "Two signals reach Jev, which reads text only. **Match a Clean Picture** and **Match a Distorted Picture** compare the draft with two descriptions using image embeddings; the second number in each is the draft's similarity. **Find Defects** lists what a vision model sees, such as extra fingers or garbled text.\n\n**Distorted** asks Jev for a yes or no from both signals. A run that fails the check can be retried with a new **seed** on **Draft**.\n\nFive paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+      ],
+      "title": "Using This Workflow"
+    },
+    {
+      "id": 3,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        30,
+        276
+      ],
+      "size": [
+        340,
+        88
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "A violinist playing on a city rooftop at sunset, both hands and the bow clearly visible"
+      ],
+      "title": "Subject"
+    },
+    {
+      "id": 4,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        30,
+        428
+      ],
+      "size": [
+        340,
+        184
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "distorted",
+        "Is the draft distorted, with defects a viewer would notice?",
+        "yes or no",
+        "Warped anatomy, extra or missing parts, broken objects, or garbled text.",
+        "The picture looks correct and matches the subject."
+      ],
+      "title": "Distorted"
+    },
+    {
+      "id": 5,
+      "type": "OpenRouterImageGenerate",
+      "pos": [
+        460,
+        276
+      ],
+      "size": [
+        340,
+        248
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 1,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "reference_1",
+          "name": "model.references.reference_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            5,
+            6,
+            7,
+            19
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterImageGenerate"
+      },
+      "widgets_values": [
+        "",
+        "microsoft/mai-image-2.6-flash",
+        "4:3",
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Draft",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 6,
+      "type": "StringFormat",
+      "pos": [
+        460,
+        588
+      ],
+      "size": [
+        340,
+        128
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 2,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "A clean, sharp, undistorted photo of {a}, with natural hands, faces, and objects"
+      ],
+      "title": "Clean Description"
+    },
+    {
+      "id": 7,
+      "type": "OpenRouterSearchEmbed",
+      "pos": [
+        890,
+        276
+      ],
+      "size": [
+        340,
+        224
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "texts",
+          "type": "STRING",
+          "link": 4,
+          "widget": {
+            "name": "texts"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 5,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "dimensions",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "dimensions"
+          }
+        },
+        {
+          "name": "input_type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "input_type"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "vectors",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "similarities",
+          "type": "STRING",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterSearchEmbed"
+      },
+      "widgets_values": [
+        "",
+        "google/gemini-embedding-2",
+        0,
+        "model default",
+        0
+      ],
+      "title": "Match a Clean Picture",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 8,
+      "type": "OpenRouterSearchEmbed",
+      "pos": [
+        890,
+        564
+      ],
+      "size": [
+        340,
+        224
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "texts",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "texts"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 6,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "dimensions",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "dimensions"
+          }
+        },
+        {
+          "name": "input_type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "input_type"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "vectors",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "similarities",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterSearchEmbed"
+      },
+      "widgets_values": [
+        "A distorted AI image with warped hands, extra fingers, melted faces, broken objects, and garbled text",
+        "google/gemini-embedding-2",
+        0,
+        "model default",
+        0
+      ],
+      "title": "Match a Distorted Picture",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 9,
+      "type": "OpenRouterChatAsk",
+      "pos": [
+        1270,
+        276
+      ],
+      "size": [
+        340,
+        444
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 7,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "system",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "system"
+          }
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "documents",
+          "type": "CHAT_DOCUMENTS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "pdf_engine",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "pdf_engine"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "reasoning",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterChatAsk"
+      },
+      "widgets_values": [
+        "List every visible defect in this image: extra or missing fingers, warped faces or limbs, broken objects, impossible geometry, or garbled text. Answer none if there are none.",
+        "openai/gpt-6-luna",
+        "medium",
+        0,
+        "",
+        "model default",
+        42,
+        "fixed",
+        0,
+        ""
+      ],
+      "title": "Find Defects",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 10,
+      "type": "StringFormat",
+      "pos": [
+        1270,
+        784
+      ],
+      "size": [
+        340,
+        188
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 3,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": 8,
+          "shape": 7
+        },
+        {
+          "label": "c",
+          "name": "values.c",
+          "type": "*",
+          "link": 9,
+          "shape": 7
+        },
+        {
+          "label": "d",
+          "name": "values.d",
+          "type": "*",
+          "link": 10,
+          "shape": 7
+        },
+        {
+          "label": "e",
+          "name": "values.e",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "Subject: {a}\n\nImage embedding similarity, as [description, draft], to a clean description: {b}\nTo a distorted description: {c}\n\nDefects a vision model saw: {d}"
+      ],
+      "title": "All the Signals"
+    },
+    {
+      "id": 11,
+      "type": "OpenRouterDecisionAsk",
+      "pos": [
+        1650,
+        276
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "situation",
+          "type": "STRING",
+          "link": 11,
+          "widget": {
+            "name": "situation"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 12
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "links": [
+            13
+          ]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAsk"
+      },
+      "widgets_values": [
+        "",
+        "typesafe/jev-1.13",
+        0
+      ],
+      "title": "Check the Draft",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1650,
+        496
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 13
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": [
+            15
+          ]
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "distorted",
+        0.5
+      ],
+      "title": "Read Distorted"
+    },
+    {
+      "id": 13,
+      "type": "PrimitiveString",
+      "pos": [
+        2080,
+        276
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "drafts/rejected"
+      ],
+      "title": "Rejected Folder"
+    },
+    {
+      "id": 14,
+      "type": "PrimitiveString",
+      "pos": [
+        2080,
+        398
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "drafts/approved"
+      ],
+      "title": "Approved Folder"
+    },
+    {
+      "id": 15,
+      "type": "ComfySwitchNode",
+      "pos": [
+        2080,
+        520
+      ],
+      "size": [
+        340,
+        78
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "link": 15,
+          "widget": {
+            "name": "switch"
+          }
+        },
+        {
+          "name": "on_false",
+          "type": "STRING",
+          "link": 17
+        },
+        {
+          "name": "on_true",
+          "type": "STRING",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "title": "Choose the Folder"
+    },
+    {
+      "id": 16,
+      "type": "SaveImage",
+      "pos": [
+        2460,
+        276
+      ],
+      "size": [
+        340,
+        290
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 18,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "title": "Save the Draft"
+    },
+    {
+      "id": 17,
+      "type": "PreviewAny",
+      "pos": [
+        2460,
+        630
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Decision Summary"
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      5,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      3,
+      0,
+      6,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      3,
+      0,
+      10,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      6,
+      0,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      5,
+      5,
+      0,
+      7,
+      2,
+      "IMAGE"
+    ],
+    [
+      6,
+      5,
+      0,
+      8,
+      2,
+      "IMAGE"
+    ],
+    [
+      7,
+      5,
+      0,
+      9,
+      2,
+      "IMAGE"
+    ],
+    [
+      8,
+      7,
+      1,
+      10,
+      1,
+      "STRING"
+    ],
+    [
+      9,
+      8,
+      1,
+      10,
+      2,
+      "STRING"
+    ],
+    [
+      10,
+      9,
+      0,
+      10,
+      3,
+      "STRING"
+    ],
+    [
+      11,
+      10,
+      0,
+      11,
+      0,
+      "STRING"
+    ],
+    [
+      12,
+      4,
+      0,
+      11,
+      1,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      13,
+      11,
+      0,
+      12,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      14,
+      11,
+      1,
+      17,
+      0,
+      "STRING"
+    ],
+    [
+      15,
+      12,
+      1,
+      15,
+      0,
+      "BOOLEAN"
+    ],
+    [
+      16,
+      13,
+      0,
+      15,
+      2,
+      "STRING"
+    ],
+    [
+      17,
+      14,
+      0,
+      15,
+      1,
+      "STRING"
+    ],
+    [
+      18,
+      15,
+      0,
+      16,
+      1,
+      "STRING"
+    ],
+    [
+      19,
+      5,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Input",
+      "bounding": [
+        0,
+        166,
+        400,
+        476
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Draft",
+      "bounding": [
+        430,
+        166,
+        400,
+        580
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Check",
+      "bounding": [
+        860,
+        166,
+        1160,
+        836
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Save",
+      "bounding": [
+        2050,
+        166,
+        780,
+        734
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        30,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

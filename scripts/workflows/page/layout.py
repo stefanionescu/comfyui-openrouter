@@ -2,24 +2,9 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import cast, TYPE_CHECKING
-from scripts.workflows.page.config import (
-    GUTTER,
-    NODE_GAP,
-    DOM_SIZES,
-    GROUP_TOP,
-    STACK_GAP,
-    NODE_WIDTH,
-    SLOT_HEIGHT,
-    TITLE_HEIGHT,
-    AUTOGROW_TYPE,
-    CANVAS_ORIGIN,
-    WIDGET_HEIGHT,
-    MULTILINE_HEIGHT,
-    MULTISELECT_HEIGHT,
-    CHILD_WIDGET_HEIGHT,
-)
+from scripts.workflows.page.config import GUTTER, NODE_GAP, GROUP_TOP, STACK_GAP, CANVAS_ORIGIN
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -44,43 +29,6 @@ class Box:
     def right(self) -> int:
         """The column just right of the box."""
         return self.x + self.width
-
-
-def count_slots(name: str, settings: Mapping[str, object], linked: frozenset[str]) -> int:
-    """Count the sockets a growing row shows: every slot up to the last linked one, and one more."""
-    template = cast("dict[str, object]", settings["template"])
-    slots = [f"{name}.{slot}" for slot in cast("list[str]", template["names"])]
-    return min(len(slots), max((index + 1 for index, slot in enumerate(slots) if slot in linked), default=0) + 1)
-
-
-def measure(kind: str, schema: Mapping[str, object], linked: frozenset[str] = frozenset()) -> tuple[int, int]:
-    """Size a node from its schema: a row per socket, then its widgets; nodes with their own panel are measured."""
-    if kind in DOM_SIZES:
-        return DOM_SIZES[kind]
-    inputs = cast("list[dict[str, object]]", schema["inputs"])
-    outputs = cast("list[object]", schema["outputs"])
-    widgets = [item for item in inputs if item.get("widget")]
-    sockets = sum(
-        count_slots(str(item["name"]), item, linked) if item["type"] == AUTOGROW_TYPE else 1
-        for item in inputs
-        if not item.get("widget")
-    )
-    rows = max(sockets, len(outputs))
-    height = TITLE_HEIGHT + rows * SLOT_HEIGHT + sum(_measure_widget(item) for item in widgets)
-    return NODE_WIDTH, height
-
-
-def _measure_widget(item: Mapping[str, object]) -> int:
-    """Height of one widget row, with the child rows of a dynamic dropdown's first option."""
-    if item.get("multiline"):
-        return MULTILINE_HEIGHT
-    if item.get("multiselect"):
-        return MULTISELECT_HEIGHT
-    options = cast("list[dict[str, object]]", item.get("options") or [])
-    if item["type"] == "COMFY_DYNAMICCOMBO_V3" and options:
-        children = cast("dict[str, dict[str, object]]", options[0]["inputs"])
-        return WIDGET_HEIGHT + CHILD_WIDGET_HEIGHT * sum(len(group) for group in children.values())
-    return WIDGET_HEIGHT
 
 
 def place_columns(
@@ -110,15 +58,19 @@ def place_group(
 
 
 def place_stacks(
-    stacks: Sequence[Sequence[Group]], sizes: Mapping[str, tuple[int, int]], origin: tuple[int, int] = CANVAS_ORIGIN
+    stacks: Sequence[Sequence[Group]],
+    sizes: Mapping[str, tuple[int, int]],
+    origin: tuple[int, int] = CANVAS_ORIGIN,
+    notes: Sequence[str] = (),
 ) -> tuple[dict[str, Box], list[dict[str, object]]]:
-    """Place the stacks side by side below the note, and serialize each group's frame."""
+    """Place the notes in a row, the stacks side by side below them, and serialize each group's frame."""
     boxes: dict[str, Box] = {}
     frames: list[dict[str, object]] = []
-    top = origin[1]
-    if "note" in sizes:
-        boxes["note"] = Box(origin[0], top, *sizes["note"])
-        top = boxes["note"].bottom + GUTTER
+    x = origin[0]
+    for key in notes:
+        boxes[key] = Box(x, origin[1], *sizes[key])
+        x = boxes[key].right + GUTTER
+    top = max((boxes[key].bottom + GUTTER for key in notes), default=origin[1])
     x = origin[0]
     for stack in stacks:
         y = top
@@ -142,4 +94,4 @@ def place_stacks(
     return boxes, frames
 
 
-__all__ = ["GUTTER", "count_slots", "measure", "place_columns", "place_stacks"]
+__all__ = ["GUTTER", "place_columns", "place_stacks"]

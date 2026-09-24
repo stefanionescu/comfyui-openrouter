@@ -1,0 +1,1158 @@
+{
+  "id": "f84b8537-6061-5cbe-b12e-855240c5e475",
+  "revision": 0,
+  "last_node_id": 15,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        30
+      ],
+      "size": [
+        620,
+        88
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a short clip of one speaker in **Your Clip**. The same clip is the voice sample.\n3. Press **Run**. The Spanish dub is saved under `dub/approved` or `dub/review`."
+      ],
+      "title": "Start Here"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        650,
+        30
+      ],
+      "size": [
+        620,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "**Transcribe** writes the words and subtitles. **Translate** turns the words into Spanish, and Jev checks in **Faithful** that nothing was added or left out. **Speak in Your Voice** reads the translation in the voice of your clip, using its transcript as the sample text.\n\nUse a clip of your own voice, or one you have permission to copy. The subtitles are saved as text.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+      ],
+      "title": "Using This Workflow"
+    },
+    {
+      "id": 3,
+      "type": "LoadAudio",
+      "pos": [
+        30,
+        276
+      ],
+      "size": [
+        340,
+        136
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "audio"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            1,
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "title": "Your Clip"
+    },
+    {
+      "id": 4,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        30,
+        476
+      ],
+      "size": [
+        340,
+        184
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "faithful",
+        "Does the Spanish translation say the same as the original, with nothing added or left out?",
+        "yes or no",
+        "",
+        ""
+      ],
+      "title": "Faithful"
+    },
+    {
+      "id": 5,
+      "type": "OpenRouterAudioTranscribe",
+      "pos": [
+        460,
+        276
+      ],
+      "size": [
+        340,
+        194
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "language",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "language"
+          }
+        },
+        {
+          "name": "timestamps",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "timestamps"
+          }
+        },
+        {
+          "name": "temperature",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "temperature"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            3,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "segments",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "subtitles",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterAudioTranscribe"
+      },
+      "widgets_values": [
+        "assemblyai/universal-3-5-pro",
+        "",
+        "segments",
+        0.0,
+        0
+      ],
+      "title": "Transcribe",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 6,
+      "type": "SaveText",
+      "pos": [
+        460,
+        534
+      ],
+      "size": [
+        340,
+        170
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 4
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveText"
+      },
+      "widgets_values": [
+        "dub/subtitles",
+        "txt"
+      ],
+      "title": "Save the Subtitles"
+    },
+    {
+      "id": 7,
+      "type": "OpenRouterChatAsk",
+      "pos": [
+        840,
+        276
+      ],
+      "size": [
+        340,
+        444
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 5,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "system",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "system"
+          }
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "documents",
+          "type": "CHAT_DOCUMENTS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "pdf_engine",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "pdf_engine"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            7,
+            8
+          ]
+        },
+        {
+          "name": "reasoning",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterChatAsk"
+      },
+      "widgets_values": [
+        "",
+        "openai/gpt-6-sol",
+        "medium",
+        0,
+        "",
+        "model default",
+        42,
+        "fixed",
+        0,
+        "Translate the text into natural Spanish. Keep the meaning and the tone. Answer with the translation only."
+      ],
+      "title": "Translate",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 8,
+      "type": "StringFormat",
+      "pos": [
+        840,
+        784
+      ],
+      "size": [
+        340,
+        148
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 6,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": 7,
+          "shape": 7
+        },
+        {
+          "label": "c",
+          "name": "values.c",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "Original:\n{a}\n\nSpanish translation:\n{b}"
+      ],
+      "title": "Original and Translation"
+    },
+    {
+      "id": 9,
+      "type": "OpenRouterDecisionAsk",
+      "pos": [
+        1270,
+        276
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "situation",
+          "type": "STRING",
+          "link": 9,
+          "widget": {
+            "name": "situation"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 10
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAsk"
+      },
+      "widgets_values": [
+        "",
+        "typesafe/jev-1.13",
+        0
+      ],
+      "title": "Check the Translation",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 10,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1270,
+        496
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 11
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": [
+            12
+          ]
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "faithful",
+        0.5
+      ],
+      "title": "Read Faithful"
+    },
+    {
+      "id": 11,
+      "type": "OpenRouterAudioSpeak",
+      "pos": [
+        1650,
+        276
+      ],
+      "size": [
+        340,
+        228
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 8,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "speed",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "speed"
+          }
+        },
+        {
+          "name": "voice_sample",
+          "type": "AUDIO",
+          "link": 2,
+          "shape": 7
+        },
+        {
+          "name": "sample_transcript",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "sample_transcript"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterAudioSpeak"
+      },
+      "widgets_values": [
+        "",
+        "fish-audio/s2.1-pro",
+        "pcm",
+        1.0,
+        "",
+        0
+      ],
+      "title": "Speak in Your Voice",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "PrimitiveString",
+      "pos": [
+        2030,
+        276
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "dub/approved"
+      ],
+      "title": "Approved Folder"
+    },
+    {
+      "id": 13,
+      "type": "PrimitiveString",
+      "pos": [
+        2030,
+        398
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "dub/review"
+      ],
+      "title": "Review Folder"
+    },
+    {
+      "id": 14,
+      "type": "ComfySwitchNode",
+      "pos": [
+        2030,
+        520
+      ],
+      "size": [
+        340,
+        78
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "link": 12,
+          "widget": {
+            "name": "switch"
+          }
+        },
+        {
+          "name": "on_false",
+          "type": "STRING",
+          "link": 14
+        },
+        {
+          "name": "on_true",
+          "type": "STRING",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "title": "Choose the Folder"
+    },
+    {
+      "id": 15,
+      "type": "SaveAudioAdvanced",
+      "pos": [
+        2030,
+        662
+      ],
+      "size": [
+        340,
+        136
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 16
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 15,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudioAdvanced"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        "flac"
+      ],
+      "title": "Save the Dub"
+    }
+  ],
+  "links": [
+    [
+      1,
+      3,
+      0,
+      5,
+      0,
+      "AUDIO"
+    ],
+    [
+      2,
+      3,
+      0,
+      11,
+      3,
+      "AUDIO"
+    ],
+    [
+      3,
+      5,
+      0,
+      11,
+      4,
+      "STRING"
+    ],
+    [
+      4,
+      5,
+      2,
+      6,
+      0,
+      "STRING"
+    ],
+    [
+      5,
+      5,
+      0,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      6,
+      5,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      7,
+      7,
+      0,
+      8,
+      1,
+      "STRING"
+    ],
+    [
+      8,
+      7,
+      0,
+      11,
+      0,
+      "STRING"
+    ],
+    [
+      9,
+      8,
+      0,
+      9,
+      0,
+      "STRING"
+    ],
+    [
+      10,
+      4,
+      0,
+      9,
+      1,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      11,
+      9,
+      0,
+      10,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      12,
+      10,
+      1,
+      14,
+      0,
+      "BOOLEAN"
+    ],
+    [
+      13,
+      12,
+      0,
+      14,
+      2,
+      "STRING"
+    ],
+    [
+      14,
+      13,
+      0,
+      14,
+      1,
+      "STRING"
+    ],
+    [
+      15,
+      14,
+      0,
+      15,
+      1,
+      "STRING"
+    ],
+    [
+      16,
+      11,
+      0,
+      15,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Input",
+      "bounding": [
+        0,
+        166,
+        400,
+        524
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Transcript",
+      "bounding": [
+        430,
+        166,
+        780,
+        796
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Dub",
+      "bounding": [
+        1240,
+        166,
+        1160,
+        662
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        30,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

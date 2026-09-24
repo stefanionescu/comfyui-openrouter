@@ -1,0 +1,1382 @@
+{
+  "id": "6c6ba9e8-cf5d-5c82-bdb0-3fa76892661c",
+  "revision": 0,
+  "last_node_id": 19,
+  "last_link_id": 20,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MarkdownNote",
+      "pos": [
+        0,
+        30
+      ],
+      "size": [
+        620,
+        88
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload the photo in **Product Photo** and describe the campaign in **Campaign**.\n3. Press **Run**. The edited image is saved under `campaign/approved` or `campaign/review`."
+      ],
+      "title": "Start Here"
+    },
+    {
+      "id": 2,
+      "type": "MarkdownNote",
+      "pos": [
+        650,
+        30
+      ],
+      "size": [
+        620,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "**Write Edit Ideas** looks at the photo and answers with three editing ideas as JSON. Jev picks the one that fits the campaign in **Best Idea**, and **Extract the Idea** passes its text to **Apply the Idea**, which edits the photo.\n\n**On Brief** asks Jev whether the chosen idea suits the campaign at all; when it does not, the result goes to `campaign/review`. **Chosen Idea** shows the instruction that was used.\n\nThree paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+      ],
+      "title": "Using This Workflow"
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [
+        30,
+        276
+      ],
+      "size": [
+        340,
+        350
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "image"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4,
+            15
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "",
+        "image"
+      ],
+      "title": "Product Photo"
+    },
+    {
+      "id": 4,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        30,
+        690
+      ],
+      "size": [
+        340,
+        88
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1,
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "Autumn sale for young city commuters. Warm evening light, a sense of movement, premium feel."
+      ],
+      "title": "Campaign"
+    },
+    {
+      "id": 5,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        410,
+        276
+      ],
+      "size": [
+        340,
+        190
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "best_idea",
+        "Which editing idea fits the campaign best while keeping the product unchanged?",
+        "one choice",
+        "idea_1\nidea_2\nidea_3"
+      ],
+      "title": "Best Idea"
+    },
+    {
+      "id": 6,
+      "type": "OpenRouterDecisionAddQuestion",
+      "pos": [
+        410,
+        530
+      ],
+      "size": [
+        340,
+        184
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 7,
+          "shape": 7
+        },
+        {
+          "name": "name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
+      },
+      "widgets_values": [
+        "on_brief",
+        "Does the chosen idea suit the campaign?",
+        "yes or no",
+        "",
+        ""
+      ],
+      "title": "On Brief"
+    },
+    {
+      "id": 7,
+      "type": "StringFormat",
+      "pos": [
+        840,
+        276
+      ],
+      "size": [
+        340,
+        128
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 1,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "Campaign: {a}\n\nWrite three different ideas for editing this product photo into a campaign image. Each idea is one detailed editing instruction that keeps the product exactly as it is."
+      ],
+      "title": "Idea Request"
+    },
+    {
+      "id": 8,
+      "type": "OpenRouterChatAsk",
+      "pos": [
+        840,
+        468
+      ],
+      "size": [
+        340,
+        444
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 3,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 4,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "system",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "system"
+          }
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "documents",
+          "type": "CHAT_DOCUMENTS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "pdf_engine",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "pdf_engine"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            5,
+            11
+          ]
+        },
+        {
+          "name": "reasoning",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterChatAsk"
+      },
+      "widgets_values": [
+        "",
+        "openai/gpt-6-sol",
+        "medium",
+        0,
+        "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"idea_1\": {\n      \"type\": \"string\"\n    },\n    \"idea_2\": {\n      \"type\": \"string\"\n    },\n    \"idea_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"idea_1\",\n    \"idea_2\",\n    \"idea_3\"\n  ],\n  \"additionalProperties\": false\n}",
+        "model default",
+        42,
+        "fixed",
+        0,
+        ""
+      ],
+      "title": "Write Edit Ideas",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 9,
+      "type": "StringFormat",
+      "pos": [
+        1220,
+        276
+      ],
+      "size": [
+        340,
+        148
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
+          "link": 2,
+          "shape": 7
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": 5,
+          "shape": 7
+        },
+        {
+          "label": "c",
+          "name": "values.c",
+          "type": "*",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "f_string",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "f_string"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringFormat"
+      },
+      "widgets_values": [
+        "Campaign:\n{a}\n\nIdeas:\n{b}"
+      ],
+      "title": "Campaign and Ideas"
+    },
+    {
+      "id": 10,
+      "type": "OpenRouterDecisionAsk",
+      "pos": [
+        1220,
+        488
+      ],
+      "size": [
+        340,
+        156
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "situation",
+          "type": "STRING",
+          "link": 6,
+          "widget": {
+            "name": "situation"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 8
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "links": [
+            9,
+            10
+          ]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionAsk"
+      },
+      "widgets_values": [
+        "",
+        "typesafe/jev-1.13",
+        0
+      ],
+      "title": "Choose an Idea",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 11,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1600,
+        276
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 9
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": [
+            12
+          ]
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": []
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "best_idea",
+        0.5
+      ],
+      "title": "Read Best Idea"
+    },
+    {
+      "id": 12,
+      "type": "OpenRouterDecisionReadAnswer",
+      "pos": [
+        1600,
+        522
+      ],
+      "size": [
+        340,
+        182
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
+          "link": 10
+        },
+        {
+          "name": "question",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "question"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "is_yes",
+          "type": "BOOLEAN",
+          "links": [
+            16
+          ]
+        },
+        {
+          "name": "probability",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "score",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "confidence",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterDecisionReadAnswer"
+      },
+      "widgets_values": [
+        "on_brief",
+        0.5
+      ],
+      "title": "Read On Brief"
+    },
+    {
+      "id": 13,
+      "type": "JsonExtractString",
+      "pos": [
+        1600,
+        768
+      ],
+      "size": [
+        340,
+        112
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "json_string",
+          "type": "STRING",
+          "link": 11,
+          "widget": {
+            "name": "json_string"
+          }
+        },
+        {
+          "name": "key",
+          "type": "STRING",
+          "link": 12,
+          "widget": {
+            "name": "key"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            13,
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JsonExtractString"
+      },
+      "widgets_values": [
+        "",
+        ""
+      ],
+      "title": "Extract the Idea"
+    },
+    {
+      "id": 14,
+      "type": "OpenRouterImageGenerate",
+      "pos": [
+        2030,
+        276
+      ],
+      "size": [
+        340,
+        344
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 13,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "reference_1",
+          "name": "model.references.reference_1",
+          "type": "IMAGE",
+          "link": 15,
+          "shape": 7
+        },
+        {
+          "label": "reference_2",
+          "name": "model.references.reference_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterImageGenerate"
+      },
+      "widgets_values": [
+        "",
+        "openai/gpt-image-2.5-flare",
+        "model default",
+        "medium",
+        "model default",
+        90,
+        1,
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Apply the Idea",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 15,
+      "type": "PreviewAny",
+      "pos": [
+        2030,
+        684
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Chosen Idea"
+    },
+    {
+      "id": 16,
+      "type": "PrimitiveString",
+      "pos": [
+        2410,
+        276
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "campaign/approved"
+      ],
+      "title": "Approved Folder"
+    },
+    {
+      "id": 17,
+      "type": "PrimitiveString",
+      "pos": [
+        2410,
+        398
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "campaign/review"
+      ],
+      "title": "Review Folder"
+    },
+    {
+      "id": 18,
+      "type": "ComfySwitchNode",
+      "pos": [
+        2410,
+        520
+      ],
+      "size": [
+        340,
+        78
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "link": 16,
+          "widget": {
+            "name": "switch"
+          }
+        },
+        {
+          "name": "on_false",
+          "type": "STRING",
+          "link": 18
+        },
+        {
+          "name": "on_true",
+          "type": "STRING",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ],
+      "title": "Choose the Folder"
+    },
+    {
+      "id": 19,
+      "type": "SaveImage",
+      "pos": [
+        2410,
+        662
+      ],
+      "size": [
+        340,
+        290
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 19,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "title": "Save the Edit"
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      7,
+      0,
+      "STRING"
+    ],
+    [
+      2,
+      4,
+      0,
+      9,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      7,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      4,
+      3,
+      0,
+      8,
+      2,
+      "IMAGE"
+    ],
+    [
+      5,
+      8,
+      0,
+      9,
+      1,
+      "STRING"
+    ],
+    [
+      6,
+      9,
+      0,
+      10,
+      0,
+      "STRING"
+    ],
+    [
+      7,
+      5,
+      0,
+      6,
+      0,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      8,
+      6,
+      0,
+      10,
+      1,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      9,
+      10,
+      0,
+      11,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      10,
+      10,
+      0,
+      12,
+      0,
+      "DECISION_ANSWERS"
+    ],
+    [
+      11,
+      8,
+      0,
+      13,
+      0,
+      "STRING"
+    ],
+    [
+      12,
+      11,
+      0,
+      13,
+      1,
+      "STRING"
+    ],
+    [
+      13,
+      13,
+      0,
+      14,
+      0,
+      "STRING"
+    ],
+    [
+      14,
+      13,
+      0,
+      15,
+      0,
+      "STRING"
+    ],
+    [
+      15,
+      3,
+      0,
+      14,
+      2,
+      "IMAGE"
+    ],
+    [
+      16,
+      12,
+      1,
+      18,
+      0,
+      "BOOLEAN"
+    ],
+    [
+      17,
+      16,
+      0,
+      18,
+      2,
+      "STRING"
+    ],
+    [
+      18,
+      17,
+      0,
+      18,
+      1,
+      "STRING"
+    ],
+    [
+      19,
+      18,
+      0,
+      19,
+      1,
+      "STRING"
+    ],
+    [
+      20,
+      14,
+      0,
+      19,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Input",
+      "bounding": [
+        0,
+        166,
+        780,
+        642
+      ],
+      "color": "#55746b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Choose",
+      "bounding": [
+        810,
+        166,
+        1160,
+        776
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Edit",
+      "bounding": [
+        2000,
+        166,
+        780,
+        816
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        30,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

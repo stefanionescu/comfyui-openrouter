@@ -1,8 +1,8 @@
 {
-  "id": "6e349bcd-c30e-5ca5-906a-0a40ba28f1db",
+  "id": "ff9e1a0c-26b2-52df-a967-a4acf6fefbe6",
   "revision": 0,
-  "last_node_id": 7,
-  "last_link_id": 5,
+  "last_node_id": 8,
+  "last_link_id": 6,
   "nodes": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
       ],
       "size": [
         620,
-        116
+        88
       ],
       "flags": {},
       "order": 0,
@@ -33,69 +33,99 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a photo of a product with its price in **Load Image**.\n3. **Chat: Ask** sends one paid OpenRouter request. Its **answer schema** asks for a JSON answer with the fields `name` and `price`, which **Extract JSON String** reads.\n4. Press **Run**."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Choose a folder of images in **Training Images**.\n3. Press **Run**. **Save Captions** writes each image and its caption to `output/captions`."
       ],
       "title": "Start Here"
     },
     {
       "id": 2,
-      "type": "LoadImage",
+      "type": "MarkdownNote",
       "pos": [
-        30,
-        286
+        650,
+        30
       ],
       "size": [
-        340,
-        350
+        620,
+        106
       ],
       "flags": {},
       "order": 1,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "**Caption Each Image** runs once per image, so a folder of 20 images sends 20 paid requests. Each caption is one sentence that names only what is visible.\n\nJev then checks every caption in **Caption Rules**: one sentence, visible content only, no opinions. **Caption Verdicts** lists Jev's answer for each image, so you can fix the few that fail before training.\n\nPrices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
+      ],
+      "title": "Using This Workflow"
+    },
+    {
+      "id": 3,
+      "type": "LoadImageDataSetFromFolder",
+      "pos": [
+        30,
+        276
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "folder",
           "type": "COMBO",
           "link": null,
           "widget": {
-            "name": "image"
+            "name": "folder"
           }
         }
       ],
       "outputs": [
         {
-          "name": "IMAGE",
+          "name": "images",
           "type": "IMAGE",
+          "shape": 6,
           "links": [
-            1
+            1,
+            2
           ]
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "LoadImage"
+        "Node name for S&R": "LoadImageDataSetFromFolder"
       },
       "widgets_values": [
-        "",
-        "image"
-      ]
+        ""
+      ],
+      "title": "Training Images"
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "OpenRouterChatAsk",
       "pos": [
         460,
-        286
+        276
       ],
       "size": [
         340,
-        594
+        444
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -125,20 +155,6 @@
           "label": "image_2",
           "name": "model.images.image_2",
           "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "label": "video_1",
-          "name": "model.videos.video_1",
-          "type": "VIDEO",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "label": "audio_1",
-          "name": "model.audio.audio_1",
-          "type": "AUDIO",
           "link": null,
           "shape": 7
         },
@@ -198,8 +214,8 @@
           "name": "text",
           "type": "STRING",
           "links": [
-            2,
-            3
+            3,
+            4
           ]
         },
         {
@@ -228,172 +244,246 @@
         "Node name for S&R": "OpenRouterChatAsk"
       },
       "widgets_values": [
-        "Read the product name and price from this photo.",
-        "google/gemini-3.5-flash",
+        "Write a one-sentence training caption for this image. Name only what is visible: subject, setting, lighting, and style. No opinions.",
+        "openai/gpt-6-luna",
         "medium",
         0,
-        1.0,
-        "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": \"string\"\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"name\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
+        "",
         "model default",
         42,
         "fixed",
         0,
         ""
       ],
+      "title": "Caption Each Image",
       "color": "#432",
       "bgcolor": "#653"
     },
     {
-      "id": 4,
-      "type": "JsonExtractString",
-      "pos": [
-        890,
-        286
-      ],
-      "size": [
-        340,
-        140
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "json_string",
-          "type": "STRING",
-          "link": 2,
-          "widget": {
-            "name": "json_string"
-          }
-        },
-        {
-          "name": "key",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "key"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            4
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "JsonExtractString"
-      },
-      "widgets_values": [
-        "",
-        "name"
-      ]
-    },
-    {
       "id": 5,
-      "type": "JsonExtractString",
+      "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        490
+        276
       ],
       "size": [
         340,
-        140
+        184
       ],
       "flags": {},
       "order": 4,
       "mode": 0,
       "inputs": [
         {
-          "name": "json_string",
-          "type": "STRING",
-          "link": 3,
-          "widget": {
-            "name": "json_string"
-          }
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": null,
+          "shape": 7
         },
         {
-          "name": "key",
+          "name": "name",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "key"
+            "name": "name"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
+          }
+        },
+        {
+          "name": "answer_type",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "answer_type"
           }
         }
       ],
       "outputs": [
         {
-          "name": "STRING",
-          "type": "STRING",
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
           "links": [
             5
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "JsonExtractString"
+        "Node name for S&R": "OpenRouterDecisionAddQuestion"
       },
       "widgets_values": [
+        "follows_rules",
+        "Is the caption one sentence that describes only visible content, without opinions or guesses?",
+        "yes or no",
         "",
-        "price"
-      ]
+        ""
+      ],
+      "title": "Caption Rules"
     },
     {
       "id": 6,
-      "type": "PreviewAny",
+      "type": "OpenRouterDecisionAsk",
       "pos": [
         1270,
-        286
+        276
       ],
       "size": [
         340,
-        240
+        156
       ],
       "flags": {},
       "order": 5,
       "mode": 0,
       "inputs": [
         {
-          "name": "source",
-          "type": "*",
-          "link": 4
+          "name": "situation",
+          "type": "STRING",
+          "link": 4,
+          "widget": {
+            "name": "situation"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "DECISION_QUESTIONS",
+          "link": 5
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
         }
       ],
       "outputs": [
         {
-          "name": "STRING",
-          "type": "STRING",
+          "name": "answers",
+          "type": "DECISION_ANSWERS",
           "links": []
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": [
+            6
+          ]
         }
       ],
       "properties": {
-        "Node name for S&R": "PreviewAny"
+        "Node name for S&R": "OpenRouterDecisionAsk"
       },
-      "widgets_values": [],
-      "title": "Product"
+      "widgets_values": [
+        "",
+        "typesafe/jev-1.13",
+        0
+      ],
+      "title": "Check Each Caption",
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
       "id": 7,
-      "type": "PreviewAny",
+      "type": "SaveImageTextDataSetToFolder",
       "pos": [
-        1270,
-        590
+        460,
+        784
       ],
       "size": [
         340,
-        240
+        126
       ],
       "flags": {},
       "order": 6,
       "mode": 0,
       "inputs": [
         {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 2
+        },
+        {
+          "name": "texts",
+          "type": "STRING",
+          "link": 3,
+          "shape": 7
+        },
+        {
+          "name": "folder_name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "folder_name"
+          }
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "mode"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImageTextDataSetToFolder"
+      },
+      "widgets_values": [
+        "captions",
+        "image",
+        "overwrite"
+      ],
+      "title": "Save Captions"
+    },
+    {
+      "id": 8,
+      "type": "PreviewAny",
+      "pos": [
+        1270,
+        496
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
           "name": "source",
           "type": "*",
-          "link": 5
+          "link": 6
         }
       ],
       "outputs": [
@@ -407,15 +497,15 @@
         "Node name for S&R": "PreviewAny"
       },
       "widgets_values": [],
-      "title": "Price"
+      "title": "Caption Verdicts"
     }
   ],
   "links": [
     [
       1,
-      2,
-      0,
       3,
+      0,
+      4,
       2,
       "IMAGE"
     ],
@@ -423,16 +513,16 @@
       2,
       3,
       0,
-      4,
+      7,
       0,
-      "STRING"
+      "IMAGE"
     ],
     [
       3,
-      3,
+      4,
       0,
-      5,
-      0,
+      7,
+      1,
       "STRING"
     ],
     [
@@ -447,7 +537,15 @@
       5,
       5,
       0,
-      7,
+      6,
+      1,
+      "DECISION_QUESTIONS"
+    ],
+    [
+      6,
+      6,
+      1,
+      8,
       0,
       "STRING"
     ]
@@ -458,9 +556,9 @@
       "title": "Input",
       "bounding": [
         0,
-        176,
+        166,
         400,
-        490
+        198
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -468,12 +566,12 @@
     },
     {
       "id": 2,
-      "title": "Ask",
+      "title": "Write",
       "bounding": [
         430,
-        176,
+        166,
         400,
-        734
+        774
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -481,14 +579,14 @@
     },
     {
       "id": 3,
-      "title": "Answer",
+      "title": "Check",
       "bounding": [
         860,
-        176,
+        166,
         780,
-        684
+        600
       ],
-      "color": "#55746b",
+      "color": "#68688c",
       "font_size": 24,
       "flags": {}
     }

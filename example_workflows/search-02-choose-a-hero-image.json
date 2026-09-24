@@ -1,8 +1,8 @@
 {
-  "id": "1f8e299c-ec88-5551-a31f-d78e405127f9",
+  "id": "1e881e92-1195-5479-8971-a3f1a9a63668",
   "revision": 0,
-  "last_node_id": 12,
-  "last_link_id": 14,
+  "last_node_id": 15,
+  "last_link_id": 16,
   "nodes": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
       ],
       "size": [
         620,
-        128
+        88
       ],
       "flags": {},
       "order": 0,
@@ -33,62 +33,53 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Write the notes and the question. The first **Chat: Ask** answers with a cheap model, and **Decision: Ask** checks the answer against the notes; each sends one paid OpenRouter request.\n3. **If/Else Switch** is a ComfyUI node marked as a beta. Only the branch it picks runs, so the strong model's **Chat: Ask** sends a paid request only when the check fails.\n4. Press **Run**."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the page and the picture you need in **Hero Brief**.\n3. Press **Run**. The best of four images is saved under `hero/approved` or `hero/review`."
       ],
       "title": "Start Here"
     },
     {
       "id": 2,
-      "type": "PrimitiveStringMultiline",
+      "type": "MarkdownNote",
       "pos": [
-        30,
-        298
+        650,
+        30
       ],
       "size": [
-        340,
-        108
+        620,
+        106
       ],
       "flags": {},
       "order": 1,
       "mode": 0,
       "inputs": [
         {
-          "name": "value",
+          "name": "text",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "value"
+            "name": "text"
           }
         }
       ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            1,
-            5
-          ]
-        }
-      ],
+      "outputs": [],
       "properties": {
-        "Node name for S&R": "PrimitiveStringMultiline"
+        "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "The store opens at 9:00 and closes at 18:00 on weekdays. On Saturdays it closes at 14:00. It is closed on Sundays."
+        "**Four Candidates** draws four images in one request. **Rank the Images** scores each against the brief with a vision reranker and keeps the best.\n\n**Describe the Winner** writes what the winning image shows, and Jev decides in **Hero Ready** whether it works as a homepage hero: clear subject, room for a headline, and no defects.\n\nFour paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
-      "title": "Notes"
+      "title": "Using This Workflow"
     },
     {
       "id": 3,
-      "type": "PrimitiveString",
+      "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        470
+        276
       ],
       "size": [
         340,
-        58
+        88
       ],
       "flags": {},
       "order": 2,
@@ -108,29 +99,30 @@
           "name": "STRING",
           "type": "STRING",
           "links": [
+            1,
             2,
-            6
+            3
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "PrimitiveString"
+        "Node name for S&R": "PrimitiveStringMultiline"
       },
       "widgets_values": [
-        "When does the store close on Saturday?"
+        "Homepage hero for an outdoor gear shop's spring sale: a hiker on a ridge at sunrise, wide landscape, calm sky on the left for the headline"
       ],
-      "title": "Question"
+      "title": "Hero Brief"
     },
     {
       "id": 4,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         30,
-        592
+        428
       ],
       "size": [
         340,
-        228
+        184
       ],
       "flags": {},
       "order": 3,
@@ -180,94 +172,237 @@
         "Node name for S&R": "OpenRouterDecisionAddQuestion"
       },
       "widgets_values": [
-        "supported",
-        "Is every fact in the answer stated in the notes, and does the answer address the question?",
+        "hero_ready",
+        "Does the image work as a homepage hero: a clear subject, open space for a headline, and no visible defects?",
         "yes or no",
         "",
         ""
-      ]
+      ],
+      "title": "Hero Ready"
     },
     {
       "id": 5,
-      "type": "StringFormat",
+      "type": "OpenRouterImageGenerate",
       "pos": [
         460,
-        298
+        276
       ],
       "size": [
         340,
-        148
+        272
       ],
       "flags": {},
       "order": 4,
       "mode": 0,
       "inputs": [
         {
-          "label": "a",
-          "name": "values.a",
-          "type": "*",
-          "link": 1,
-          "shape": 7
-        },
-        {
-          "label": "b",
-          "name": "values.b",
-          "type": "*",
-          "link": 2,
-          "shape": 7
-        },
-        {
-          "label": "c",
-          "name": "values.c",
-          "type": "*",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "f_string",
+          "name": "prompt",
           "type": "STRING",
+          "link": 1,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
-            "name": "f_string"
+            "name": "model"
           }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
         }
       ],
       "outputs": [
         {
-          "name": "STRING",
-          "type": "STRING",
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
           "links": [
-            3,
             4
           ]
+        },
+        {
+          "name": "masks",
+          "type": "MASK",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "svg",
+          "type": "SVG",
+          "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "StringFormat"
+        "Node name for S&R": "OpenRouterImageGenerate"
       },
       "widgets_values": [
-        "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"
-      ]
+        "",
+        "recraft/recraft-v4.1-flash",
+        "16:9",
+        4,
+        42,
+        "fixed",
+        0
+      ],
+      "title": "Four Candidates",
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
       "id": 6,
-      "type": "OpenRouterChatAsk",
+      "type": "OpenRouterSearchRank",
       "pos": [
         460,
-        510
+        612
       ],
       "size": [
         340,
-        594
+        254
       ],
       "flags": {},
       "order": 5,
       "mode": 0,
       "inputs": [
         {
+          "name": "query",
+          "type": "STRING",
+          "link": 2,
+          "widget": {
+            "name": "query"
+          }
+        },
+        {
+          "name": "documents",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "documents"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": 4,
+          "shape": 7
+        },
+        {
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "top_n",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "top_n"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "texts",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": [
+            5,
+            16
+          ]
+        },
+        {
+          "name": "scores",
+          "type": "STRING",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterSearchRank"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "nvidia/llama-nemotron-rerank-vl-1b-v2:free",
+        1,
+        0
+      ],
+      "title": "Rank the Images",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 7,
+      "type": "OpenRouterChatAsk",
+      "pos": [
+        840,
+        276
+      ],
+      "size": [
+        340,
+        444
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
           "name": "prompt",
           "type": "STRING",
-          "link": 3,
+          "link": null,
           "widget": {
             "name": "prompt"
           }
@@ -284,20 +419,13 @@
           "label": "image_1",
           "name": "model.images.image_1",
           "type": "IMAGE",
-          "link": null,
+          "link": 5,
           "shape": 7
         },
         {
-          "label": "video_1",
-          "name": "model.videos.video_1",
-          "type": "VIDEO",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "label": "audio_1",
-          "name": "model.audio.audio_1",
-          "type": "AUDIO",
+          "label": "image_2",
+          "name": "model.images.image_2",
+          "type": "IMAGE",
           "link": null,
           "shape": 7
         },
@@ -357,8 +485,7 @@
           "name": "text",
           "type": "STRING",
           "links": [
-            7,
-            12
+            6
           ]
         },
         {
@@ -387,11 +514,10 @@
         "Node name for S&R": "OpenRouterChatAsk"
       },
       "widgets_values": [
-        "",
-        "google/gemini-3.5-flash",
+        "Describe this image in three sentences: the subject, where the empty space is, and any visible defect.",
+        "openai/gpt-6-luna",
         "medium",
         0,
-        1.0,
         "",
         "model default",
         42,
@@ -399,29 +525,30 @@
         0,
         ""
       ],
+      "title": "Describe the Winner",
       "color": "#432",
       "bgcolor": "#653"
     },
     {
-      "id": 7,
+      "id": 8,
       "type": "StringFormat",
       "pos": [
         840,
-        298
+        784
       ],
       "size": [
         340,
         168
       ],
       "flags": {},
-      "order": 6,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
           "label": "a",
           "name": "values.a",
           "type": "*",
-          "link": 5,
+          "link": 3,
           "shape": 7
         },
         {
@@ -467,22 +594,23 @@
         "Node name for S&R": "StringFormat"
       },
       "widgets_values": [
-        "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"
-      ]
+        "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"
+      ],
+      "title": "Brief and Winner"
     },
     {
-      "id": 8,
+      "id": 9,
       "type": "OpenRouterDecisionAsk",
       "pos": [
         1270,
-        298
+        276
       ],
       "size": [
         340,
-        192
+        156
       ],
       "flags": {},
-      "order": 7,
+      "order": 8,
       "mode": 0,
       "inputs": [
         {
@@ -532,7 +660,9 @@
         {
           "name": "summary",
           "type": "STRING",
-          "links": []
+          "links": [
+            11
+          ]
         }
       ],
       "properties": {
@@ -543,22 +673,23 @@
         "typesafe/jev-1.13",
         0
       ],
+      "title": "Check the Winner",
       "color": "#432",
       "bgcolor": "#653"
     },
     {
-      "id": 9,
+      "id": 10,
       "type": "OpenRouterDecisionReadAnswer",
       "pos": [
         1270,
-        554
+        496
       ],
       "size": [
         340,
-        190
+        182
       ],
       "flags": {},
-      "order": 8,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -593,7 +724,7 @@
           "name": "is_yes",
           "type": "BOOLEAN",
           "links": [
-            11
+            12
           ]
         },
         {
@@ -621,166 +752,112 @@
         "Node name for S&R": "OpenRouterDecisionReadAnswer"
       },
       "widgets_values": [
-        "supported",
-        0.8
-      ]
-    },
-    {
-      "id": 10,
-      "type": "OpenRouterChatAsk",
-      "pos": [
-        1700,
-        298
+        "hero_ready",
+        0.5
       ],
-      "size": [
-        340,
-        594
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "link": 4,
-          "widget": {
-            "name": "prompt"
-          }
-        },
-        {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
-        },
-        {
-          "label": "image_1",
-          "name": "model.images.image_1",
-          "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "system",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "system"
-          }
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "documents",
-          "type": "CHAT_DOCUMENTS",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "name": "pdf_engine",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "pdf_engine"
-          }
-        },
-        {
-          "name": "seed",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "seed"
-          }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "text",
-          "type": "STRING",
-          "links": [
-            13
-          ]
-        },
-        {
-          "name": "reasoning",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "audio",
-          "type": "AUDIO",
-          "links": []
-        },
-        {
-          "name": "conversation",
-          "type": "CHAT_CONVERSATION",
-          "links": []
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OpenRouterChatAsk"
-      },
-      "widgets_values": [
-        "",
-        "anthropic/claude-sonnet-5",
-        "high",
-        0,
-        "",
-        "model default",
-        42,
-        "fixed",
-        0,
-        ""
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
+      "title": "Read Hero Ready"
     },
     {
       "id": 11,
-      "type": "ComfySwitchNode",
+      "type": "PrimitiveString",
       "pos": [
-        2080,
-        298
+        1650,
+        276
       ],
       "size": [
         340,
-        78
+        58
       ],
       "flags": {},
       "order": 10,
       "mode": 0,
       "inputs": [
         {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "hero/approved"
+      ],
+      "title": "Approved Folder"
+    },
+    {
+      "id": 12,
+      "type": "PrimitiveString",
+      "pos": [
+        1650,
+        398
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "hero/review"
+      ],
+      "title": "Review Folder"
+    },
+    {
+      "id": 13,
+      "type": "ComfySwitchNode",
+      "pos": [
+        1650,
+        520
+      ],
+      "size": [
+        340,
+        78
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
           "name": "switch",
           "type": "BOOLEAN",
-          "link": 11,
+          "link": 12,
           "widget": {
             "name": "switch"
           }
@@ -788,12 +865,12 @@
         {
           "name": "on_false",
           "type": "STRING",
-          "link": 13
+          "link": 14
         },
         {
           "name": "on_true",
           "type": "STRING",
-          "link": 12
+          "link": 13
         }
       ],
       "outputs": [
@@ -801,7 +878,7 @@
           "name": "output",
           "type": "STRING",
           "links": [
-            14
+            15
           ]
         }
       ],
@@ -810,27 +887,72 @@
       },
       "widgets_values": [
         false
-      ]
+      ],
+      "title": "Choose the Folder"
     },
     {
-      "id": 12,
+      "id": 14,
+      "type": "SaveImage",
+      "pos": [
+        2030,
+        276
+      ],
+      "size": [
+        340,
+        290
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 16
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 15,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "title": "Save the Hero"
+    },
+    {
+      "id": 15,
       "type": "PreviewAny",
       "pos": [
-        2080,
-        440
+        2030,
+        630
       ],
       "size": [
         340,
         240
       ],
       "flags": {},
-      "order": 11,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
           "name": "source",
           "type": "*",
-          "link": 14
+          "link": 11
         }
       ],
       "outputs": [
@@ -844,13 +966,13 @@
         "Node name for S&R": "PreviewAny"
       },
       "widgets_values": [],
-      "title": "Answer"
+      "title": "Check Summary"
     }
   ],
   "links": [
     [
       1,
-      2,
+      3,
       0,
       5,
       0,
@@ -859,16 +981,16 @@
     [
       2,
       3,
-      0,
-      5,
-      1,
-      "STRING"
-    ],
-    [
-      3,
-      5,
       0,
       6,
+      0,
+      "STRING"
+    ],
+    [
+      3,
+      3,
+      0,
+      8,
       0,
       "STRING"
     ],
@@ -876,39 +998,39 @@
       4,
       5,
       0,
-      10,
-      0,
-      "STRING"
+      6,
+      3,
+      "IMAGE"
     ],
     [
       5,
-      2,
-      0,
+      6,
+      1,
       7,
-      0,
-      "STRING"
+      2,
+      "IMAGE"
     ],
     [
       6,
-      3,
-      0,
       7,
+      0,
+      8,
       1,
       "STRING"
     ],
     [
       7,
       6,
-      0,
-      7,
+      2,
+      8,
       2,
       "STRING"
     ],
     [
       8,
-      7,
-      0,
       8,
+      0,
+      9,
       0,
       "STRING"
     ],
@@ -916,15 +1038,15 @@
       9,
       4,
       0,
-      8,
+      9,
       1,
       "DECISION_QUESTIONS"
     ],
     [
       10,
-      8,
-      0,
       9,
+      0,
+      10,
       0,
       "DECISION_ANSWERS"
     ],
@@ -932,33 +1054,49 @@
       11,
       9,
       1,
-      11,
+      15,
+      0,
+      "STRING"
+    ],
+    [
+      12,
+      10,
+      1,
+      13,
       0,
       "BOOLEAN"
     ],
     [
-      12,
-      6,
-      0,
+      13,
       11,
+      0,
+      13,
       2,
       "STRING"
     ],
     [
-      13,
-      10,
+      14,
+      12,
       0,
-      11,
+      13,
       1,
       "STRING"
     ],
     [
+      15,
+      13,
+      0,
       14,
-      11,
-      0,
-      12,
-      0,
+      1,
       "STRING"
+    ],
+    [
+      16,
+      6,
+      1,
+      14,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [
@@ -967,9 +1105,9 @@
       "title": "Input",
       "bounding": [
         0,
-        188,
+        166,
         400,
-        662
+        476
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -977,12 +1115,12 @@
     },
     {
       "id": 2,
-      "title": "Ask",
+      "title": "Search",
       "bounding": [
         430,
-        188,
+        166,
         780,
-        946
+        816
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -990,24 +1128,11 @@
     },
     {
       "id": 3,
-      "title": "Decision",
+      "title": "Check",
       "bounding": [
         1240,
-        188,
-        400,
-        586
-      ],
-      "color": "#68688c",
-      "font_size": 24,
-      "flags": {}
-    },
-    {
-      "id": 4,
-      "title": "Answer",
-      "bounding": [
-        1670,
-        188,
-        780,
+        166,
+        1160,
         734
       ],
       "color": "#68688c",

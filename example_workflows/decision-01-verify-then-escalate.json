@@ -1,8 +1,8 @@
 {
-  "id": "a6578314-4b30-572c-9ad9-2ecbda7faf34",
+  "id": "7bdf3634-968c-5bcb-b526-a84a32ab95ba",
   "revision": 0,
-  "last_node_id": 12,
-  "last_link_id": 12,
+  "last_node_id": 14,
+  "last_link_id": 15,
   "nodes": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
       ],
       "size": [
         620,
-        128
+        88
       ],
       "flags": {},
       "order": 0,
@@ -33,62 +33,53 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Write the brief. **Image: Generate**, **Chat: Ask**, and **Decision: Ask** each send one paid OpenRouter request: the image, its description, and the check.\n3. **If/Else Switch** is a ComfyUI node marked as a beta. Only the branch it picks runs; here it picks the folder the image is saved in.\n4. Press **Run**."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Paste your notes in **Notes** and type the question in **Question**.\n3. Press **Run**. **Answer** shows the cheap model's answer, or the strong model's when Jev doubts it."
       ],
       "title": "Start Here"
     },
     {
       "id": 2,
-      "type": "PrimitiveStringMultiline",
+      "type": "MarkdownNote",
       "pos": [
-        30,
-        298
+        650,
+        30
       ],
       "size": [
-        340,
-        108
+        620,
+        106
       ],
       "flags": {},
       "order": 1,
       "mode": 0,
       "inputs": [
         {
-          "name": "value",
+          "name": "text",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "value"
+            "name": "text"
           }
         }
       ],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            1,
-            2
-          ]
-        }
-      ],
+      "outputs": [],
       "properties": {
-        "Node name for S&R": "PrimitiveStringMultiline"
+        "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "A red panda astronaut floating in space"
+        "**Quick Answer** uses a fast, inexpensive model. Jev checks in **Supported** that every fact in it comes from the notes, with a threshold of 0.8.\n\n**If/Else Switch** runs only the branch it picks, so **Careful Answer**, a stronger and dearer model, runs only when the quick answer fails the check.\n\nTwo or three paid requests per run. Prices are in **OpenRouter models**; each request's charge is at openrouter.ai/activity."
       ],
-      "title": "Brief"
+      "title": "Using This Workflow"
     },
     {
       "id": 3,
-      "type": "PrimitiveString",
+      "type": "PrimitiveStringMultiline",
       "pos": [
-        410,
-        298
+        30,
+        276
       ],
       "size": [
         340,
-        58
+        88
       ],
       "flags": {},
       "order": 2,
@@ -108,24 +99,25 @@
           "name": "STRING",
           "type": "STRING",
           "links": [
-            10
+            1,
+            5
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "PrimitiveString"
+        "Node name for S&R": "PrimitiveStringMultiline"
       },
       "widgets_values": [
-        "openrouter/approved"
+        "The store opens at 9:00 and closes at 18:00 on weekdays. On Saturdays it closes at 14:00, and on the first Saturday of each month at 16:00. It is closed on Sundays and public holidays. Returns are accepted at the service desk until 30 minutes before closing."
       ],
-      "title": "Approved folder"
+      "title": "Notes"
     },
     {
       "id": 4,
       "type": "PrimitiveString",
       "pos": [
-        410,
-        420
+        30,
+        428
       ],
       "size": [
         340,
@@ -149,7 +141,8 @@
           "name": "STRING",
           "type": "STRING",
           "links": [
-            11
+            2,
+            6
           ]
         }
       ],
@@ -157,20 +150,20 @@
         "Node name for S&R": "PrimitiveString"
       },
       "widgets_values": [
-        "openrouter/rejected"
+        "Until what time can I return an item on the first Saturday of the month?"
       ],
-      "title": "Rejected folder"
+      "title": "Question"
     },
     {
       "id": 5,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
-        30,
-        470
+        410,
+        276
       ],
       "size": [
         340,
-        228
+        184
       ],
       "flags": {},
       "order": 4,
@@ -212,7 +205,7 @@
           "name": "questions",
           "type": "DECISION_QUESTIONS",
           "links": [
-            7
+            9
           ]
         }
       ],
@@ -220,122 +213,87 @@
         "Node name for S&R": "OpenRouterDecisionAddQuestion"
       },
       "widgets_values": [
-        "matches",
-        "Does the image, as described, show everything the brief asks for?",
+        "supported",
+        "Is every fact in the answer stated in the notes, and does it answer the question?",
         "yes or no",
         "",
         ""
-      ]
+      ],
+      "title": "Supported"
     },
     {
       "id": 6,
-      "type": "OpenRouterImageGenerate",
+      "type": "StringFormat",
       "pos": [
-        840,
-        298
+        410,
+        524
       ],
       "size": [
         340,
-        356
+        148
       ],
       "flags": {},
       "order": 5,
       "mode": 0,
       "inputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
+          "label": "a",
+          "name": "values.a",
+          "type": "*",
           "link": 1,
-          "widget": {
-            "name": "prompt"
-          }
+          "shape": 7
         },
         {
-          "name": "model",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "link": null,
-          "widget": {
-            "name": "model"
-          }
+          "label": "b",
+          "name": "values.b",
+          "type": "*",
+          "link": 2,
+          "shape": 7
         },
         {
-          "label": "reference_1",
-          "name": "model.references.reference_1",
-          "type": "IMAGE",
+          "label": "c",
+          "name": "values.c",
+          "type": "*",
           "link": null,
           "shape": 7
         },
         {
-          "name": "seed",
-          "type": "INT",
+          "name": "f_string",
+          "type": "STRING",
           "link": null,
           "widget": {
-            "name": "seed"
+            "name": "f_string"
           }
-        },
-        {
-          "name": "variation",
-          "type": "INT",
-          "link": null,
-          "widget": {
-            "name": "variation"
-          }
-        },
-        {
-          "name": "options",
-          "type": "REQUEST_OPTIONS",
-          "link": null,
-          "shape": 7
         }
       ],
       "outputs": [
         {
-          "name": "images",
-          "type": "IMAGE",
-          "shape": 6,
+          "name": "STRING",
+          "type": "STRING",
           "links": [
             3,
             4
           ]
-        },
-        {
-          "name": "masks",
-          "type": "MASK",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "svg",
-          "type": "SVG",
-          "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "OpenRouterImageGenerate"
+        "Node name for S&R": "StringFormat"
       },
       "widgets_values": [
-        "",
-        "google/gemini-3.1-flash-image",
-        "model default",
-        "model default",
-        1,
-        42,
-        "fixed",
-        0
+        "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"
       ],
-      "color": "#432",
-      "bgcolor": "#653"
+      "title": "Answer Request"
     },
     {
       "id": 7,
       "type": "OpenRouterChatAsk",
       "pos": [
-        1220,
-        298
+        840,
+        276
       ],
       "size": [
         340,
-        594
+        444
       ],
       "flags": {},
       "order": 6,
@@ -344,7 +302,7 @@
         {
           "name": "prompt",
           "type": "STRING",
-          "link": null,
+          "link": 3,
           "widget": {
             "name": "prompt"
           }
@@ -361,27 +319,6 @@
           "label": "image_1",
           "name": "model.images.image_1",
           "type": "IMAGE",
-          "link": 3,
-          "shape": 7
-        },
-        {
-          "label": "image_2",
-          "name": "model.images.image_2",
-          "type": "IMAGE",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "label": "video_1",
-          "name": "model.videos.video_1",
-          "type": "VIDEO",
-          "link": null,
-          "shape": 7
-        },
-        {
-          "label": "audio_1",
-          "name": "model.audio.audio_1",
-          "type": "AUDIO",
           "link": null,
           "shape": 7
         },
@@ -441,7 +378,8 @@
           "name": "text",
           "type": "STRING",
           "links": [
-            5
+            7,
+            13
           ]
         },
         {
@@ -470,11 +408,10 @@
         "Node name for S&R": "OpenRouterChatAsk"
       },
       "widgets_values": [
-        "Describe this image in one paragraph.",
-        "google/gemini-3.5-flash",
+        "",
+        "openai/gpt-6-luna",
         "medium",
         0,
-        1.0,
         "",
         "model default",
         42,
@@ -482,6 +419,7 @@
         0,
         ""
       ],
+      "title": "Quick Answer",
       "color": "#432",
       "bgcolor": "#653"
     },
@@ -489,12 +427,12 @@
       "id": 8,
       "type": "StringFormat",
       "pos": [
-        1220,
-        956
+        840,
+        784
       ],
       "size": [
         340,
-        148
+        168
       ],
       "flags": {},
       "order": 7,
@@ -504,19 +442,26 @@
           "label": "a",
           "name": "values.a",
           "type": "*",
-          "link": 2,
+          "link": 5,
           "shape": 7
         },
         {
           "label": "b",
           "name": "values.b",
           "type": "*",
-          "link": 5,
+          "link": 6,
           "shape": 7
         },
         {
           "label": "c",
           "name": "values.c",
+          "type": "*",
+          "link": 7,
+          "shape": 7
+        },
+        {
+          "label": "d",
+          "name": "values.d",
           "type": "*",
           "link": null,
           "shape": 7
@@ -535,7 +480,7 @@
           "name": "STRING",
           "type": "STRING",
           "links": [
-            6
+            8
           ]
         }
       ],
@@ -543,19 +488,20 @@
         "Node name for S&R": "StringFormat"
       },
       "widgets_values": [
-        "Brief: {a}\n\nDescription of the image: {b}"
-      ]
+        "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"
+      ],
+      "title": "Notes and Answer"
     },
     {
       "id": 9,
       "type": "OpenRouterDecisionAsk",
       "pos": [
-        1650,
-        298
+        1220,
+        276
       ],
       "size": [
         340,
-        192
+        156
       ],
       "flags": {},
       "order": 8,
@@ -564,7 +510,7 @@
         {
           "name": "situation",
           "type": "STRING",
-          "link": 6,
+          "link": 8,
           "widget": {
             "name": "situation"
           }
@@ -572,7 +518,7 @@
         {
           "name": "questions",
           "type": "DECISION_QUESTIONS",
-          "link": 7
+          "link": 9
         },
         {
           "name": "model",
@@ -602,13 +548,15 @@
           "name": "answers",
           "type": "DECISION_ANSWERS",
           "links": [
-            8
+            10
           ]
         },
         {
           "name": "summary",
           "type": "STRING",
-          "links": []
+          "links": [
+            11
+          ]
         }
       ],
       "properties": {
@@ -619,6 +567,7 @@
         "typesafe/jev-1.13",
         0
       ],
+      "title": "Check the Answer",
       "color": "#432",
       "bgcolor": "#653"
     },
@@ -626,12 +575,12 @@
       "id": 10,
       "type": "OpenRouterDecisionReadAnswer",
       "pos": [
-        1650,
-        554
+        1220,
+        496
       ],
       "size": [
         340,
-        190
+        182
       ],
       "flags": {},
       "order": 9,
@@ -640,7 +589,7 @@
         {
           "name": "answers",
           "type": "DECISION_ANSWERS",
-          "link": 8
+          "link": 10
         },
         {
           "name": "question",
@@ -669,7 +618,7 @@
           "name": "is_yes",
           "type": "BOOLEAN",
           "links": [
-            9
+            12
           ]
         },
         {
@@ -697,29 +646,169 @@
         "Node name for S&R": "OpenRouterDecisionReadAnswer"
       },
       "widgets_values": [
-        "matches",
-        0.5
-      ]
+        "supported",
+        0.8
+      ],
+      "title": "Read Supported"
     },
     {
       "id": 11,
-      "type": "ComfySwitchNode",
+      "type": "OpenRouterChatAsk",
       "pos": [
-        2030,
-        298
+        1650,
+        276
       ],
       "size": [
         340,
-        78
+        468
       ],
       "flags": {},
       "order": 10,
       "mode": 0,
       "inputs": [
         {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 4,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        },
+        {
+          "label": "image_1",
+          "name": "model.images.image_1",
+          "type": "IMAGE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "system",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "system"
+          }
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "documents",
+          "type": "CHAT_DOCUMENTS",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "pdf_engine",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "pdf_engine"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "variation",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "variation"
+          }
+        },
+        {
+          "name": "options",
+          "type": "REQUEST_OPTIONS",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            14
+          ]
+        },
+        {
+          "name": "reasoning",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "conversation",
+          "type": "CHAT_CONVERSATION",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterChatAsk"
+      },
+      "widgets_values": [
+        "",
+        "anthropic/claude-opus-5.5",
+        "medium",
+        0,
+        1.0,
+        "",
+        "model default",
+        42,
+        "fixed",
+        0,
+        ""
+      ],
+      "title": "Careful Answer",
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "ComfySwitchNode",
+      "pos": [
+        2030,
+        276
+      ],
+      "size": [
+        340,
+        78
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
           "name": "switch",
           "type": "BOOLEAN",
-          "link": 9,
+          "link": 12,
           "widget": {
             "name": "switch"
           }
@@ -727,12 +816,12 @@
         {
           "name": "on_false",
           "type": "STRING",
-          "link": 11
+          "link": 14
         },
         {
           "name": "on_true",
           "type": "STRING",
-          "link": 10
+          "link": 13
         }
       ],
       "outputs": [
@@ -740,7 +829,7 @@
           "name": "output",
           "type": "STRING",
           "links": [
-            12
+            15
           ]
         }
       ],
@@ -749,56 +838,82 @@
       },
       "widgets_values": [
         false
-      ]
+      ],
+      "title": "Keep or Escalate"
     },
     {
-      "id": 12,
-      "type": "SaveImage",
+      "id": 13,
+      "type": "PreviewAny",
       "pos": [
         2030,
-        440
+        418
       ],
       "size": [
         340,
-        290
+        240
       ],
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 4
-        },
-        {
-          "name": "filename_prefix",
-          "type": "STRING",
-          "link": 12,
-          "widget": {
-            "name": "filename_prefix"
-          }
+          "name": "source",
+          "type": "*",
+          "link": 15
         }
       ],
       "outputs": [
         {
-          "name": "images",
-          "type": "IMAGE",
+          "name": "STRING",
+          "type": "STRING",
           "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "SaveImage"
+        "Node name for S&R": "PreviewAny"
       },
-      "widgets_values": [
-        "ComfyUI"
-      ]
+      "widgets_values": [],
+      "title": "Answer"
+    },
+    {
+      "id": 14,
+      "type": "PreviewAny",
+      "pos": [
+        2030,
+        722
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Check Summary"
     }
   ],
   "links": [
     [
       1,
-      2,
+      3,
       0,
       6,
       0,
@@ -806,10 +921,10 @@
     ],
     [
       2,
-      2,
+      4,
       0,
-      8,
-      0,
+      6,
+      1,
       "STRING"
     ],
     [
@@ -817,27 +932,43 @@
       6,
       0,
       7,
-      2,
-      "IMAGE"
+      0,
+      "STRING"
     ],
     [
       4,
       6,
       0,
-      12,
+      11,
       0,
-      "IMAGE"
+      "STRING"
     ],
     [
       5,
-      7,
+      3,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      6,
+      4,
       0,
       8,
       1,
       "STRING"
     ],
     [
-      6,
+      7,
+      7,
+      0,
+      8,
+      2,
+      "STRING"
+    ],
+    [
+      8,
       8,
       0,
       9,
@@ -845,7 +976,7 @@
       "STRING"
     ],
     [
-      7,
+      9,
       5,
       0,
       9,
@@ -853,7 +984,7 @@
       "DECISION_QUESTIONS"
     ],
     [
-      8,
+      10,
       9,
       0,
       10,
@@ -861,35 +992,43 @@
       "DECISION_ANSWERS"
     ],
     [
+      11,
       9,
+      1,
+      14,
+      0,
+      "STRING"
+    ],
+    [
+      12,
       10,
       1,
-      11,
+      12,
       0,
       "BOOLEAN"
     ],
     [
-      10,
-      3,
+      13,
+      7,
       0,
-      11,
+      12,
       2,
       "STRING"
     ],
     [
+      14,
       11,
-      4,
       0,
-      11,
+      12,
       1,
       "STRING"
     ],
     [
+      15,
       12,
-      11,
       0,
-      12,
-      1,
+      13,
+      0,
       "STRING"
     ]
   ],
@@ -899,9 +1038,9 @@
       "title": "Input",
       "bounding": [
         0,
-        188,
+        166,
         780,
-        540
+        536
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -909,12 +1048,12 @@
     },
     {
       "id": 2,
-      "title": "Image",
+      "title": "Check",
       "bounding": [
         810,
-        188,
+        166,
         780,
-        946
+        816
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -922,12 +1061,12 @@
     },
     {
       "id": 3,
-      "title": "Decision",
+      "title": "Escalate",
       "bounding": [
         1620,
-        188,
+        166,
         780,
-        586
+        826
       ],
       "color": "#68688c",
       "font_size": 24,

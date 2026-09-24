@@ -4,25 +4,25 @@ from __future__ import annotations
 
 import sys
 import json
-import math
 import uuid
 import argparse
 from scripts.config import NOTE
 from src.paths import EXTENSION_ROOT
 from typing import cast, TYPE_CHECKING
 from scripts.nodes.check import read_schemas
+from scripts.workflows.page.config import NOTE_WIDTH
+from scripts.workflows.page.layout import place_stacks
 from scripts.workflows.page.graph import Node, NAMESPACE
 from scripts.workflows.descriptions.chat import CHAT_WORKFLOWS
-from scripts.workflows.page.layout import measure, place_stacks
+from scripts.workflows.page.sizes import measure, measure_note
 from scripts.workflows.descriptions.audio import AUDIO_WORKFLOWS
 from scripts.workflows.descriptions.image import IMAGE_WORKFLOWS
 from scripts.workflows.descriptions.video import VIDEO_WORKFLOWS
+from scripts.workflows.descriptions.design import DESIGN_WORKFLOWS
 from scripts.workflows.descriptions.search import SEARCH_WORKFLOWS
-from scripts.workflows.descriptions.options import OPTIONS_WORKFLOWS
 from scripts.workflows.descriptions.decision import DECISION_WORKFLOWS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS, WORKFLOW_TEXTS
 from scripts.workflows.page.serialize import Json, Palette, serialize_graph, serialize_subgraph
-from scripts.workflows.page.config import NOTE_WIDTH, NOTE_PADDING, NOTE_LINE_HEIGHT, NOTE_CHARS_PER_LINE
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -32,11 +32,11 @@ if TYPE_CHECKING:
 WORKFLOWS = (
     *CHAT_WORKFLOWS,
     *IMAGE_WORKFLOWS,
+    *DESIGN_WORKFLOWS,
     *VIDEO_WORKFLOWS,
     *AUDIO_WORKFLOWS,
     *SEARCH_WORKFLOWS,
     *DECISION_WORKFLOWS,
-    *OPTIONS_WORKFLOWS,
 )
 
 
@@ -63,27 +63,31 @@ def check_coverage(node_ids: Iterable[str]) -> list[str]:
 
 
 def serialize_workflow(workflow: Workflow, palette: Palette) -> Json:
-    """Serialize one workflow: its Start Here note, placed nodes, links, group frames and subgraph definitions."""
-    text = WORKFLOW_TEXTS[workflow.slug]["start"]
-    note = Node("note", NOTE, {"text": text}, title=SHARED_TEXTS["start"])
-    # The note is sized to its copy: each line wraps at the note width.
-    lines = sum(max(1, math.ceil(len(line) / NOTE_CHARS_PER_LINE)) for line in text.splitlines())
-    sizes = {note.key: (NOTE_WIDTH, NOTE_PADDING + lines * NOTE_LINE_HEIGHT)}
+    """Serialize one workflow: its two notes, placed nodes, links, group frames and subgraph definitions."""
+    texts = WORKFLOW_TEXTS[workflow.slug]
+    notes = (
+        Node("note", NOTE, {"text": texts["start"]}, title=SHARED_TEXTS["start"]),
+        Node("using", NOTE, {"text": texts["using"]}, title=SHARED_TEXTS["using"]),
+    )
+    sizes = {note.key: (NOTE_WIDTH, measure_note(str(note.values["text"]))) for note in notes}
     # A growing row of sockets shows each linked slot and one more, so the links decide a node's height.
     targets = [end.split(".", 1) for _start, end in workflow.links]
     sizes |= {
         node.key: measure(
-            node.kind, palette.schema(node), frozenset(socket for key, socket in targets if key == node.key)
+            node.kind,
+            palette.schema(node),
+            node.values,
+            frozenset(socket for key, socket in targets if key == node.key),
         )
         for node in workflow.nodes
     }
-    boxes, groups = place_stacks(workflow.stacks, sizes)
-    grouped = sum(len(column) for stack in workflow.stacks for group in stack for column in group.columns) + 1
-    if set(boxes) != set(sizes) or len(boxes) != grouped:
+    boxes, groups = place_stacks(workflow.stacks, sizes, notes=[note.key for note in notes])
+    grouped = sum(len(column) for stack in workflow.stacks for group in stack for column in group.columns)
+    if set(boxes) != set(sizes) or len(boxes) != grouped + len(notes):
         message = f"Place every node of {workflow.slug} in exactly one group."
         raise ValueError(message)
     entries, records = serialize_graph(
-        (note, *workflow.nodes),
+        (*notes, *workflow.nodes),
         workflow.links,
         palette,
         {key: (box.x, box.y, box.width, box.height) for key, box in boxes.items()},
