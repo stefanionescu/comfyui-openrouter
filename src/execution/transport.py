@@ -40,7 +40,11 @@ if TYPE_CHECKING:
 
 
 def _open_session(configuration: ExecutionConfiguration, *, is_authorized: bool = True) -> aiohttp.ClientSession:
-    """Open one session for one request; the key goes only to OpenRouter, never to a provider's own host."""
+    """Open one session for one request; the key goes only to OpenRouter, never to a provider's own host.
+
+    Proxy settings from the environment and cookies are ignored, and every request refuses redirects, so
+    neither the key nor a reply can pass through another host.
+    """
     headers = {
         "HTTP-Referer": ATTRIBUTION_URL,
         "X-OpenRouter-Title": ATTRIBUTION_TITLE,
