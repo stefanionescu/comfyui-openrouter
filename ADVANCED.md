@@ -1,11 +1,29 @@
 # ComfyUI OpenRouter Advanced Guide
 
-Use this guide for settings, prices, model updates, and recovery. For
-installation and your first run, see [the setup guide](README.md). Each node's
-native **Info** explains its inputs and model-specific limits.
+This guide is for people who already run the workflows described in the
+[README](README.md). It defines what each node sends, decides, and returns,
+lists the settings, limits, and defaults, and covers recovery, development,
+and troubleshooting. Each node's native **Info** explains its inputs and
+model-specific limits.
+
+The extension keeps five fixed boundaries:
+
+- Every paid request goes from the ComfyUI server to OpenRouter with your key.
+  OpenRouter passes it to the model's provider, which receives your prompts,
+  media, and documents.
+- Model-list refreshes and automatic checks read OpenRouter's public lists and
+  send no key.
+- The extension saves four things in its private state folder: the key, the
+  settings, the model lists, and the video job records. ComfyUI's save nodes
+  write every output. The extension keeps no logs and no copy of prompts or
+  outputs.
+- A paid request is never retried, because it may have reached OpenRouter
+  before its connection failed.
+- Every message, label, and workflow note is in English.
 
 ## Contents
 
+- [Run architecture](#run-architecture)
 - [Keys and access](#keys-and-access)
 - [Request limits](#request-limits)
 - [Prices](#prices)
@@ -19,6 +37,50 @@ native **Info** explains its inputs and model-specific limits.
 - [Developer workflow](#developer-workflow)
 - [Official packaging and publishing](#official-packaging-and-publishing)
 - [Troubleshooting](#troubleshooting)
+
+## Run architecture
+
+Each paid node follows the same steps. It reads its inputs and the chosen
+model's entry in the saved model list, and refuses what the model cannot take.
+It waits for one of the **parallel requests** slots, sends one request to
+OpenRouter, and turns the reply into ComfyUI outputs. Media are encoded and
+decoded in a worker thread, so ComfyUI stays responsive. An output the model
+did not make stops the nodes connected to it.
+
+What each node sends and returns:
+
+- **Chat: Ask** sends one chat completion. The message holds the prompt, then the media: images as PNG, videos as MP4, and audio clips as WAV, each encoded in the request. A PDF goes as a file for OpenRouter's PDF reader, and a text file as text. Earlier turns come from **conversation**. It returns the
+  text, the reasoning when the model shares it, and any images the model drew.
+  A spoken answer is streamed as 24 kHz mono PCM audio.
+- **Chat: Attach Document** reads one file from ComfyUI's input folder and
+  sends nothing itself.
+- **Image: Generate** sends one image request with the prompt, the chosen
+  fields, the count, and each reference as a PNG data URL. It returns raster
+  images with their masks, where white marks the transparent area, and SVG
+  files separately.
+- **Video: Generate** sends one video job with the prompt, the chosen fields,
+  and the frames or references. It records the job as soon as OpenRouter
+  accepts it, checks its status every **video check interval**, and downloads
+  the MP4 from openrouter.ai when it is ready.
+- **Video: Download** checks the status of one recorded job and downloads its
+  video. It sends no paid request.
+- **Audio: Speak** sends the text, the voice, the speed, and the voice sample as
+  WAV when it is connected. It returns the audio OpenRouter sends, raw PCM or
+  MP3.
+- **Audio: Transcribe** sends the clip as WAV, with the language and the
+  timestamps asked for. It returns the text, the segments, SRT subtitles, and
+  the timed words.
+- **Search: Embed** sends every text line and image in one request. The
+  similarities are worked out on your computer, by comparing each vector with
+  the first.
+- **Search: Rank** sends the query and every text line and image in one
+  request, and returns them in order of relevance with their scores.
+- **Decision: Ask** sends the situation and the questions from **Decision: Add
+  Question** to OpenRouter's alpha decisions API. **Decision: Read Answer**
+  reads one answer locally and sends nothing.
+- **Request Options** sends nothing itself. A paid node adds its provider
+  choices and extra fields to its own request, and refuses a field its request
+  type does not accept.
 
 ## Keys and access
 
@@ -52,11 +114,6 @@ temporary, and user folders. The folder holds the saved key, the settings, the
 saved model lists, and the video job records. Files use owner-only permissions
 where supported. They are not encrypted; other code running as the same
 operating-system user can read them.
-
-What leaves your computer: prompts, media, and settings go to OpenRouter and the
-chosen model's provider in paid requests. Model-list refreshes and checks send
-no key; they read OpenRouter's public lists. The extension keeps no logs and no
-copy of prompts or outputs.
 
 ## Request limits
 
@@ -144,18 +201,21 @@ checking.
 
 ## Caching and reruns
 
-ComfyUI reuses a cached result when a node's inputs are unchanged. Change **run
-number** to send the same request again; each run is billed. The **seed** of a
-paid node changes after each run unless its control is **fixed**, so queuing
-again sends a new request. The examples ship with the seed control on **fixed**.
-Saving a different key starts a new cache, so no result made with another key
-is reused.
-
-Paid requests are never retried: a request may have reached OpenRouter before
-its connection failed. Requests that bill nothing, model lists, video status,
-and video downloads, are retried up to three times after a busy reply or a
-dropped connection. ComfyUI's cancel stops waiting during every request. Chat
-bills the tokens the model produced before a cancel.
+- ComfyUI reuses a cached result while a node's inputs are unchanged. Change
+  **run number** to send the same request again; each run is billed.
+- The **seed** of a paid node changes after each run unless its control is
+  **fixed**, so queuing again sends a new request. The examples ship with the
+  seed control on **fixed**.
+- Saving a different key starts a new cache, so no result made with another
+  key is reused. Changing settings keeps the cache.
+- By default, ComfyUI keeps only the most recent run's results, so running
+  another workflow in between sends the requests again.
+- Paid requests are never retried. Requests that bill nothing, such as model
+  lists, video status checks, and video downloads, are retried up to three
+  times after a busy reply or a dropped connection.
+- ComfyUI's cancel stops waiting during every request. A chat model bills the
+  tokens it produced before the cancel, and a video job keeps running and
+  billing.
 
 ## Recovery
 
@@ -217,39 +277,56 @@ expired.
 A paid node checks its inputs against the chosen model before it sends
 anything, so a refused input costs nothing.
 
-**Chat: Ask** stops before sending when the prompt is empty or too long, the
-conversation is too long, the media is above the upload limit, a connected
-image, video, or audio clip is a kind the model does not read, the output token
-limit is above the model's, or the answer schema is not a JSON object.
+**Chat: Ask** stops before sending when:
 
-**Chat: Attach Document** stops when no file is chosen, the file is outside the
-input folder, is not a PDF or text file, is above the upload limit, or is not
-UTF-8 text, or when more than 8 documents are chained.
+- The prompt is empty or too long, or the conversation is too long.
+- The media is above the upload limit.
+- A connected image, video, or audio clip is a kind the model does not read.
+- The output token limit is above the model's.
+- The answer schema is not a JSON object.
 
-**Image: Generate** stops before sending when the prompt is empty, the image
-count or the number of references is outside the model's range, or a
-transparent background is asked of a JPEG.
+**Chat: Attach Document** stops when:
 
-**Video: Generate** stops before sending when there is neither a prompt nor a
-first frame, frames and references are both connected, a frame is a batch, the
-model does not take a last frame or a kind of reference, or an identical
-request is on hold after an uncertain submission.
+- No file is chosen, or the file is outside the input folder.
+- The file is not a PDF or text file, is above the upload limit, or is not
+  UTF-8 text.
+- More than 8 documents are chained.
 
-**Audio: Speak** stops before sending when the text is empty or too long, or the
-voice sample is too large. **Audio: Transcribe** stops when the language is not
-a two-letter code or the clip is a batch.
+**Image: Generate** stops before sending when:
 
-**Search: Embed** and **Search: Rank** stop when there are no items or more than
-256, or images reach a model that does not read them; **Search: Rank** also
-stops when the query is empty.
+- The prompt is empty.
+- The image count or the number of references is outside the model's range.
+- A transparent background is asked of a JPEG.
 
-**Decision: Add Question** stops when the name is not valid or is used twice,
-the question is empty, the list is full, or the answer type's fields are
-incomplete. **Decision: Ask** stops when the situation is empty or too long.
-**Decision: Read Answer** stops when no question has the name.
+**Video: Generate** stops before sending when:
+
+- There is neither a prompt nor a first frame.
+- Frames and references are both connected, or a frame is a batch.
+- The model does not take a last frame or that kind of reference.
+- An identical request is on hold after an uncertain submission.
+
+**Audio: Speak** stops before sending when the text is empty or too long, or
+the voice sample is too large. **Audio: Transcribe** stops when the language is
+not a two-letter code or the clip is a batch.
+
+**Search: Embed** and **Search: Rank** stop when:
+
+- There are no items, or more than 256.
+- Images reach a model that does not read them.
+- For **Search: Rank**, the query is empty.
+
+**Decision: Add Question** stops when:
+
+- The name is not valid or is used twice.
+- The question is empty, or the list already holds 32 questions.
+- The answer type's fields are incomplete.
+
+**Decision: Ask** stops when the situation is empty or too long. **Decision:
+Read Answer** stops when no question has the name.
 
 **Request Options** stops when a provider list or a JSON field cannot be read.
-A paid node stops when the options hold a field its endpoint does not accept.
+A paid node stops when the options hold a field its request type does not
+accept.
 
 After sending, OpenRouter's answer decides:
 
@@ -327,10 +404,12 @@ mise run comfy:nodes:schema        # Print the node descriptions the workflow bu
 ```
 
 The workflows are built, not hand-saved. `scripts/workflows/descriptions/`
-says what each one holds, one module per node family, and `texts.py` holds the
-Start Here notes and group names. The build reads the node schemas through the
-ComfyUI interpreter, with the bundled model list; it needs no running ComfyUI
-server and sends no request.
+says what each one holds, one module per category, and `texts.py` holds the
+**Start Here** and **Using This Workflow** notes and the group names. The build
+reads the node schemas through the ComfyUI interpreter, with the bundled model
+list; it needs no running ComfyUI server and sends no request. Node heights
+follow the sum ComfyUI's page computes, so a workflow keeps its layout when it
+loads.
 
 `comfy:models:build` reads the network and is not part of the complete check.
 It fails when OpenRouter lists a kind of model that no node serves, so a new
@@ -425,6 +504,13 @@ checks, `SKIP_ENV_CHECK=1` to skip only the private-file guard, or
   commit](https://www.conventionalcommits.org/) format, `type(scope): subject`.
 - **pre-push** runs the complete `mise run repo:check`.
 
+### Runtime verification
+
+Restart ComfyUI after Python changes. Rebuild the browser files and reload the
+browser after frontend changes. The project has no automated test suites:
+verify a change by running the affected workflows in the loaded checkout. Paid
+nodes send billed requests, so choose inexpensive models while testing.
+
 ### Code boundaries
 
 The packages stack in one order, and a package imports only packages below it:
@@ -451,6 +537,22 @@ src.config
   because that is ComfyUI's contract.
 - Every other message a person reads is a named constant in
   `src/config/messages/`, and in `web/scripts/text.ts` for the dialogs.
+
+### Change messages and workflow notes
+
+- To change a message a node shows, edit its constant in
+  `src/config/messages/`. The [troubleshooting](#troubleshooting) headings
+  quote the messages, so change the matching heading too.
+- To change a node's labels or tooltips, edit its `io.Schema` call in
+  `src/nodes/`, then its help page in `web/docs/`.
+- To change the dialogs' text, edit `web/scripts/text.ts`, then rebuild the
+  browser files.
+- To change a workflow's notes or group names, edit
+  `scripts/workflows/descriptions/texts.py`. To change its nodes, models, or
+  prompts, edit its module in the same folder. Then rebuild the workflows.
+- To change a node's default model, edit `src/config/generation/models.py`.
+  The default must be in the bundled model list, which `mise run
+comfy:models:build` refreshes.
 
 ## Official packaging and publishing
 

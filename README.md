@@ -1,14 +1,37 @@
 # ComfyUI OpenRouter
 
-Use any model on OpenRouter from ComfyUI with your own OpenRouter API key.
-Chat with text, images, video, audio, and documents; generate images and
-video; turn text into speech and speech into text; compare and rank text and
-images; and answer typed questions with Jev decision models. Requests go from
-your ComfyUI server straight to OpenRouter and are billed to your OpenRouter
-account.
+ComfyUI OpenRouter is a ComfyUI extension that runs any model on OpenRouter
+with your own OpenRouter API key. Its nodes cover six kinds of work:
 
-This is not ComfyUI's built-in OpenRouter node, which bills your Comfy
-account and offers a fixed list of models.
+- **Chat** asks any chat model a question, with images, video, audio, and
+  documents, and returns text, reasoning, images, or speech.
+- **Image** generates and edits images, with masks and SVG files.
+- **Video** makes a video from a prompt, frames, or references, and collects
+  a video that kept running after a cancel.
+- **Audio** turns text into speech, in a copied voice if you want, and speech
+  into text, timed segments, timed words, and subtitles.
+- **Search** turns text and images into embeddings, lists of numbers that put
+  similar items close together, and ranks them against a query.
+- **Decisions** answer typed questions with Jev, OpenRouter's decision model.
+  Jev answers with probabilities instead of text, so its answers can switch
+  what a workflow does next.
+
+Separate parts handle separate concerns:
+
+- OpenRouter passes each request to the model's provider and bills your
+  OpenRouter account.
+- This extension checks each input against the chosen model before it sends
+  anything, sends the request from your ComfyUI server with your key, and
+  turns the reply into ComfyUI images, video, audio, and text.
+- ComfyUI's own save nodes write the files.
+
+Every run of a paid node sends a paid request. Check the model, its price in
+**OpenRouter models**, and how many runs a list of inputs causes before you
+press **Run**. Models make mistakes: review generated media, text, and Jev's
+answers before you rely on them.
+
+This is not ComfyUI's built-in OpenRouter node, which bills your Comfy account
+and offers a fixed list of models.
 
 ## Contents
 
@@ -19,13 +42,16 @@ account and offers a fixed list of models.
 - [Nodes](#nodes)
 - [Find and refresh models](#find-and-refresh-models)
 - [How a run works](#how-a-run-works)
+- [Develop the extension](#develop-the-extension)
 - [Fix a setup problem](#fix-a-setup-problem)
 - [Advanced guide](#advanced-guide)
 
 ## Requirements
 
 - **Python 3.12 or later** in the environment that runs ComfyUI.
-- **ComfyUI 0.34.6 or later**.
+- **ComfyUI 0.34.6 or later**, with **frontend 1.49.6 or later** within the
+  1.x series. Older versions do not show the per-model controls or the
+  OpenRouter dialogs.
 - An **OpenRouter account** with credits, and an API key from
   openrouter.ai/settings/keys.
 - Network access from the ComfyUI server to openrouter.ai.
@@ -114,9 +140,7 @@ openrouter.ai/activity.
 ## Choose a workflow
 
 The `example_workflows` folder holds 13 editable workflows built on real tasks.
-Each one uses the newest models for its job and lets Jev, OpenRouter's decision
-model, make the call that a person would otherwise make: which image to keep,
-whether a draft is distorted, whether an answer is supported. Together they use
+Each one uses the newest models for its job. Jev, OpenRouter's decision model, then makes the call a person would otherwise make: which image to keep, whether a draft is distorted, or whether an answer is supported. Together they use
 every node.
 
 Open one from native **Browse Templates → comfyui-openrouter**, or drag its JSON
@@ -124,6 +148,10 @@ file onto ComfyUI. Each workflow has a **Start Here** note with the steps and a
 **Using This Workflow** note that explains how it decides. Examples need only
 native ComfyUI nodes and this extension. Media inputs start empty; select your
 own image, audio, or document.
+
+Several workflows route their results with ComfyUI's **If/Else Switch**, which
+ComfyUI marks as beta. It runs only the branch it picks, so a paid node on the
+other branch sends nothing.
 
 After updating, open an example in a new tab. Existing graphs keep their saved
 notes, prompts, and layout. Notes and node titles are saved in the graph in
@@ -197,6 +225,10 @@ The nodes appear under **OpenRouter**, **OpenRouter/Chat**, **OpenRouter/Image**
 | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Turn one answer into text, a yes flag, and numbers.                                       |
 | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Choose providers, price caps, and extra request fields.                                   |
 
+The decision nodes use OpenRouter's alpha decisions API. OpenRouter can change
+it without notice, and a change can stop the decision nodes until the extension
+is updated.
+
 ## Find and refresh models
 
 The models that came with this version appear before the first refresh.
@@ -205,9 +237,7 @@ Open **Extensions → OpenRouter → OpenRouter models** to search the list, see
 prices, and calculate a price. Select **Refresh Models** for current models and
 prices; the node dropdowns then show the refreshed list.
 
-**Refreshing the list does not install anything.** To use a model that is not
-listed, choose **other model ID** in any node's model dropdown and type the ID,
-including suffixes such as `:online` for web search.
+**Refreshing the list does not install anything.** To use a model that is not listed, choose **other model ID** in any node's model dropdown and type the ID. The ID can include a suffix, such as `:online` for web search.
 
 OpenRouter settings can enable automatic checks. They report changes; select
 **Refresh Models** to save the updated list. See
@@ -226,10 +256,49 @@ Node inputs ──▶ ComfyUI server (key and settings stay here)
 Node outputs ◀── text, images, video, audio, and answers
 ```
 
-Each run of a paid node is one paid request, except **Video: Generate**, which
-also checks the job's status until the video is ready. ComfyUI reuses a cached
-result when nothing changed; change **run number** to send the same request
-again.
+1. A paid node reads its inputs and the chosen model's entry in the saved
+   model list. It refuses an input the model cannot take before anything is
+   sent, so a refused input costs nothing.
+2. The node waits for a free slot. At most **parallel requests** requests are
+   in flight at once; the default is 4.
+3. The node sends one request from the ComfyUI server to OpenRouter with your
+   key. OpenRouter passes it to the model's provider and bills your account.
+4. **Video: Generate** records the video job, then checks its status until the
+   video is ready and downloads it. The status checks and the download are not
+   billed.
+5. The node turns the reply into ComfyUI outputs. An output the model did not
+   make, such as images from a text model, stops the nodes connected to it.
+6. Your save nodes write the files. ComfyUI reuses a result while its inputs
+   are unchanged. Change **run number** to send the same request again; each
+   run is billed.
+
+The [advanced guide](ADVANCED.md#run-architecture) lists what each node sends
+and returns.
+
+## Develop the extension
+
+Development needs **Git** and **mise**. Point the checks at your ComfyUI
+installation in `.mise.local.toml`:
+
+```toml
+[env]
+COMFYUI_PATH = "/path/to/ComfyUI"
+COMFYUI_PYTHON = "/path/to/ComfyUI/.venv/bin/python"
+```
+
+Install the toolchain, dependencies, and Git hooks, then run the complete check
+before you push:
+
+```shell
+mise trust
+mise run repo:setup
+mise run repo:check
+```
+
+Restart ComfyUI after Python changes. Rebuild the browser files with
+`mise run comfy:frontend:build` and the workflows with
+`mise run comfy:workflows:build` after changing their sources. The [advanced
+guide](ADVANCED.md#developer-workflow) lists every task and what it runs.
 
 ## Fix a setup problem
 
@@ -242,6 +311,9 @@ again.
 | A model is missing from a dropdown           | Select **Refresh Models** in **OpenRouter models**, or choose **other model ID** and type it.                                                 |
 | "Value not in list" for a model              | The model left OpenRouter's list. Choose another model or type its ID in **other model ID**.                                                  |
 | A video was not ready in time                | Add **Video: Download**, choose the job, and select **Run**. OpenRouter keeps making the video.                                               |
+| `pydantic` cannot be imported                | Install `requirements.txt` with the Python that runs ComfyUI, then restart.                                                                   |
+| Node help is missing                         | Restore the complete extension, including the guides under `web/docs`.                                                                        |
+| Templates are missing                        | Confirm the extension includes `example_workflows`; you can also drag a JSON file from there onto ComfyUI.                                    |
 | Duplicate nodes or menus appear              | Keep one `comfyui-openrouter` folder; move backups outside `custom_nodes`.                                                                    |
 
 For the messages a node shows, read the [advanced guide](ADVANCED.md#troubleshooting).
@@ -253,10 +325,12 @@ Third-party components keep their own license terms.
 
 The [advanced guide](ADVANCED.md) is the reference. It covers:
 
-- Keys and access, and what leaves your computer.
-- Request limits and prices.
+- What leaves your computer, and what the extension saves.
+- What each node sends, decides, and returns.
+- Keys and access, request limits, and prices.
 - Model updates and automatic checks.
 - Caching and reruns, and recovering video jobs.
 - Limits and defaults, and when a run stops.
 - Updating and removing the extension, and the developer workflow.
+- Changing messages and workflow notes.
 - What each message means.
