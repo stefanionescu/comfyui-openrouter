@@ -49,7 +49,7 @@ class EmbeddingOperation:
     async def send(self, configuration: Configuration) -> EmbeddingResult:
         """Check the model, send the items, and compare each vector with the first by cosine similarity."""
         request = self.request
-        await validate_model(request.model_id, "embeddings", configuration)
+        await validate_model(request.model_id, "embeddings", configuration, ["image"] if request.image_urls else [])
         # The endpoint takes one shape per request, so with images every item uses the content form.
         items: list[Json] = list(request.texts)
         if request.image_urls:

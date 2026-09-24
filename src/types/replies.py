@@ -87,11 +87,13 @@ class ChatChoiceReply(Reply):
     Attributes:
         message: The model's message, when it answered.
         error: The provider's error, when the choice failed after the request succeeded.
+        finish_reason: Why the answer ended, such as stop, length, or content_filter.
 
     """
 
     message: ChatMessage | None = None
     error: ErrorBody | None = None
+    finish_reason: str | None = None
 
 
 class ChatReply(Reply):

@@ -51,7 +51,10 @@ async def read_events(response: aiohttp.ClientResponse, max_bytes: int) -> Async
         except OpenRouterError:
             raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
         if isinstance(event, dict) and "error" in event:
-            raise read_failure(HTTPStatus.BAD_GATEWAY, payload.encode())
+            # A failure after the reply started carries its own status, like a failed chat choice.
+            error = event["error"]
+            status = error.get("code") if isinstance(error, dict) else None
+            raise read_failure(status if isinstance(status, int) else HTTPStatus.BAD_GATEWAY, payload.encode())
         yield event
 
 

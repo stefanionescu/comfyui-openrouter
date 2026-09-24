@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 def build_request_body(body: Mapping[str, Json], options: Options | None, endpoint: Endpoint) -> dict[str, Json]:
-    """Add the options this endpoint accepts, refusing any it does not before a request is sent."""
+    """Add the options this endpoint accepts, refusing any it does not; the node's own provider fields stay."""
     merged = dict(body)
     if options is None:
         return merged
@@ -39,7 +39,8 @@ def build_request_body(body: Mapping[str, Json], options: Options | None, endpoi
             raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_RESERVED_FIELD.format(field=field))
     merged.update(options.extra_fields)
     if provider:
-        merged["provider"] = provider
+        earlier = merged.get("provider")
+        merged["provider"] = {**(earlier if isinstance(earlier, dict) else {}), **provider}
     return merged
 
 

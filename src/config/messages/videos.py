@@ -3,7 +3,7 @@
 FRAMES_BESIDE_REFERENCES = (
     "Connect first or last frames, or references, not both. OpenRouter uses the frames and ignores the references."
 )
-IMAGE_BATCH = "Connect one image for each frame, not a batch."
+IMAGE_BATCH = "Connect one image to each frame, not a batch or a list."
 JOB_CANCELLED = "OpenRouter cancelled the video job: {reason}"
 JOB_EXPIRED = "The video job expired before it finished. Run the node again to start a new job."
 JOB_FAILED = "OpenRouter could not make the video: {reason}"
@@ -21,7 +21,6 @@ SUBMIT_UNCERTAIN = (
     "The connection closed before OpenRouter confirmed the video request. It may be running and billed; check "
     "openrouter.ai/activity. An identical request is refused for {minutes} minutes."
 )
-VIDEO_REFERENCES_RANGE = "Connect at most {maximum} {kind} references."
 VIDEO_URL_UNEXPECTED = "OpenRouter's video address was not on openrouter.ai, so it was not downloaded."
 
 __all__ = [
@@ -35,6 +34,5 @@ __all__ = [
     "PROMPT_REQUIRED",
     "SUBMIT_DELAYED",
     "SUBMIT_UNCERTAIN",
-    "VIDEO_REFERENCES_RANGE",
     "VIDEO_URL_UNEXPECTED",
 ]

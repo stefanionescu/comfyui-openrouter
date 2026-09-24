@@ -10,7 +10,6 @@ import asyncio
 import hashlib
 from typing import TYPE_CHECKING
 from datetime import UTC, datetime
-from ..models import validate_model
 from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ..failures import sanitize_reason
@@ -20,12 +19,13 @@ from ..operation import validate_upload_size
 from ...config.patterns import JOB_ID_PATTERN
 from ...config.storage import UNCERTAIN_PREFIX
 from ...config.units import SECONDS_PER_MINUTE
+from ...config.messages.models import MODEL_FRAME
 from ..transport import download_video, send_json
 from ...config.generation.videos import DONE_STATUSES
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.openrouter import VIDEOS_URL, VIDEO_JOB_URL
 from ...config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
-from ...config.generation.videos import MAX_REFERENCE_AUDIO, MAX_REFERENCE_IMAGES, MAX_REFERENCE_VIDEOS
+from ..models import validate_model, validate_limits, read_video_limits
 from ...config.messages.videos import (
     JOB_FAILED,
     JOB_EXPIRED,
@@ -34,7 +34,6 @@ from ...config.messages.videos import (
     SUBMIT_DELAYED,
     PROMPT_REQUIRED,
     SUBMIT_UNCERTAIN,
-    VIDEO_REFERENCES_RANGE,
     FRAMES_BESIDE_REFERENCES,
 )
 
@@ -42,10 +41,10 @@ if TYPE_CHECKING:
     from ...types import Json
     from .jobs import JobStore
     from ...types.videos import VideoRequest
+    from ...types.models import Model, Limits
     from ...types.settings import Settings, Configuration
 
 JOB_ID = re.compile(JOB_ID_PATTERN)
-REFERENCE_LIMITS = {"image": MAX_REFERENCE_IMAGES, "video": MAX_REFERENCE_VIDEOS, "audio": MAX_REFERENCE_AUDIO}
 
 
 class VideoDownloadOperation:
@@ -98,23 +97,32 @@ class VideoOperation:
         self.request = request
         self.jobs = jobs
 
+    async def _read_model(self, configuration: Configuration) -> tuple[Model, Limits | None]:
+        """Check that the model reads the connected media, and read its entry in OpenRouter's video list."""
+        request = self.request
+        kinds = {kind for kind, _url in request.references}
+        if request.frame_urls:
+            kinds.add("image")
+        model = await validate_model(request.model_id, "videos", configuration, sorted(kinds))
+        return model, await read_video_limits(request.model_id, configuration)
+
     def validate(self, settings: Settings) -> None:
-        """Refuse a request with nothing to animate, frames beside references, and too much media."""
+        """Refuse a request with nothing to animate, frames beside references, and media over the upload limit."""
         request = self.request
         if not request.prompt.strip() and "first_frame" not in request.frame_urls:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_REQUIRED)
         if request.frame_urls and request.references:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, FRAMES_BESIDE_REFERENCES)
         validate_upload_size((*request.frame_urls.values(), *(url for _kind, url in request.references)), settings)
-        for kind, limit in REFERENCE_LIMITS.items():
-            if sum(item == kind for item, _url in request.references) > limit:
-                raise OpenRouterError(ErrorCode.INVALID_INPUT, VIDEO_REFERENCES_RANGE.format(maximum=limit, kind=kind))
 
-    def build_body(self, parameters: frozenset[str]) -> dict[str, Json]:
-        """Build the job request, sending each control only when set and the seed only when the model takes it."""
+    def build_body(self, parameters: frozenset[str], limits: Limits | None) -> dict[str, Json]:
+        """Build the job request, checked against the model's entry in OpenRouter's video list when it has one.
+
+        Each control goes only when set, the seed only to a model that takes it, and sound turned off is left out for
+        a model that makes none.
+        """
         request = self.request
-        body: dict[str, Json] = {"model": request.model_id, "prompt": request.prompt}
-        chosen: dict[str, Json] = {
+        values: dict[str, Json] = {
             "duration": request.duration,
             "resolution": request.resolution,
             "aspect_ratio": request.aspect_ratio,
@@ -122,8 +130,17 @@ class VideoOperation:
             "upscale_factor": request.upscale_factor,
             "creativity": request.creativity,
         }
-        body.update({field: value for field, value in chosen.items() if value is not None})
-        if "seed" in parameters:
+        chosen = {field: value for field, value in values.items() if value is not None}
+        if limits is not None:
+            if request.generate_audio is False and "generate_audio" not in limits.fields:
+                del chosen["generate_audio"]
+            for frame in request.frame_urls:
+                if frame not in limits.fields:
+                    message = MODEL_FRAME.format(model=request.model_id, frame=frame.replace("_", " "))
+                    raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
+            validate_limits(request.model_id, limits, chosen)
+        body: dict[str, Json] = {"model": request.model_id, "prompt": request.prompt, **chosen}
+        if "seed" in (limits.fields if limits is not None else parameters):
             body["seed"] = request.seed
         if request.frame_urls:
             body["frame_images"] = [
@@ -139,8 +156,9 @@ class VideoOperation:
     async def send(self, configuration: Configuration) -> bytes:
         """Resume an identical recorded job instead of paying for a second one, or submit and record a new job."""
         settings = configuration.settings
-        model = await validate_model(self.request.model_id, "videos", configuration)
-        body = self.build_body(model.parameters)
+        request = self.request
+        model, limits = await self._read_model(configuration)
+        body = self.build_body(model.parameters, limits)
         request_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         found = await asyncio.to_thread(self.jobs.find, request_hash, settings.video_retry_delay_minutes)
         if found is not None and found.status == "accepted":
@@ -153,7 +171,7 @@ class VideoOperation:
             version=1,
             name=UNCERTAIN_PREFIX + request_hash,
             job_id=None,
-            model_id=self.request.model_id,
+            model_id=request.model_id,
             request_hash=request_hash,
             submitted_at=datetime.now(UTC).isoformat(),
             status="uncertain",

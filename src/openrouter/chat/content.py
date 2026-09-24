@@ -50,10 +50,13 @@ def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
 
 
 def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Json]:
-    """Add each control that is set; the temperature and the seed go only to a model that takes them."""
+    """Add each control that is set; the reasoning effort, temperature, and seed go only to a model that takes them.
+
+    With an answer schema, only providers that follow it may answer.
+    """
     settings = request.settings
     body: dict[str, Json] = {"model": request.model_id, "messages": _build_messages(request)}
-    if settings.effort is not None:
+    if settings.effort is not None and "reasoning" in parameters:
         body["reasoning"] = {"effort": settings.effort}
     if settings.max_tokens > 0:
         field = "max_tokens" if "max_completion_tokens" not in parameters else "max_completion_tokens"
@@ -65,6 +68,7 @@ def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Js
     if settings.answer_schema is not None:
         schema: dict[str, Json] = {"name": ANSWER_SCHEMA_NAME, "schema": dict(settings.answer_schema), "strict": True}
         body["response_format"] = {"type": "json_schema", "json_schema": schema}
+        body["provider"] = {"require_parameters": True}
     if settings.pdf_engine is not None and any(document.file_url for document in request.documents):
         body["plugins"] = [{"id": "file-parser", "pdf": {"engine": settings.pdf_engine}}]
     return build_request_body(body | _build_output_fields(settings), request.options, "chat")

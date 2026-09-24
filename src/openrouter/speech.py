@@ -8,6 +8,7 @@ from .transport import send_speech
 from .options import build_request_body
 from ..config.openrouter import SPEECH_URL
 from .operation import validate_upload_size
+from ..config.messages.models import MODEL_VOICE
 from ..types.audio import PcmFormat, SpeechResult
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.inputs import PCM_RATE_MISSING, SPEECH_TEXT_EMPTY, VOICE_SAMPLE_SIZE, SPEECH_TEXT_LENGTH
@@ -57,9 +58,14 @@ class SpeechOperation:
         validate_upload_size((sample,), settings)
 
     async def send(self, configuration: Configuration) -> SpeechResult:
-        """Check the model, send the text with the voice and sample when set, and keep the reply's format."""
+        """Check the model, send the text with the voice and sample when set, and keep the reply's format.
+
+        A voice sample needs a model with a provider that clones voices.
+        """
         request = self.request
-        await validate_model(request.model_id, "speech", configuration)
+        model = await validate_model(request.model_id, "speech", configuration)
+        if request.sample and not model.has_voice_cloning:
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_VOICE.format(model=request.model_id))
         body: dict[str, Json] = {
             "model": request.model_id,
             "input": request.text,

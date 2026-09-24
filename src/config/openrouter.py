@@ -13,8 +13,22 @@ TRANSCRIPTION_URL = "https://openrouter.ai/api/v1/audio/transcriptions"
 EMBEDDINGS_URL = "https://openrouter.ai/api/v1/embeddings"
 RERANK_URL = "https://openrouter.ai/api/v1/rerank"
 DECISIONS_URL = "https://openrouter.ai/api/alpha/decisions"
-# The public listing of one model, read without the key; an unknown ID returns 404.
+# The public listings, read without the key: one model, one image model's providers, and every video model. An
+# unknown ID returns 404.
 MODEL_URL = "https://openrouter.ai/api/v1/models/{model_id}/endpoints"
+IMAGE_MODEL_URL = "https://openrouter.ai/api/v1/images/models/{model_id}/endpoints"
+VIDEO_MODELS_URL = "https://openrouter.ai/api/v1/videos/models"
+# How the model check names what a model reads or makes, and the image and video fields whose name differs from
+# the node's label.
+MEDIA_LABELS = {"image": "images", "video": "video", "audio": "audio"}
+# A chat model follows an answer schema when a provider lists either field.
+SCHEMA_PARAMETERS = ("structured_outputs", "response_format")
+FIELD_NAMES = {
+    "n": "count",
+    "input_references": "references",
+    "output_format": "format",
+    "output_compression": "compression",
+}
 
 # OpenRouter attributes usage to an address; the Registry page's name is fixed before the first release.
 ATTRIBUTION_URL = "https://registry.comfy.org/nodes/comfyui-openrouter"
@@ -31,6 +45,8 @@ MAX_RETRY_SECONDS = 30
 RETRY_STATUSES = (408, 429, 500, 502, 503, 504, 524, 529)
 
 MAX_REASON_CHARACTERS = 300
+# A reason that ends otherwise gets a full stop.
+REASON_ENDINGS = (".", "!", "?", "…")
 CANCELLATION_POLL_SECONDS = 0.1
 # A paid node's progress bar: validated, sent, answered, and outputs built.
 PROGRESS_STEPS = 3
@@ -99,30 +115,36 @@ __all__ = [
     "DECISIONS_URL",
     "EMBEDDINGS_URL",
     "ENDPOINT_LABELS",
+    "FIELD_NAMES",
     "GET_ATTEMPTS",
     "IMAGES_URL",
+    "IMAGE_MODEL_URL",
     "MAX_ERROR_BYTES",
     "MAX_OPTION_BYTES",
     "MAX_PRICE",
     "MAX_PROVIDERS",
     "MAX_REASON_CHARACTERS",
     "MAX_RETRY_SECONDS",
+    "MEDIA_LABELS",
     "MIN_RETRY_SECONDS",
     "MODEL_OUTPUTS",
     "MODEL_URL",
     "PRICE_PRECISION",
     "PRICE_STEP",
     "PROGRESS_STEPS",
+    "REASON_ENDINGS",
     "REPLY_CHUNK_BYTES",
     "RERANK_URL",
     "RESERVED_FIELDS",
     "RETRY_STATUSES",
     "ROUTING_FIELDS",
+    "SCHEMA_PARAMETERS",
     "SORT_CHOICES",
     "SPEECH_URL",
     "TRANSCRIPTION_URL",
     "VIDEOS_URL",
     "VIDEO_CONTENT_PREFIX",
     "VIDEO_JOB_URL",
+    "VIDEO_MODELS_URL",
     "YES_NO_CHOICES",
 ]

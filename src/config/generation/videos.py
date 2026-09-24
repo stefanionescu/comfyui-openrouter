@@ -1,10 +1,7 @@
-"""Video choices, reference limits, and job record limits."""
+"""Video choices and job record limits."""
 
 from .inputs import MODEL_DEFAULT
 
-MAX_REFERENCE_IMAGES = 8
-MAX_REFERENCE_VIDEOS = 2
-MAX_REFERENCE_AUDIO = 2
 # The longest duration the node offers, in seconds; 0 sends no duration.
 MAX_DURATION = 60
 MAX_UPSCALE_FACTOR = 8.0
@@ -29,9 +26,6 @@ __all__ = [
     "JOB_TIME_CHARACTERS",
     "MAX_CREATIVITY",
     "MAX_DURATION",
-    "MAX_REFERENCE_AUDIO",
-    "MAX_REFERENCE_IMAGES",
-    "MAX_REFERENCE_VIDEOS",
     "MAX_UPSCALE_FACTOR",
     "RESOLUTIONS",
     "UPSCALE_STEP",

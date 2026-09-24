@@ -40,7 +40,7 @@ class RankOperation:
     async def send(self, configuration: Configuration) -> RankResult:
         """Check the model and send the query and documents; the reply lists them highest relevance first."""
         request = self.request
-        await validate_model(request.model_id, "rerank", configuration)
+        await validate_model(request.model_id, "rerank", configuration, ["image"] if request.image_urls else [])
         documents: list[Json] = [*request.texts, *({"image": url} for url in request.image_urls)]
         body: dict[str, Json] = {"model": request.model_id, "query": request.query, "documents": documents}
         if request.top_n > 0:

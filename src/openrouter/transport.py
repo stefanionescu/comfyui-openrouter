@@ -13,6 +13,7 @@ from .streams import read_events
 from typing import TYPE_CHECKING
 from .failures import read_failure
 from ..types.audio import AudioReply
+from pydantic import ValidationError
 from ..types.parsing import parse_json
 from contextlib import asynccontextmanager
 from ..config.units import BYTES_PER_MEBIBYTE
@@ -21,7 +22,6 @@ from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.videos import VIDEO_URL_UNEXPECTED
 from ..config.messages.run import REQUEST_TIMEOUT, REPLY_UNREADABLE, REQUEST_UNCERTAIN, OPENROUTER_UNREACHABLE
 from ..config.openrouter import (
-    MODEL_URL,
     GET_ATTEMPTS,
     RETRY_STATUSES,
     ATTRIBUTION_URL,
@@ -35,7 +35,7 @@ from ..config.openrouter import (
 )
 
 if TYPE_CHECKING:
-    from ..types import Json
+    from ..types import Json, Reply
     from ..types.settings import Configuration
     from collections.abc import Mapping, AsyncIterator, AsyncGenerator
 
@@ -188,11 +188,15 @@ async def download_video(url: str, configuration: Configuration) -> bytes:
     return await _download(url, configuration, is_authorized=True)
 
 
-async def download_listing(model_id: str, configuration: Configuration) -> bytes | None:
-    """Read OpenRouter's public listing of one model without the key, or None when no model has this ID."""
-    url = MODEL_URL.format(model_id=model_id)
+async def download_listing[T: Reply](url: str, reply: type[T], configuration: Configuration) -> T | None:
+    """Read one of OpenRouter's public model listings without the key, or None when it lists no such model."""
     content = await _download(url, configuration, is_authorized=False, is_missing_ok=True)
-    return content or None
+    if not content:
+        return None
+    try:
+        return reply.model_validate_json(content)
+    except ValidationError:
+        raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
 
 
 async def download_media(url: str, configuration: Configuration) -> bytes:

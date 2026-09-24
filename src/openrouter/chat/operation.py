@@ -11,18 +11,20 @@ from .audio import send_audio_chat
 from ..models import validate_model
 from ...types.chat import ChatResult
 from pydantic import ValidationError
-from ...config.openrouter import CHAT_URL
 from ..operation import validate_upload_size
 from ..transport import send_json, download_media
 from ..failures import sanitize_reason, read_failure
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.replies import ChatReply, ErrorReply, ChatMessage
-from ...config.messages.run import REPLY_EMPTY, MODEL_REFUSED, REPLY_UNREADABLE
+from ...config.openrouter import CHAT_URL, MEDIA_LABELS, SCHEMA_PARAMETERS
+from ...config.messages.models import MODEL_OUTPUT, MODEL_SCHEMA, MODEL_TOKENS
 from ...config.generation.chat import MAX_PROMPT_CHARACTERS, MAX_CONVERSATION_TURNS
 from ...config.messages.inputs import PROMPT_EMPTY, PROMPT_LENGTH, CONVERSATION_LIMIT
+from ...config.messages.run import ANSWER_CUT, REPLY_EMPTY, MODEL_REFUSED, ANSWER_FILTERED, REPLY_UNREADABLE
 
 if TYPE_CHECKING:
     from ...types import Json
+    from ...types.models import Model
     from ...types.chat import ChatRequest
     from ...types.settings import Settings, Configuration
 
@@ -48,11 +50,19 @@ class ChatOperation:
 
     async def send(self, configuration: Configuration) -> ChatResult:
         """Check the model, then send; an answer cut at the output token limit is returned as it is."""
-        model = await validate_model(self.request.model_id, "chat", configuration)
-        body = build_body(self.request, model.parameters)
-        if "audio" in self.request.settings.outputs:
-            return await send_audio_chat(body, configuration)
-        message = _read_message(await send_json(CHAT_URL, body, configuration))
+        request = self.request
+        media = {"image": request.image_urls, "video": request.video_urls, "audio": request.audio_clips}
+        model = await validate_model(
+            request.model_id, "chat", configuration, [kind for kind, items in media.items() if items]
+        )
+        _validate_settings(request, model)
+        body = build_body(request, model.parameters)
+        if "audio" in request.settings.outputs:
+            result = await send_audio_chat(body, configuration)
+            if not result.text and result.audio is None:
+                raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+            return result
+        message, finish_reason = _read_message(await send_json(CHAT_URL, body, configuration))
         if isinstance(message.content, list):
             parts = (part for part in message.content if isinstance(part, dict))
             text = "".join(str(part.get("text", "")) for part in parts if part.get("type") == "text")
@@ -61,12 +71,27 @@ class ChatOperation:
         images = tuple([await _read_image(item.image_url.url, configuration) for item in message.images])
         images = tuple(image for image in images if image)
         if not text and not images:
-            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
+            ended = {"length": ANSWER_CUT, "content_filter": ANSWER_FILTERED}.get(finish_reason or "", REPLY_EMPTY)
+            raise OpenRouterError(ErrorCode.TRANSPORT, ended)
         return ChatResult(text=text, reasoning=message.reasoning or "", images=images, audio=None, is_pcm=False)
 
 
-def _read_message(document: Json) -> ChatMessage:
-    """Read the first choice's message, refusing a failed choice and a model's refusal."""
+def _validate_settings(request: ChatRequest, model: Model) -> None:
+    """Refuse outputs the model cannot make, a schema it cannot follow, and more tokens than any provider gives."""
+    settings = request.settings
+    missing = sorted(settings.outputs - model.outputs)
+    if missing:
+        message = MODEL_OUTPUT.format(model=request.model_id, kind=MEDIA_LABELS[missing[0]])
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
+    if settings.answer_schema is not None and model.parameters.isdisjoint(SCHEMA_PARAMETERS):
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_SCHEMA.format(model=request.model_id))
+    if settings.max_tokens > model.max_tokens > 0:
+        message = MODEL_TOKENS.format(model=request.model_id, maximum=model.max_tokens)
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
+
+
+def _read_message(document: Json) -> tuple[ChatMessage, str | None]:
+    """Read the first choice's message and why it ended, refusing a failed choice and a model's refusal."""
     try:
         reply = ChatReply.model_validate(document)
     except ValidationError:
@@ -81,7 +106,7 @@ def _read_message(document: Json) -> ChatMessage:
     if message.refusal:
         reason = sanitize_reason(message.refusal)
         raise OpenRouterError(ErrorCode.REFUSED, MODEL_REFUSED.format(reason=reason))
-    return message
+    return message, choice.finish_reason
 
 
 async def _read_image(url: str, configuration: Configuration) -> bytes:
