@@ -134,6 +134,7 @@ class FunctionVisitor(ast.NodeVisitor):
         self.collect_placeholder_docstring(context, node)
         if exemption_reason(context, node, self.policy, has_main_call=self.has_main_call) is None:
             self.collect_size_violations(context, node)
+            self.collect_verb_violation(context, node)
         self.name_stack.append(node.name)
         self.generic_visit(node)
         self.name_stack.pop()
@@ -159,6 +160,23 @@ class FunctionVisitor(ast.NodeVisitor):
                     "message": "function docstring uses placeholder wording",
                 },
             )
+
+    def collect_verb_violation(self, context: FunctionContext, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
+        """Append a diagnostic when a governed function's name does not start with a verb from the naming rules."""
+        path = context.relative_path
+        is_governed = any(path == prefix or path.startswith(prefix) for prefix in self.policy["named_paths"])
+        first_word = node.name.lstrip("_").split("_", 1)[0]
+        if not is_governed or first_word in self.policy["verbs"] or first_word in self.policy["predicates"]:
+            return
+        self.violations.append(
+            {
+                "path": path,
+                "line": node.lineno,
+                "code": "python.function-verb",
+                "name": context.qualified_name,
+                "message": "start the name with a verb from rules/NAMING.md",
+            },
+        )
 
     def collect_size_violations(
         self,

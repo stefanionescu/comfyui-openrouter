@@ -227,7 +227,8 @@ Rules:
 - Use `handle` only for callbacks, framework/event boundaries, or signal
   handlers.
 - Start every function with one verb from the table below, with the meaning
-  the table gives it.
+  the table gives it. Predicates start with `is_` or `has_`. The function
+  policy checks this for `src/`, `scripts/`, and the package `__init__.py`.
 - Avoid positional boolean parameters. Use options, enums, or explicit function
   names when a boolean would be ambiguous.
 
@@ -252,6 +253,12 @@ Rules:
 | `get`, `set`, `reset` | Immediate access without work or I/O, direct assignment, return to the start. |
 | `decode`, `encode`    | Bytes or serialized payloads to typed values, and back.                       |
 | `sanitize`            | Transform input into a safe external form.                                    |
+| `wait`                | Await a task, a thread, or a job until it settles.                            |
+| `register`            | Hand a route or a hook to the host that calls it.                             |
+| `delete`              | Remove a file or a record.                                                    |
+| `download`            | Read a file or a document from a network address.                             |
+| `measure`             | Compute a size or a length.                                                   |
+| `place`               | Set positions in a layout.                                                    |
 
 Bad:
 

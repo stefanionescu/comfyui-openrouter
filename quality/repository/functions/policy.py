@@ -31,6 +31,9 @@ class PythonFunctionPolicy(TypedDict):
 
     max_trivial_statements: int
     allowlist: list[NamedFunctionRule]
+    verbs: list[str]
+    predicates: list[str]
+    named_paths: list[str]
 
 
 class ShellFunctionPolicy(TypedDict):
@@ -55,9 +58,13 @@ def read_function_policy(root: Path) -> FunctionPolicy:
     python = require_mapping(payload["python"], f"{FUNCTION_POLICY_PATH}.python")
     require_keys(
         python,
-        required={"max_trivial_statements", "allowlist"},
+        required={"max_trivial_statements", "allowlist", "verbs", "predicates", "named_paths"},
         context=f"{FUNCTION_POLICY_PATH}.python",
     )
+    names = {
+        key: require_string_list(python[key], f"{FUNCTION_POLICY_PATH}.python.{key}", is_nonempty=True)
+        for key in ("verbs", "predicates", "named_paths")
+    }
     max_python_statements = require_int(
         python["max_trivial_statements"],
         f"{FUNCTION_POLICY_PATH}.python.max_trivial_statements",
@@ -75,6 +82,9 @@ def read_function_policy(root: Path) -> FunctionPolicy:
         "python": {
             "max_trivial_statements": max_python_statements,
             "allowlist": allowlist,
+            "verbs": names["verbs"],
+            "predicates": names["predicates"],
+            "named_paths": names["named_paths"],
         },
         "shell": {
             "max_trivial_statements": max_shell_statements,

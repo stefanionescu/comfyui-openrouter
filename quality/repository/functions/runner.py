@@ -9,6 +9,7 @@ from quality.lib.languages import source_language
 from quality.lib.source import read_python_source
 from quality.lib.diagnostics import report_diagnostics
 from quality.repository.functions.references import index_modules
+from quality.repository.functions.names import list_name_violations
 from quality.repository.functions.policy import read_function_policy
 from quality.config.repository.paths import FUNCTION_POLICY_EXCLUDED_DIRS
 from quality.repository.functions.shell import collect_shell_function_violations
@@ -77,6 +78,7 @@ def analyze_functions(scope: str, root: Path) -> list[NamedDiagnostic]:
             errors.extend(collect_python_function_violations(source, policy["python"], modules))
         elif language == "shell":
             errors.extend(collect_shell_function_violations(relative_path, source_text, policy["shell"]))
+    errors.extend(list_name_violations(sources, policy["python"], selected_paths))
     return errors
 
 
