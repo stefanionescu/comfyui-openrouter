@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "When the quick answer fails the check, Claude Opus 5.5 answers again with more care. **If/Else Switch** runs only the branch it picks, so the stronger model costs nothing when the quick answer passes."
+        "When the quick answer fails the check, Claude Opus 5.5 answers again with more care. **If/Else Switch** runs only the branch it picks, so you pay for the stronger model only when the quick answer fails."
       ],
       "title": "Note"
     },

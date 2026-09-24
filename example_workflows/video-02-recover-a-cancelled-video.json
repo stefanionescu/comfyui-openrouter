@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Use this after you cancel a run of **Video: Generate**, or after ComfyUI restarts while a video is being made. OpenRouter still makes the video and bills it.\n\n1. In **job**, choose the video. Each entry shows its ID, model, and start time. Press R to list jobs started after the page loaded.\n2. Press **Run**. The video is saved under `video/openrouter`.\n\nDownloading costs nothing. A job leaves the list once its video is saved."
+        "Use this after you cancel a run of **Video: Generate**, or after ComfyUI restarts while a video is being made. OpenRouter still makes the video and bills it.\n\n1. In **job**, choose the video. Each entry shows its ID, model, and start time. Press R to list jobs started after the page loaded.\n2. Press **Run**. The video is saved under `video/openrouter`.\n\nDownloading is free. A job leaves the list once its video is saved."
       ],
       "title": "Start Here"
     },

@@ -167,7 +167,7 @@ WORKFLOW_TEXTS = {
             "1. In **job**, choose the video. Each entry shows its ID, model, and start time. Press R to list jobs "
             "started after the page loaded.\n"
             "2. Press **Run**. The video is saved under `video/openrouter`.\n\n"
-            "Downloading costs nothing. A job leaves the list once its video is saved."
+            "Downloading is free. A job leaves the list once its video is saved."
         ),
     },
     "audio-01-triage-a-voicemail": {
@@ -277,8 +277,8 @@ WORKFLOW_TEXTS = {
         "check_description": "Asks Jev whether every fact in the answer comes from the notes.",
         "escalate": (
             "When the quick answer fails the check, Claude Opus 5.5 answers again with more care. **If/Else "
-            "Switch** runs only the branch it picks, so the stronger model costs nothing when the quick answer "
-            "passes."
+            "Switch** runs only the branch it picks, so you pay for the stronger model only when the quick answer "
+            "fails."
         ),
         "escalate_description": "Asks a stronger model only when the quick answer fails the check.",
     },
