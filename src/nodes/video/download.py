@@ -50,9 +50,12 @@ class VideoDownload(io.ComfyNode):
 
     @classmethod
     @override
-    def validate_inputs(cls, *, job: str = "") -> bool | str:  # pyright: ignore[reportIncompatibleMethodOverride] -- reason: ComfyUI calls by schema.
-        """Take a job recorded after the node definitions were built, as long as the label names a job ID."""
-        return True if JOB_ID.match(job.split(" ", 1)[0]) else JOB_UNKNOWN
+    def validate_inputs(cls, **inputs: object) -> bool | str:
+        """Take a job recorded after the node definitions were built, as long as the label names a job ID.
+
+        ComfyUI skips its own list check only for inputs the validator takes as positional or extra keywords.
+        """
+        return True if JOB_ID.match(str(inputs.get("job", "")).split(" ", 1)[0]) else JOB_UNKNOWN
 
     @classmethod
     @override
