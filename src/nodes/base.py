@@ -21,7 +21,7 @@ class PaidNode(io.ComfyNode):
     @classmethod
     async def fingerprint_inputs(cls, **_inputs: object) -> str:
         """Add the key's token to the cache key, so a new key runs the node again."""
-        snapshot = await asyncio.to_thread(get_runtime().configuration.execution_snapshot)
+        snapshot = await asyncio.to_thread(get_runtime().configuration.read_snapshot)
         return snapshot.generation
 
     @classmethod

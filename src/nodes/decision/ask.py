@@ -7,10 +7,10 @@ from ..base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.parsing import parse_json
-from ..inputs import define_request_inputs
+from ..inputs import build_request_inputs
 from ...openrouter.decisions import DecisionOperation
 from ...types.errors import ErrorCode, OpenRouterError
-from ...comfy.execution import run_request, wait_for_execution
+from ...comfy.execution import send_request, wait_for_task
 from ...config.generation.models import DEFAULT_DECISION_MODEL
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.messages.inputs import SITUATION_EMPTY, SITUATION_LENGTH
@@ -20,8 +20,8 @@ from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU, QUESTI
 
 if TYPE_CHECKING:
     from ...types import Json
+    from ...types.options import Options
     from ...types.decisions import QuestionSet
-    from ...types.options import RequestOptions
 
 
 def _read_state(situation: str) -> Json:
@@ -37,7 +37,7 @@ def _read_state(situation: str) -> Json:
     return state if isinstance(state, (dict, list)) else situation
 
 
-def _summarize(answers: AnswerSet) -> str:
+def _describe_answers(answers: AnswerSet) -> str:
     """Write one line per answer, with numbers to two decimals."""
     lines: list[str] = []
     for answer in answers.answers:
@@ -76,7 +76,7 @@ class DecisionAsk(PaidNode):
                 ),
                 io.Custom(QUESTIONS_TYPE).Input("questions", tooltip="Connect Decision: Add Question."),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_DECISION_MODEL, tooltip=MODEL_TOOLTIP),
-                *define_request_inputs(has_seed=False),
+                *build_request_inputs(has_seed=False),
             ],
             outputs=[
                 io.Custom(ANSWERS_TYPE).Output("answers", display_name="answers"),
@@ -91,7 +91,7 @@ class DecisionAsk(PaidNode):
         situation: str,
         questions: QuestionSet,
         model: str,
-        options: RequestOptions | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Check the situation, then send it with the questions."""
         request = DecisionRequest(
@@ -101,9 +101,9 @@ class DecisionAsk(PaidNode):
             options=options,
         )
         task = asyncio.create_task(
-            run_request(DecisionOperation(request), lambda answers: io.NodeOutput(answers, _summarize(answers)))
+            send_request(DecisionOperation(request), lambda answers: io.NodeOutput(answers, _describe_answers(answers)))
         )
-        return await wait_for_execution(task)
+        return await wait_for_task(task)
 
 
 __all__ = ["DecisionAsk"]

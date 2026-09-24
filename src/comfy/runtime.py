@@ -1,8 +1,8 @@
 """Create the shared stores when ComfyUI loads the extension."""
 
-from ..storage.files import state_directory
 from ..openrouter.videos.jobs import JobStore
 from ..settings.store import ConfigurationStore
+from ..storage.files import choose_state_directory
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.generation.videos import JOB_FOLDER_NAME
 from ..config.messages.settings import RUNTIME_NOT_READY
@@ -24,14 +24,14 @@ class Runtime:
 
     def __init__(self) -> None:
         """Create the shared stores and place their state under one private directory."""
-        self.configuration = ConfigurationStore(state_directory())
+        self.configuration = ConfigurationStore(choose_state_directory())
         self.jobs = JobStore(self.configuration.directory / JOB_FOLDER_NAME)
 
 
 _runtime: Runtime | None = None
 
 
-def initialize_runtime() -> None:
+def create_runtime() -> None:
     """Initialize once through the host's extension lifecycle, without network calls."""
     global _runtime  # noqa: PLW0603 -- reason: ComfyUI initializes one shared runtime during loading.
     if _runtime is None:
@@ -45,4 +45,4 @@ def get_runtime() -> Runtime:
     return _runtime
 
 
-__all__ = ["Runtime", "get_runtime", "initialize_runtime"]
+__all__ = ["Runtime", "create_runtime", "get_runtime"]

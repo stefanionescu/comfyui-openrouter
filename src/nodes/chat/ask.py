@@ -12,11 +12,11 @@ from ...types.parsing import parse_json
 from comfy_execution.graph import ExecutionBlocker
 from ...openrouter.chat.operation import ChatOperation
 from ...types.errors import ErrorCode, OpenRouterError
-from ..inputs import read_sockets, define_request_inputs
+from ..inputs import read_sockets, build_request_inputs
 from ...config.generation.models import DEFAULT_CHAT_MODEL
 from ...config.messages.inputs import ANSWER_SCHEMA_INVALID
 from ...types.chat import Turn, ChatRequest, ChatSettings, Conversation
-from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE, CONVERSATION_TYPE
 from ...comfy.media import decode_pcm, decode_audio, decode_image, encode_audio, encode_video, encode_images
@@ -40,11 +40,11 @@ from ...config.generation.chat import (
 if TYPE_CHECKING:
     from ...types import Json
     from collections.abc import Mapping
-    from ...types.options import RequestOptions
+    from ...types.options import Options
     from ...types.chat import Document, ChatResult
 
 
-def _define_media() -> list[io.Input]:
+def _build_media_sockets() -> list[io.Input]:
     """Offer one growing row of sockets for each kind of media a model can read."""
     media: list[io.Input] = []
     for kind, template, count, items in (
@@ -189,7 +189,7 @@ class ChatAsk(PaidNode):
                     optional=True,
                     tooltip="Connect Chat: Attach Document. OpenRouter converts PDFs for models that read only text.",
                 ),
-                *_define_media(),
+                *_build_media_sockets(),
                 *CONTROLS,
                 io.Combo.Input(
                     "pdf_engine",
@@ -199,7 +199,7 @@ class ChatAsk(PaidNode):
                     advanced=True,
                     tooltip="How OpenRouter reads attached PDFs.",
                 ),
-                *define_request_inputs(has_seed=True),
+                *build_request_inputs(has_seed=True),
             ],
             outputs=[
                 io.String.Output("text", display_name="text"),
@@ -231,7 +231,7 @@ class ChatAsk(PaidNode):
         images: dict[str, object] | None = None,
         videos: dict[str, object] | None = None,
         audio: dict[str, object] | None = None,
-        options: RequestOptions | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the connected media inside the owned task, send, and decode what the model made."""
         history = conversation or Conversation(())
@@ -247,9 +247,9 @@ class ChatAsk(PaidNode):
         )
         sockets = {"images": images, "videos": videos, "audio": audio}
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the media inside the owned task, then send the request."""
-            image_urls, video_urls, clips = await owned_io(lambda: _encode_media(sockets))
+            image_urls, video_urls, clips = await wait_for_thread(lambda: _encode_media(sockets))
             request = ChatRequest(
                 model_id=model.strip(),
                 system=system,
@@ -263,9 +263,9 @@ class ChatAsk(PaidNode):
                 settings=settings,
                 options=options,
             )
-            return await run_request(ChatOperation(request), lambda result: _build_outputs(result, history, prompt))
+            return await send_request(ChatOperation(request), lambda result: _build_outputs(result, history, prompt))
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
 __all__ = ["ChatAsk"]

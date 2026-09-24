@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .options import RequestOptions
+    from .options import Options
     from collections.abc import Mapping
 
 
@@ -42,7 +42,7 @@ class VideoRequest:
     seed: int
     upscale_factor: float | None
     creativity: float | None
-    options: RequestOptions | None
+    options: Options | None
 
 
 class VideoJob(Value):

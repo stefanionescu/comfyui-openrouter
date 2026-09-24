@@ -9,18 +9,7 @@ from ..config.security import MAX_JSON_BYTES, MAX_JSON_DEPTH
 from ..config.messages.requests import JSON_SIZE, JSON_DEPTH, JSON_MAPPING, JSON_SYNTAX, JSON_VALUES, JSON_DUPLICATE_KEY
 
 
-def parse_json(text: str, *, max_bytes: int = MAX_JSON_BYTES, max_depth: int = MAX_JSON_DEPTH) -> Json:
-    """Reject oversized, nested, duplicate-key, and non-finite JSON input."""
-    if len(text.encode("utf-8")) > max_bytes:
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_SIZE)
-    try:
-        value = cast("object", json.loads(text, object_pairs_hook=_unique_fields))
-        return _validate_json(value, max_depth=max_depth)
-    except (ValueError, RecursionError) as error:
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_SYNTAX) from error
-
-
-def _unique_fields(pairs: list[tuple[str, Json]]) -> dict[str, Json]:
+def _build_fields(pairs: list[tuple[str, Json]]) -> dict[str, Json]:
     """Build a JSON object while rejecting duplicate keys."""
     result: dict[str, Json] = {}
     for key, value in pairs:
@@ -49,11 +38,22 @@ def _validate_json(value: object, *, max_depth: int = MAX_JSON_DEPTH) -> Json:
     raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_VALUES)
 
 
-def mapping_value(value: Json) -> dict[str, Json]:
+def parse_json(text: str, *, max_bytes: int = MAX_JSON_BYTES, max_depth: int = MAX_JSON_DEPTH) -> Json:
+    """Reject oversized, nested, duplicate-key, and non-finite JSON input."""
+    if len(text.encode("utf-8")) > max_bytes:
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_SIZE)
+    try:
+        value = cast("object", json.loads(text, object_pairs_hook=_build_fields))
+        return _validate_json(value, max_depth=max_depth)
+    except (ValueError, RecursionError) as error:
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_SYNTAX) from error
+
+
+def validate_fields(value: Json) -> dict[str, Json]:
     """Require an object at a public JSON boundary."""
     if not isinstance(value, dict):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_MAPPING)
     return value
 
 
-__all__ = ["mapping_value", "parse_json"]
+__all__ = ["parse_json", "validate_fields"]

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from ..options import apply_options
+from ..options import build_request_body
 from ...config.generation.chat import AUDIO_FORMAT, ANSWER_SCHEMA_NAME
 
 if TYPE_CHECKING:
@@ -34,6 +34,21 @@ def _build_messages(request: ChatRequest) -> list[Json]:
     return messages
 
 
+def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
+    """Ask for images or audio besides text; a music model gets no voice, and OpenRouter streams all audio."""
+    fields: dict[str, Json] = {}
+    if "image" in settings.outputs:
+        fields["modalities"] = ["image", "text"]
+        if settings.aspect_ratio is not None:
+            fields["image_config"] = {"aspect_ratio": settings.aspect_ratio}
+    if "audio" in settings.outputs:
+        fields["modalities"] = ["text", "audio"]
+        fields["stream"] = True
+        if settings.voice is not None:
+            fields["audio"] = {"voice": settings.voice, "format": AUDIO_FORMAT}
+    return fields
+
+
 def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Json]:
     """Add each control that is set; the temperature and the seed go only to a model that takes them."""
     settings = request.settings
@@ -52,22 +67,7 @@ def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Js
         body["response_format"] = {"type": "json_schema", "json_schema": schema}
     if settings.pdf_engine is not None and any(document.file_url for document in request.documents):
         body["plugins"] = [{"id": "file-parser", "pdf": {"engine": settings.pdf_engine}}]
-    return apply_options(body | _build_output_fields(settings), request.options, "chat")
-
-
-def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
-    """Ask for images or audio besides text; a music model gets no voice, and OpenRouter streams all audio."""
-    fields: dict[str, Json] = {}
-    if "image" in settings.outputs:
-        fields["modalities"] = ["image", "text"]
-        if settings.aspect_ratio is not None:
-            fields["image_config"] = {"aspect_ratio": settings.aspect_ratio}
-    if "audio" in settings.outputs:
-        fields["modalities"] = ["text", "audio"]
-        fields["stream"] = True
-        if settings.voice is not None:
-            fields["audio"] = {"voice": settings.voice, "format": AUDIO_FORMAT}
-    return fields
+    return build_request_body(body | _build_output_fields(settings), request.options, "chat")
 
 
 __all__ = ["build_body"]

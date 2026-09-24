@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from .models import check_model
-from .transport import post_json
+from .transport import send_json
 from typing import TYPE_CHECKING
-from .options import apply_options
+from .models import validate_model
 from pydantic import ValidationError
+from .options import build_request_body
 from ..types.replies import DecisionReply
 from ..config.openrouter import DECISIONS_URL
 from ..config.messages.run import REPLY_UNREADABLE
@@ -24,7 +24,7 @@ from ..types.decisions import (
 if TYPE_CHECKING:
     from ..types import Json
     from ..types.replies import AnswerReply
-    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, Configuration
     from ..types.decisions import Answer, Question, DecisionRequest
 
 # The wire type of each question kind.
@@ -67,15 +67,15 @@ class DecisionOperation:
     def validate(self, settings: Settings) -> None:
         """Accept the request: Decision: Add Question checks each question and Decision: Ask the situation."""
 
-    async def send(self, configuration: ExecutionConfiguration) -> AnswerSet:
+    async def send(self, configuration: Configuration) -> AnswerSet:
         """Check the model, send the situation and questions, and read the answers in question order."""
         request = self.request
-        await check_model(request.model_id, "decisions", configuration)
+        await validate_model(request.model_id, "decisions", configuration)
         questions: dict[str, Json] = {
             question.name: _describe_question(question) for question in request.questions.questions
         }
         body: dict[str, Json] = {"model": request.model_id, "state": request.state, "questions": questions}
-        document = await post_json(DECISIONS_URL, apply_options(body, request.options, "decisions"), configuration)
+        document = await send_json(DECISIONS_URL, build_request_body(body, request.options, "decisions"), configuration)
         try:
             reply = DecisionReply.model_validate(document)
         except ValidationError:

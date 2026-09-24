@@ -9,18 +9,18 @@ from dataclasses import asdict
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...comfy.media import encode_audio
-from ..inputs import define_request_inputs
+from ..inputs import build_request_inputs
 from ...types.audio import TranscriptionRequest
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.generation.models import DEFAULT_TRANSCRIPTION_MODEL
-from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...openrouter.transcription import TranscriptionOperation, format_subtitles
 from ...config.generation.audio import TIMESTAMP_CHOICES, MAX_TRANSCRIPTION_TEMPERATURE
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
-    from ...types.options import RequestOptions
+    from ...types.options import Options
 
 
 class AudioTranscribe(PaidNode):
@@ -63,7 +63,7 @@ class AudioTranscribe(PaidNode):
                     advanced=True,
                     tooltip="0 leaves it to the model.",
                 ),
-                *define_request_inputs(has_seed=False),
+                *build_request_inputs(has_seed=False),
             ],
             outputs=[
                 io.String.Output("text", display_name="text"),
@@ -82,13 +82,13 @@ class AudioTranscribe(PaidNode):
         language: str = "",
         timestamps: str = TIMESTAMP_CHOICES[0],
         temperature: float = 0.0,
-        options: RequestOptions | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the clip inside the owned task, then send it."""
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the clip inside the owned task, then send the request."""
-            clip = await owned_io(lambda: encode_audio(audio))
+            clip = await wait_for_thread(lambda: encode_audio(audio))
             request = TranscriptionRequest(
                 model_id=model.strip(),
                 clip=clip,
@@ -97,7 +97,7 @@ class AudioTranscribe(PaidNode):
                 temperature=temperature,
                 options=options,
             )
-            return await run_request(
+            return await send_request(
                 TranscriptionOperation(request),
                 lambda result: io.NodeOutput(
                     result.text,
@@ -110,7 +110,7 @@ class AudioTranscribe(PaidNode):
                 ),
             )
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
 __all__ = ["AudioTranscribe"]

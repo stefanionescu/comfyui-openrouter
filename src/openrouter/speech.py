@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from .models import check_model
 from typing import TYPE_CHECKING
-from .transport import post_audio
-from .options import apply_options
-from .operation import check_upload_size
+from .models import validate_model
+from .transport import send_speech
+from .options import build_request_body
 from ..config.openrouter import SPEECH_URL
+from .operation import validate_upload_size
 from ..types.audio import PcmFormat, SpeechResult
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.inputs import PCM_RATE_MISSING, SPEECH_TEXT_EMPTY, VOICE_SAMPLE_SIZE, SPEECH_TEXT_LENGTH
@@ -16,7 +16,7 @@ from ..config.generation.audio import DEFAULT_SPEED, PCM_MEDIA_TYPE, MAX_SPEECH_
 if TYPE_CHECKING:
     from ..types import Json
     from ..types.audio import SpeechRequest
-    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, Configuration
 
 
 def _read_pcm_format(media_type: str) -> PcmFormat | None:
@@ -54,12 +54,12 @@ class SpeechOperation:
         sample = request.sample or ""
         if len(sample.partition(",")[2]) * 3 // 4 > MAX_VOICE_SAMPLE_BYTES:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, VOICE_SAMPLE_SIZE)
-        check_upload_size((sample,), settings)
+        validate_upload_size((sample,), settings)
 
-    async def send(self, configuration: ExecutionConfiguration) -> SpeechResult:
+    async def send(self, configuration: Configuration) -> SpeechResult:
         """Check the model, send the text with the voice and sample when set, and keep the reply's format."""
         request = self.request
-        await check_model(request.model_id, "speech", configuration)
+        await validate_model(request.model_id, "speech", configuration)
         body: dict[str, Json] = {
             "model": request.model_id,
             "input": request.text,
@@ -74,7 +74,7 @@ class SpeechOperation:
             if request.sample_transcript.strip():
                 references.append({"type": "text", "text": request.sample_transcript})
             body["input_references"] = references
-        audio = await post_audio(SPEECH_URL, apply_options(body, request.options, "speech"), configuration)
+        audio = await send_speech(SPEECH_URL, build_request_body(body, request.options, "speech"), configuration)
         return SpeechResult(audio, _read_pcm_format(audio.media_type))
 
 

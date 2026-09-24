@@ -1,6 +1,6 @@
 """Define editable settings, their units, defaults, and supported ranges."""
 
-INTEGER_SETTINGS: dict[str, dict[str, int]] = {
+SETTING_RANGES: dict[str, dict[str, int]] = {
     "request_timeout_seconds": {"default": 600, "minimum": 10, "maximum": 3600},
     "max_upload_megabytes": {"default": 64, "minimum": 1, "maximum": 512},
     "max_download_megabytes": {"default": 512, "minimum": 16, "maximum": 4096},
@@ -19,9 +19,9 @@ SETTINGS_TIMEOUT_SECONDS = 5
 REQUEST_CHUNK_BYTES = 1024
 
 __all__ = [
-    "INTEGER_SETTINGS",
     "MAX_SETTINGS_BYTES",
     "MAX_SETTINGS_FILE_BYTES",
     "REQUEST_CHUNK_BYTES",
     "SETTINGS_TIMEOUT_SECONDS",
+    "SETTING_RANGES",
 ]

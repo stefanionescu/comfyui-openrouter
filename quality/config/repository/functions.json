@@ -15,7 +15,7 @@
             },
             {
                 "path": "src/settings/routes.py",
-                "names": ["ConfigurationRoutes.status"],
+                "names": ["ConfigurationRoutes.read_status"],
                 "reason": "aiohttp calls this route handler itself."
             }
         ]

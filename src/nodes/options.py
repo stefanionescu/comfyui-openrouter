@@ -6,12 +6,12 @@ import re
 from decimal import Decimal
 from comfy_api.latest import io
 from types import MappingProxyType
+from ..types.options import Options
 from ..types.parsing import parse_json
 from typing import override, TYPE_CHECKING
 from ..config.patterns import PROVIDER_SLUG_PATTERN
 from ..config.generation.inputs import MODEL_DEFAULT
 from ..types.errors import ErrorCode, OpenRouterError
-from ..types.options import RequestOptions as OptionsRecord
 from ..config.namespace import NODE_PREFIX, SHARED_MENU, OPTIONS_TYPE
 from ..config.messages.inputs import OPTIONS_JSON, OPTIONS_SIZE, PROVIDER_SLUG
 from ..config.openrouter import SORT_CHOICES, MAX_PROVIDERS, YES_NO_CHOICES, MAX_OPTION_BYTES, COLLECTION_CHOICES
@@ -139,7 +139,7 @@ class RequestOptions(io.ComfyNode):
         if any(PROVIDER.match(slug) is None for slug in per_provider):
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
         prices = {"prompt": max_prompt_price, "completion": max_completion_price}
-        options = OptionsRecord(
+        options = Options(
             order=_read_providers(order),
             only=_read_providers(only),
             ignore=_read_providers(ignore),

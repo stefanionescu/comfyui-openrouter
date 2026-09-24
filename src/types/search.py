@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
-    from .options import RequestOptions
+    from .options import Options
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,7 +28,7 @@ class EmbeddingRequest:
     image_urls: tuple[str, ...]
     dimensions: int
     input_type: str | None
-    options: RequestOptions | None
+    options: Options | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,7 +64,7 @@ class RankRequest:
     texts: tuple[str, ...]
     image_urls: tuple[str, ...]
     top_n: int
-    options: RequestOptions | None
+    options: Options | None
 
 
 @dataclass(frozen=True, slots=True)

@@ -8,17 +8,17 @@ import math
 import time
 import asyncio
 import hashlib
-from ..models import check_model
 from typing import TYPE_CHECKING
 from datetime import UTC, datetime
-from ..failures import clean_reason
-from ..options import apply_options
+from ..models import validate_model
 from ...types.videos import VideoJob
 from pydantic import ValidationError
-from ..operation import check_upload_size
+from ..failures import sanitize_reason
+from ..options import build_request_body
 from ...types.replies import VideoJobReply
-from ..transport import get_video, post_json
+from ..operation import validate_upload_size
 from ...config.patterns import JOB_ID_PATTERN
+from ..transport import download_video, send_json
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.openrouter import VIDEOS_URL, VIDEO_JOB_URL
 from ...config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from ...types import Json
     from .jobs import JobStore
     from ...types.videos import VideoRequest
-    from ...types.settings import Settings, ExecutionConfiguration
+    from ...types.settings import Settings, Configuration
 
 JOB_ID = re.compile(JOB_ID_PATTERN)
 REFERENCE_LIMITS = {"image": MAX_REFERENCE_IMAGES, "video": MAX_REFERENCE_VIDEOS, "audio": MAX_REFERENCE_AUDIO}
@@ -57,7 +57,7 @@ class VideoDownloadOperation:
     def validate(self, settings: Settings) -> None:
         """Accept any recorded job; there is nothing to refuse before checking its status."""
 
-    async def send(self, configuration: ExecutionConfiguration) -> bytes:
+    async def send(self, configuration: Configuration) -> bytes:
         """Check the job at once, so a job that finished while ComfyUI was closed downloads immediately.
 
         A cancel or the wait limit leaves the record in place, which is what lets Video: Download finish it.
@@ -65,7 +65,7 @@ class VideoDownloadOperation:
         settings = configuration.settings
         deadline = time.monotonic() + settings.video_wait_minutes * SECONDS_PER_MINUTE
         while True:
-            content = await get_video(VIDEO_JOB_URL.format(job_id=self.job.job_id), configuration)
+            content = await download_video(VIDEO_JOB_URL.format(job_id=self.job.job_id), configuration)
             try:
                 reply = VideoJobReply.model_validate_json(content)
             except ValidationError:
@@ -76,15 +76,15 @@ class VideoDownloadOperation:
                 raise OpenRouterError(ErrorCode.TIMEOUT, JOB_WAIT_LIMIT.format(minutes=settings.video_wait_minutes))
             await asyncio.sleep(settings.video_poll_seconds)
         if reply.status != "completed":
-            await asyncio.to_thread(self.jobs.remove, self.job.name)
-            reason = clean_reason(reply.error or "")
+            await asyncio.to_thread(self.jobs.delete, self.job.name)
+            reason = sanitize_reason(reply.error or "")
             ended = {"failed": JOB_FAILED, "cancelled": JOB_CANCELLED}.get(reply.status, JOB_EXPIRED)
             raise OpenRouterError(ErrorCode.UNAVAILABLE, ended.format(reason=reason))
         if not reply.unsigned_urls:
             raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
-        video = await get_video(reply.unsigned_urls[0], configuration)
+        video = await download_video(reply.unsigned_urls[0], configuration)
         # The record goes only after the download, so a failed download can be collected again.
-        await asyncio.to_thread(self.jobs.remove, self.job.name)
+        await asyncio.to_thread(self.jobs.delete, self.job.name)
         return video
 
 
@@ -103,7 +103,7 @@ class VideoOperation:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_REQUIRED)
         if request.frame_urls and request.references:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, FRAMES_BESIDE_REFERENCES)
-        check_upload_size((*request.frame_urls.values(), *(url for _kind, url in request.references)), settings)
+        validate_upload_size((*request.frame_urls.values(), *(url for _kind, url in request.references)), settings)
         for kind, limit in REFERENCE_LIMITS.items():
             if sum(item == kind for item, _url in request.references) > limit:
                 raise OpenRouterError(ErrorCode.INVALID_INPUT, VIDEO_REFERENCES_RANGE.format(maximum=limit, kind=kind))
@@ -132,12 +132,12 @@ class VideoOperation:
             body["input_references"] = [
                 {"type": f"{kind}_url", f"{kind}_url": {"url": url}} for kind, url in request.references
             ]
-        return apply_options(body, request.options, "videos")
+        return build_request_body(body, request.options, "videos")
 
-    async def send(self, configuration: ExecutionConfiguration) -> bytes:
+    async def send(self, configuration: Configuration) -> bytes:
         """Resume an identical recorded job instead of paying for a second one, or submit and record a new job."""
         settings = configuration.settings
-        model = await check_model(self.request.model_id, "videos", configuration)
+        model = await validate_model(self.request.model_id, "videos", configuration)
         body = self.build_body(model.parameters)
         request_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         found = await asyncio.to_thread(self.jobs.find, request_hash, settings.resubmit_hold_minutes)
@@ -157,12 +157,12 @@ class VideoOperation:
             status="uncertain",
         )
         try:
-            document = await post_json(VIDEOS_URL, body, configuration)
+            document = await send_json(VIDEOS_URL, body, configuration)
         except OpenRouterError as error:
             # The request may have been accepted and billed, so an identical one is held back for a while.
             if error.code not in {ErrorCode.UNCERTAIN, ErrorCode.TIMEOUT}:
                 raise
-            await asyncio.to_thread(self.jobs.record, job)
+            await asyncio.to_thread(self.jobs.save, job)
             raise OpenRouterError(
                 ErrorCode.UNCERTAIN, SUBMIT_UNCERTAIN.format(minutes=settings.resubmit_hold_minutes)
             ) from None
@@ -174,7 +174,7 @@ class VideoOperation:
             raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
         # The record is written before the first wait, so a cancel one moment later still leaves it.
         accepted = job.model_copy(update={"name": reply.id, "job_id": reply.id, "status": "accepted"})
-        await asyncio.to_thread(self.jobs.record, accepted)
+        await asyncio.to_thread(self.jobs.save, accepted)
         return await VideoDownloadOperation(accepted, self.jobs).send(configuration)
 
 

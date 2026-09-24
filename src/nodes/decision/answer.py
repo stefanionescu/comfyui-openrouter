@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ...types.decisions import Answer, AnswerSet
 
 
-def read_values(answer: Answer, threshold: float) -> tuple[str, bool, float, float, int, float]:
+def _build_outputs(answer: Answer, threshold: float) -> tuple[str, bool, float, float, int, float]:
     """Give every output a value for every answer kind, so any output can feed a switch node."""
     if isinstance(answer, YesNoAnswer):
         is_yes = answer.probability >= threshold
@@ -76,7 +76,7 @@ class DecisionReadAnswer(io.ComfyNode):
         if answer is None:
             names = ", ".join(answer.name for answer in answers.answers)
             raise OpenRouterError(ErrorCode.INVALID_INPUT, QUESTION_UNKNOWN.format(name=name, names=names))
-        return io.NodeOutput(*read_values(answer, threshold))
+        return io.NodeOutput(*_build_outputs(answer, threshold))
 
 
 __all__ = ["DecisionReadAnswer"]

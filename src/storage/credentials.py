@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from .files import read_private
+from .files import read_file
 from ..types.credentials import Credential
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.security import MAX_CREDENTIAL_CHARACTERS
@@ -25,17 +25,17 @@ def read_credential(directory: Path) -> Credential:
     path = directory / "credential"
     if path.exists():
         try:
-            return parse_credential(read_private(path, max_bytes=MAX_CREDENTIAL_CHARACTERS).decode("utf-8"))
+            return parse_credential(read_file(path, max_bytes=MAX_CREDENTIAL_CHARACTERS).decode("utf-8"))
         except (OSError, UnicodeError):
             raise OpenRouterError(ErrorCode.CONFIGURATION, KEY_UNREADABLE) from None
     raise OpenRouterError(ErrorCode.AUTHENTICATION, KEY_REQUIRED)
 
 
-def credential_source(directory: Path) -> str:
+def read_credential_source(directory: Path) -> str:
     """Report presence and source without reading or returning the secret."""
     if "OPENROUTER_API_KEY" in os.environ:
         return "environment"
     return "saved" if (directory / "credential").is_file() else "missing"
 
 
-__all__ = ["credential_source", "parse_credential", "read_credential"]
+__all__ = ["parse_credential", "read_credential", "read_credential_source"]

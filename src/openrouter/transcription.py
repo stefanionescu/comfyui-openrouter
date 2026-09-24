@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import re
-from .models import check_model
-from .transport import post_json
+from .transport import send_json
 from typing import TYPE_CHECKING
-from .options import apply_options
+from .models import validate_model
 from pydantic import ValidationError
-from .operation import check_upload_size
+from .options import build_request_body
+from .operation import validate_upload_size
 from ..config.patterns import LANGUAGE_PATTERN
 from ..types.replies import TranscriptionReply
 from ..config.openrouter import TRANSCRIPTION_URL
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from ..types import Json
     from collections.abc import Sequence
     from ..types.audio import TranscriptionRequest
-    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, Configuration
 
 LANGUAGE = re.compile(LANGUAGE_PATTERN)
 GRANULARITIES = {"segments": ["segment"], "words and segments": ["segment", "word"]}
@@ -50,15 +50,15 @@ class TranscriptionOperation:
 
     def validate(self, settings: Settings) -> None:
         """Refuse a clip above the upload limit and a language that is not a two-letter code."""
-        check_upload_size((self.request.clip,), settings)
+        validate_upload_size((self.request.clip,), settings)
         language = self.request.language
         if language and LANGUAGE.match(language) is None:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, LANGUAGE_CODE)
 
-    async def send(self, configuration: ExecutionConfiguration) -> TranscriptionResult:
+    async def send(self, configuration: Configuration) -> TranscriptionResult:
         """Check the model and send the clip; Whisper starts its text and segments with a space, so all is stripped."""
         request = self.request
-        await check_model(request.model_id, "transcription", configuration)
+        await validate_model(request.model_id, "transcription", configuration)
         body: dict[str, Json] = {"model": request.model_id, "input_audio": {"data": request.clip, "format": "wav"}}
         if request.language:
             body["language"] = request.language
@@ -67,8 +67,8 @@ class TranscriptionOperation:
         if request.timestamps in GRANULARITIES:
             body["response_format"] = "verbose_json"
             body["timestamp_granularities"] = list(GRANULARITIES[request.timestamps])
-        document = await post_json(
-            TRANSCRIPTION_URL, apply_options(body, request.options, "transcription"), configuration
+        document = await send_json(
+            TRANSCRIPTION_URL, build_request_body(body, request.options, "transcription"), configuration
         )
         try:
             reply = TranscriptionReply.model_validate(document)

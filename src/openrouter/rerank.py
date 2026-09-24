@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from .models import check_model
-from .transport import post_json
+from .transport import send_json
 from typing import TYPE_CHECKING
-from .options import apply_options
+from .models import validate_model
 from pydantic import ValidationError
 from ..types.replies import RankReply
-from .operation import check_upload_size
+from .options import build_request_body
 from ..config.openrouter import RERANK_URL
-from .embeddings import check_search_items
+from .operation import validate_upload_size
+from .embeddings import validate_search_items
 from ..config.messages.inputs import QUERY_EMPTY
 from ..types.search import RankResult, RankedItem
 from ..config.messages.run import REPLY_UNREADABLE
@@ -19,7 +19,7 @@ from ..types.errors import ErrorCode, OpenRouterError
 if TYPE_CHECKING:
     from ..types import Json
     from ..types.search import RankRequest
-    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, Configuration
 
 
 class RankOperation:
@@ -34,18 +34,18 @@ class RankOperation:
         request = self.request
         if not request.query.strip():
             raise OpenRouterError(ErrorCode.INVALID_INPUT, QUERY_EMPTY)
-        check_search_items(request.texts, request.image_urls)
-        check_upload_size(request.image_urls, settings)
+        validate_search_items(request.texts, request.image_urls)
+        validate_upload_size(request.image_urls, settings)
 
-    async def send(self, configuration: ExecutionConfiguration) -> RankResult:
+    async def send(self, configuration: Configuration) -> RankResult:
         """Check the model and send the query and documents; the reply lists them highest relevance first."""
         request = self.request
-        await check_model(request.model_id, "rerank", configuration)
+        await validate_model(request.model_id, "rerank", configuration)
         documents: list[Json] = [*request.texts, *({"image": url} for url in request.image_urls)]
         body: dict[str, Json] = {"model": request.model_id, "query": request.query, "documents": documents}
         if request.top_n > 0:
             body["top_n"] = request.top_n
-        document = await post_json(RERANK_URL, apply_options(body, request.options, "rerank"), configuration)
+        document = await send_json(RERANK_URL, build_request_body(body, request.options, "rerank"), configuration)
         try:
             reply = RankReply.model_validate(document)
         except ValidationError:

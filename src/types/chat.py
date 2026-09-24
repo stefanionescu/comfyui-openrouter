@@ -7,7 +7,7 @@ from typing import Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from . import Json
-    from .options import RequestOptions
+    from .options import Options
     from collections.abc import Mapping
 
 
@@ -110,7 +110,7 @@ class ChatRequest:
     documents: tuple[Document, ...]
     seed: int
     settings: ChatSettings
-    options: RequestOptions | None
+    options: Options | None
 
 
 @dataclass(frozen=True, slots=True)

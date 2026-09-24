@@ -6,7 +6,7 @@ from collections.abc import Mapping
 
 
 @dataclass(frozen=True, slots=True)
-class RequestOptions:
+class Options:
     """Provider routing and extra fields to merge into one request.
 
     Attributes:
@@ -35,4 +35,4 @@ class RequestOptions:
     extra_fields: Mapping[str, Json]
 
 
-__all__ = ["RequestOptions"]
+__all__ = ["Options"]

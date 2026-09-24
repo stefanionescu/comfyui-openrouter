@@ -10,19 +10,19 @@ from typing import cast, TYPE_CHECKING
 from ...comfy.media import encode_images
 from ...types.search import EmbeddingRequest
 from ...openrouter.embeddings import EmbeddingOperation
+from ..inputs import read_sockets, build_request_inputs
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
-from ..inputs import read_sockets, define_request_inputs
 from ...config.generation.models import DEFAULT_EMBEDDING_MODEL
-from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.search import INPUT_TYPES, MAX_DIMENSIONS, MAX_SEARCH_IMAGES
 
 if TYPE_CHECKING:
     import torch
-    from ...types.options import RequestOptions
+    from ...types.options import Options
 
 
-def define_images() -> io.Autogrow.Input:
+def build_image_sockets() -> io.Autogrow.Input:
     """Build a search node's growing row of image sockets; each socket can carry a list or a batch."""
     names = [f"image_{number}" for number in range(1, MAX_SEARCH_IMAGES + 1)]
     template = io.Autogrow.TemplateNames(io.Image.Input("image"), names=names, min=0)
@@ -58,7 +58,7 @@ class SearchEmbed(PaidNode):
                     "texts", multiline=True, default="", tooltip="One item per line; blank lines are skipped."
                 ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_EMBEDDING_MODEL, tooltip=MODEL_TOOLTIP),
-                define_images(),
+                build_image_sockets(),
                 io.Int.Input(
                     "dimensions",
                     default=0,
@@ -75,7 +75,7 @@ class SearchEmbed(PaidNode):
                     advanced=True,
                     tooltip="A hint for models that embed queries and documents differently.",
                 ),
-                *define_request_inputs(has_seed=False),
+                *build_request_inputs(has_seed=False),
             ],
             outputs=[
                 io.String.Output("vectors", display_name="vectors"),
@@ -93,15 +93,15 @@ class SearchEmbed(PaidNode):
         dimensions: list[int],
         input_type: list[str],
         images: dict[str, list[torch.Tensor]] | None = None,
-        options: list[RequestOptions] | None = None,
+        options: list[Options] | None = None,
     ) -> io.NodeOutput:
         """Encode every image inside the owned task, then send all items at once."""
         pictures = read_images(images)
         lines = tuple(line.strip() for text in texts for line in text.splitlines() if line.strip())
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the images inside the owned task, then send the request."""
-            urls = await owned_io(lambda: tuple(url for image in pictures for url in encode_images(image)))
+            urls = await wait_for_thread(lambda: tuple(url for image in pictures for url in encode_images(image)))
             request = EmbeddingRequest(
                 model_id=model[0].strip(),
                 texts=lines,
@@ -110,14 +110,14 @@ class SearchEmbed(PaidNode):
                 input_type=input_type[0] if input_type[0] != MODEL_DEFAULT else None,
                 options=options[0] if options else None,
             )
-            return await run_request(
+            return await send_request(
                 EmbeddingOperation(request),
                 lambda result: io.NodeOutput(
                     json.dumps([list(vector) for vector in result.vectors]), json.dumps(list(result.similarities))
                 ),
             )
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
-__all__ = ["SearchEmbed", "define_images", "read_images"]
+__all__ = ["SearchEmbed", "build_image_sockets", "read_images"]

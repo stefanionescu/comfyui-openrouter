@@ -10,7 +10,7 @@ from ..types.errors import ErrorCode, OpenRouterError
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, Configuration
 
 
 class Operation[Result](Protocol):
@@ -20,12 +20,12 @@ class Operation[Result](Protocol):
         """Refuse inputs the settings or the endpoint do not allow, before anything is sent."""
         raise NotImplementedError(settings)
 
-    async def send(self, configuration: ExecutionConfiguration) -> Result:
+    async def send(self, configuration: Configuration) -> Result:
         """Send the request and return its parsed result."""
         raise NotImplementedError(configuration)
 
 
-def check_upload_size(media: Iterable[str], settings: Settings) -> None:
+def validate_upload_size(media: Iterable[str], settings: Settings) -> None:
     """Refuse encoded media, data URLs or base64 text, larger in total than the maximum upload size."""
     size = sum(len(item) for item in media)
     if size > settings.max_upload_megabytes * BYTES_PER_MEBIBYTE:
@@ -35,4 +35,4 @@ def check_upload_size(media: Iterable[str], settings: Settings) -> None:
         )
 
 
-__all__ = ["Operation", "check_upload_size"]
+__all__ = ["Operation", "validate_upload_size"]

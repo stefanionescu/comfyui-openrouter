@@ -14,9 +14,9 @@ from ..openrouter.images import ImageOperation
 from comfy_execution.graph import ExecutionBlocker
 from ..comfy.media import decode_image, encode_images
 from ..config.namespace import IMAGE_MENU, NODE_PREFIX
-from .inputs import read_sockets, define_request_inputs
+from .inputs import read_sockets, build_request_inputs
 from ..config.generation.models import DEFAULT_IMAGE_MODEL
-from ..comfy.execution import owned_io, run_request, wait_for_execution
+from ..comfy.execution import wait_for_thread, send_request, wait_for_task
 from ..config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ..config.generation.images import (
     MAX_IMAGES,
@@ -29,8 +29,8 @@ from ..config.generation.images import (
 
 if TYPE_CHECKING:
     from ..types import Json
+    from ..types.options import Options
     from ..types.images import ImageResult
-    from ..types.options import RequestOptions
 
 
 # Every image field, each starting at the model's default, which sends nothing, then the compression, the count,
@@ -79,7 +79,7 @@ class ImageGenerate(PaidNode):
                 ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_IMAGE_MODEL, tooltip=MODEL_TOOLTIP),
                 *FIELDS,
-                *define_request_inputs(has_seed=True),
+                *build_request_inputs(has_seed=True),
             ],
             outputs=[
                 io.Image.Output("images", display_name="images", is_output_list=True),
@@ -103,7 +103,7 @@ class ImageGenerate(PaidNode):
         output_compression: int = DEFAULT_COMPRESSION,
         count: int = 1,
         references: dict[str, object] | None = None,
-        options: RequestOptions | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the references inside the owned task, send, and split raster images from SVG files."""
         values = {
@@ -118,10 +118,10 @@ class ImageGenerate(PaidNode):
         if output_format in COMPRESSED_FORMATS:
             fields["output_compression"] = output_compression
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the references inside the owned task, then send the request."""
             images = [image for image in read_sockets(references) if isinstance(image, torch.Tensor)]
-            urls = await owned_io(lambda: tuple(url for image in images for url in encode_images(image)))
+            urls = await wait_for_thread(lambda: tuple(url for image in images for url in encode_images(image)))
             request = ImageRequest(
                 model_id=model.strip(),
                 prompt=prompt,
@@ -131,7 +131,7 @@ class ImageGenerate(PaidNode):
                 fields=fields,
                 options=options,
             )
-            return await run_request(ImageOperation(request), build_outputs)
+            return await send_request(ImageOperation(request), build_outputs)
 
         def build_outputs(result: ImageResult) -> io.NodeOutput:
             """Decode the raster images with their masks; hand SVG files to ComfyUI's own SVG type."""
@@ -145,7 +145,7 @@ class ImageGenerate(PaidNode):
                 svg,
             )
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
 __all__ = ["ImageGenerate"]

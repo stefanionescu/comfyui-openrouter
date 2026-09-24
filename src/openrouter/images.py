@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import base64
 import binascii
-from .models import check_model
-from .transport import post_json
+from .transport import send_json
 from typing import TYPE_CHECKING
-from .options import apply_options
+from .models import validate_model
 from pydantic import ValidationError
 from ..types.replies import ImageReply
-from .operation import check_upload_size
+from .options import build_request_body
 from ..config.openrouter import IMAGES_URL
+from .operation import validate_upload_size
 from ..types.images import ImageOutput, ImageResult
 from ..config.media import SVG_STARTS, SVG_MEDIA_TYPE
 from ..types.errors import ErrorCode, OpenRouterError
@@ -21,7 +21,7 @@ from ..config.messages.inputs import PROMPT_EMPTY, TRANSPARENT_FORMAT
 if TYPE_CHECKING:
     from ..types import Json
     from ..types.images import ImageRequest
-    from ..types.settings import Settings, ExecutionConfiguration
+    from ..types.settings import Settings, Configuration
 
 
 class ImageOperation:
@@ -38,12 +38,12 @@ class ImageOperation:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
         if request.fields.get("background") == "transparent" and request.fields.get("output_format") == "jpeg":
             raise OpenRouterError(ErrorCode.INVALID_INPUT, TRANSPARENT_FORMAT)
-        check_upload_size(request.reference_urls, settings)
+        validate_upload_size(request.reference_urls, settings)
 
-    async def send(self, configuration: ExecutionConfiguration) -> ImageResult:
+    async def send(self, configuration: Configuration) -> ImageResult:
         """Check the model, send, and read every image; an SVG file is known by its type or its first bytes."""
         request = self.request
-        model = await check_model(request.model_id, "images", configuration)
+        model = await validate_model(request.model_id, "images", configuration)
         body: dict[str, Json] = {"model": request.model_id, "prompt": request.prompt, **request.fields}
         if request.count > 1:
             body["n"] = request.count
@@ -53,7 +53,7 @@ class ImageOperation:
             body["input_references"] = [
                 {"type": "image_url", "image_url": {"url": url}} for url in request.reference_urls
             ]
-        document = await post_json(IMAGES_URL, apply_options(body, request.options, "images"), configuration)
+        document = await send_json(IMAGES_URL, build_request_body(body, request.options, "images"), configuration)
         try:
             reply = ImageReply.model_validate(document)
             files = [(base64.b64decode(item.b64_json, validate=True), item.media_type) for item in reply.images]

@@ -11,7 +11,7 @@ from typing import override, TYPE_CHECKING
 from ...settings.store import read_settings
 from ...config.generation.chat import MAX_DOCUMENTS
 from ...types.errors import ErrorCode, OpenRouterError
-from ...comfy.documents import list_documents, read_document_file
+from ...comfy.documents import list_documents, read_document
 from ...config.messages.inputs import DOCUMENT_LIMIT, DOCUMENT_MISSING
 from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE
 
@@ -72,7 +72,7 @@ class ChatAttachDocument(io.ComfyNode):
         if len(documents) >= MAX_DOCUMENTS:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, DOCUMENT_LIMIT.format(maximum=MAX_DOCUMENTS))
         settings = await asyncio.to_thread(read_settings, get_runtime().configuration.directory)
-        document = await asyncio.to_thread(read_document_file, file, settings.max_upload_megabytes)
+        document = await asyncio.to_thread(read_document, file, settings.max_upload_megabytes)
         return io.NodeOutput((*documents, document))
 
 

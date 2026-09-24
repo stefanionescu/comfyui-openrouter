@@ -37,7 +37,7 @@ class Settings:
 
 
 @dataclass(frozen=True, slots=True)
-class ExecutionConfiguration:
+class Configuration:
     """One private settings and credential snapshot for one paid request.
 
     Attributes:
@@ -52,4 +52,4 @@ class ExecutionConfiguration:
     generation: str
 
 
-__all__ = ["ExecutionConfiguration", "Settings"]
+__all__ = ["Configuration", "Settings"]

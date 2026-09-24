@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from . import Json
-    from .options import RequestOptions
+    from .options import Options
     from collections.abc import Mapping
 
 
@@ -158,7 +158,7 @@ class DecisionRequest:
     model_id: str
     state: Json
     questions: QuestionSet
-    options: RequestOptions | None
+    options: Options | None
 
 
 # Type aliases are imported by name; __all__ lists runtime names.

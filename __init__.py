@@ -14,9 +14,9 @@ class Extension(ComfyExtension):
     async def on_load(self) -> None:
         """Create the shared stores off the event loop, then register the local routes."""
         from .src.comfy.routes import register_routes  # noqa: PLC0415 -- reason: The package imports host modules ComfyUI initializes first.
-        from .src.comfy.runtime import initialize_runtime  # noqa: PLC0415 -- reason: The package imports host modules ComfyUI initializes first.
+        from .src.comfy.runtime import create_runtime  # noqa: PLC0415 -- reason: The package imports host modules ComfyUI initializes first.
 
-        await asyncio.to_thread(initialize_runtime)
+        await asyncio.to_thread(create_runtime)
         register_routes()
 
     async def get_node_list(self) -> list[type[io.ComfyNode]]:

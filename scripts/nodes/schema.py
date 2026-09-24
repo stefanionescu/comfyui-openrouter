@@ -18,7 +18,7 @@ from comfy_api.latest import io
 from src.nodes import NODE_TYPES
 from src.nodes.base import PaidNode
 from scripts.config import HOST_NODES
-from src.comfy.runtime import initialize_runtime
+from src.comfy.runtime import create_runtime
 from src.config.generation.inputs import VARIATION_INPUT
 
 
@@ -102,9 +102,9 @@ def main() -> None:
     same on every machine.
     """
     asyncio.run(host.init_extra_nodes(init_custom_nodes=False))  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType] -- reason: The host loader is untyped.
-    with tempfile.TemporaryDirectory(prefix="comfyui-openrouter-schema-") as state_directory:
-        os.environ["OPENROUTER_COMFY_STATE_DIRECTORY"] = state_directory
-        initialize_runtime()
+    with tempfile.TemporaryDirectory(prefix="comfyui-openrouter-schema-") as choose_state_directory:
+        os.environ["OPENROUTER_COMFY_STATE_DIRECTORY"] = choose_state_directory
+        create_runtime()
         export: dict[str, object] = {
             "nodes": build_registered_schemas(),
             "host": {name: build_host_schema(name) for name in HOST_NODES},

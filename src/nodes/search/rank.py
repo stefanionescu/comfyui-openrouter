@@ -9,20 +9,20 @@ from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.search import RankRequest
 from ...comfy.media import encode_images
-from ..inputs import define_request_inputs
-from .embed import read_images, define_images
+from ..inputs import build_request_inputs
 from ...openrouter.rerank import RankOperation
 from comfy_execution.graph import ExecutionBlocker
+from .embed import read_images, build_image_sockets
 from ...config.generation.search import MAX_SEARCH_ITEMS
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ...config.generation.models import DEFAULT_RANK_MODEL
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
-from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 
 if TYPE_CHECKING:
     import torch
+    from ...types.options import Options
     from ...types.search import RankResult
-    from ...types.options import RequestOptions
 
 
 class SearchRank(PaidNode):
@@ -42,7 +42,7 @@ class SearchRank(PaidNode):
                     "documents", multiline=True, default="", tooltip="One document per line; blank lines are skipped."
                 ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_RANK_MODEL, tooltip=MODEL_TOOLTIP),
-                define_images(),
+                build_image_sockets(),
                 io.Int.Input(
                     "top_n",
                     display_name="top n",
@@ -51,7 +51,7 @@ class SearchRank(PaidNode):
                     max=MAX_SEARCH_ITEMS,
                     tooltip="How many documents to keep; 0 keeps all.",
                 ),
-                *define_request_inputs(has_seed=False),
+                *build_request_inputs(has_seed=False),
             ],
             outputs=[
                 io.String.Output("texts", display_name="texts"),
@@ -70,7 +70,7 @@ class SearchRank(PaidNode):
         model: list[str],
         top_n: list[int],
         images: dict[str, list[torch.Tensor]] | None = None,
-        options: list[RequestOptions] | None = None,
+        options: list[Options] | None = None,
     ) -> io.NodeOutput:
         """Encode every image inside the owned task, send all documents at once, and return them best first."""
         pictures = read_images(images)
@@ -86,9 +86,9 @@ class SearchRank(PaidNode):
             ]
             return io.NodeOutput("\n".join(ranked_texts), ranked_images or ExecutionBlocker(None), json.dumps(scores))
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the images inside the owned task, then send the request."""
-            urls = await owned_io(lambda: tuple(url for image in pictures for url in encode_images(image)))
+            urls = await wait_for_thread(lambda: tuple(url for image in pictures for url in encode_images(image)))
             request = RankRequest(
                 model_id=model[0].strip(),
                 query=query[0],
@@ -97,9 +97,9 @@ class SearchRank(PaidNode):
                 top_n=top_n[0],
                 options=options[0] if options else None,
             )
-            return await run_request(RankOperation(request), build_outputs)
+            return await send_request(RankOperation(request), build_outputs)
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
 __all__ = ["SearchRank"]

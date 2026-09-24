@@ -52,7 +52,7 @@ class ModelReply(Reply):
 
 
 @dataclass(frozen=True, slots=True)
-class CheckedModel:
+class Model:
     """What the model check learned about one model.
 
     Attributes:
@@ -65,4 +65,4 @@ class CheckedModel:
     parameters: frozenset[str]
 
 
-__all__ = ["CheckedModel", "ModelArchitecture", "ModelEndpoint", "ModelListing", "ModelReply"]
+__all__ = ["Model", "ModelArchitecture", "ModelEndpoint", "ModelListing", "ModelReply"]

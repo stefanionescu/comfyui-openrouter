@@ -18,7 +18,7 @@ def list_documents() -> list[str]:
     return sorted(path.name for path in folder.iterdir() if path.is_file() and path.suffix.lower() in DOCUMENT_TYPES)
 
 
-def read_document_file(name: str, max_megabytes: int) -> Document:
+def read_document(name: str, max_megabytes: int) -> Document:
     """Read one document: a PDF as a data URL, and a text file as UTF-8 text."""
     folder = Path(folder_paths.get_input_directory()).resolve()
     path = Path(folder_paths.get_annotated_filepath(name)).resolve()
@@ -37,4 +37,4 @@ def read_document_file(name: str, max_megabytes: int) -> Document:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, DOCUMENT_UNREADABLE) from None
 
 
-__all__ = ["list_documents", "read_document_file"]
+__all__ = ["list_documents", "read_document"]

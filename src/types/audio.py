@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
 if TYPE_CHECKING:
-    from .options import RequestOptions
+    from .options import Options
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,7 +60,7 @@ class SpeechRequest:
     speed: float
     sample: str | None
     sample_transcript: str
-    options: RequestOptions | None
+    options: Options | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -96,7 +96,7 @@ class TranscriptionRequest:
     language: str
     timestamps: str
     temperature: float
-    options: RequestOptions | None
+    options: Options | None
 
 
 @dataclass(frozen=True, slots=True)

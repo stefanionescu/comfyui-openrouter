@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 
-def define_request_inputs(*, has_seed: bool) -> list[io.Input]:
+def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
     """Build the seed, run number, and options inputs that follow a paid node's own inputs."""
     seed = io.Int.Input(
         SEED_INPUT,
@@ -54,4 +54,4 @@ def read_sockets(slots: Mapping[str, object] | None) -> list[object]:
     return [value for _name, value in ordered if value is not None]
 
 
-__all__ = ["define_request_inputs", "read_sockets"]
+__all__ = ["build_request_inputs", "read_sockets"]

@@ -8,7 +8,7 @@ from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import STATE_FILE_SIZE, STATE_DIRECTORY_ABSOLUTE
 
 
-def state_directory() -> Path:
+def choose_state_directory() -> Path:
     """Choose the platform's private state location without creating it."""
     override = os.environ.get("OPENROUTER_COMFY_STATE_DIRECTORY")
     if override:
@@ -23,7 +23,7 @@ def state_directory() -> Path:
     return Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")) / "openrouter-comfy"
 
 
-def atomic_write(path: Path, content: bytes) -> None:
+def save_file(path: Path, content: bytes) -> None:
     """Replace one state file only after its complete private write succeeds."""
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     descriptor, temporary = tempfile.mkstemp(prefix=".openrouter-", dir=path.parent)
@@ -40,7 +40,7 @@ def atomic_write(path: Path, content: bytes) -> None:
         temporary_path.unlink(missing_ok=True)
 
 
-def read_private(path: Path, *, max_bytes: int) -> bytes:
+def read_file(path: Path, *, max_bytes: int) -> bytes:
     """Read a state file within its size limit."""
     with path.open("rb") as stream:
         content = stream.read(max_bytes + 1)
@@ -49,4 +49,4 @@ def read_private(path: Path, *, max_bytes: int) -> bytes:
     return content
 
 
-__all__ = ["atomic_write", "read_private", "state_directory"]
+__all__ = ["choose_state_directory", "read_file", "save_file"]

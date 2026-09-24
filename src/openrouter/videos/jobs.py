@@ -14,8 +14,8 @@ from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ...config.patterns import JOB_ID_PATTERN
 from ...config.messages.videos import JOB_UNKNOWN
+from ...storage.files import save_file, read_file
 from ...types.errors import ErrorCode, OpenRouterError
-from ...storage.files import atomic_write, read_private
 from ...config.generation.videos import MAX_LISTED_JOBS, SECONDS_PER_MINUTE, MAX_JOB_FILE_BYTES
 
 if TYPE_CHECKING:
@@ -32,13 +32,25 @@ class JobStore:
         self.directory = directory
         self._lock = threading.Lock()
 
-    def record(self, job: VideoJob) -> None:
+    def _read_all(self) -> list[VideoJob]:
+        """Read every record; a damaged or oversized file is skipped, so it never blocks the other jobs."""
+        if not self.directory.is_dir():
+            return []
+        jobs: list[VideoJob] = []
+        for path in sorted(self.directory.glob("*.json")):
+            try:
+                jobs.append(VideoJob.model_validate_json(read_file(path, max_bytes=MAX_JOB_FILE_BYTES)))
+            except (OSError, ValidationError, OpenRouterError):
+                continue
+        return jobs
+
+    def save(self, job: VideoJob) -> None:
         """Write one record atomically, named by its job ID or its uncertain request hash."""
         path = self.directory / f"{job.name}.json"
         with self._lock:
-            atomic_write(path, (job.model_dump_json(indent=2) + "\n").encode())
+            save_file(path, (job.model_dump_json(indent=2) + "\n").encode())
 
-    def remove(self, name: str) -> None:
+    def delete(self, name: str) -> None:
         """Delete one record; a record already gone needs no removal."""
         path = self.directory / f"{name}.json"
         with self._lock:
@@ -64,7 +76,7 @@ class JobStore:
                 (self.directory / f"{job.name}.json").unlink(missing_ok=True)
         return None
 
-    def list_jobs(self) -> list[VideoJob]:
+    def list_accepted(self) -> list[VideoJob]:
         """List the accepted jobs, newest first."""
         with self._lock:
             jobs = [job for job in self._read_all() if job.status == "accepted"]
@@ -77,18 +89,6 @@ class JobStore:
         if job is None or job.status != "accepted":
             raise OpenRouterError(ErrorCode.INVALID_INPUT, JOB_UNKNOWN)
         return job
-
-    def _read_all(self) -> list[VideoJob]:
-        """Read every record; a damaged or oversized file is skipped, so it never blocks the other jobs."""
-        if not self.directory.is_dir():
-            return []
-        jobs: list[VideoJob] = []
-        for path in sorted(self.directory.glob("*.json")):
-            try:
-                jobs.append(VideoJob.model_validate_json(read_private(path, max_bytes=MAX_JOB_FILE_BYTES)))
-            except (OSError, ValidationError, OpenRouterError):
-                continue
-        return jobs
 
 
 __all__ = ["JobStore"]

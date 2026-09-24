@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from . import Json
-    from .options import RequestOptions
+    from .options import Options
     from collections.abc import Mapping
 
 
@@ -32,7 +32,7 @@ class ImageRequest:
     count: int
     seed: int
     fields: Mapping[str, Json]
-    options: RequestOptions | None
+    options: Options | None
 
 
 @dataclass(frozen=True, slots=True)

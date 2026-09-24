@@ -1,6 +1,6 @@
 """Check ComfyUI media, then convert it with ComfyUI's own helpers to what OpenRouter sends and reads.
 
-Encoding and decoding block, so callers run these functions through owned_io.
+Encoding and decoding block, so callers run these functions through wait_for_thread.
 """
 
 from __future__ import annotations

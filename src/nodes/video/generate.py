@@ -13,11 +13,11 @@ from ...config.messages.videos import IMAGE_BATCH
 from comfy_api.latest import Input, InputImpl, io
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
-from ..inputs import read_sockets, define_request_inputs
+from ..inputs import read_sockets, build_request_inputs
 from ...openrouter.videos.operation import VideoOperation
 from ...config.generation.models import DEFAULT_VIDEO_MODEL
 from ...comfy.media import encode_audio, encode_video, encode_images
-from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.videos import (
     RESOLUTIONS,
@@ -32,10 +32,10 @@ from ...config.generation.videos import (
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-    from ...types.options import RequestOptions
+    from ...types.options import Options
 
 
-def _define_media() -> list[io.Input]:
+def _build_media_sockets() -> list[io.Input]:
     """Offer the first and last frame, and one growing row of reference sockets for each kind."""
     media: list[io.Input] = [
         io.Image.Input(frame, display_name=frame.replace("_", " "), optional=True, tooltip="One image.")
@@ -139,8 +139,8 @@ class VideoGenerate(PaidNode):
                 ),
                 io.String.Input(MODEL_INPUT, default=DEFAULT_VIDEO_MODEL, tooltip=MODEL_TOOLTIP),
                 *CONTROLS,
-                *_define_media(),
-                *define_request_inputs(has_seed=True),
+                *_build_media_sockets(),
+                *build_request_inputs(has_seed=True),
             ],
             outputs=[io.Video.Output("video", display_name="video")],
         )
@@ -163,15 +163,17 @@ class VideoGenerate(PaidNode):
         reference_images: dict[str, object] | None = None,
         reference_videos: dict[str, object] | None = None,
         reference_audio: dict[str, object] | None = None,
-        options: RequestOptions | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the frames and references inside the owned task, then submit, record, and wait."""
         frames = {"first_frame": first_frame, "last_frame": last_frame}
         sockets = {"image": reference_images, "video": reference_videos, "audio": reference_audio}
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the media inside the owned task, then send the request."""
-            frame_urls, references = await owned_io(lambda: (_encode_frames(frames), _encode_references(sockets)))
+            frame_urls, references = await wait_for_thread(
+                lambda: (_encode_frames(frames), _encode_references(sockets))
+            )
             # A control left at 0 or at the model's default sends nothing.
             request = VideoRequest(
                 model_id=model.strip(),
@@ -188,12 +190,12 @@ class VideoGenerate(PaidNode):
                 options=options,
             )
             # ComfyUI reads the MP4 from memory, so no temporary file is written.
-            return await run_request(
+            return await send_request(
                 VideoOperation(request, get_runtime().jobs),
                 lambda content: io.NodeOutput(InputImpl.VideoFromFile(memory.BytesIO(content))),
             )
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
 __all__ = ["VideoGenerate"]

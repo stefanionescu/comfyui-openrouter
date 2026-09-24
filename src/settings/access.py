@@ -49,7 +49,7 @@ def _is_same_origin(origin: str, target: SplitResult, port: int) -> bool:
     )
 
 
-def _require_local_request(request: web.Request, *, is_mutation: bool, is_multi_user: bool) -> None:
+def _validate_local_request(request: web.Request, *, is_mutation: bool, is_multi_user: bool) -> None:
     """Reject remote peers, rebinding hosts, cross-origin requests, and unsafe writes."""
     forbidden = web.HTTPForbidden(text=LOCAL_CONNECTION_REQUIRED)
     try:
@@ -74,7 +74,7 @@ def _require_local_request(request: web.Request, *, is_mutation: bool, is_multi_
         raise forbidden from None
 
 
-def local_route(
+def build_local_route(
     callback: Callable[[web.Request], Awaitable[dict[str, Json]]],
     *,
     is_mutation: bool,
@@ -82,10 +82,10 @@ def local_route(
 ) -> Callable[[web.Request], Awaitable[web.Response]]:
     """Wrap a route with local-owner checks, safe errors, and private response headers."""
 
-    async def respond(request: web.Request) -> web.Response:
+    async def build_response(request: web.Request) -> web.Response:
         """Authorize the request and return only the route's public result or safe error."""
         try:
-            _require_local_request(request, is_mutation=is_mutation, is_multi_user=is_multi_user)
+            _validate_local_request(request, is_mutation=is_mutation, is_multi_user=is_multi_user)
             return web.json_response(await callback(request), headers=PRIVATE_HEADERS)
         except OpenRouterError as error:
             # A stale revision is a conflict the page resolves by reloading; every other failure is a bad request.
@@ -96,7 +96,7 @@ def local_route(
             message, status = STATE_UNREADABLE, 500
         return web.json_response({"error": message}, status=status, headers=PRIVATE_HEADERS)
 
-    return respond
+    return build_response
 
 
-__all__ = ["local_route"]
+__all__ = ["build_local_route"]

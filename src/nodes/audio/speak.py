@@ -7,13 +7,13 @@ from ..base import PaidNode
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.audio import SpeechRequest
-from ..inputs import define_request_inputs
+from ..inputs import build_request_inputs
 from ...openrouter.speech import SpeechOperation
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...config.generation.models import DEFAULT_SPEECH_MODEL
 from ...comfy.media import decode_pcm, decode_audio, encode_audio
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
-from ...comfy.execution import owned_io, run_request, wait_for_execution
+from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.audio import (
     MAX_SPEED,
     MIN_SPEED,
@@ -25,8 +25,8 @@ from ...config.generation.audio import (
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
+    from ...types.options import Options
     from ...types.audio import SpeechResult
-    from ...types.options import RequestOptions
 
 
 def _build_outputs(result: SpeechResult) -> io.NodeOutput:
@@ -84,7 +84,7 @@ class AudioSpeak(PaidNode):
                     advanced=True,
                     tooltip="The words spoken in the voice sample.",
                 ),
-                *define_request_inputs(has_seed=False),
+                *build_request_inputs(has_seed=False),
             ],
             outputs=[io.Audio.Output("audio", display_name="audio")],
         )
@@ -100,16 +100,16 @@ class AudioSpeak(PaidNode):
         speed: float = DEFAULT_SPEED,
         sample_transcript: str = "",
         voice_sample: Input.Audio | None = None,
-        options: RequestOptions | None = None,
+        options: Options | None = None,
     ) -> io.NodeOutput:
         """Encode the voice sample inside the owned task, send, and decode the audio."""
 
-        async def start() -> io.NodeOutput:
+        async def send_encoded() -> io.NodeOutput:
             """Encode the sample inside the owned task, then send the request."""
             sample = None
             if voice_sample is not None:
                 clip = voice_sample
-                sample = "data:audio/wav;base64," + await owned_io(lambda: encode_audio(clip))
+                sample = "data:audio/wav;base64," + await wait_for_thread(lambda: encode_audio(clip))
             request = SpeechRequest(
                 model_id=model.strip(),
                 text=text,
@@ -120,9 +120,9 @@ class AudioSpeak(PaidNode):
                 sample_transcript=sample_transcript,
                 options=options,
             )
-            return await run_request(SpeechOperation(request), _build_outputs)
+            return await send_request(SpeechOperation(request), _build_outputs)
 
-        return await wait_for_execution(asyncio.create_task(start()))
+        return await wait_for_task(asyncio.create_task(send_encoded()))
 
 
 __all__ = ["AudioSpeak"]

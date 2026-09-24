@@ -34,28 +34,6 @@ async def _wait_shielded[T](task: asyncio.Task[T]) -> bool:
     return cancelled
 
 
-async def owned_io[T](operation: Callable[[], T]) -> T:
-    """Finish blocking work already handed to a thread before letting a cancel through."""
-    task = asyncio.create_task(asyncio.to_thread(operation))
-    if await _wait_shielded(task):
-        task.exception()
-        raise asyncio.CancelledError
-    return task.result()
-
-
-async def wait_for_execution[T](task: asyncio.Task[T]) -> T:
-    """Forward ComfyUI interruption to the owned preparation or execution task."""
-    try:
-        while not task.done():
-            throw_exception_if_processing_interrupted()
-            await asyncio.wait({task}, timeout=CANCELLATION_POLL_SECONDS)
-        return await task
-    finally:
-        if not task.done():
-            task.cancel()
-            await asyncio.gather(task, return_exceptions=True)
-
-
 def _read_request_limit(capacity: int) -> asyncio.Semaphore:
     """Return the shared request limit of the running event loop.
 
@@ -68,7 +46,29 @@ def _read_request_limit(capacity: int) -> asyncio.Semaphore:
     return limit
 
 
-async def run_request[Result](
+async def wait_for_thread[T](work: Callable[[], T]) -> T:
+    """Run blocking work in a thread, and finish it before letting a cancel through."""
+    task = asyncio.create_task(asyncio.to_thread(work))
+    if await _wait_shielded(task):
+        task.exception()
+        raise asyncio.CancelledError
+    return task.result()
+
+
+async def wait_for_task[T](task: asyncio.Task[T]) -> T:
+    """Forward ComfyUI interruption to the owned preparation or execution task."""
+    try:
+        while not task.done():
+            throw_exception_if_processing_interrupted()
+            await asyncio.wait({task}, timeout=CANCELLATION_POLL_SECONDS)
+        return await task
+    finally:
+        if not task.done():
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
+
+
+async def send_request[Result](
     operation: Operation[Result], build_outputs: Callable[[Result], io.NodeOutput]
 ) -> io.NodeOutput:
     """Validate, send within the parallel limit, and build the node's outputs, showing only ComfyUI's progress bar.
@@ -77,14 +77,14 @@ async def run_request[Result](
     """
     progress = ComfyAPI().execution
     await progress.set_progress(0, 3)
-    configuration = await asyncio.to_thread(get_runtime().configuration.execution_snapshot)
+    configuration = await asyncio.to_thread(get_runtime().configuration.read_snapshot)
     operation.validate(configuration.settings)
     await progress.set_progress(1, 3)
     try:
         async with _read_request_limit(configuration.settings.parallel_requests):
-            result = await wait_for_execution(asyncio.create_task(operation.send(configuration)))
+            result = await wait_for_task(asyncio.create_task(operation.send(configuration)))
         await progress.set_progress(2, 3)
-        outputs = await owned_io(lambda: build_outputs(result))
+        outputs = await wait_for_thread(lambda: build_outputs(result))
         await progress.set_progress(3, 3)
     except OpenRouterError as error:
         if error.code is ErrorCode.INTERRUPTED:
@@ -96,4 +96,4 @@ async def run_request[Result](
     return outputs
 
 
-__all__ = ["owned_io", "run_request", "wait_for_execution"]
+__all__ = ["send_request", "wait_for_task", "wait_for_thread"]

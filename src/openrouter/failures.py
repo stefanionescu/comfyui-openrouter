@@ -45,19 +45,6 @@ FIXED_FAILURES: dict[int, tuple[ErrorCode, str]] = {
 }
 
 
-def read_failure(status: int, body: bytes) -> OpenRouterError:
-    """Map a failed reply to one reviewed message, adding OpenRouter's reason for the statuses that explain."""
-    if status in EXPLAINED_FAILURES:
-        code, message = EXPLAINED_FAILURES[status]
-        try:
-            reason = clean_reason(_read_reason(ErrorReply.model_validate_json(body)))
-        except ValidationError:
-            reason = NO_REASON
-        return OpenRouterError(code, message.format(reason=reason))
-    code, message = FIXED_FAILURES.get(status, (ErrorCode.TRANSPORT, REQUEST_FAILED))
-    return OpenRouterError(code, message.format(status=status))
-
-
 def _read_reason(reply: ErrorReply) -> str:
     """Choose the text that names the problem.
 
@@ -77,7 +64,20 @@ def _read_reason(reply: ErrorReply) -> str:
     return next((text for text in (*candidates, document.get("message")) if isinstance(text, str)), raw)
 
 
-def clean_reason(message: str) -> str:
+def read_failure(status: int, body: bytes) -> OpenRouterError:
+    """Map a failed reply to one reviewed message, adding OpenRouter's reason for the statuses that explain."""
+    if status in EXPLAINED_FAILURES:
+        code, message = EXPLAINED_FAILURES[status]
+        try:
+            reason = sanitize_reason(_read_reason(ErrorReply.model_validate_json(body)))
+        except ValidationError:
+            reason = NO_REASON
+        return OpenRouterError(code, message.format(reason=reason))
+    code, message = FIXED_FAILURES.get(status, (ErrorCode.TRANSPORT, REQUEST_FAILED))
+    return OpenRouterError(code, message.format(status=status))
+
+
+def sanitize_reason(message: str) -> str:
     """Remove the only private details a provider's reason can carry, keys and addresses, and shorten it."""
     text = " ".join(KEY.sub("", URL.sub("", message)).split())
     if len(text) > MAX_REASON_CHARACTERS:
@@ -85,4 +85,4 @@ def clean_reason(message: str) -> str:
     return text or NO_REASON
 
 
-__all__ = ["clean_reason", "read_failure"]
+__all__ = ["read_failure", "sanitize_reason"]

@@ -12,7 +12,7 @@ from ...config.patterns import JOB_ID_PATTERN
 from ...config.messages.videos import JOB_UNKNOWN
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import VIDEO_MENU, NODE_PREFIX
-from ...comfy.execution import run_request, wait_for_execution
+from ...comfy.execution import send_request, wait_for_task
 from ...openrouter.videos.operation import VideoDownloadOperation
 
 JOB_ID = re.compile(JOB_ID_PATTERN)
@@ -30,7 +30,7 @@ class VideoDownload(io.ComfyNode):
         """List the recorded jobs when ComfyUI builds the node definitions; the R key reads them again."""
         labels = [
             f"{job.job_id} · {job.model_id} · {job.submitted_at[:16].replace('T', ' ')}"
-            for job in get_runtime().jobs.list_jobs()
+            for job in get_runtime().jobs.list_accepted()
         ]
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
@@ -67,12 +67,12 @@ class VideoDownload(io.ComfyNode):
         record = await asyncio.to_thread(jobs.read, job_id)
         # ComfyUI reads the MP4 from memory, so no temporary file is written.
         task = asyncio.create_task(
-            run_request(
+            send_request(
                 VideoDownloadOperation(record, jobs),
                 lambda content: io.NodeOutput(InputImpl.VideoFromFile(memory.BytesIO(content))),
             )
         )
-        return await wait_for_execution(task)
+        return await wait_for_task(task)
 
 
 __all__ = ["VideoDownload"]

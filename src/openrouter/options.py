@@ -9,11 +9,11 @@ from ..config.openrouter import ENDPOINT_LABELS, ROUTING_FIELDS, RESERVED_FIELDS
 
 if TYPE_CHECKING:
     from ..types import Json, Endpoint
+    from ..types.options import Options
     from collections.abc import Mapping
-    from ..types.options import RequestOptions
 
 
-def apply_options(body: Mapping[str, Json], options: RequestOptions | None, endpoint: Endpoint) -> dict[str, Json]:
+def build_request_body(body: Mapping[str, Json], options: Options | None, endpoint: Endpoint) -> dict[str, Json]:
     """Add the options this endpoint accepts, refusing any it does not before a request is sent."""
     merged = dict(body)
     if options is None:
@@ -43,4 +43,4 @@ def apply_options(body: Mapping[str, Json], options: RequestOptions | None, endp
     return merged
 
 
-__all__ = ["apply_options"]
+__all__ = ["build_request_body"]
