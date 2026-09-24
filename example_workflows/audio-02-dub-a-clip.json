@@ -13,7 +13,7 @@
       ],
       "size": [
         340,
-        156
+        122
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a short clip of one speaker in **Load Audio**. The clip is also the voice sample, so use your own voice or one you have permission to copy.\n3. Press **Run**. The dub is saved under `dub/approved` or `dub/review`, and the subtitles under `dub/subtitles`.\n\nFour paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a short clip of one speaker in **Load Audio**. The clip is also the voice sample, so use your own voice or one you have permission to copy.\n3. Press **Run**. The dub is saved under `dub/approved` or `dub/review`, and the subtitles under `dub/subtitles`."
       ],
       "title": "Start Here"
     },
@@ -46,7 +46,7 @@
       ],
       "size": [
         340,
-        156
+        122
       ],
       "flags": {},
       "order": 1,
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Universal-3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`. One paid request."
+        "Universal-3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`."
       ],
       "title": "Note"
     },
@@ -79,7 +79,7 @@
       ],
       "size": [
         720,
-        156
+        122
       ],
       "flags": {},
       "order": 2,
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev, TypeSafe's decision model, compares the two and answers **accurate**: does the translation say the same, with nothing added or left out? Two paid requests."
+        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev, TypeSafe's decision model, compares the two and answers **accurate**: does the translation say the same, with nothing added or left out?"
       ],
       "title": "Note"
     },
@@ -112,7 +112,7 @@
       ],
       "size": [
         340,
-        156
+        122
       ],
       "flags": {},
       "order": 3,
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Fish Audio S2.1 Pro reads the translation in the voice of the clip, using the transcript as the sample text. The dub is saved in the **approved** folder when the translation is accurate, and in **review** otherwise. One paid request."
+        "Fish Audio S2.1 Pro reads the translation in the voice of the clip, using the transcript as the sample text. The dub is saved in the **approved** folder when the translation is accurate, and in **review** otherwise."
       ],
       "title": "Note"
     },
@@ -141,7 +141,7 @@
       "type": "LoadAudio",
       "pos": [
         30,
-        360
+        326
       ],
       "size": [
         340,
@@ -182,7 +182,7 @@
       "type": "43368639-46a6-549f-882b-b08e16775ed5",
       "pos": [
         460,
-        360
+        326
       ],
       "size": [
         340,
@@ -217,7 +217,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        360
+        326
       ],
       "size": [
         340,
@@ -242,19 +242,19 @@
           }
         },
         {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
           "name": "answer_type",
           "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
             "name": "answer_type"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
           }
         }
       ],
@@ -272,10 +272,10 @@
       },
       "widgets_values": [
         "accurate",
-        "Does the translation say the same as the original, with nothing added or left out?",
         "yes or no",
         "",
-        ""
+        "",
+        "Does the translation say the same as the original, with nothing added or left out?"
       ]
     },
     {
@@ -283,7 +283,7 @@
       "type": "9a218e99-af71-58ea-a075-33a94e59fe97",
       "pos": [
         1270,
-        360
+        326
       ],
       "size": [
         340,
@@ -346,7 +346,7 @@
       "type": "PreviewAny",
       "pos": [
         1270,
-        522
+        488
       ],
       "size": [
         340,
@@ -380,7 +380,7 @@
       "type": "e475331b-00e9-5d6e-ae6e-0bd37a7c8d74",
       "pos": [
         1700,
-        360
+        326
       ],
       "size": [
         340,
@@ -530,7 +530,7 @@
         0,
         30,
         400,
-        496
+        462
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -543,7 +543,7 @@
         430,
         30,
         400,
-        386
+        352
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -556,7 +556,7 @@
         860,
         30,
         780,
-        762
+        728
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -569,7 +569,7 @@
         1670,
         30,
         400,
-        544
+        510
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -702,11 +702,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1067,27 +1067,11 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
-              {
                 "name": "model",
                 "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
-                }
-              },
-              {
-                "name": "system",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "system"
                 }
               },
               {
@@ -1124,19 +1108,19 @@
                 "shape": 7
               },
               {
-                "name": "reasoning",
+                "name": "reasoning_effort",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "reasoning"
+                  "name": "reasoning_effort"
                 }
               },
               {
-                "name": "max_output_tokens",
+                "name": "max_tokens",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "max_output_tokens"
+                  "name": "max_tokens"
                 }
               },
               {
@@ -1145,14 +1129,6 @@
                 "link": null,
                 "widget": {
                   "name": "temperature"
-                }
-              },
-              {
-                "name": "answer_schema",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "answer_schema"
                 }
               },
               {
@@ -1196,11 +1172,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1208,6 +1184,30 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
               }
             ],
             "outputs": [
@@ -1245,12 +1245,10 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "",
               "openai/gpt-6-sol",
               "model default",
               0,
               1.0,
-              "",
               "text",
               "model default",
               "alloy",
@@ -1258,6 +1256,8 @@
               42,
               "fixed",
               0,
+              "",
+              "",
               ""
             ],
             "color": "#432",
@@ -1347,14 +1347,6 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "situation",
-                "type": "STRING",
-                "link": 5,
-                "widget": {
-                  "name": "situation"
-                }
-              },
-              {
                 "name": "questions",
                 "type": "DECISION_QUESTIONS",
                 "link": 9
@@ -1368,11 +1360,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1380,6 +1372,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 5,
+                "widget": {
+                  "name": "situation"
+                }
               }
             ],
             "outputs": [
@@ -1402,9 +1402,9 @@
               "Node name for S&R": "OpenRouterDecisionAsk"
             },
             "widgets_values": [
-              "",
               "typesafe/jev-1.13",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1504,7 +1504,7 @@
             "origin_id": 202,
             "origin_slot": 0,
             "target_id": 203,
-            "target_slot": 0,
+            "target_slot": 17,
             "type": "STRING"
           },
           {
@@ -1528,7 +1528,7 @@
             "origin_id": 204,
             "origin_slot": 0,
             "target_id": 205,
-            "target_slot": 0,
+            "target_slot": 4,
             "type": "STRING"
           },
           {
@@ -1560,7 +1560,7 @@
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 205,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "DECISION_QUESTIONS"
           },
           {
@@ -1723,14 +1723,6 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "text",
-                "type": "STRING",
-                "link": 5,
-                "widget": {
-                  "name": "text"
-                }
-              },
-              {
                 "name": "model",
                 "type": "STRING",
                 "link": null,
@@ -1777,11 +1769,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1789,6 +1781,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 5,
+                "widget": {
+                  "name": "text"
+                }
               }
             ],
             "outputs": [
@@ -1804,13 +1804,13 @@
               "Node name for S&R": "OpenRouterAudioSpeak"
             },
             "widgets_values": [
-              "",
               "fish-audio/s2.1-pro",
               "",
               "pcm",
               1.0,
               "",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -2039,7 +2039,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 301,
-            "target_slot": 0,
+            "target_slot": 8,
             "type": "STRING"
           },
           {
@@ -2047,7 +2047,7 @@
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 301,
-            "target_slot": 5,
+            "target_slot": 4,
             "type": "AUDIO"
           },
           {
@@ -2055,7 +2055,7 @@
             "origin_id": -10,
             "origin_slot": 2,
             "target_id": 301,
-            "target_slot": 6,
+            "target_slot": 5,
             "type": "STRING"
           },
           {

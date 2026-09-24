@@ -13,7 +13,7 @@
       ],
       "size": [
         340,
-        120
+        88
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload the voicemail in **Load Audio**.\n3. Press **Run**. The transcript and a spoken reply are saved under `voicemail`.\n\nFour paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload the voicemail in **Load Audio**.\n3. Press **Run**. The transcript and a spoken reply are saved under `voicemail`."
       ],
       "title": "Start Here"
     },
@@ -46,7 +46,7 @@
       ],
       "size": [
         340,
-        120
+        88
       ],
       "flags": {},
       "order": 1,
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Universal-3.5 Pro turns the recording into text, and the transcript is saved under `voicemail/transcript`. One paid request."
+        "Universal-3.5 Pro turns the recording into text, and the transcript is saved under `voicemail/transcript`."
       ],
       "title": "Note"
     },
@@ -79,7 +79,7 @@
       ],
       "size": [
         720,
-        120
+        88
       ],
       "flags": {},
       "order": 2,
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev, TypeSafe's decision model, reads the transcript and answers three questions: **department** picks sales, support, or billing; **callback** asks whether the caller wants a call back; **urgency** scores how soon. **Summary** shows all three. One paid request."
+        "Jev, TypeSafe's decision model, reads the transcript and answers three questions: **department** picks sales, support, or billing; **callback** asks whether the caller wants a call back; **urgency** scores how soon. **Summary** shows all three."
       ],
       "title": "Note"
     },
@@ -112,7 +112,7 @@
       ],
       "size": [
         340,
-        120
+        88
       ],
       "flags": {},
       "order": 3,
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Luna writes what the chosen department says when it calls back, and Gemini 3.8 Flash TTS reads it aloud. The reply is saved under `voicemail/reply`. Two paid requests."
+        "GPT-6 Luna writes what the chosen department says when it calls back, and Gemini 3.8 Flash TTS reads it aloud. The reply is saved under `voicemail/reply`."
       ],
       "title": "Note"
     },
@@ -141,7 +141,7 @@
       "type": "LoadAudio",
       "pos": [
         30,
-        324
+        292
       ],
       "size": [
         340,
@@ -181,7 +181,7 @@
       "type": "a9deac24-7512-5c3c-ae7e-81ce022868e3",
       "pos": [
         460,
-        324
+        292
       ],
       "size": [
         340,
@@ -216,7 +216,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        324
+        292
       ],
       "size": [
         340,
@@ -241,19 +241,19 @@
           }
         },
         {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
           "name": "answer_type",
           "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
             "name": "answer_type"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
           }
         }
       ],
@@ -271,9 +271,9 @@
       },
       "widgets_values": [
         "department",
-        "Which department should call back?",
         "one choice",
-        "sales: New orders, quotes, and product questions.\nsupport: Faults, repairs, and how-to questions.\nbilling: Charges, refunds, and invoices."
+        "sales: New orders, quotes, and product questions.\nsupport: Faults, repairs, and how-to questions.\nbilling: Charges, refunds, and invoices.",
+        "Which department should call back?"
       ]
     },
     {
@@ -281,7 +281,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        578
+        546
       ],
       "size": [
         340,
@@ -306,19 +306,19 @@
           }
         },
         {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
           "name": "answer_type",
           "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
             "name": "answer_type"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
           }
         }
       ],
@@ -336,10 +336,10 @@
       },
       "widgets_values": [
         "callback",
-        "Does the caller ask to be called back?",
         "yes or no",
         "",
-        ""
+        "",
+        "Does the caller ask to be called back?"
       ]
     },
     {
@@ -347,7 +347,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        826
+        794
       ],
       "size": [
         340,
@@ -372,19 +372,19 @@
           }
         },
         {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
           "name": "answer_type",
           "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
             "name": "answer_type"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
           }
         }
       ],
@@ -402,9 +402,9 @@
       },
       "widgets_values": [
         "urgency",
-        "How urgent is the call?",
         "score",
-        "This week\nToday\nWithin the hour"
+        "This week\nToday\nWithin the hour",
+        "How urgent is the call?"
       ]
     },
     {
@@ -412,7 +412,7 @@
       "type": "58b9a9c1-e294-5468-8ff3-77068e6e4fd0",
       "pos": [
         1270,
-        324
+        292
       ],
       "size": [
         340,
@@ -463,7 +463,7 @@
       "type": "PreviewAny",
       "pos": [
         1270,
-        496
+        464
       ],
       "size": [
         340,
@@ -497,7 +497,7 @@
       "type": "09104698-f3b3-5651-9f46-c3cfc0d5c3be",
       "pos": [
         1700,
-        324
+        292
       ],
       "size": [
         340,
@@ -606,7 +606,7 @@
         0,
         30,
         400,
-        460
+        428
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -619,7 +619,7 @@
         430,
         30,
         400,
-        350
+        318
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -632,7 +632,7 @@
         860,
         30,
         780,
-        1016
+        984
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -645,7 +645,7 @@
         1670,
         30,
         400,
-        370
+        338
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -778,11 +778,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1014,14 +1014,6 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "situation",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "situation"
-                }
-              },
-              {
                 "name": "questions",
                 "type": "DECISION_QUESTIONS",
                 "link": 3
@@ -1035,11 +1027,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1047,6 +1039,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "situation"
+                }
               }
             ],
             "outputs": [
@@ -1069,9 +1069,9 @@
               "Node name for S&R": "OpenRouterDecisionAsk"
             },
             "widgets_values": [
-              "",
               "typesafe/jev-1.13",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1171,7 +1171,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 201,
-            "target_slot": 0,
+            "target_slot": 4,
             "type": "STRING"
           },
           {
@@ -1179,7 +1179,7 @@
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 201,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "DECISION_QUESTIONS"
           },
           {
@@ -1339,27 +1339,11 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 1,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
-              {
                 "name": "model",
                 "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
-                }
-              },
-              {
-                "name": "system",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "system"
                 }
               },
               {
@@ -1396,19 +1380,19 @@
                 "shape": 7
               },
               {
-                "name": "reasoning",
+                "name": "reasoning_effort",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "reasoning"
+                  "name": "reasoning_effort"
                 }
               },
               {
-                "name": "max_output_tokens",
+                "name": "max_tokens",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "max_output_tokens"
+                  "name": "max_tokens"
                 }
               },
               {
@@ -1417,14 +1401,6 @@
                 "link": null,
                 "widget": {
                   "name": "temperature"
-                }
-              },
-              {
-                "name": "answer_schema",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "answer_schema"
                 }
               },
               {
@@ -1468,11 +1444,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1480,6 +1456,30 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
               }
             ],
             "outputs": [
@@ -1516,12 +1516,10 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "",
               "openai/gpt-6-luna",
               "model default",
               0,
               1.0,
-              "",
               "text",
               "model default",
               "alloy",
@@ -1529,6 +1527,8 @@
               42,
               "fixed",
               0,
+              "",
+              "",
               ""
             ],
             "color": "#432",
@@ -1549,14 +1549,6 @@
             "order": 302,
             "mode": 0,
             "inputs": [
-              {
-                "name": "text",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "text"
-                }
-              },
               {
                 "name": "model",
                 "type": "STRING",
@@ -1604,11 +1596,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1616,6 +1608,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "text"
+                }
               }
             ],
             "outputs": [
@@ -1631,13 +1631,13 @@
               "Node name for S&R": "OpenRouterAudioSpeak"
             },
             "widgets_values": [
-              "",
               "google/gemini-3.8-flash-tts",
               "Kore",
               "pcm",
               1.0,
               "",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1702,7 +1702,7 @@
             "origin_id": 301,
             "origin_slot": 0,
             "target_id": 302,
-            "target_slot": 0,
+            "target_slot": 17,
             "type": "STRING"
           },
           {
@@ -1710,7 +1710,7 @@
             "origin_id": 302,
             "origin_slot": 0,
             "target_id": 303,
-            "target_slot": 0,
+            "target_slot": 8,
             "type": "STRING"
           },
           {

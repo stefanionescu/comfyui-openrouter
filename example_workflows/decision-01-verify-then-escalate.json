@@ -13,7 +13,7 @@
       ],
       "size": [
         340,
-        132
+        98
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Paste your notes in **Notes** and type the question in **Question**.\n3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev, TypeSafe's decision model, doubts it.\n\nTwo or three paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Paste your notes in **Notes** and type the question in **Question**.\n3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev, TypeSafe's decision model, doubts it."
       ],
       "title": "Start Here"
     },
@@ -46,7 +46,7 @@
       ],
       "size": [
         340,
-        132
+        98
       ],
       "flags": {},
       "order": 1,
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Luna, a fast and inexpensive model, answers the question using only the notes. One paid request."
+        "GPT-6 Luna, a fast model, answers the question using only the notes."
       ],
       "title": "Note"
     },
@@ -79,7 +79,7 @@
       ],
       "size": [
         720,
-        132
+        98
       ],
       "flags": {},
       "order": 2,
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev answers **supported**: does every fact in the answer come from the notes? The answer passes when the probability of yes is at least 0.8. One paid request."
+        "Jev answers **supported**: does every fact in the answer come from the notes? The answer passes when the probability of yes is at least 0.8."
       ],
       "title": "Note"
     },
@@ -112,7 +112,7 @@
       ],
       "size": [
         720,
-        132
+        98
       ],
       "flags": {},
       "order": 3,
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "When the quick answer fails the check, Claude Opus 5.5 answers again with more care. **If/Else Switch** runs only the branch it picks, so you pay for the stronger model only when the quick answer fails."
+        "When the quick answer fails the check, Claude Opus 5.5 answers again with more care. **If/Else Switch** runs only the branch it picks, so the stronger model runs only when the quick answer fails."
       ],
       "title": "Note"
     },
@@ -141,7 +141,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        336
+        302
       ],
       "size": [
         340,
@@ -183,7 +183,7 @@
       "type": "PrimitiveString",
       "pos": [
         30,
-        488
+        454
       ],
       "size": [
         340,
@@ -225,7 +225,7 @@
       "type": "c5d60db5-e243-5bb4-90d2-5fb8ee084ab0",
       "pos": [
         460,
-        336
+        302
       ],
       "size": [
         340,
@@ -272,7 +272,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        336
+        302
       ],
       "size": [
         340,
@@ -297,19 +297,19 @@
           }
         },
         {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
           "name": "answer_type",
           "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
             "name": "answer_type"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
           }
         }
       ],
@@ -327,10 +327,10 @@
       },
       "widgets_values": [
         "supported",
-        "Is every fact in the answer stated in the notes, and does it answer the question?",
         "yes or no",
         "",
-        ""
+        "",
+        "Is every fact in the answer stated in the notes, and does it answer the question?"
       ]
     },
     {
@@ -338,7 +338,7 @@
       "type": "e7fdb144-fdb9-5a91-8d30-b9f091f4a3a4",
       "pos": [
         1270,
-        336
+        302
       ],
       "size": [
         340,
@@ -394,7 +394,7 @@
       "type": "PreviewAny",
       "pos": [
         1270,
-        486
+        452
       ],
       "size": [
         340,
@@ -428,7 +428,7 @@
       "type": "c43f2c55-6085-50d4-9e14-0a579f88e973",
       "pos": [
         1700,
-        336
+        302
       ],
       "size": [
         340,
@@ -481,7 +481,7 @@
       "type": "PreviewAny",
       "pos": [
         2080,
-        336
+        302
       ],
       "size": [
         340,
@@ -609,7 +609,7 @@
         0,
         30,
         400,
-        546
+        512
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -622,7 +622,7 @@
         430,
         30,
         400,
-        382
+        348
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -635,7 +635,7 @@
         860,
         30,
         780,
-        726
+        692
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -648,7 +648,7 @@
         1670,
         30,
         780,
-        576
+        542
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -830,27 +830,11 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 1,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
-              {
                 "name": "model",
                 "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
-                }
-              },
-              {
-                "name": "system",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "system"
                 }
               },
               {
@@ -887,19 +871,19 @@
                 "shape": 7
               },
               {
-                "name": "reasoning",
+                "name": "reasoning_effort",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "reasoning"
+                  "name": "reasoning_effort"
                 }
               },
               {
-                "name": "max_output_tokens",
+                "name": "max_tokens",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "max_output_tokens"
+                  "name": "max_tokens"
                 }
               },
               {
@@ -908,14 +892,6 @@
                 "link": null,
                 "widget": {
                   "name": "temperature"
-                }
-              },
-              {
-                "name": "answer_schema",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "answer_schema"
                 }
               },
               {
@@ -959,11 +935,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -971,6 +947,30 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
               }
             ],
             "outputs": [
@@ -1007,12 +1007,10 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "",
               "openai/gpt-6-luna",
               "model default",
               0,
               1.0,
-              "",
               "text",
               "model default",
               "alloy",
@@ -1020,6 +1018,8 @@
               42,
               "fixed",
               0,
+              "",
+              "",
               ""
             ],
             "color": "#432",
@@ -1033,7 +1033,7 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 0,
+            "target_slot": 17,
             "type": "STRING"
           },
           {
@@ -1265,14 +1265,6 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "situation",
-                "type": "STRING",
-                "link": 1,
-                "widget": {
-                  "name": "situation"
-                }
-              },
-              {
                 "name": "questions",
                 "type": "DECISION_QUESTIONS",
                 "link": 6
@@ -1286,11 +1278,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1298,6 +1290,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "situation"
+                }
               }
             ],
             "outputs": [
@@ -1320,9 +1320,9 @@
               "Node name for S&R": "OpenRouterDecisionAsk"
             },
             "widgets_values": [
-              "",
               "typesafe/jev-1.13",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1414,7 +1414,7 @@
             "origin_id": 201,
             "origin_slot": 0,
             "target_id": 202,
-            "target_slot": 0,
+            "target_slot": 4,
             "type": "STRING"
           },
           {
@@ -1454,7 +1454,7 @@
             "origin_id": -10,
             "origin_slot": 3,
             "target_id": 202,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "DECISION_QUESTIONS"
           },
           {
@@ -1578,27 +1578,11 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
-              {
                 "name": "model",
                 "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
-                }
-              },
-              {
-                "name": "system",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "system"
                 }
               },
               {
@@ -1635,19 +1619,19 @@
                 "shape": 7
               },
               {
-                "name": "reasoning",
+                "name": "reasoning_effort",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "reasoning"
+                  "name": "reasoning_effort"
                 }
               },
               {
-                "name": "max_output_tokens",
+                "name": "max_tokens",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "max_output_tokens"
+                  "name": "max_tokens"
                 }
               },
               {
@@ -1656,14 +1640,6 @@
                 "link": null,
                 "widget": {
                   "name": "temperature"
-                }
-              },
-              {
-                "name": "answer_schema",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "answer_schema"
                 }
               },
               {
@@ -1707,11 +1683,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1719,6 +1695,30 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
               }
             ],
             "outputs": [
@@ -1755,12 +1755,10 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "",
               "anthropic/claude-opus-5.5",
               "medium",
               0,
               1.0,
-              "",
               "text",
               "model default",
               "alloy",
@@ -1768,6 +1766,8 @@
               42,
               "fixed",
               0,
+              "",
+              "",
               ""
             ],
             "color": "#432",
@@ -1839,7 +1839,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 301,
-            "target_slot": 0,
+            "target_slot": 17,
             "type": "STRING"
           },
           {

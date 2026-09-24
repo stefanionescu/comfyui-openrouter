@@ -13,7 +13,7 @@
       ],
       "size": [
         340,
-        132
+        98
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the brand in **Brand**: its name, its character, and where the logo is used.\n3. Press **Run**. The logo is saved under `logo` as an SVG file and as a PNG sticker with a transparent background.\n\nFour paid requests per run. See prices at openrouter.ai/models and charges at openrouter.ai/activity."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the brand in **Brand**: its name, its character, and where the logo is used.\n3. Press **Run**. The logo is saved under `logo` as an SVG file and as a PNG with a transparent background."
       ],
       "title": "Start Here"
     },
@@ -46,7 +46,7 @@
       ],
       "size": [
         720,
-        132
+        98
       ],
       "flags": {},
       "order": 1,
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev, TypeSafe's decision model, picks the one that will make the simplest, most memorable mark in **best**, and **Prompt** shows it. Two paid requests."
+        "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev, TypeSafe's decision model, picks the one that will make the simplest, most memorable mark in **best**, and **Prompt** shows it."
       ],
       "title": "Note"
     },
@@ -79,7 +79,7 @@
       ],
       "size": [
         340,
-        132
+        98
       ],
       "flags": {},
       "order": 2,
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Recraft V4.1 Vector draws the prompt as an SVG file, which scales to any size without blurring. One paid request."
+        "Recraft V4.1 Vector draws the prompt as an SVG file, which scales to any size without blurring."
       ],
       "title": "Note"
     },
@@ -112,7 +112,7 @@
       ],
       "size": [
         340,
-        132
+        98
       ],
       "flags": {},
       "order": 3,
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT Image 2.5 Flare draws the prompt on a transparent background. The picture and its transparency arrive separately, so **Join Image with Alpha** puts them together before saving. **Mask** shows the transparency; white marks the transparent area. One paid request."
+        "GPT Image 2.5 Flare draws the prompt on a transparent background. The picture and its transparency arrive separately, so **Join Image with Alpha** puts them together before saving. **Mask** shows the transparency; white marks the transparent area."
       ],
       "title": "Note"
     },
@@ -141,7 +141,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        336
+        302
       ],
       "size": [
         340,
@@ -182,7 +182,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         460,
-        336
+        302
       ],
       "size": [
         340,
@@ -207,19 +207,19 @@
           }
         },
         {
-          "name": "instructions",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "instructions"
-          }
-        },
-        {
           "name": "answer_type",
           "type": "COMFY_DYNAMICCOMBO_V3",
           "link": null,
           "widget": {
             "name": "answer_type"
+          }
+        },
+        {
+          "name": "instructions",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "instructions"
           }
         }
       ],
@@ -237,9 +237,9 @@
       },
       "widgets_values": [
         "best",
-        "Which prompt will give the simplest, most memorable logo for this brand?",
         "one choice",
-        "prompt_1\nprompt_2\nprompt_3"
+        "prompt_1\nprompt_2\nprompt_3",
+        "Which prompt will give the simplest, most memorable logo for this brand?"
       ]
     },
     {
@@ -247,7 +247,7 @@
       "type": "596362ae-4cb6-5076-b4a4-28915aabb123",
       "pos": [
         460,
-        590
+        556
       ],
       "size": [
         340,
@@ -300,7 +300,7 @@
       "type": "PreviewAny",
       "pos": [
         840,
-        336
+        302
       ],
       "size": [
         340,
@@ -334,7 +334,7 @@
       "type": "PreviewAny",
       "pos": [
         840,
-        640
+        606
       ],
       "size": [
         340,
@@ -365,10 +365,10 @@
     },
     {
       "id": 10,
-      "type": "37e94334-8295-50f1-9678-0ff455527280",
+      "type": "ca663bab-d49e-52c2-9391-aa73e87f5d0d",
       "pos": [
         1270,
-        336
+        302
       ],
       "size": [
         340,
@@ -392,14 +392,14 @@
       "widgets_values": [
         ""
       ],
-      "title": "Vector"
+      "title": "SVG"
     },
     {
       "id": 11,
-      "type": "f560f466-abe8-5a8f-8a07-dc0f9a4c927b",
+      "type": "83cfbe62-41b1-5f90-9973-87a914ac8980",
       "pos": [
         1700,
-        336
+        302
       ],
       "size": [
         340,
@@ -431,7 +431,7 @@
       "widgets_values": [
         ""
       ],
-      "title": "Sticker"
+      "title": "PNG"
     }
   ],
   "links": [
@@ -492,7 +492,7 @@
         0,
         30,
         400,
-        424
+        390
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -505,7 +505,7 @@
         430,
         30,
         780,
-        880
+        846
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -513,12 +513,12 @@
     },
     {
       "id": 3,
-      "title": "Vector",
+      "title": "SVG",
       "bounding": [
         1240,
         30,
         400,
-        424
+        390
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -526,12 +526,12 @@
     },
     {
       "id": 4,
-      "title": "Sticker",
+      "title": "PNG",
       "bounding": [
         1670,
         30,
         400,
-        424
+        390
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -652,27 +652,11 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 6,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
-              {
                 "name": "model",
                 "type": "STRING",
                 "link": null,
                 "widget": {
                   "name": "model"
-                }
-              },
-              {
-                "name": "system",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "system"
                 }
               },
               {
@@ -709,19 +693,19 @@
                 "shape": 7
               },
               {
-                "name": "reasoning",
+                "name": "reasoning_effort",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "reasoning"
+                  "name": "reasoning_effort"
                 }
               },
               {
-                "name": "max_output_tokens",
+                "name": "max_tokens",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "max_output_tokens"
+                  "name": "max_tokens"
                 }
               },
               {
@@ -730,14 +714,6 @@
                 "link": null,
                 "widget": {
                   "name": "temperature"
-                }
-              },
-              {
-                "name": "answer_schema",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "answer_schema"
                 }
               },
               {
@@ -781,11 +757,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -793,6 +769,30 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 6,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
               }
             ],
             "outputs": [
@@ -830,12 +830,10 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "",
               "openai/gpt-6-sol",
               "model default",
               0,
               1.0,
-              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prompt_1\": {\n      \"type\": \"string\"\n    },\n    \"prompt_2\": {\n      \"type\": \"string\"\n    },\n    \"prompt_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"prompt_1\",\n    \"prompt_2\",\n    \"prompt_3\"\n  ],\n  \"additionalProperties\": false\n}",
               "text",
               "model default",
               "alloy",
@@ -843,6 +841,8 @@
               42,
               "fixed",
               0,
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prompt_1\": {\n      \"type\": \"string\"\n    },\n    \"prompt_2\": {\n      \"type\": \"string\"\n    },\n    \"prompt_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"prompt_1\",\n    \"prompt_2\",\n    \"prompt_3\"\n  ],\n  \"additionalProperties\": false\n}",
+              "",
               "Write three different prompts for a flat, two-colour logo mark for the brand the person describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
             ],
             "color": "#432",
@@ -925,14 +925,6 @@
             "mode": 0,
             "inputs": [
               {
-                "name": "situation",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "situation"
-                }
-              },
-              {
                 "name": "questions",
                 "type": "DECISION_QUESTIONS",
                 "link": 8
@@ -946,11 +938,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -958,6 +950,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "situation"
+                }
               }
             ],
             "outputs": [
@@ -980,9 +980,9 @@
               "Node name for S&R": "OpenRouterDecisionAsk"
             },
             "widgets_values": [
-              "",
               "typesafe/jev-1.13",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1131,7 +1131,7 @@
             "origin_id": 102,
             "origin_slot": 0,
             "target_id": 103,
-            "target_slot": 0,
+            "target_slot": 4,
             "type": "STRING"
           },
           {
@@ -1163,7 +1163,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 0,
+            "target_slot": 17,
             "type": "STRING"
           },
           {
@@ -1179,7 +1179,7 @@
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 103,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "DECISION_QUESTIONS"
           },
           {
@@ -1204,7 +1204,7 @@
         }
       },
       {
-        "id": "37e94334-8295-50f1-9678-0ff455527280",
+        "id": "ca663bab-d49e-52c2-9391-aa73e87f5d0d",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -1214,7 +1214,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Vector",
+        "name": "SVG",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -1235,7 +1235,7 @@
         },
         "inputs": [
           {
-            "id": "a0a8e68d-46d2-5039-a4bb-5e1dbd47907a",
+            "id": "eba28a01-0c25-58d5-818d-5f857b4b5afb",
             "name": "prompt",
             "type": "STRING",
             "linkIds": [
@@ -1265,14 +1265,6 @@
             "order": 200,
             "mode": 0,
             "inputs": [
-              {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
               {
                 "name": "model",
                 "type": "STRING",
@@ -1353,11 +1345,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1365,6 +1357,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "prompt"
+                }
               }
             ],
             "outputs": [
@@ -1392,7 +1392,6 @@
               "Node name for S&R": "OpenRouterImageGenerate"
             },
             "widgets_values": [
-              "",
               "recraft/recraft-v4.1-vector",
               "model default",
               "1:1",
@@ -1403,7 +1402,8 @@
               1,
               42,
               "fixed",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1467,7 +1467,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 201,
-            "target_slot": 0,
+            "target_slot": 12,
             "type": "STRING"
           }
         ],
@@ -1476,7 +1476,7 @@
         }
       },
       {
-        "id": "f560f466-abe8-5a8f-8a07-dc0f9a4c927b",
+        "id": "83cfbe62-41b1-5f90-9973-87a914ac8980",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -1486,7 +1486,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Sticker",
+        "name": "PNG",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -1507,7 +1507,7 @@
         },
         "inputs": [
           {
-            "id": "b743f0c9-40a7-51b8-87ad-0590ef2b2544",
+            "id": "f8f08c8f-7c98-572e-9307-afbfef38f6b6",
             "name": "prompt",
             "type": "STRING",
             "linkIds": [
@@ -1537,14 +1537,6 @@
             "order": 300,
             "mode": 0,
             "inputs": [
-              {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 6,
-                "widget": {
-                  "name": "prompt"
-                }
-              },
               {
                 "name": "model",
                 "type": "STRING",
@@ -1625,11 +1617,11 @@
                 }
               },
               {
-                "name": "variation",
+                "name": "run_number",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "variation"
+                  "name": "run_number"
                 }
               },
               {
@@ -1637,6 +1629,14 @@
                 "type": "REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 6,
+                "widget": {
+                  "name": "prompt"
+                }
               }
             ],
             "outputs": [
@@ -1667,7 +1667,6 @@
               "Node name for S&R": "OpenRouterImageGenerate"
             },
             "widgets_values": [
-              "",
               "openai/gpt-image-2.5-flare",
               "model default",
               "1:1",
@@ -1678,7 +1677,8 @@
               1,
               42,
               "fixed",
-              0
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
@@ -1763,7 +1763,7 @@
               "Node name for S&R": "SaveImage"
             },
             "widgets_values": [
-              "logo/fernwood-sticker"
+              "logo/fernwood"
             ]
           },
           {
@@ -1883,12 +1883,12 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 301,
-            "target_slot": 0,
+            "target_slot": 12,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Draws the logo on a transparent background and saves it as a PNG sticker."
+          "description": "Draws the logo on a transparent background and saves it as a PNG."
         }
       }
     ]

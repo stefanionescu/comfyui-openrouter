@@ -164,7 +164,7 @@ PROMPTS = Subgraph(
             {
                 "model": WRITER,
                 "answer_schema": build_numbered_schema("prompt", 3),
-                "system": (
+                "system_prompt": (
                     "Write three different prompts for a flat, two-colour logo mark for the brand the person "
                     "describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
                 ),
@@ -189,28 +189,28 @@ PROMPTS = Subgraph(
     description=LOGO_TEXTS["prompts_description"],
 )
 
-VECTOR = Subgraph(
-    name=SHARED_TEXTS["vector"],
+SVG = Subgraph(
+    name=SHARED_TEXTS["svg"],
     nodes=(
         Node(
-            "vector",
+            "svg",
             GENERATE,
             {"model": "recraft/recraft-v4.1-vector", "aspect_ratio": "1:1"},
             is_paid=True,
         ),
         Node("save", HostNode.SAVE_SVG, {"filename_prefix": "logo/fernwood"}),
     ),
-    links=(("vector.svg", "save.svg"),),
-    columns=(("vector",), ("save",)),
-    inputs=(("prompt", "vector.prompt"),),
-    description=LOGO_TEXTS["vector_description"],
+    links=(("svg.svg", "save.svg"),),
+    columns=(("svg",), ("save",)),
+    inputs=(("prompt", "svg.prompt"),),
+    description=LOGO_TEXTS["svg_description"],
 )
 
-STICKER = Subgraph(
-    name=SHARED_TEXTS["sticker"],
+PNG = Subgraph(
+    name=SHARED_TEXTS["png"],
     nodes=(
         Node(
-            "sticker",
+            "png",
             GENERATE,
             {
                 "model": GPT_IMAGE,
@@ -221,20 +221,20 @@ STICKER = Subgraph(
             is_paid=True,
         ),
         Node("join", HostNode.JOIN_ALPHA),
-        Node("save", HostNode.SAVE_IMAGE, {"filename_prefix": "logo/fernwood-sticker"}),
+        Node("save", HostNode.SAVE_IMAGE, {"filename_prefix": "logo/fernwood"}),
         Node("mask", HostNode.MASK_IMAGE),
         Node("preview", HostNode.PREVIEW_IMAGE, title=SHARED_TEXTS["mask"]),
     ),
     links=(
-        ("sticker.images", "join.image"),
-        ("sticker.masks", "join.alpha"),
+        ("png.images", "join.image"),
+        ("png.masks", "join.alpha"),
         ("join.IMAGE", "save.images"),
-        ("sticker.masks", "mask.mask"),
+        ("png.masks", "mask.mask"),
         ("mask.IMAGE", "preview.images"),
     ),
-    columns=(("sticker",), ("join", "mask"), ("save", "preview")),
-    inputs=(("prompt", "sticker.prompt"),),
-    description=LOGO_TEXTS["sticker_description"],
+    columns=(("png",), ("join", "mask"), ("save", "preview")),
+    inputs=(("prompt", "png.prompt"),),
+    description=LOGO_TEXTS["png_description"],
     previews=(("save", IMAGE_PREVIEW),),
 )
 
@@ -265,16 +265,16 @@ DESIGN_LOGO = Workflow(
         Node("prompts", PROMPTS.name),
         Node("prompt", HostNode.PREVIEW, title=SHARED_TEXTS["prompt"]),
         Node("summary", HostNode.PREVIEW, title=SHARED_TEXTS["summary"]),
-        Node("vector", VECTOR.name),
-        Node("sticker", STICKER.name),
+        Node("svg", SVG.name),
+        Node("png", PNG.name),
     ),
     links=(
         ("brand.STRING", "prompts.brand"),
         ("best.questions", "prompts.questions"),
         ("prompts.prompt", "prompt.source"),
         ("prompts.summary", "summary.source"),
-        ("prompts.prompt", "vector.prompt"),
-        ("prompts.prompt", "sticker.prompt"),
+        ("prompts.prompt", "svg.prompt"),
+        ("prompts.prompt", "png.prompt"),
     ),
     stacks=(
         (Group(SHARED_TEXTS["input"], (("brand",),), note=LOGO_TEXTS["input"]),),
@@ -286,10 +286,10 @@ DESIGN_LOGO = Workflow(
                 LOGO_TEXTS["prompts"],
             ),
         ),
-        (Group(SHARED_TEXTS["vector"], (("vector",),), STAGE_COLOUR, LOGO_TEXTS["vector"]),),
-        (Group(SHARED_TEXTS["sticker"], (("sticker",),), STAGE_COLOUR, LOGO_TEXTS["sticker"]),),
+        (Group(SHARED_TEXTS["svg"], (("svg",),), STAGE_COLOUR, LOGO_TEXTS["svg"]),),
+        (Group(SHARED_TEXTS["png"], (("png",),), STAGE_COLOUR, LOGO_TEXTS["png"]),),
     ),
-    subgraphs=(PROMPTS, VECTOR, STICKER),
+    subgraphs=(PROMPTS, SVG, PNG),
 )
 
 DESIGN_WORKFLOWS = (EDIT_BEST_IDEA, DESIGN_LOGO)
