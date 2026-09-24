@@ -66,7 +66,7 @@ class ConfigurationStore:
             source = read_credential_source(self.directory)
         return {
             "settings": asdict(settings),
-            "integer_settings": {
+            "setting_ranges": {
                 name: {"minimum": definition["minimum"], "maximum": definition["maximum"]}
                 for name, definition in SETTING_RANGES.items()
             },

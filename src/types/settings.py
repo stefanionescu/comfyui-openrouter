@@ -15,9 +15,9 @@ class Settings:
         max_upload_megabytes: Largest encoded media in one request.
         max_download_megabytes: Largest reply body, image, audio, or video accepted.
         parallel_requests: Requests in flight at once per ComfyUI run.
-        video_poll_seconds: Time between video status checks.
+        video_check_interval_seconds: Time between video status checks.
         video_wait_minutes: How long one run waits for a video job.
-        resubmit_hold_minutes: How long an uncertain video request blocks an identical one.
+        video_retry_delay_minutes: How long an identical video request is refused after an uncertain one.
 
     """
 
@@ -25,9 +25,9 @@ class Settings:
     max_upload_megabytes: int
     max_download_megabytes: int
     parallel_requests: int
-    video_poll_seconds: int
+    video_check_interval_seconds: int
     video_wait_minutes: int
-    resubmit_hold_minutes: int
+    video_retry_delay_minutes: int
 
     @property
     def revision(self) -> str:

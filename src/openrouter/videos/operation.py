@@ -29,9 +29,9 @@ from ...config.generation.videos import MAX_REFERENCE_AUDIO, MAX_REFERENCE_IMAGE
 from ...config.messages.videos import (
     JOB_FAILED,
     JOB_EXPIRED,
-    SUBMIT_HOLD,
     JOB_CANCELLED,
     JOB_WAIT_LIMIT,
+    SUBMIT_DELAYED,
     PROMPT_REQUIRED,
     SUBMIT_UNCERTAIN,
     VIDEO_REFERENCES_RANGE,
@@ -76,7 +76,7 @@ class VideoDownloadOperation:
                 break
             if time.monotonic() >= deadline:
                 raise OpenRouterError(ErrorCode.TIMEOUT, JOB_WAIT_LIMIT.format(minutes=settings.video_wait_minutes))
-            await asyncio.sleep(settings.video_poll_seconds)
+            await asyncio.sleep(settings.video_check_interval_seconds)
         if reply.status != "completed":
             await asyncio.to_thread(self.jobs.delete, self.job.name)
             reason = sanitize_reason(reply.error or "")
@@ -142,13 +142,13 @@ class VideoOperation:
         model = await validate_model(self.request.model_id, "videos", configuration)
         body = self.build_body(model.parameters)
         request_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-        found = await asyncio.to_thread(self.jobs.find, request_hash, settings.resubmit_hold_minutes)
+        found = await asyncio.to_thread(self.jobs.find, request_hash, settings.video_retry_delay_minutes)
         if found is not None and found.status == "accepted":
             return await VideoDownloadOperation(found, self.jobs).send(configuration)
         if found is not None:
             elapsed = (datetime.now(UTC) - datetime.fromisoformat(found.submitted_at)).total_seconds()
-            minutes = max(1, math.ceil(settings.resubmit_hold_minutes - elapsed / SECONDS_PER_MINUTE))
-            raise OpenRouterError(ErrorCode.UNCERTAIN, SUBMIT_HOLD.format(minutes=minutes))
+            minutes = max(1, math.ceil(settings.video_retry_delay_minutes - elapsed / SECONDS_PER_MINUTE))
+            raise OpenRouterError(ErrorCode.UNCERTAIN, SUBMIT_DELAYED.format(minutes=minutes))
         job = VideoJob(
             version=1,
             name=UNCERTAIN_PREFIX + request_hash,
@@ -161,12 +161,12 @@ class VideoOperation:
         try:
             document = await send_json(VIDEOS_URL, body, configuration)
         except OpenRouterError as error:
-            # The request may have been accepted and billed, so an identical one is held back for a while.
+            # The request may have been accepted and billed, so an identical one is refused for a while.
             if error.code not in {ErrorCode.UNCERTAIN, ErrorCode.TIMEOUT}:
                 raise
             await asyncio.to_thread(self.jobs.save, job)
             raise OpenRouterError(
-                ErrorCode.UNCERTAIN, SUBMIT_UNCERTAIN.format(minutes=settings.resubmit_hold_minutes)
+                ErrorCode.UNCERTAIN, SUBMIT_UNCERTAIN.format(minutes=settings.video_retry_delay_minutes)
             ) from None
         try:
             reply = VideoJobReply.model_validate(document)

@@ -59,10 +59,10 @@ class JobStore:
             # bearer:disable python_lang_path_traversal
             path.unlink(missing_ok=True)
 
-    def find(self, request_hash: str, hold_minutes: int) -> VideoJob | None:
-        """Return the accepted job for an identical request, or an uncertain one still within its hold.
+    def find(self, request_hash: str, delay_minutes: int) -> VideoJob | None:
+        """Return the accepted job for an identical request, or an uncertain one still within the retry delay.
 
-        An uncertain record older than the hold is deleted, so the identical request may be sent again.
+        An uncertain record older than the delay is deleted, so the identical request may be sent again.
         """
         now = datetime.now(UTC)
         with self._lock:
@@ -72,7 +72,7 @@ class JobStore:
                 if job.status == "accepted":
                     return job
                 age = (now - datetime.fromisoformat(job.submitted_at)).total_seconds()
-                if age < hold_minutes * SECONDS_PER_MINUTE:
+                if age < delay_minutes * SECONDS_PER_MINUTE:
                     return job
                 (self.directory / f"{job.name}{JOB_FILE_SUFFIX}").unlink(missing_ok=True)
         return None

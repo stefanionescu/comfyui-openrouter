@@ -13,13 +13,13 @@ JOB_WAIT_LIMIT = (
     "OpenRouter keeps making it; use Video: Download to collect it."
 )
 PROMPT_REQUIRED = "Write a prompt or connect a first frame."
-SUBMIT_HOLD = (
+SUBMIT_DELAYED = (
     "An earlier identical video request may have been accepted. Wait {minutes} minutes or check "
     "openrouter.ai/activity before sending it again."
 )
 SUBMIT_UNCERTAIN = (
     "The connection closed before OpenRouter confirmed the video request. It may be running and billed; check "
-    "openrouter.ai/activity. An identical request is held for {minutes} minutes."
+    "openrouter.ai/activity. An identical request is refused for {minutes} minutes."
 )
 VIDEO_REFERENCES_RANGE = "Connect at most {maximum} {kind} references."
 VIDEO_URL_UNEXPECTED = "OpenRouter's video address was not on openrouter.ai, so it was not downloaded."
@@ -33,7 +33,7 @@ __all__ = [
     "JOB_UNKNOWN",
     "JOB_WAIT_LIMIT",
     "PROMPT_REQUIRED",
-    "SUBMIT_HOLD",
+    "SUBMIT_DELAYED",
     "SUBMIT_UNCERTAIN",
     "VIDEO_REFERENCES_RANGE",
     "VIDEO_URL_UNEXPECTED",

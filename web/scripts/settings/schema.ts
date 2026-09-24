@@ -28,7 +28,7 @@ const configurationDocumentSchema = v.object({
   credential: v.object({
     source: v.picklist(['missing', 'saved', 'environment']),
   }),
-  integer_settings: v.unknown(),
+  setting_ranges: v.unknown(),
   settings: unknownRecordSchema,
   credential_limit: v.unknown(),
 });
@@ -68,7 +68,7 @@ export function parseConfiguration(value: unknown): Configuration {
   const result = v.safeParse(configurationDocumentSchema, value);
   if (!result.success) throw new Error(message('settings.invalidResponse'));
   const document = result.output;
-  const definitions = parseDefinitions(document.integer_settings);
+  const definitions = parseDefinitions(document.setting_ranges);
   const credentialLimit = v.safeParse(credentialLimitSchema, document.credential_limit);
   if (!credentialLimit.success) throw new Error(message('settings.invalidResponse'));
   const settings = new Map(Object.entries(document.settings));

@@ -48,8 +48,8 @@ export const LIMIT_LABELS = new Map<string, string>([
   ['max_upload_megabytes', 'maximum upload size (MiB)'],
   ['parallel_requests', 'parallel requests'],
   ['request_timeout_seconds', 'request timeout (seconds)'],
-  ['resubmit_hold_minutes', 'resubmit hold (minutes)'],
-  ['video_poll_seconds', 'video check interval (seconds)'],
+  ['video_check_interval_seconds', 'video check interval (seconds)'],
+  ['video_retry_delay_minutes', 'video retry delay (minutes)'],
   ['video_wait_minutes', 'maximum video wait (minutes)'],
 ]);
 
