@@ -8,55 +8,39 @@ from ..base import PaidNode
 from ...tasks import owned_io
 from comfy_api.latest import io
 from ...comfy.media import encode_images
-from ...state.capabilities import TextChoice
 from ...state.search import EmbeddingRequest
 from typing import cast, ClassVar, TYPE_CHECKING
-from ...config.generation.inputs import MODEL_DEFAULT
 from ...execution.embeddings import EmbeddingOperation
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
+from ..inputs import read_sockets, define_request_inputs
 from ...comfy.execution import run_request, wait_for_execution
 from ...config.generation.models import DEFAULT_EMBEDDING_MODEL
-from ..inputs import read_model, define_model_input, define_request_inputs
+from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.search import INPUT_TYPES, MAX_DIMENSIONS, MAX_SEARCH_IMAGES
 
 if TYPE_CHECKING:
     import torch
-    from collections.abc import Mapping
-    from ...state.capabilities import Endpoint
     from ...state.options import RequestOptions
 
 
-def define_search_model(endpoint: Endpoint, default_model: str) -> io.DynamicCombo.Input:
-    """Build the model dropdown of a search node: image sockets appear for a model that reads images.
-
-    Each socket can carry a list or a batch.
-    """
+def define_images() -> io.Autogrow.Input:
+    """Build a search node's growing row of image sockets; each socket can carry a list or a batch."""
     names = [f"image_{number}" for number in range(1, MAX_SEARCH_IMAGES + 1)]
-    images = io.Autogrow.Input(
+    template = io.Autogrow.TemplateNames(io.Image.Input("image"), names=names, min=0)
+    return io.Autogrow.Input(
         "images",
-        template=io.Autogrow.TemplateNames(io.Image.Input("image"), names=names, min=0),
-        tooltip="Images to compare or rank; every image in a list or batch becomes one item.",
-    )
-    return define_model_input(
-        endpoint,
-        default_model,
-        lambda choice: [images] if isinstance(choice, TextChoice) and "image" in choice.inputs else [],
-        [images],
+        template=template,
+        tooltip="Images to compare or rank, for models that read images; each image in a list or batch is one item.",
     )
 
 
-def read_list_model(model: Mapping[str, object]) -> tuple[dict[str, object], tuple[torch.Tensor, ...]]:
-    """Read a list node's dropdown, whose every value is a list, and split its images into single images."""
-    values = {key: cast("list[object]", value)[0] for key, value in model.items() if key != "images"}
-    slots = cast("Mapping[str, list[torch.Tensor] | None]", model.get("images") or {})
-    ordered = sorted(slots.items(), key=lambda item: int(item[0].rsplit("_", 1)[1]))
-    images = tuple(
-        batch[index : index + 1]
-        for _name, batches in ordered
-        for batch in batches or ()
-        for index in range(batch.shape[0])
-    )
-    return values, images
+def read_images(images: dict[str, list[torch.Tensor]] | None) -> tuple[torch.Tensor, ...]:
+    """Split the images of a list node's sockets, whose every value is a list of batches, into single images."""
+    singles: list[torch.Tensor] = []
+    for batches in read_sockets(images):
+        for batch in cast("list[torch.Tensor]", batches):
+            singles += [batch[index : index + 1] for index in range(batch.shape[0])]
+    return tuple(singles)
 
 
 class SearchEmbed(PaidNode):
@@ -76,7 +60,8 @@ class SearchEmbed(PaidNode):
                 io.String.Input(
                     "texts", multiline=True, default="", tooltip="One item per line; blank lines are skipped."
                 ),
-                define_search_model("embeddings", DEFAULT_EMBEDDING_MODEL),
+                io.String.Input(MODEL_INPUT, default=DEFAULT_EMBEDDING_MODEL, tooltip=MODEL_TOOLTIP),
+                define_images(),
                 io.Int.Input(
                     "dimensions",
                     default=0,
@@ -103,26 +88,25 @@ class SearchEmbed(PaidNode):
         )
 
     @classmethod
-    async def send(
+    async def send(  # noqa: PLR0913 -- reason: ComfyUI requires one named argument for each saved node input.
         cls,
         *,
         texts: list[str],
-        model: dict[str, object],
+        model: list[str],
         dimensions: list[int],
         input_type: list[str],
+        images: dict[str, list[torch.Tensor]] | None = None,
         options: list[RequestOptions] | None = None,
     ) -> io.NodeOutput:
         """Encode every image inside the owned task, then send all items at once."""
-        values, images = read_list_model(model)
-        selection = read_model("embeddings", values, TextChoice)
+        pictures = read_images(images)
         lines = tuple(line.strip() for text in texts for line in text.splitlines() if line.strip())
 
         async def start() -> io.NodeOutput:
             """Encode the images inside the owned task, then send the request."""
-            urls = await owned_io(lambda: tuple(url for image in images for url in encode_images(image)))
+            urls = await owned_io(lambda: tuple(url for image in pictures for url in encode_images(image)))
             request = EmbeddingRequest(
-                model_id=selection.model_id,
-                choice=selection.choice,
+                model_id=model[0].strip(),
                 texts=lines,
                 image_urls=urls,
                 dimensions=dimensions[0],
@@ -139,4 +123,4 @@ class SearchEmbed(PaidNode):
         return await wait_for_execution(asyncio.create_task(start()))
 
 
-__all__ = ["SearchEmbed", "define_search_model", "read_list_model"]
+__all__ = ["SearchEmbed", "define_images", "read_images"]

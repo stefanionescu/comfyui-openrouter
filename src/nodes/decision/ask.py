@@ -6,14 +6,14 @@ import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
 from ...serialization import parse_json
+from ..inputs import define_request_inputs
 from typing import ClassVar, TYPE_CHECKING
-from ...state.capabilities import TextChoice
 from ...errors import ErrorCode, ConnectorError
 from ...execution.decisions import DecisionOperation
 from ...comfy.execution import run_request, wait_for_execution
 from ...config.generation.models import DEFAULT_DECISION_MODEL
+from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.messages.inputs import SITUATION_EMPTY, SITUATION_LENGTH
-from ..inputs import read_model, define_model_input, define_request_inputs
 from ...state.decisions import AnswerSet, YesNoAnswer, ChoiceAnswer, DecisionRequest
 from ...config.generation.decisions import DEFAULT_THRESHOLD, MAX_SITUATION_CHARACTERS
 from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU, QUESTIONS_TYPE
@@ -60,7 +60,7 @@ class DecisionAsk(PaidNode):
 
     @classmethod
     def define_schema(cls) -> io.Schema:
-        """Build the model dropdown of decision models, which take no per-model settings."""
+        """List the situation, the questions, and the model."""
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Decision: Ask",
@@ -77,7 +77,7 @@ class DecisionAsk(PaidNode):
                     tooltip="What to decide on, as text or as a JSON object or array.",
                 ),
                 io.Custom(QUESTIONS_TYPE).Input("questions", tooltip="Connect Decision: Add Question."),
-                define_model_input("decisions", DEFAULT_DECISION_MODEL, lambda _choice: [], []),
+                io.String.Input(MODEL_INPUT, default=DEFAULT_DECISION_MODEL, tooltip=MODEL_TOOLTIP),
                 *define_request_inputs(has_seed=False),
             ],
             outputs=[
@@ -92,14 +92,12 @@ class DecisionAsk(PaidNode):
         *,
         situation: str,
         questions: QuestionSet,
-        model: dict[str, object],
+        model: str,
         options: RequestOptions | None = None,
     ) -> io.NodeOutput:
         """Check the situation, then send it with the questions."""
-        selection = read_model("decisions", model, TextChoice)
         request = DecisionRequest(
-            model_id=selection.model_id,
-            choice=selection.choice,
+            model_id=model.strip(),
             state=_read_state(situation),
             questions=questions,
             options=options,

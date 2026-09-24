@@ -8,6 +8,7 @@ import math
 import time
 import asyncio
 import hashlib
+from ..models import check_model
 from typing import TYPE_CHECKING
 from datetime import UTC, datetime
 from ..failures import clean_reason
@@ -31,8 +32,6 @@ from ...config.messages.videos import (
     JOB_WAIT_LIMIT,
     PROMPT_REQUIRED,
     SUBMIT_UNCERTAIN,
-    VIDEO_REFERENCE_KIND,
-    LAST_FRAME_UNSUPPORTED,
     VIDEO_REFERENCES_RANGE,
     FRAMES_BESIDE_REFERENCES,
 )
@@ -90,7 +89,7 @@ class VideoDownloadOperation:
 
 
 class VideoOperation:
-    """One video job: refused before sending when the model cannot take it, resumed when already running."""
+    """One video job, resumed instead of sent again when an identical one is already running."""
 
     def __init__(self, request: VideoRequest, jobs: JobStore) -> None:
         """Keep the request to validate and send, and the store its job is recorded in."""
@@ -98,8 +97,8 @@ class VideoOperation:
         self.jobs = jobs
 
     def validate(self, settings: Settings) -> None:
-        """Refuse a request with nothing to animate, frames beside references, and media the model cannot take."""
-        request, choice = self.request, self.request.choice
+        """Refuse a request with nothing to animate, frames beside references, and too much media."""
+        request = self.request
         if not request.prompt.strip() and "first_frame" not in request.frame_urls:
             raise ConnectorError(ErrorCode.INVALID_INPUT, PROMPT_REQUIRED)
         if request.frame_urls and request.references:
@@ -108,16 +107,10 @@ class VideoOperation:
         for kind, limit in REFERENCE_LIMITS.items():
             if sum(item == kind for item, _url in request.references) > limit:
                 raise ConnectorError(ErrorCode.INVALID_INPUT, VIDEO_REFERENCES_RANGE.format(maximum=limit, kind=kind))
-        if choice is None:
-            return
-        if "last_frame" in request.frame_urls and "last_frame" not in choice.frame_types:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, LAST_FRAME_UNSUPPORTED.format(model=choice.name))
-        for kind in {kind for kind, _url in request.references} - choice.reference_types:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, VIDEO_REFERENCE_KIND.format(model=choice.name, kind=kind))
 
-    def build_body(self) -> dict[str, Json]:
-        """Build the job request, sending each choice only when set and each flag only when the model takes it."""
-        request, choice = self.request, self.request.choice
+    def build_body(self, parameters: frozenset[str]) -> dict[str, Json]:
+        """Build the job request, sending each control only when set and the seed only when the model takes it."""
+        request = self.request
         body: dict[str, Json] = {"model": request.model_id, "prompt": request.prompt}
         chosen: dict[str, Json] = {
             "duration": request.duration,
@@ -128,7 +121,7 @@ class VideoOperation:
             "creativity": request.creativity,
         }
         body.update({field: value for field, value in chosen.items() if value is not None})
-        if choice is None or choice.has_seed:
+        if "seed" in parameters:
             body["seed"] = request.seed
         if request.frame_urls:
             body["frame_images"] = [
@@ -144,7 +137,8 @@ class VideoOperation:
     async def send(self, configuration: ExecutionConfiguration) -> bytes:
         """Resume an identical recorded job instead of paying for a second one, or submit and record a new job."""
         settings = configuration.settings
-        body = self.build_body()
+        model = await check_model(self.request.model_id, "videos", configuration)
+        body = self.build_body(model.parameters)
         request_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         found = await asyncio.to_thread(self.jobs.find, request_hash, settings.resubmit_hold_minutes)
         if found is not None and found.status == "accepted":

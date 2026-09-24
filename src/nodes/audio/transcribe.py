@@ -9,13 +9,13 @@ from ...tasks import owned_io
 from dataclasses import asdict
 from comfy_api.latest import io
 from ...comfy.media import encode_audio
+from ..inputs import define_request_inputs
 from typing import ClassVar, TYPE_CHECKING
-from ...state.capabilities import TextChoice
 from ...state.audio import TranscriptionRequest
 from ...config.namespace import AUDIO_MENU, NODE_PREFIX
 from ...comfy.execution import run_request, wait_for_execution
+from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
 from ...config.generation.models import DEFAULT_TRANSCRIPTION_MODEL
-from ..inputs import read_model, define_model_input, define_request_inputs
 from ...execution.transcription import TranscriptionOperation, format_subtitles
 from ...config.generation.audio import TIMESTAMP_CHOICES, MAX_TRANSCRIPTION_TEMPERATURE
 
@@ -31,7 +31,7 @@ class AudioTranscribe(PaidNode):
 
     @classmethod
     def define_schema(cls) -> io.Schema:
-        """Build the model dropdown, one option per transcription model, and the shared transcription controls."""
+        """List the clip, the model, the language, the timestamps, and the temperature."""
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Audio: Transcribe",
@@ -42,7 +42,7 @@ class AudioTranscribe(PaidNode):
             ),
             inputs=[
                 io.Audio.Input("audio", tooltip="One clip. Providers stop after about 60 seconds of processing."),
-                define_model_input("transcription", DEFAULT_TRANSCRIPTION_MODEL, lambda _choice: [], []),
+                io.String.Input(MODEL_INPUT, default=DEFAULT_TRANSCRIPTION_MODEL, tooltip=MODEL_TOOLTIP),
                 io.String.Input(
                     "language",
                     default="",
@@ -81,21 +81,19 @@ class AudioTranscribe(PaidNode):
         cls,
         *,
         audio: Input.Audio,
-        model: dict[str, object],
+        model: str,
         language: str = "",
         timestamps: str = TIMESTAMP_CHOICES[0],
         temperature: float = 0.0,
         options: RequestOptions | None = None,
     ) -> io.NodeOutput:
         """Encode the clip inside the owned task, then send it."""
-        selection = read_model("transcription", model, TextChoice)
 
         async def start() -> io.NodeOutput:
             """Encode the clip inside the owned task, then send the request."""
             clip = await owned_io(lambda: encode_audio(audio))
             request = TranscriptionRequest(
-                model_id=selection.model_id,
-                choice=selection.choice,
+                model_id=model.strip(),
                 clip=clip,
                 language=language.strip().lower(),
                 timestamps=timestamps,

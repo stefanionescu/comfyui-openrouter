@@ -12,7 +12,6 @@ JOB_WAIT_LIMIT = (
     "The video was not ready within the maximum video wait of {minutes} minutes in OpenRouter settings. "
     "OpenRouter keeps making it; use Video: Download to collect it."
 )
-LAST_FRAME_UNSUPPORTED = "{model} does not accept a last frame. Disconnect it or choose a model that does."
 PROMPT_REQUIRED = "Write a prompt or connect a first frame."
 SUBMIT_HOLD = (
     "An earlier identical video request may have been accepted. Wait {minutes} minutes or check "
@@ -23,7 +22,6 @@ SUBMIT_UNCERTAIN = (
     "openrouter.ai/activity. An identical request is held for {minutes} minutes."
 )
 VIDEO_REFERENCES_RANGE = "Connect at most {maximum} {kind} references."
-VIDEO_REFERENCE_KIND = "{model} does not accept {kind} references."
 VIDEO_URL_UNEXPECTED = "OpenRouter's video address was not on openrouter.ai, so it was not downloaded."
 
 __all__ = [
@@ -34,11 +32,9 @@ __all__ = [
     "JOB_FAILED",
     "JOB_UNKNOWN",
     "JOB_WAIT_LIMIT",
-    "LAST_FRAME_UNSUPPORTED",
     "PROMPT_REQUIRED",
     "SUBMIT_HOLD",
     "SUBMIT_UNCERTAIN",
     "VIDEO_REFERENCES_RANGE",
-    "VIDEO_REFERENCE_KIND",
     "VIDEO_URL_UNEXPECTED",
 ]

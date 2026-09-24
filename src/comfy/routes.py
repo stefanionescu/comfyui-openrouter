@@ -5,13 +5,12 @@ from pathlib import Path
 from comfy.cli_args import args
 from server import PromptServer
 from ..runtime import get_runtime
-from ..paths import EXTENSION_ROOT
-from ..discovery.routes import ModelRoutes
-from ..settings.store import read_settings
-from ..discovery.checker import ModelChecker
 from ..errors import ErrorCode, ConnectorError
 from ..settings.routes import ConfigurationRoutes
 from ..config.messages.settings import PRIVATE_STATE_LOCATION
+
+# The installed extension, which the private state must stay out of.
+EXTENSION_ROOT = Path(__file__).resolve().parents[2]
 
 
 def register_routes() -> None:
@@ -29,11 +28,6 @@ def register_routes() -> None:
     if any(directory.is_relative_to(Path(root).resolve()) for root in public_roots):
         raise ConnectorError(ErrorCode.CONFIGURATION, PRIVATE_STATE_LOCATION)
     ConfigurationRoutes(store, is_multi_user=args.multi_user).register(PromptServer.instance.routes)
-    checker = ModelChecker(get_runtime().models, lambda: read_settings(directory))
-    PromptServer.instance.app.cleanup_ctx.append(checker.lifecycle)
-    ModelRoutes(get_runtime().models, is_multi_user=args.multi_user, checker=checker).register(
-        PromptServer.instance.routes
-    )
 
 
 __all__ = ["register_routes"]

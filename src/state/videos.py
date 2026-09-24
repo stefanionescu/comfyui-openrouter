@@ -9,7 +9,6 @@ from typing import Literal, TYPE_CHECKING
 if TYPE_CHECKING:
     from .options import RequestOptions
     from collections.abc import Mapping
-    from .capabilities import VideoChoice
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,7 +17,6 @@ class VideoRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         prompt: What the video shows.
         duration: Seconds, or None for the model's default.
         resolution: Resolution, or None for the model's default.
@@ -34,7 +32,6 @@ class VideoRequest:
     """
 
     model_id: str
-    choice: VideoChoice | None
     prompt: str
     duration: int | None
     resolution: str | None

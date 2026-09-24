@@ -184,10 +184,10 @@ layers = [
   "src.nodes",
   "src.comfy",
   "src.runtime",
-  "src.execution | src.discovery | src.settings",
+  "src.execution | src.settings",
   "src.http",
   "src.credentials",
-  "src.storage | src.serialization | src.tasks | src.paths",
+  "src.storage | src.serialization | src.tasks",
   "src.errors",
   "src.state",
   "src.config",
@@ -201,11 +201,9 @@ allow_indirect_imports = true
 source_modules = [
   "src.credentials",
   "src.config",
-  "src.discovery",
   "src.errors",
   "src.execution",
   "src.http",
-  "src.paths",
   "src.runtime",
   "src.serialization",
   "src.settings",
@@ -231,7 +229,6 @@ type = "forbidden"
 source_modules = [ "src.state" ]
 forbidden_modules = [
   "src.comfy",
-  "src.discovery",
   "src.execution",
   "src.http",
   "src.nodes",
@@ -242,4 +239,4 @@ forbidden_modules = [
 name = "Config must not import runtime code or tooling"
 type = "forbidden"
 source_modules = [ "src.config" ]
-forbidden_modules = [ "src.nodes", "src.comfy", "src.execution", "src.discovery", "src.state", "scripts", "quality" ]
+forbidden_modules = [ "src.nodes", "src.comfy", "src.execution", "src.state", "scripts", "quality" ]

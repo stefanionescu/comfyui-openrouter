@@ -1,9 +1,12 @@
 """Records shared by the runtime: dataclasses for in-process values, pydantic models for JSON."""
 
+from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 
 type Json = bool | int | float | str | list[Json] | dict[str, Json] | None
+# The OpenRouter endpoints the paid nodes send to.
+type Endpoint = Literal["chat", "images", "videos", "speech", "transcription", "embeddings", "rerank", "decisions"]
 
 
 class Value(BaseModel):

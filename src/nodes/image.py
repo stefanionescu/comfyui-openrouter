@@ -8,113 +8,59 @@ import io as memory
 from .base import PaidNode
 from ..tasks import owned_io
 from comfy_api.latest import io
-from types import MappingProxyType
 from ..state.images import ImageRequest
 from ..config.media import SVG_MEDIA_TYPE
-from ..state.models import ImageParameter
-from ..state.capabilities import ImageChoice
+from typing import ClassVar, TYPE_CHECKING
 from ..execution.images import ImageOperation
-from typing import cast, ClassVar, TYPE_CHECKING
 from comfy_execution.graph import ExecutionBlocker
-from ..config.generation.inputs import MODEL_DEFAULT
 from ..comfy.media import decode_image, encode_images
 from ..config.namespace import IMAGE_MENU, NODE_PREFIX
+from .inputs import read_sockets, define_request_inputs
 from ..config.generation.models import DEFAULT_IMAGE_MODEL
 from ..comfy.execution import run_request, wait_for_execution
-from .inputs import read_model, define_model_input, define_request_inputs
+from ..config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ..config.generation.images import (
     MAX_IMAGES,
-    ALL_FORMATS,
-    ENUM_FIELDS,
     FIELD_LABELS,
-    ALL_QUALITIES,
-    ALL_BACKGROUNDS,
-    ALL_RESOLUTIONS,
-    ALL_ASPECT_RATIOS,
+    FIELD_VALUES,
+    COMPRESSED_FORMATS,
     DEFAULT_COMPRESSION,
     MAX_REFERENCE_SOCKETS,
 )
 
 if TYPE_CHECKING:
     from ..state import Json
-    from collections.abc import Mapping
     from ..state.images import ImageResult
     from ..state.options import RequestOptions
 
 
-# What a written model ID may use, since the saved list does not describe it.
-WRITTEN_PARAMETERS = MappingProxyType(
-    {
-        "resolution": ImageParameter(kind="enum", values=ALL_RESOLUTIONS),
-        "aspect_ratio": ImageParameter(kind="enum", values=ALL_ASPECT_RATIOS),
-        "quality": ImageParameter(kind="enum", values=ALL_QUALITIES),
-        "background": ImageParameter(kind="enum", values=ALL_BACKGROUNDS),
-        "output_format": ImageParameter(kind="enum", values=ALL_FORMATS),
-        "output_compression": ImageParameter(kind="range", minimum=0, maximum=100),
-        "n": ImageParameter(kind="range", minimum=1, maximum=MAX_IMAGES),
-    }
+# Every image field, each starting at the model's default, which sends nothing, then the compression, the count,
+# and the reference sockets. A reference socket can carry a batch, and every image in it is sent.
+FIELDS = (
+    *(
+        io.Combo.Input(field, display_name=FIELD_LABELS[field], options=[MODEL_DEFAULT, *values], default=MODEL_DEFAULT)
+        for field, values in FIELD_VALUES.items()
+    ),
+    io.Int.Input(
+        "output_compression",
+        display_name="compression",
+        default=DEFAULT_COMPRESSION,
+        min=0,
+        max=100,
+        advanced=True,
+        tooltip="JPEG and WebP quality; higher keeps more detail.",
+    ),
+    io.Int.Input("count", default=1, min=1, max=MAX_IMAGES, tooltip="How many images to make."),
+    io.Autogrow.Input(
+        "references",
+        template=io.Autogrow.TemplateNames(
+            io.Image.Input("reference"),
+            names=[f"reference_{number}" for number in range(1, MAX_REFERENCE_SOCKETS + 1)],
+            min=0,
+        ),
+        tooltip="Images to edit or combine, one per socket.",
+    ),
 )
-
-
-def _define_children(choice: ImageChoice | None) -> list[io.Input]:
-    """Show only the fields, count, and reference sockets this model accepts, or every one for a written ID.
-
-    Each field starts at the model's default, which sends nothing; a field with one value, or a count that
-    cannot go above 1, offers no choice and is left out. A reference socket can carry a batch, and every image
-    in it is sent.
-    """
-    parameters = choice.parameters if choice else WRITTEN_PARAMETERS
-    children: list[io.Input] = [
-        io.Combo.Input(
-            field,
-            display_name=FIELD_LABELS[field],
-            options=[MODEL_DEFAULT, *parameters[field].values],
-            default=MODEL_DEFAULT,
-        )
-        for field in ENUM_FIELDS
-        if field in parameters and parameters[field].kind == "enum" and len(parameters[field].values) > 1
-    ]
-    compression = parameters.get("output_compression")
-    if compression is not None and compression.kind == "range":
-        low, high = compression.minimum or 0, compression.maximum or 100
-        children.append(
-            io.Int.Input(
-                "output_compression",
-                display_name="compression",
-                default=min(max(DEFAULT_COMPRESSION, low), high),
-                min=low,
-                max=high,
-                advanced=True,
-                tooltip="JPEG and WebP quality; higher keeps more detail.",
-            )
-        )
-    count = parameters.get("n")
-    if count is not None and count.kind == "range" and (count.maximum or 1) > 1:
-        low = count.minimum or 1
-        children.append(
-            io.Int.Input("count", default=low, min=low, max=count.maximum or low, tooltip="How many images to make.")
-        )
-    references = min(choice.max_references if choice else MAX_REFERENCE_SOCKETS, MAX_REFERENCE_SOCKETS)
-    if references > 0:
-        names = [f"reference_{number}" for number in range(1, references + 1)]
-        children.append(
-            io.Autogrow.Input(
-                "references",
-                template=io.Autogrow.TemplateNames(io.Image.Input("reference"), names=names, min=0),
-                tooltip="Images to edit or combine, one per socket.",
-            )
-        )
-    return children
-
-
-def _read_fields(model: Mapping[str, object]) -> dict[str, Json]:
-    """Read the chosen image fields under their wire names, leaving out every field left at the model's default."""
-    fields: dict[str, Json] = {
-        field: str(model[field]) for field in ENUM_FIELDS if model.get(field, MODEL_DEFAULT) != MODEL_DEFAULT
-    }
-    if "output_compression" in model:
-        fields["output_compression"] = cast("int", model["output_compression"])
-    return fields
 
 
 class ImageGenerate(PaidNode):
@@ -124,7 +70,7 @@ class ImageGenerate(PaidNode):
 
     @classmethod
     def define_schema(cls) -> io.Schema:
-        """Build the model dropdown, one option per image model, with every field a written ID may use."""
+        """List the prompt, the model, every image field, and the reference sockets."""
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Image: Generate",
@@ -134,7 +80,8 @@ class ImageGenerate(PaidNode):
                 io.String.Input(
                     "prompt", multiline=True, default="", placeholder="prompt", tooltip="What to draw or change."
                 ),
-                define_model_input("images", DEFAULT_IMAGE_MODEL, _define_children, _define_children(None)),
+                io.String.Input(MODEL_INPUT, default=DEFAULT_IMAGE_MODEL, tooltip=MODEL_TOOLTIP),
+                *FIELDS,
                 *define_request_inputs(has_seed=True),
             ],
             outputs=[
@@ -145,26 +92,46 @@ class ImageGenerate(PaidNode):
         )
 
     @classmethod
-    async def send(
-        cls, *, prompt: str, model: dict[str, object], seed: int, options: RequestOptions | None = None
+    async def send(  # noqa: PLR0913 -- reason: ComfyUI requires one named argument for each saved node input.
+        cls,
+        *,
+        prompt: str,
+        model: str,
+        seed: int,
+        resolution: str = MODEL_DEFAULT,
+        aspect_ratio: str = MODEL_DEFAULT,
+        quality: str = MODEL_DEFAULT,
+        background: str = MODEL_DEFAULT,
+        output_format: str = MODEL_DEFAULT,
+        output_compression: int = DEFAULT_COMPRESSION,
+        count: int = 1,
+        references: dict[str, object] | None = None,
+        options: RequestOptions | None = None,
     ) -> io.NodeOutput:
         """Encode the references inside the owned task, send, and split raster images from SVG files."""
-        selection = read_model("images", model, ImageChoice)
+        values = {
+            "resolution": resolution,
+            "aspect_ratio": aspect_ratio,
+            "quality": quality,
+            "background": background,
+            "output_format": output_format,
+        }
+        # A field left at the model's default sends nothing, and compression applies only to JPEG and WebP.
+        fields: dict[str, Json] = {field: value for field, value in values.items() if value != MODEL_DEFAULT}
+        if output_format in COMPRESSED_FORMATS:
+            fields["output_compression"] = output_compression
 
         async def start() -> io.NodeOutput:
             """Encode the references inside the owned task, then send the request."""
-            slots = cast("Mapping[str, object]", model.get("references") or {})
-            ordered = sorted(slots.items(), key=lambda item: int(item[0].rsplit("_", 1)[1]))
-            images = [image for _name, image in ordered if isinstance(image, torch.Tensor)]
-            references = await owned_io(lambda: tuple(url for image in images for url in encode_images(image)))
+            images = [image for image in read_sockets(references) if isinstance(image, torch.Tensor)]
+            urls = await owned_io(lambda: tuple(url for image in images for url in encode_images(image)))
             request = ImageRequest(
-                model_id=selection.model_id,
-                choice=selection.choice,
+                model_id=model.strip(),
                 prompt=prompt,
-                reference_urls=references,
-                count=cast("int", model.get("count", 1)),
+                reference_urls=urls,
+                count=count,
                 seed=seed,
-                fields=_read_fields(model),
+                fields=fields,
                 options=options,
             )
             return await run_request(ImageOperation(request), build_outputs)

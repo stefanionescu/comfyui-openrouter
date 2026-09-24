@@ -6,6 +6,7 @@ import base64
 import binascii
 from .audio import stream_audio
 from .content import build_body
+from ..models import check_model
 from typing import TYPE_CHECKING
 from ...state.chat import ChatResult
 from pydantic import ValidationError
@@ -17,13 +18,7 @@ from ..transport import post_json, download_public
 from ...state.replies import ChatReply, ErrorReply, ChatMessage
 from ...config.messages.run import REPLY_EMPTY, MODEL_REFUSED, REPLY_UNREADABLE
 from ...config.generation.chat import MAX_PROMPT_CHARACTERS, MAX_CONVERSATION_TURNS
-from ...config.messages.inputs import (
-    PROMPT_EMPTY,
-    PROMPT_LENGTH,
-    CONVERSATION_LIMIT,
-    INPUT_NOT_ACCEPTED,
-    OUTPUT_TOKENS_RANGE,
-)
+from ...config.messages.inputs import PROMPT_EMPTY, PROMPT_LENGTH, CONVERSATION_LIMIT
 
 if TYPE_CHECKING:
     from ...state import Json
@@ -32,18 +27,14 @@ if TYPE_CHECKING:
 
 
 class ChatOperation:
-    """One chat completion, refused before sending when the model cannot take its inputs."""
+    """One chat completion."""
 
     def __init__(self, request: ChatRequest) -> None:
         """Keep the request to validate and send."""
         self.request = request
 
     def validate(self, settings: Settings) -> None:
-        """Refuse an empty or oversized prompt, a long conversation, too much media, and inputs the model lacks.
-
-        The dropdown shows only sockets a model accepts, so these checks matter for a written ID the saved
-        list holds and for inputs connected before switching models.
-        """
+        """Refuse an empty or oversized prompt, a long conversation, and too much media."""
         request = self.request
         if not request.prompt.strip():
             raise ConnectorError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
@@ -53,23 +44,11 @@ class ChatOperation:
             raise ConnectorError(ErrorCode.INVALID_INPUT, CONVERSATION_LIMIT.format(maximum=MAX_CONVERSATION_TURNS))
         documents = (document.file_url or "" for document in request.documents)
         check_upload_size((*request.image_urls, *request.video_urls, *request.audio_clips, *documents), settings)
-        choice = request.choice
-        if choice is None:
-            return
-        for kind, media in (
-            ("image", request.image_urls),
-            ("video", request.video_urls),
-            ("audio", request.audio_clips),
-        ):
-            if media and kind not in choice.inputs:
-                raise ConnectorError(ErrorCode.INVALID_INPUT, INPUT_NOT_ACCEPTED.format(model=choice.name, kind=kind))
-        maximum = choice.max_output_tokens
-        if maximum is not None and request.settings.max_output_tokens > maximum:
-            raise ConnectorError(ErrorCode.INVALID_INPUT, OUTPUT_TOKENS_RANGE.format(maximum=maximum))
 
     async def send(self, configuration: ExecutionConfiguration) -> ChatResult:
-        """Send the completion; an answer cut at the output token limit is returned as it is."""
-        body = build_body(self.request)
+        """Check the model, then send; an answer cut at the output token limit is returned as it is."""
+        model = await check_model(self.request.model_id, "chat", configuration)
+        body = build_body(self.request, model.parameters)
         if "audio" in self.request.settings.outputs:
             return await stream_audio(body, configuration)
         message = _read_message(await post_json(CHAT_URL, body, configuration))

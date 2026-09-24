@@ -10,7 +10,7 @@ import asyncio
 import argparse
 from typing import cast
 from pathlib import Path
-from src.paths import EXTENSION_ROOT
+from scripts.config import REPO_ROOT
 from src.config.namespace import (
     CHAT_MENU,
     AUDIO_MENU,
@@ -46,7 +46,7 @@ def read_host_installation() -> tuple[Path, Path]:
 def read_schemas() -> dict[str, object]:
     """Describe the nodes and the host nodes the workflows place."""
     host, interpreter = read_host_installation()
-    environment = dict(os.environ, PYTHONPATH=os.pathsep.join((str(host), str(EXTENSION_ROOT))))
+    environment = dict(os.environ, PYTHONPATH=os.pathsep.join((str(host), str(REPO_ROOT))))
     return cast("dict[str, object]", json.loads(asyncio.run(_describe(interpreter, environment))))
 
 
@@ -54,8 +54,8 @@ async def _describe(interpreter: Path, environment: dict[str, str]) -> str:
     """Run the schema script in ComfyUI's interpreter."""
     process = await asyncio.create_subprocess_exec(
         str(interpreter),
-        str(EXTENSION_ROOT / "scripts/nodes/schema.py"),
-        cwd=EXTENSION_ROOT,
+        str(REPO_ROOT / "scripts/nodes/schema.py"),
+        cwd=REPO_ROOT,
         env=environment,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
@@ -70,7 +70,7 @@ async def _describe(interpreter: Path, environment: dict[str, str]) -> str:
 def check_help_pages(schemas: dict[str, Schema]) -> list[str]:
     """Check that every node has a help page naming real inputs."""
     problems: list[str] = []
-    pages = {path.stem: path for path in (EXTENSION_ROOT / "web/docs").glob("*.md")}
+    pages = {path.stem: path for path in (REPO_ROOT / "web/docs").glob("*.md")}
     problems.extend(f"Add web/docs/{node_id}.md." for node_id in schemas if node_id not in pages)
     for stem, path in sorted(pages.items()):
         schema = schemas.get(stem)

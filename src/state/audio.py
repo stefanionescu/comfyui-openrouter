@@ -7,7 +7,6 @@ from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from .options import RequestOptions
-    from .capabilities import TextChoice, SpeechChoice
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,7 +43,6 @@ class SpeechRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         text: What to say.
         voice: The voice, or None for the provider's default voice.
         audio_format: pcm or mp3, the format OpenRouter sends.
@@ -56,7 +54,6 @@ class SpeechRequest:
     """
 
     model_id: str
-    choice: SpeechChoice | None
     text: str
     voice: str | None
     audio_format: str
@@ -86,7 +83,6 @@ class TranscriptionRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         clip: Base64 WAV without a data: prefix, as the endpoint takes it.
         language: Two-letter language code, or empty.
         timestamps: none, segments, or words and segments.
@@ -96,7 +92,6 @@ class TranscriptionRequest:
     """
 
     model_id: str
-    choice: TextChoice | None
     clip: str
     language: str
     timestamps: str

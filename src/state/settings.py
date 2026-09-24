@@ -18,8 +18,6 @@ class Settings:
         video_poll_seconds: Time between video status checks.
         video_wait_minutes: How long one run waits for a video job.
         resubmit_hold_minutes: How long an uncertain video request blocks an identical one.
-        model_interval_hours: Time between automatic model-list checks.
-        model_auto_check: Whether the automatic model-list check runs.
 
     """
 
@@ -30,8 +28,6 @@ class Settings:
     video_poll_seconds: int
     video_wait_minutes: int
     resubmit_hold_minutes: int
-    model_interval_hours: int
-    model_auto_check: bool
 
     @property
     def revision(self) -> str:

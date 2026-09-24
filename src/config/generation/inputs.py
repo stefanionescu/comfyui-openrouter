@@ -1,10 +1,8 @@
 """Names of the inputs every paid node shares, and of the choice that sends nothing."""
 
 MODEL_INPUT = "model"
-MODEL_ID_INPUT = "model_id"
-# The dropdown option where any model ID can be written instead of chosen.
-WRITTEN_CHOICE = "other model ID"
-# Every endpoint's choice that sends nothing and leaves the value to the model.
+MODEL_TOOLTIP = "Any OpenRouter model ID. Copy one from openrouter.ai/models."
+# Every dropdown's choice that sends nothing and leaves the value to the model.
 MODEL_DEFAULT = "model default"
 SEED_INPUT = "seed"
 # The run number: changing it sends the same request again.
@@ -23,10 +21,9 @@ __all__ = [
     "MAX_VARIATION",
     "MIN_VARIATION",
     "MODEL_DEFAULT",
-    "MODEL_ID_INPUT",
     "MODEL_INPUT",
+    "MODEL_TOOLTIP",
     "OPTIONS_INPUT",
     "SEED_INPUT",
     "VARIATION_INPUT",
-    "WRITTEN_CHOICE",
 ]

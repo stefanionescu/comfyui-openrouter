@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .models import check_model
 from typing import TYPE_CHECKING
 from .transport import post_audio
 from .options import apply_options
@@ -56,8 +57,9 @@ class SpeechOperation:
         check_upload_size((sample,), settings)
 
     async def send(self, configuration: ExecutionConfiguration) -> SpeechResult:
-        """Send the text, the voice when chosen, and the sample when connected, and keep the reply's format."""
+        """Check the model, send the text with the voice and sample when set, and keep the reply's format."""
         request = self.request
+        await check_model(request.model_id, "speech", configuration)
         body: dict[str, Json] = {
             "model": request.model_id,
             "input": request.text,

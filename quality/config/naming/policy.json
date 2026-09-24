@@ -122,10 +122,10 @@
             "reason": "ComfyUI calls this extension hook by name."
         },
         {
-            "path_regexes": ["^src/(config|state|discovery|execution|nodes)/.*\\.py$"],
+            "path_regexes": ["^src/(config|state|execution|nodes)/.*\\.py$"],
             "languages": ["python"],
             "categories": ["variables", "constants", "attributes", "parameters"],
-            "names": ["resolution", "resolutions", "ALL_RESOLUTIONS"],
+            "names": ["resolution", "RESOLUTIONS"],
             "allowed_banned_terms": ["resolution"],
             "reason": "OpenRouter names this image and video request field; the extension keeps its spelling."
         },
@@ -133,7 +133,7 @@
             "path_regexes": ["^scripts/workflows/.*\\.py$"],
             "languages": ["python"],
             "categories": ["variables", "constants", "attributes", "parameters"],
-            "names": ["resolution", "resolutions", "ALL_RESOLUTIONS"],
+            "names": ["resolution", "RESOLUTIONS"],
             "allowed_banned_terms": ["resolution"],
             "reason": "OpenRouter names this image and video request field; the extension keeps its spelling."
         },

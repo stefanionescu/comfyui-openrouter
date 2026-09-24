@@ -7,7 +7,6 @@ from dataclasses import dataclass
 
 if TYPE_CHECKING:
     from .options import RequestOptions
-    from .capabilities import TextChoice
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,7 +15,6 @@ class EmbeddingRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         texts: Text items.
         image_urls: PNG data URLs of image items.
         dimensions: Vector length, or 0 for the model's default.
@@ -26,7 +24,6 @@ class EmbeddingRequest:
     """
 
     model_id: str
-    choice: TextChoice | None
     texts: tuple[str, ...]
     image_urls: tuple[str, ...]
     dimensions: int
@@ -54,7 +51,6 @@ class RankRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         query: What the documents are ranked against.
         texts: Text documents.
         image_urls: PNG data URLs of image documents.
@@ -64,7 +60,6 @@ class RankRequest:
     """
 
     model_id: str
-    choice: TextChoice | None
     query: str
     texts: tuple[str, ...]
     image_urls: tuple[str, ...]

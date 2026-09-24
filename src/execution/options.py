@@ -9,8 +9,8 @@ from ..config.openrouter import ENDPOINT_LABELS, ROUTING_FIELDS, RESERVED_FIELDS
 
 if TYPE_CHECKING:
     from ..state import Json
+    from ..state import Endpoint
     from collections.abc import Mapping
-    from ..state.capabilities import Endpoint
     from ..state.options import RequestOptions
 
 

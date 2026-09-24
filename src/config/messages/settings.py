@@ -9,7 +9,6 @@ KEY_WHITESPACE = "Remove spaces and line breaks from the OpenRouter API key."
 PRIVATE_STATE_LOCATION = "Keep OpenRouter's private state outside ComfyUI, its package, and its media folders."
 RUNTIME_NOT_READY = "The OpenRouter nodes are still loading. Wait for ComfyUI to finish starting, then run again."
 SETTINGS_CHANGED = "The settings changed in another window. Reload the settings and try again."
-SETTINGS_ON_OFF = "Choose on or off for automatic model checks."
 SETTINGS_RANGE = "Choose each OpenRouter setting within its range."
 SETTINGS_UNREADABLE = "OpenRouter's private settings could not be read. Check the state folder's permissions."
 SETTINGS_WHOLE_NUMBERS = "Enter whole numbers for the OpenRouter settings."
@@ -27,7 +26,6 @@ __all__ = [
     "PRIVATE_STATE_LOCATION",
     "RUNTIME_NOT_READY",
     "SETTINGS_CHANGED",
-    "SETTINGS_ON_OFF",
     "SETTINGS_RANGE",
     "SETTINGS_UNREADABLE",
     "SETTINGS_WHOLE_NUMBERS",

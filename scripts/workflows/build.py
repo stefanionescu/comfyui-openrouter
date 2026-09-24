@@ -6,9 +6,8 @@ import sys
 import json
 import uuid
 import argparse
-from scripts.config import NOTE
-from src.paths import EXTENSION_ROOT
 from typing import cast, TYPE_CHECKING
+from scripts.config import NOTE, REPO_ROOT
 from scripts.nodes.check import read_schemas
 from scripts.workflows.page.palette import Palette
 from scripts.workflows.page.graph import Node, NAMESPACE
@@ -61,7 +60,7 @@ def build_palette(export: dict[str, object], workflow: Workflow) -> Palette:
 
 def check_coverage(node_ids: Iterable[str]) -> list[str]:
     """Report every workflow the README does not link and every node no workflow places."""
-    readme = (EXTENSION_ROOT / "README.md").read_text(encoding="utf-8")
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     problems = [
         f"Link example_workflows/{workflow.slug}.json from README.md."
         for workflow in WORKFLOWS
@@ -157,9 +156,9 @@ def serialize_workflow(workflow: Workflow, palette: Palette) -> Json:
 def compare_shipped_file(path: Path, content: Json) -> str | None:
     """Say whether a shipped file matches its build."""
     if not path.is_file():
-        return f"Build {path.relative_to(EXTENSION_ROOT)} with mise run comfy:workflows:build."
+        return f"Build {path.relative_to(REPO_ROOT)} with mise run comfy:workflows:build."
     is_same = json.loads(path.read_text(encoding="utf-8")) == content
-    return None if is_same else f"Rebuild {path.relative_to(EXTENSION_ROOT)} with mise run comfy:workflows:build."
+    return None if is_same else f"Rebuild {path.relative_to(REPO_ROOT)} with mise run comfy:workflows:build."
 
 
 def main() -> int:
@@ -169,14 +168,14 @@ def main() -> int:
     arguments = parser.parse_args()
     export = read_schemas()
     outputs: dict[Path, Json] = {
-        EXTENSION_ROOT / "example_workflows" / f"{workflow.slug}.json": serialize_workflow(
+        REPO_ROOT / "example_workflows" / f"{workflow.slug}.json": serialize_workflow(
             workflow, build_palette(export, workflow)
         )
         for workflow in WORKFLOWS
     }
     problems = [
-        f"Remove or describe {path.relative_to(EXTENSION_ROOT)}."
-        for path in (EXTENSION_ROOT / "example_workflows").glob("*.json")
+        f"Remove or describe {path.relative_to(REPO_ROOT)}."
+        for path in (REPO_ROOT / "example_workflows").glob("*.json")
         if path not in outputs
     ]
     problems += check_coverage(cast("dict[str, object]", export["nodes"]))

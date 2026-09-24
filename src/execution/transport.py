@@ -20,6 +20,7 @@ from ..config.messages.media import DOWNLOAD_LIMIT
 from ..config.messages.videos import VIDEO_URL_UNEXPECTED
 from ..config.messages.run import REQUEST_TIMEOUT, REPLY_UNREADABLE, REQUEST_UNCERTAIN, OPENROUTER_UNREACHABLE
 from ..config.openrouter import (
+    MODEL_URL,
     GET_ATTEMPTS,
     RETRY_STATUSES,
     ATTRIBUTION_URL,
@@ -143,8 +144,13 @@ async def stream_events(
             yield event
 
 
-async def _get(url: str, configuration: ExecutionConfiguration, *, is_authorized: bool) -> bytes:
-    """Read one address that bills nothing, retrying busy replies and dropped connections a few times."""
+async def _get(
+    url: str, configuration: ExecutionConfiguration, *, is_authorized: bool, is_missing_ok: bool = False
+) -> bytes:
+    """Read one address that bills nothing, retrying busy replies and dropped connections a few times.
+
+    With is_missing_ok, a 404 reads as an empty body; the JSON replies that use it are never empty.
+    """
     for attempt in range(GET_ATTEMPTS):
         delay = float(2**attempt)
         is_last = attempt == GET_ATTEMPTS - 1
@@ -155,6 +161,8 @@ async def _get(url: str, configuration: ExecutionConfiguration, *, is_authorized
             ):
                 if response.status in RETRY_STATUSES and not is_last:
                     delay = _read_retry_delay(response.headers.get("Retry-After"), delay)
+                elif is_missing_ok and response.status == HTTPStatus.NOT_FOUND:
+                    return b""
                 else:
                     await _raise_failure(response)
                     return await _read_body(response, configuration)
@@ -182,6 +190,13 @@ async def get_video(url: str, configuration: ExecutionConfiguration) -> bytes:
     return await _get(url, configuration, is_authorized=True)
 
 
+async def get_model(model_id: str, configuration: ExecutionConfiguration) -> bytes | None:
+    """Read OpenRouter's public listing of one model without the key, or None when no model has this ID."""
+    url = MODEL_URL.format(model_id=model_id)
+    content = await _get(url, configuration, is_authorized=False, is_missing_ok=True)
+    return content or None
+
+
 async def download_public(url: str, configuration: ExecutionConfiguration) -> bytes:
     """Download media a reply links on a provider's host, without the key."""
     if not url.startswith("https://"):
@@ -189,4 +204,4 @@ async def download_public(url: str, configuration: ExecutionConfiguration) -> by
     return await _get(url, configuration, is_authorized=False)
 
 
-__all__ = ["download_public", "get_video", "post_audio", "post_json", "stream_events"]
+__all__ = ["download_public", "get_model", "get_video", "post_audio", "post_json", "stream_events"]

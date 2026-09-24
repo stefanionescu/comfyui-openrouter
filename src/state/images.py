@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from . import Json
     from .options import RequestOptions
     from collections.abc import Mapping
-    from .capabilities import ImageChoice
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,10 +17,9 @@ class ImageRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         prompt: What to draw or change.
         reference_urls: PNG data URLs of the reference images.
-        count: How many images to make.
+        count: How many images to make; n is sent only above 1.
         seed: Seed sent when the model accepts one.
         fields: The chosen request fields under their wire names, only those other than the model's default.
         options: Provider routing and extra fields.
@@ -29,7 +27,6 @@ class ImageRequest:
     """
 
     model_id: str
-    choice: ImageChoice | None
     prompt: str
     reference_urls: tuple[str, ...]
     count: int

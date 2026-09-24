@@ -10,10 +10,6 @@ DOCUMENT_MISSING = "Put a PDF or text file in ComfyUI's input folder, press R, a
 DOCUMENT_OUTSIDE = "Choose a document inside ComfyUI's input folder."
 DOCUMENT_SIZE = "The document is larger than the maximum upload size of {maximum} MiB in OpenRouter settings."
 DOCUMENT_UNREADABLE = "The document could not be read as UTF-8 text. Save it as UTF-8 or as a PDF."
-IMAGE_COUNT_RANGE = "Choose between {minimum} and {maximum} images for this model."
-INPUT_NOT_ACCEPTED = (
-    "{model} does not accept {kind} input. Choose a model that lists {kind} as input, or disconnect it."
-)
 LANGUAGE_CODE = "Enter a two-letter language code such as en, or leave the language empty."
 OPTIONS_JSON = "Write {field} as a JSON object, or leave it empty."
 OPTIONS_SIZE = "Keep {field} under 64 KB."
@@ -21,7 +17,6 @@ OPTION_RESERVED_FIELD = "The node sets {field} itself. Remove it from the extra 
 OPTION_UNSUPPORTED = (
     "OpenRouter's {endpoint} requests do not accept {field}. Remove it from Request Options for this node."
 )
-OUTPUT_TOKENS_RANGE = "Choose at most {maximum} output tokens for this model, or 0 for the model's default."
 PCM_RATE_MISSING = (
     "OpenRouter sent PCM audio without its sample rate and channels. Choose mp3 as the audio format and run again."
 )
@@ -34,7 +29,6 @@ QUESTION_LIMIT = "Ask at most {maximum} questions in one decision."
 QUESTION_NAME = "Name the question with lowercase letters, digits, and underscores, starting with a letter."
 QUESTION_REPEATED = "Each question needs its own name; {name} is used twice."
 QUESTION_UNKNOWN = "There is no question named {name}. The questions are: {names}."
-REFERENCES_RANGE = "This model takes {minimum} to {maximum} reference images, and {count} are connected."
 SCORE_LEVELS = "List {minimum} to {maximum} levels, one per line, from lowest to highest."
 SEARCH_ITEMS_EMPTY = "Enter at least one line of text or connect an image."
 SEARCH_ITEMS_LIMIT = "Send at most {maximum} items at once."
@@ -57,14 +51,11 @@ __all__ = [
     "DOCUMENT_OUTSIDE",
     "DOCUMENT_SIZE",
     "DOCUMENT_UNREADABLE",
-    "IMAGE_COUNT_RANGE",
-    "INPUT_NOT_ACCEPTED",
     "LANGUAGE_CODE",
     "OPTIONS_JSON",
     "OPTIONS_SIZE",
     "OPTION_RESERVED_FIELD",
     "OPTION_UNSUPPORTED",
-    "OUTPUT_TOKENS_RANGE",
     "PCM_RATE_MISSING",
     "PROMPT_EMPTY",
     "PROMPT_LENGTH",
@@ -75,7 +66,6 @@ __all__ = [
     "QUESTION_NAME",
     "QUESTION_REPEATED",
     "QUESTION_UNKNOWN",
-    "REFERENCES_RANGE",
     "SCORE_LEVELS",
     "SEARCH_ITEMS_EMPTY",
     "SEARCH_ITEMS_LIMIT",

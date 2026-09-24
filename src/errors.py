@@ -18,7 +18,6 @@ class ErrorCode(StrEnum):
     UNCERTAIN = "uncertain"
     INTERRUPTED = "interrupted"
     CONFLICT = "conflict"
-    DISCOVERY = "models"
     MEDIA = "media"
 
 

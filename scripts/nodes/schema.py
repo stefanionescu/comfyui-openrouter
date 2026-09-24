@@ -98,8 +98,8 @@ def build_registered_schemas() -> dict[str, dict[str, object]]:
 def main() -> None:
     """Print the node descriptions of this extension and of the host nodes the workflows place.
 
-    The extension's state folder is a new empty one, so every model dropdown is built from the bundled
-    model list and the export is the same on every machine.
+    The extension's state folder is a new empty one, so Video: Download lists no jobs and the export is the
+    same on every machine.
     """
     asyncio.run(host.init_extra_nodes(init_custom_nodes=False))  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType] -- reason: The host loader is untyped.
     with tempfile.TemporaryDirectory(prefix="comfyui-openrouter-schema-") as state_directory:

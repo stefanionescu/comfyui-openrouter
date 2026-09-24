@@ -34,17 +34,16 @@ def build_messages(request: ChatRequest) -> list[Json]:
     return messages
 
 
-def build_body(request: ChatRequest) -> dict[str, Json]:
-    """Add each control the model accepts; a written ID the saved list does not hold gets every control set."""
-    settings, choice = request.settings, request.choice
-    parameters = choice.parameters if choice else frozenset({"max_completion_tokens", "seed"})
+def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Json]:
+    """Add each control that is set; the temperature and the seed go only to a model that takes them."""
+    settings = request.settings
     body: dict[str, Json] = {"model": request.model_id, "messages": build_messages(request)}
     if settings.effort is not None:
         body["reasoning"] = {"effort": settings.effort}
     if settings.max_output_tokens > 0:
         field = "max_tokens" if "max_completion_tokens" not in parameters else "max_completion_tokens"
         body[field] = settings.max_output_tokens
-    if settings.temperature is not None:
+    if "temperature" in parameters:
         body["temperature"] = settings.temperature
     if "seed" in parameters:
         body["seed"] = request.seed

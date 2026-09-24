@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from . import Json
     from .options import RequestOptions
     from collections.abc import Mapping
-    from .capabilities import ChatChoice
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,7 +62,7 @@ class ChatSettings:
     Attributes:
         effort: Reasoning effort, or None for the model's default.
         max_output_tokens: Largest answer in tokens, or 0 for the model's default.
-        temperature: Sampling temperature, or None when the model takes none.
+        temperature: Sampling temperature, sent when the model takes one.
         answer_schema: JSON schema the answer must follow, or None for free text.
         outputs: Media to make besides text: image, audio.
         aspect_ratio: Aspect ratio of generated images, or None for the model's default.
@@ -74,7 +73,7 @@ class ChatSettings:
 
     effort: str | None
     max_output_tokens: int
-    temperature: float | None
+    temperature: float
     answer_schema: Mapping[str, Json] | None
     outputs: frozenset[str]
     aspect_ratio: str | None
@@ -88,7 +87,6 @@ class ChatRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         system: System instructions, sent when not blank.
         prompt: The question.
         conversation: Earlier turns sent before the question.
@@ -103,7 +101,6 @@ class ChatRequest:
     """
 
     model_id: str
-    choice: ChatChoice | None
     system: str
     prompt: str
     conversation: Conversation

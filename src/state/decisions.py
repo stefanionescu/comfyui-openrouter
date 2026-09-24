@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from . import Json
     from .options import RequestOptions
     from collections.abc import Mapping
-    from .capabilities import TextChoice
 
 
 @dataclass(frozen=True, slots=True)
@@ -150,7 +149,6 @@ class DecisionRequest:
 
     Attributes:
         model_id: The model ID sent to OpenRouter.
-        choice: What the model accepts, or None for a written ID the saved list does not hold.
         state: The situation, as text or JSON.
         questions: The questions to answer.
         options: Provider routing and extra fields.
@@ -158,7 +156,6 @@ class DecisionRequest:
     """
 
     model_id: str
-    choice: TextChoice | None
     state: Json
     questions: QuestionSet
     options: RequestOptions | None

@@ -10,7 +10,6 @@ requirements.txt
 web/extension.js
 web/extension.css
 example_workflows/**/*.json
-resources/models/snapshot.json
 rules/DOCUMENTATION.md
 # Preserve the TypeScript guide's authored formatting.
 rules/TYPESCRIPT.md

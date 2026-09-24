@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .models import check_model
 from .transport import post_json
 from typing import TYPE_CHECKING
 from .options import apply_options
@@ -22,23 +23,24 @@ if TYPE_CHECKING:
 
 
 class RankOperation:
-    """One rank request, refused before sending when its query or documents do not suit the model."""
+    """One rank request."""
 
     def __init__(self, request: RankRequest) -> None:
         """Keep the request to validate and send."""
         self.request = request
 
     def validate(self, settings: Settings) -> None:
-        """Refuse an empty query, no documents, too many, images the model cannot read, and too much media."""
-        request, choice = self.request, self.request.choice
+        """Refuse an empty query, no documents, too many, and too much media."""
+        request = self.request
         if not request.query.strip():
             raise ConnectorError(ErrorCode.INVALID_INPUT, QUERY_EMPTY)
-        check_search_items(request.texts, request.image_urls, choice.inputs if choice else None, request.model_id)
+        check_search_items(request.texts, request.image_urls)
         check_upload_size(request.image_urls, settings)
 
     async def send(self, configuration: ExecutionConfiguration) -> RankResult:
-        """Send the query and documents; the reply lists them highest relevance first."""
+        """Check the model and send the query and documents; the reply lists them highest relevance first."""
         request = self.request
+        await check_model(request.model_id, "rerank", configuration)
         documents: list[Json] = [*request.texts, *({"image": url} for url in request.image_urls)]
         body: dict[str, Json] = {"model": request.model_id, "query": request.query, "documents": documents}
         if request.top_n > 0:

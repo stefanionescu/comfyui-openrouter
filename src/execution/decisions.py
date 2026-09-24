@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .models import check_model
 from .transport import post_json
 from typing import TYPE_CHECKING
 from .options import apply_options
@@ -67,8 +68,9 @@ class DecisionOperation:
         """Accept the request: Decision: Add Question checks each question and Decision: Ask the situation."""
 
     async def send(self, configuration: ExecutionConfiguration) -> AnswerSet:
-        """Send the situation and questions, and read the answers in question order."""
+        """Check the model, send the situation and questions, and read the answers in question order."""
         request = self.request
+        await check_model(request.model_id, "decisions", configuration)
         questions: dict[str, Json] = {
             question.name: _describe_question(question) for question in request.questions.questions
         }

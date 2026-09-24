@@ -13,6 +13,8 @@ TRANSCRIPTION_URL = "https://openrouter.ai/api/v1/audio/transcriptions"
 EMBEDDINGS_URL = "https://openrouter.ai/api/v1/embeddings"
 RERANK_URL = "https://openrouter.ai/api/v1/rerank"
 DECISIONS_URL = "https://openrouter.ai/api/alpha/decisions"
+# The public listing of one model, read without the key; an unknown ID returns 404.
+MODEL_URL = "https://openrouter.ai/api/v1/models/{model_id}/endpoints"
 
 # OpenRouter attributes usage to an address; the Registry page's name is fixed before the first release.
 ATTRIBUTION_URL = "https://registry.comfy.org/nodes/comfyui-openrouter"
@@ -23,7 +25,7 @@ REPLY_CHUNK_BYTES = 65_536
 MAX_ERROR_BYTES = 65_536
 BYTES_PER_MEBIBYTE = 1_048_576
 
-# Only requests that bill nothing are retried: model lists, video status, and video content.
+# Only requests that bill nothing are retried: model checks, video status, and video content.
 GET_ATTEMPTS = 3
 MIN_RETRY_SECONDS = 1
 MAX_RETRY_SECONDS = 30
@@ -68,6 +70,17 @@ ENDPOINT_LABELS = {
     "rerank": "rank",
     "decisions": "decision",
 }
+# What a model must make, in OpenRouter's output_modalities names, to suit each endpoint.
+MODEL_OUTPUTS = {
+    "chat": ("text", "image", "audio"),
+    "images": ("image",),
+    "videos": ("video",),
+    "speech": ("speech",),
+    "transcription": ("transcription",),
+    "embeddings": ("embeddings",),
+    "rerank": ("rerank",),
+    "decisions": ("decisions",),
+}
 MAX_PROVIDERS = 32
 MAX_OPTION_BYTES = 65_536
 
@@ -90,6 +103,8 @@ __all__ = [
     "MAX_REASON_CHARACTERS",
     "MAX_RETRY_SECONDS",
     "MIN_RETRY_SECONDS",
+    "MODEL_OUTPUTS",
+    "MODEL_URL",
     "REPLY_CHUNK_BYTES",
     "RERANK_URL",
     "RESERVED_FIELDS",

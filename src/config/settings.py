@@ -8,10 +8,7 @@ INTEGER_SETTINGS: dict[str, dict[str, int]] = {
     "video_poll_seconds": {"default": 15, "minimum": 5, "maximum": 120},
     "video_wait_minutes": {"default": 30, "minimum": 1, "maximum": 240},
     "resubmit_hold_minutes": {"default": 30, "minimum": 0, "maximum": 1440},
-    "model_interval_hours": {"default": 24, "minimum": 1, "maximum": 8760},
 }
-
-DEFAULT_MODEL_AUTO_CHECK = True
 
 MAX_SETTINGS_BYTES = 4096
 
@@ -22,7 +19,6 @@ SETTINGS_TIMEOUT_SECONDS = 5
 REQUEST_CHUNK_BYTES = 1024
 
 __all__ = [
-    "DEFAULT_MODEL_AUTO_CHECK",
     "INTEGER_SETTINGS",
     "MAX_SETTINGS_BYTES",
     "MAX_SETTINGS_FILE_BYTES",

@@ -5,8 +5,6 @@ extend-exclude = [
     ".artifacts",
     # Registry version identifiers are opaque, checksum-pinned upstream data.
     "quality/config/security/semgrep/packs.json",
-    # Model names and descriptions are OpenRouter's text, not ours.
-    "resources/models/snapshot.json",
 ]
 
 [default.extend-words]

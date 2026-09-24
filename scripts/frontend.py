@@ -6,7 +6,7 @@ import sys
 import asyncio
 import argparse
 from typing import TYPE_CHECKING
-from src.paths import EXTENSION_ROOT
+from scripts.config import REPO_ROOT
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -32,7 +32,7 @@ async def build_bundle(destination: Path) -> None:
         "--charset=utf8",
         "--legal-comments=inline",
         *(f"--external:{module}" for module in HOST_MODULES),
-        cwd=EXTENSION_ROOT,
+        cwd=REPO_ROOT,
     )
     if await process.wait() != 0:
         message = "esbuild failed."
@@ -45,15 +45,15 @@ def main() -> int:
     parser.add_argument("--check", action="store_true")
     arguments = parser.parse_args()
     if not arguments.check:
-        asyncio.run(build_bundle(EXTENSION_ROOT / "web"))
+        asyncio.run(build_bundle(REPO_ROOT / "web"))
         return 0
-    scratch = EXTENSION_ROOT / ".artifacts" / "frontend"
+    scratch = REPO_ROOT / ".artifacts" / "frontend"
     scratch.mkdir(parents=True, exist_ok=True)
     asyncio.run(build_bundle(scratch))
     problems = [
         f"Rebuild {name} with mise run comfy:frontend:build."
         for name in (BUNDLE, STYLES)
-        if not (built := EXTENSION_ROOT / "web" / name).is_file() or built.read_bytes() != (scratch / name).read_bytes()
+        if not (built := REPO_ROOT / "web" / name).is_file() or built.read_bytes() != (scratch / name).read_bytes()
     ]
     for problem in problems:
         sys.stderr.write(problem + "\n")

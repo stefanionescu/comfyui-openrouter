@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from .models import check_model
 from .transport import post_json
 from typing import TYPE_CHECKING
 from .options import apply_options
@@ -55,8 +56,9 @@ class TranscriptionOperation:
             raise ConnectorError(ErrorCode.INVALID_INPUT, LANGUAGE_CODE)
 
     async def send(self, configuration: ExecutionConfiguration) -> TranscriptionResult:
-        """Send the clip; Whisper starts its text and segments with a space, so every text is stripped."""
+        """Check the model and send the clip; Whisper starts its text and segments with a space, so all is stripped."""
         request = self.request
+        await check_model(request.model_id, "transcription", configuration)
         body: dict[str, Json] = {"model": request.model_id, "input_audio": {"data": request.clip, "format": "wav"}}
         if request.language:
             body["language"] = request.language

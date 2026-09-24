@@ -22,11 +22,6 @@
                 "path": "src/settings/routes.py",
                 "names": ["ConfigurationRoutes.status"],
                 "reason": "aiohttp calls this route handler itself."
-            },
-            {
-                "path": "src/discovery/routes.py",
-                "names": ["ModelRoutes.status", "ModelRoutes.refresh"],
-                "reason": "aiohttp calls these route handlers itself."
             }
         ]
     },

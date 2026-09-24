@@ -1,4 +1,8 @@
-"""The host nodes the build scripts name."""
+"""The repository root and the host nodes the build scripts name."""
+
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 IMAGE = "LoadImage"
 NOTE = "MarkdownNote"
@@ -65,6 +69,7 @@ __all__ = [
     "PREVIEW",
     "PREVIEW_AUDIO",
     "PREVIEW_IMAGE",
+    "REPO_ROOT",
     "SAVE_AUDIO",
     "SAVE_CAPTIONS",
     "SAVE_IMAGE",

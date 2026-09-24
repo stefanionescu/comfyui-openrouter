@@ -105,8 +105,6 @@ ALLOWED_SCRIPT_ROOT_FOLDERS = {
 ALLOWED_SINGLE_SCRIPT_FOLDERS = {
     # Repository setup/check tasks share their explicit task root.
     ".mise/tasks/repo",
-    # The model list build reads the network, so it has no check task beside it.
-    ".mise/tasks/comfy/models",
     # These shell entrypoints share their owner with JavaScript policy or filtering code.
     "quality/config/repository/licenses",
     "quality/repository/licenses",
