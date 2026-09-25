@@ -1,6 +1,5 @@
 """Messages for OpenRouter failures and refusals; {reason} is OpenRouter's cleaned reason, ending as a sentence."""
 
-# A cut answer or a filtered one comes back with nothing to show.
 ANSWER_CUT = (
     "The model used up max tokens before answering, often on reasoning. Raise max tokens or lower the reasoning effort."
 )
@@ -12,7 +11,6 @@ CREDITS_REQUIRED = (
 KEY_REJECTED = "OpenRouter did not accept the API key. Check the key in OpenRouter settings."
 MODEL_REFUSED = "The model refused to answer: {reason}"
 MODEL_UNAVAILABLE = "OpenRouter could not serve this model: {reason}"
-# Stands in for a reason when OpenRouter gives none.
 NO_REASON = "no reason given."
 MODERATION_REFUSED = "OpenRouter blocked this request: {reason}"
 NO_PROVIDER = (

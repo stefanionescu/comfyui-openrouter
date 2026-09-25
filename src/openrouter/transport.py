@@ -129,7 +129,6 @@ async def _download(
         except (aiohttp.ClientError, TimeoutError):
             if is_last:
                 raise OpenRouterError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE) from None
-        # A cancel ends the wait.
         await asyncio.sleep(delay)
     raise OpenRouterError(ErrorCode.TRANSPORT, OPENROUTER_UNREACHABLE)
 

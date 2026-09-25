@@ -5,7 +5,6 @@ MODEL_TOOLTIP = "Any OpenRouter model ID. Copy one from openrouter.ai/models."
 # Every dropdown's choice that sends nothing and leaves the value to the model.
 MODEL_DEFAULT = "model default"
 SEED_INPUT = "seed"
-# Changing the run number sends the same request again.
 RUN_NUMBER_INPUT = "run_number"
 OPTIONS_INPUT = "options"
 DEFAULT_SEED = 42

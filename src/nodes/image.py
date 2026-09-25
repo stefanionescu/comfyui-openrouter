@@ -33,8 +33,7 @@ if TYPE_CHECKING:
     from ..types.images import ImageResult
 
 
-# Every image field, each starting at the model's default, which sends nothing, then the compression, the count,
-# and the references. Every image of a batch or list goes in the one request, at its own size.
+# The image fields, compression, count, and references; a field left at model default sends nothing.
 FIELDS = (
     *(
         io.Combo.Input(field, display_name=FIELD_LABELS[field], options=[MODEL_DEFAULT, *values], default=MODEL_DEFAULT)

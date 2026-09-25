@@ -14,7 +14,7 @@ SVG_MEDIA_TYPE = "image/svg+xml"
 # An SVG file starts with its root element or an XML declaration, after any leading whitespace.
 SVG_STARTS = (b"<svg", b"<?xml")
 
-# Media sent inline as data URLs, which OpenRouter reads like files.
+# The data URL prefixes of media sent inline.
 MP4_URL_PREFIX = "data:video/mp4;base64,"
 
 WAV_URL_PREFIX = "data:audio/wav;base64,"
