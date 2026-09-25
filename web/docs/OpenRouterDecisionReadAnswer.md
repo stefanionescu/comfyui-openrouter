@@ -1,7 +1,7 @@
 # Decision: Read Answer
 
 Reads one answer from **Decision: Ask**, by its question's name, as text, a yes
-flag, and numbers that switch and math nodes can use.
+flag, and numbers.
 
 ## Inputs
 

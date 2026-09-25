@@ -20,10 +20,9 @@ Generates or edits images with any image model on OpenRouter.
 | `prompt`             | What to draw or change.                                                                       |
 | `options`            | Settings from **Request Options**.                                                            |
 
-**model default** sends nothing, so the model uses its own default. Before
-anything is paid, the node reads the model's entry in OpenRouter's image list
-and refuses a value, count, or number of references the model does not take,
-naming what it does take.
+**model default** sends nothing. Before anything is paid, the node refuses a
+value, count, or number of references the model's image listing does not
+include, naming what it does take.
 
 ## Outputs
 

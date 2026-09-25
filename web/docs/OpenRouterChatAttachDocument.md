@@ -22,9 +22,8 @@ several of these nodes to attach several files.
 2. Choose it in **document**.
 3. Connect **documents** to **Chat: Ask**.
 
-A PDF is sent as a file; **Chat: Ask**'s **PDF engine** sets how OpenRouter
-reads it. A text file must be UTF-8. Each file counts toward the maximum upload
-size in **OpenRouter settings**. An edited file is read again on the next run.
+**Chat: Ask**'s **PDF engine** sets how OpenRouter reads a PDF. A text file must
+be UTF-8. An edited file is read again on the next run.
 Example: **chat-01-write-a-product-listing**.
 
 [OpenRouter PDF documentation](https://openrouter.ai/docs/guides/overview/multimodal/pdfs)

@@ -24,10 +24,9 @@ frames, or reference media.
 | `last_frame`       | One image the video ends on; a batch or list is refused.                               |
 | `options`          | Settings from **Request Options**.                                                     |
 
-A setting left at **model default** or 0 sends nothing, so the model uses its
-own default. Before anything is paid, the node reads the model's entry in
-OpenRouter's video list and refuses a duration, resolution, aspect ratio, frame,
-sound, or upscale setting the model does not take, naming what it does take.
+**model default** or 0 sends nothing. Before anything is paid, the node refuses
+a duration, resolution, aspect ratio, frame, sound, or upscale setting the
+model's video listing does not include, naming what it does take.
 
 ## Outputs
 
@@ -43,11 +42,7 @@ sound, or upscale setting the model does not take, naming what it does take.
 
 Example: **video-01-animate-a-product-shot**.
 
-A video job always runs to completion at OpenRouter, even if you cancel the run
-or ComfyUI restarts; download it with **Video: Download**. Running the identical
-request again picks up that job. If the connection closes before OpenRouter
-confirms a request, the identical request is refused for **video retry delay
-(minutes)**; check openrouter.ai/activity meanwhile. Reference videos count
-toward the maximum upload size.
+A job runs to completion even if you cancel or ComfyUI restarts; collect it
+with **Video: Download**, or run the identical request again.
 
 [OpenRouter video generation documentation](https://openrouter.ai/docs/guides/overview/multimodal/video-generation)

@@ -32,8 +32,7 @@ Examples: **decision-01-verify-then-escalate** and
 
 The default model, `typesafe/jev-1.13`, is a fixed version. To follow TypeSafe's
 newest release, type `~typesafe/jev-latest` in **model**. Jev reads up to 32,000
-tokens per request. TypeSafe advises choosing thresholds from your own labeled
-examples.
+tokens per request.
 
 This node uses OpenRouter's alpha decisions API (`/api/alpha/decisions`), which
 OpenRouter may still change.

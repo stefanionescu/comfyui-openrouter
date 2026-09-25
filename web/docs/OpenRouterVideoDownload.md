@@ -22,9 +22,7 @@ it, ComfyUI restarted, or it waited too long.
 2. Connect **video** to **Save Video**.
 3. Select **Run**.
 
-The list shows the jobs **Video: Generate** started that are still waiting to be
-downloaded. A job leaves the list once its video is downloaded, or when
-OpenRouter reports that it failed, was cancelled, or expired. Example:
-**video-02-recover-a-cancelled-video**.
+A job leaves the list once its video is downloaded, or when it fails, is
+cancelled, or expires. Example: **video-02-recover-a-cancelled-video**.
 
 [OpenRouter video generation documentation](https://openrouter.ai/docs/guides/overview/multimodal/video-generation)

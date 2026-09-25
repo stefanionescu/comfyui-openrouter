@@ -44,7 +44,7 @@ model reads them. Returns text, and images or speech from models that make them.
 3. Connect **text** to **Preview as Text**, and select **Run**.
 
 Examples: **chat-01-write-a-product-listing** and
-**chat-02-caption-a-training-set** in **Browse Templates → comfyui-openrouter**.
+**chat-02-caption-a-training-set**.
 
 Everything connected to **images**, **videos**, and **audio** goes in one
 request: one item, a batch, a list such as **Load Image (from Folder)** makes,
@@ -55,9 +55,6 @@ Before anything is paid, the node refuses media the model does not read,
 outputs it does not make, an answer schema it cannot follow, and max tokens
 above its longest answer.
 
-An answer that stops mid-sentence hit the token limit; raise **max tokens**. An
-empty answer says whether the token limit or a content filter stopped it.
-Cancelling stops the wait. For factual answers, attach the documents the model
-should answer from.
+An answer that stops mid-sentence hit the token limit; raise **max tokens**.
 
 [OpenRouter multimodal documentation](https://openrouter.ai/docs/guides/overview/multimodal/overview)

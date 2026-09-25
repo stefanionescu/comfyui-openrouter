@@ -5,28 +5,19 @@
 [![Python 3.12 or later](docs/images/badge-python.svg)](#requirements)
 [![MIT license](docs/images/badge-license.svg)](LICENSE.md)
 
-This is a ComfyUI extension that runs any OpenRouter model, with your own API
-key.
+Run any OpenRouter model in ComfyUI with your own API key.
 
-It adds 13 nodes. Twelve cover six kinds of models, and **Request Options** sets
-provider choices for the eight paid ones:
-
-- **Chat:** ask a model a question, with images, video, audio, or documents. Get
-  back text, images, or speech.
-- **Image:** generate and edit images, including masks and SVG files.
-- **Video:** make a video from a prompt, frames, or reference media.
-- **Audio:** turn text into speech, optionally in a cloned voice, and speech into
-  text with timestamps and subtitles.
-- **Search:** turn text and images into embeddings (lists of numbers that place
-  similar items close together), and rank them against a query.
-- **Decision:** ask a decision model, such as TypeSafe's Jev, typed questions. It
-  answers with probabilities, so a workflow can branch on the answers.
-- **Request Options:** choose providers, price limits, and extra request fields
-  for any paid node.
-
-Requests go from your ComfyUI server to OpenRouter, which passes them to the
-model's provider (the company that runs the model) and bills your OpenRouter
-account.
+- **Chat:** ask with images, video, audio, or documents; get text, images, or
+  speech.
+- **Image:** generate and edit images, with masks and SVG files.
+- **Video:** make a video from a prompt, frames, or references.
+- **Audio:** text to speech, with voice cloning, and transcription with
+  timestamps and subtitles.
+- **Search:** embed and rank text and images.
+- **Decision:** ask a decision model, such as TypeSafe's Jev, typed questions
+  and get probabilities.
+- **Request Options:** providers, price limits, and extra request fields for any
+  paid node.
 
 ## Contents
 
@@ -45,18 +36,12 @@ account.
 
 - Python 3.12 or later.
 - ComfyUI 0.34.6 or later, with frontend 1.49.6 or later in the 1.x series.
-- An OpenRouter account with credit, and an API key from
-  openrouter.ai/settings/keys.
-- Network access from the ComfyUI server to openrouter.ai.
+- An OpenRouter API key.
 
 ## Install
 
-1. Stop ComfyUI.
-2. Put the extension in `ComfyUI/custom_nodes/comfyui-openrouter`, with
-   `__init__.py` and `requirements.txt` directly inside that folder.
-3. Install `requirements.txt` with the Python that runs ComfyUI, using the
-   command for your installation below.
-4. Start ComfyUI and reload its window.
+Put the extension in `ComfyUI/custom_nodes/comfyui-openrouter`, install its
+`requirements.txt` with ComfyUI's Python, and restart ComfyUI.
 
 ### Comfy Desktop
 
@@ -64,19 +49,15 @@ account.
    **Manage**.
 2. Under **About**, copy **Location**. In that folder, find the `ComfyUI` folder
    that holds `main.py`, and put the extension in its `custom_nodes` folder.
-3. Select **Terminal** in the same panel. It opens in the ComfyUI folder with
-   the installation's Python. Run:
+3. Select **Terminal** in the same panel and run:
 
 ```sh
 pip install -r custom_nodes/comfyui-openrouter/requirements.txt
 ```
 
-Then start the installation. [Comfy Desktop's Manage panel](https://docs.comfy.org/installation/desktop/usage/manage)
-explains these controls.
-
 ### macOS or Linux
 
-From the ComfyUI folder, replacing `.venv` if your environment has another name:
+From the ComfyUI folder:
 
 ```sh
 .venv/bin/python -m pip install -r custom_nodes/comfyui-openrouter/requirements.txt
@@ -109,25 +90,15 @@ To update or remove the extension, see the
 
 ## First run
 
-1. Open **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings** and
-   save your API key. It is stored on the server, in the extension's private
-   folder.
+1. Save your API key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
+   settings**.
 2. Open **Browse Templates → comfyui-openrouter →
-   decision-01-verify-then-escalate**, or drag
-   [its file](example_workflows/decision-01-verify-then-escalate.json) onto the
-   canvas.
-3. Select **Run**.
-4. Read the answer in **Answer**, and Jev's check in **Summary**.
+   decision-01-verify-then-escalate** and select **Run**.
+3. Read the answer in **Answer**, and Jev's check in **Summary**.
 
-To stop a run, use ComfyUI's cancel button. To send the same request again,
-change **run number**. Each request's charge is listed at
-openrouter.ai/activity.
+To send the same request again, change **run number**.
 
 ## Example workflows
-
-There are 13 example workflows, and together they use every node. In 12 of
-them, Jev decides something: which image to keep, whether a draft is distorted,
-or whether an answer is backed by its sources.
 
 | Workflow                                                                                                          | Input                               |
 | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
@@ -145,28 +116,17 @@ or whether an answer is backed by its sources.
 | [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)                               | A brief                             |
 | [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json)         | Notes and a question                |
 
-Open one from **Browse Templates → comfyui-openrouter**, or drag its file onto
-ComfyUI. Each group has a note that says what it does; start with **Start
-Here**. Each step after the inputs is a subgraph: select the icon at its
-top-right corner to open it. Media inputs start empty, so add your own image,
-audio, or document.
+They are in **Browse Templates → comfyui-openrouter**. Start with each
+workflow's **Start Here** note; each step is a subgraph. Media inputs start
+empty.
 
 ![Screenshot of the Choose group in image-01: a note explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/workflow-choose-group.png)
 
-Some workflows use ComfyUI's **If/Else Switch** (beta). It runs only the branch
-it picks, so the nodes on the other branch send nothing.
-
 After an update, open the examples in a new tab to get the new versions.
-
-**Request Options** is used in **Chat: Write a Product Listing**, to keep the
-listing away from providers that store data.
 
 ## Nodes
 
-The nodes are in ComfyUI's node menu under **OpenRouter**: 12 in the groups
-Chat, Image, Video, Audio, Search, and Decision, and **Request Options** at the
-top. Eight nodes send a paid request each time they run; the other five prepare
-or read data and are free. ComfyUI's node help opens each node's guide.
+The nodes are under **OpenRouter** in the node menu, and each has a help page.
 
 ![Node map. Chat: Attach Document feeds Chat: Ask. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Video: Download collects a job Video: Generate left running, so no link joins them. Paid nodes have an indigo bar.](docs/images/node-map.svg)
 
@@ -191,59 +151,38 @@ The decision nodes use OpenRouter's alpha decisions API
 
 ## Models
 
-Each paid node has a **model** field. Type any model ID from
-[openrouter.ai/models](https://openrouter.ai/models), such as
-`google/gemini-3.5-flash`; the same page lists each model's price. You can add
-a variant suffix, such as `:nitro` for the fastest providers.
+Each paid node takes any model ID from
+[openrouter.ai/models](https://openrouter.ai/models), with an optional variant
+suffix such as `:nitro`.
 
 ![Chat: Ask on the canvas: sockets for a conversation, documents, images, videos, audio, and options; then the model field set to google/gemini-3.5-flash, the reasoning effort, max tokens, temperature, outputs, aspect ratio, voice, PDF engine, seed, and run number; and the answer schema, prompt, and system prompt boxes at the bottom.](docs/images/chat-ask-node.png)
 
-Before it sends, the node checks the model with OpenRouter's public listings.
-It stops with an error if OpenRouter has no model with that ID, if the model
-makes something else, such as a video model in **Image: Generate**, or if the
-model does not take what you connected or chose, such as an image on a
-text-only model or a duration the video model does not make. The error names
-what the model does take. The check is free and runs once per model each time
-ComfyUI starts. The [advanced guide](ADVANCED.md#models) lists every check and
-each node's default model.
+Before sending, the node checks the model against OpenRouter's public listings
+and stops if the ID is unknown, the model makes something else, or it does not
+take what you connected or chose. The error names what the model does take. The
+[advanced guide](ADVANCED.md#models) lists every check and each node's default
+model.
 
 Each media socket, such as **images**, takes one item, a batch, or a list, and
-everything connected goes in one request, each image at its own size. To send
-several **Load Image** nodes, join them with ComfyUI's **Create List**.
+everything connected goes in one request, each image at its own size. Join
+several **Load Image** nodes with **Create List**.
 
 ## How a run works
 
-```text
-Node inputs ──▶ ComfyUI server (the key and settings stay here)
-                  │ checks the inputs and the model ID
-                  ▼
-               OpenRouter ──▶ the model's provider
-                  │
-                  ▼
-Node outputs ◀── text, images, video, audio, and answers
-```
-
-1. The node checks its inputs, such as an empty prompt or media over the upload
-   limit, and stops with an error before anything is sent or billed.
-2. It waits for a free slot. At most **parallel requests** requests run at
-   once; the default is 4.
-3. It checks the model ID with OpenRouter, which is free, then sends one
-   request from your ComfyUI server to OpenRouter with your key. OpenRouter
-   passes it to the model's provider and bills your account.
-4. For video, the node records the job, checks it until the video is ready, and
-   downloads it. The checks and the download are free.
-5. The node turns the reply into ComfyUI outputs. Nodes connected to an empty
-   output, such as `images` from a text-only model, are skipped.
-6. Your save nodes write the files. ComfyUI reuses a result while the inputs
-   are unchanged; change **run number** to send the request again.
+1. The node checks its inputs and the model, and stops before anything is
+   paid.
+2. At most **parallel requests** requests run at once; the default is 4.
+3. It sends one request with your key. A video job is recorded, checked until
+   ready, and downloaded.
+4. Nodes connected to an empty output, such as `images` from a text-only model,
+   are skipped.
 
 The [advanced guide](ADVANCED.md#what-each-node-sends) lists what each node
 sends and returns.
 
 ## Development
 
-Development needs Git and mise. Tell the checks where ComfyUI is, in
-`.mise.local.toml`:
+Development needs mise. Point the checks at ComfyUI in `.mise.local.toml`:
 
 ```toml
 [env]
@@ -270,21 +209,14 @@ lists every task.
 | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | No OpenRouter nodes in the menu              | Check that the folder is `ComfyUI/custom_nodes/comfyui-openrouter`, ComfyUI is 0.34.6 or later, and the console shows no import error. |
 | No **OpenRouter** entry under **Extensions** | Check that `web/extension.js` exists in the extension's folder, then reload the window.                                                |
-| "Set your OpenRouter API key..."             | Save the key in **OpenRouter settings**, or set `OPENROUTER_API_KEY` and restart ComfyUI.                                              |
 | The settings cannot be changed               | ComfyUI runs in multi-user mode or is open from another computer. Set `OPENROUTER_API_KEY` where ComfyUI starts instead.               |
-| "OpenRouter has no model named..."           | Copy the model ID from its page at openrouter.ai/models. IDs are lowercase, in the form `author/model`.                                |
-| "... does not take image requests"           | The model makes something else. Choose a model of the node's kind at openrouter.ai/models.                                             |
-| A video was not ready in time                | OpenRouter keeps making it. Add **Video: Download**, choose the job, and select **Run**.                                               |
 | `pydantic` cannot be imported                | Install `requirements.txt` with the Python that runs ComfyUI, then restart.                                                            |
 | Node help is missing                         | Reinstall the whole extension, including `web/docs`.                                                                                   |
 | The templates are missing                    | Reinstall the whole extension, including `example_workflows`.                                                                          |
 | Nodes or menus appear twice                  | Keep one `comfyui-openrouter` folder in `custom_nodes`; move copies elsewhere.                                                         |
 
-For the messages a node shows, see [troubleshooting](ADVANCED.md#troubleshooting).
-The [advanced guide](ADVANCED.md) also covers keys, settings, limits, models,
-caching, and video recovery.
+More in the [advanced guide's troubleshooting](ADVANCED.md#troubleshooting).
 
 ## License
 
-The code, guides, and workflows are under the [MIT license](LICENSE.md).
-Third-party components keep their own licenses.
+[MIT](LICENSE.md).
