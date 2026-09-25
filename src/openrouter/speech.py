@@ -11,8 +11,8 @@ from .operation import validate_upload_size
 from ..config.messages.models import MODEL_VOICE
 from ..types.audio import PcmFormat, SpeechResult
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.messages.inputs import PCM_RATE_MISSING, SPEECH_TEXT_EMPTY, VOICE_SAMPLE_SIZE, SPEECH_TEXT_LENGTH
-from ..config.generation.audio import DEFAULT_SPEED, PCM_MEDIA_TYPE, MAX_SPEECH_CHARACTERS, MAX_VOICE_SAMPLE_BYTES
+from ..config.generation.audio import DEFAULT_SPEED, PCM_MEDIA_TYPE
+from ..config.messages.inputs import PCM_RATE_MISSING, SPEECH_TEXT_EMPTY
 
 if TYPE_CHECKING:
     from ..types import Json
@@ -46,16 +46,11 @@ class SpeechOperation:
         self.request = request
 
     def validate(self, settings: Settings) -> None:
-        """Refuse empty or overlong text and an oversized voice sample."""
+        """Refuse empty text and a voice sample over the upload limit."""
         request = self.request
         if not request.text.strip():
             raise OpenRouterError(ErrorCode.INVALID_INPUT, SPEECH_TEXT_EMPTY)
-        if len(request.text) > MAX_SPEECH_CHARACTERS:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, SPEECH_TEXT_LENGTH.format(maximum=MAX_SPEECH_CHARACTERS))
-        sample = request.sample or ""
-        if len(sample.partition(",")[2]) * 3 // 4 > MAX_VOICE_SAMPLE_BYTES:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, VOICE_SAMPLE_SIZE)
-        validate_upload_size((sample,), settings)
+        validate_upload_size((request.sample or "",), settings)
 
     async def send(self, configuration: Configuration) -> SpeechResult:
         """Check the model, send the text with the voice and sample when set, and keep the reply's format.
@@ -63,7 +58,7 @@ class SpeechOperation:
         A voice sample needs a model with a provider that clones voices.
         """
         request = self.request
-        model = await validate_model(request.model_id, "speech", configuration)
+        model = await validate_model(request.model_id, "speech", configuration.settings)
         if request.sample and not model.has_voice_cloning:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_VOICE.format(model=request.model_id))
         body: dict[str, Json] = {

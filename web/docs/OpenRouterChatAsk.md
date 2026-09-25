@@ -13,7 +13,7 @@ model reads them. Returns text, and images or speech from models that make them.
 | `audio`            | Audio clips: one, a batch, or a list. Each is sent as WAV.                                                                                                      |
 | `reasoning_effort` | How much a reasoning model thinks before answering. Sent only to models that reason.                                                                            |
 | `max_tokens`       | The longest answer in tokens; 0 leaves it to the model.                                                                                                         |
-| `temperature`      | 0 to 2. Higher values vary the answer more. Sent only to models that take a temperature.                                                                        |
+| `temperature`      | **model default** sends none. **set** sends a value from 0 to 2; higher values vary the answer more. Sent only to models that take a temperature.               |
 | `outputs`          | **text**, **image and text**, or **audio and text**. Images and audio need a model that makes them.                                                             |
 | `aspect_ratio`     | The shape of the images a model draws.                                                                                                                          |
 | `voice`            | The voice of a spoken answer, such as `alloy`. Music models need it empty.                                                                                      |

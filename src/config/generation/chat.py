@@ -1,14 +1,14 @@
-"""Chat ranges and choices: documents, temperature, token limits, PDF engines, outputs, and voice audio."""
+"""Chat choices: documents, temperature, PDF engines, outputs, and voice audio."""
 
 from .inputs import MODEL_DEFAULT
 
-MAX_DOCUMENTS = 8
+# The temperature dropdown: model default sends none, and set sends its value.
+TEMPERATURE_INPUT = "temperature"
+SET_TEMPERATURE = "set"
+TEMPERATURE_VALUE_INPUT = "value"
 DEFAULT_TEMPERATURE = 1.0
 MAX_TEMPERATURE = 2.0
 TEMPERATURE_STEP = 0.05
-MAX_OUTPUT_TOKENS = 1_000_000
-MAX_CONVERSATION_TURNS = 200
-MAX_PROMPT_CHARACTERS = 1_000_000
 PDF_ENGINES = (MODEL_DEFAULT, "native", "cloudflare-ai", "mistral-ocr")
 EFFORTS = (MODEL_DEFAULT, "none", "minimal", "low", "medium", "high", "xhigh", "max")
 # What each outputs choice asks the model to make besides text.
@@ -40,13 +40,12 @@ __all__ = [
     "DEFAULT_VOICE",
     "DOCUMENT_TYPES",
     "EFFORTS",
-    "MAX_CONVERSATION_TURNS",
-    "MAX_DOCUMENTS",
-    "MAX_OUTPUT_TOKENS",
-    "MAX_PROMPT_CHARACTERS",
     "MAX_TEMPERATURE",
     "OUTPUTS",
     "PDF_ENGINES",
     "PDF_MEDIA_TYPE",
+    "SET_TEMPERATURE",
+    "TEMPERATURE_INPUT",
     "TEMPERATURE_STEP",
+    "TEMPERATURE_VALUE_INPUT",
 ]

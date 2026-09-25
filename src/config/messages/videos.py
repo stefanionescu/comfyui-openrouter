@@ -18,10 +18,9 @@ SUBMIT_DELAYED = (
     "openrouter.ai/activity before sending it again."
 )
 SUBMIT_UNCERTAIN = (
-    "The connection closed before OpenRouter confirmed the video request. It may be running and billed; check "
-    "openrouter.ai/activity. An identical request is refused for {minutes} minutes."
+    "OpenRouter's answer to the video request did not arrive or could not be read. The video may be running and "
+    "billed; check openrouter.ai/activity. An identical request is refused for {minutes} minutes."
 )
-VIDEO_URL_UNEXPECTED = "OpenRouter's video address was not on openrouter.ai, so it was not downloaded."
 
 __all__ = [
     "FRAMES_BESIDE_REFERENCES",
@@ -34,5 +33,4 @@ __all__ = [
     "PROMPT_REQUIRED",
     "SUBMIT_DELAYED",
     "SUBMIT_UNCERTAIN",
-    "VIDEO_URL_UNEXPECTED",
 ]

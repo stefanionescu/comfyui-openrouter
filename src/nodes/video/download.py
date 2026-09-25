@@ -48,6 +48,7 @@ class VideoDownload(io.ComfyNode):
                 )
             ],
             outputs=[io.Video.Output("video", display_name="video")],
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -73,6 +74,7 @@ class VideoDownload(io.ComfyNode):
             send_request(
                 VideoDownloadOperation(record, jobs),
                 lambda content: io.NodeOutput(InputImpl.VideoFromFile(memory.BytesIO(content))),
+                cls.hidden.unique_id,
             )
         )
         return await wait_for_task(task)

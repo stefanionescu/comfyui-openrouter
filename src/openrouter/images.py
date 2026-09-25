@@ -69,8 +69,8 @@ class ImageOperation:
         """Check the model, send, and read every image; an SVG file is known by its type or its first bytes."""
         request = self.request
         inputs = ["image"] if request.reference_urls else []
-        model = await validate_model(request.model_id, "images", configuration, inputs)
-        limits = await read_image_limits(request.model_id, configuration)
+        model = await validate_model(request.model_id, "images", configuration.settings, inputs)
+        limits = await read_image_limits(request.model_id, configuration.settings)
         body: dict[str, Json] = {"model": request.model_id, "prompt": request.prompt, **self.build_fields(limits)}
         if "seed" in (limits.fields if limits is not None else model.parameters):
             body["seed"] = request.seed

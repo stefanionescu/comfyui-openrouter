@@ -62,7 +62,7 @@ class ChatSettings:
     Attributes:
         effort: Reasoning effort, or None for the model's default.
         max_tokens: Largest answer in tokens, or 0 for the model's default.
-        temperature: Sampling temperature, sent when the model takes one.
+        temperature: Sampling temperature, sent when set and the model takes one; None leaves it to the model.
         answer_schema: JSON schema the answer must follow, or None for free text.
         outputs: Media to make besides text: image, audio.
         aspect_ratio: Aspect ratio of generated images, or None for the model's default.
@@ -73,7 +73,7 @@ class ChatSettings:
 
     effort: str | None
     max_tokens: int
-    temperature: float
+    temperature: float | None
     answer_schema: Mapping[str, Json] | None
     outputs: frozenset[str]
     aspect_ratio: str | None

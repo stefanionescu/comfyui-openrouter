@@ -137,14 +137,12 @@ class VideoJobReply(Reply):
     Attributes:
         id: The job ID.
         status: Where the job is, such as completed or failed.
-        unsigned_urls: The addresses of the finished videos on openrouter.ai.
         error: Why the job failed, when it did.
 
     """
 
     id: str
     status: str
-    unsigned_urls: tuple[str, ...] = ()
     error: str | None = None
 
 

@@ -28,7 +28,7 @@ first.
 2. Connect **similarities** to **Preview as Text**.
 3. Select **Run**.
 
-All items go in one request, up to 256. A text-only model refuses images.
+All items go in one request. A text-only model refuses images.
 Example: **image-02-reject-distorted-images**.
 
 [OpenRouter embeddings documentation](https://openrouter.ai/docs/api_reference/embeddings)

@@ -252,18 +252,18 @@
       ],
       "size": [
         340,
-        358
+        334
       ],
       "flags": {},
       "order": 6,
       "mode": 0,
       "inputs": [
         {
-          "name": "order",
+          "name": "provider",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "order"
+            "name": "provider"
           }
         },
         {
@@ -288,14 +288,6 @@
           "link": null,
           "widget": {
             "name": "sort"
-          }
-        },
-        {
-          "name": "allow_fallbacks",
-          "type": "COMBO",
-          "link": null,
-          "widget": {
-            "name": "allow_fallbacks"
           }
         },
         {
@@ -363,7 +355,6 @@
         "",
         "",
         "",
-        "model default",
         "model default",
         "deny",
         false,
@@ -1026,7 +1017,7 @@
               },
               {
                 "name": "temperature",
-                "type": "FLOAT",
+                "type": "COMFY_DYNAMICCOMBO_V3",
                 "link": null,
                 "widget": {
                   "name": "temperature"
@@ -1148,7 +1139,7 @@
               "openai/gpt-6-sol",
               "model default",
               0,
-              1.0,
+              "model default",
               "text",
               "model default",
               "alloy",
@@ -1235,7 +1226,7 @@
               },
               {
                 "name": "temperature",
-                "type": "FLOAT",
+                "type": "COMFY_DYNAMICCOMBO_V3",
                 "link": null,
                 "widget": {
                   "name": "temperature"
@@ -1357,7 +1348,7 @@
               "openai/gpt-6-luna",
               "model default",
               0,
-              1.0,
+              "model default",
               "text",
               "model default",
               "alloy",

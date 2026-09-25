@@ -9,10 +9,9 @@ from comfy_api.latest import io
 from ...comfy.runtime import get_runtime
 from typing import override, TYPE_CHECKING
 from ...settings.store import read_settings
-from ...config.generation.chat import MAX_DOCUMENTS
+from ...config.messages.inputs import DOCUMENT_MISSING
 from ...types.errors import ErrorCode, OpenRouterError
 from ...comfy.documents import list_documents, read_document
-from ...config.messages.inputs import DOCUMENT_LIMIT, DOCUMENT_MISSING
 from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE
 
 if TYPE_CHECKING:
@@ -69,8 +68,6 @@ class ChatAttachDocument(io.ComfyNode):
         """Read the file off the event loop and add it after the earlier documents."""
         if not file:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, DOCUMENT_MISSING)
-        if len(documents) >= MAX_DOCUMENTS:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, DOCUMENT_LIMIT.format(maximum=MAX_DOCUMENTS))
         settings = await asyncio.to_thread(read_settings, get_runtime().configuration.directory)
         document = await asyncio.to_thread(read_document, file, settings.max_upload_megabytes)
         return io.NodeOutput((*documents, document))

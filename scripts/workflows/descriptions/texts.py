@@ -49,6 +49,8 @@ SHARED_TEXTS = {
     "notes": "Notes",
     "question": "Question",
     "articles": "Articles",
+    "model": "Model",
+    "info": "Info",
 }
 
 __all__ = ["SHARED_TEXTS"]

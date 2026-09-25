@@ -10,10 +10,10 @@ from typing import TYPE_CHECKING
 from ...comfy.media import encode_images
 from ..inputs import build_request_inputs
 from ...types.search import EmbeddingRequest
+from ...config.generation.search import INPUT_TYPES
 from ...openrouter.embeddings import EmbeddingOperation
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ...config.generation.models import DEFAULT_EMBEDDING_MODEL
-from ...config.generation.search import INPUT_TYPES, MAX_DIMENSIONS
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 
@@ -50,7 +50,6 @@ class SearchEmbed(PaidNode):
                     "dimensions",
                     default=0,
                     min=0,
-                    max=MAX_DIMENSIONS,
                     advanced=True,
                     tooltip="Vector length for models that shorten vectors; 0 leaves it to the model.",
                 ),
@@ -72,6 +71,7 @@ class SearchEmbed(PaidNode):
                 io.String.Output("similarities", display_name="similarities"),
             ],
             is_input_list=True,
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -105,6 +105,7 @@ class SearchEmbed(PaidNode):
                 lambda result: io.NodeOutput(
                     json.dumps([list(vector) for vector in result.vectors]), json.dumps(list(result.similarities))
                 ),
+                cls.hidden.unique_id,
             )
 
         return await wait_for_task(asyncio.create_task(send_encoded()))

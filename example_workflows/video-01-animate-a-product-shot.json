@@ -1,8 +1,8 @@
 {
   "id": "aff6f82a-58ed-5a2d-877d-0f768a32402d",
   "revision": 0,
-  "last_node_id": 12,
-  "last_link_id": 9,
+  "last_node_id": 16,
+  "last_link_id": 12,
   "nodes": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
       ],
       "size": [
         340,
-        88
+        108
       ],
       "flags": {},
       "order": 0,
@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the shot in **Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the shot in **Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`.\n\nTo animate with another video model, change **Model**."
       ],
       "title": "Start Here"
     },
@@ -41,15 +41,48 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        460,
+        30,
+        570
+      ],
+      "size": [
+        720,
+        108
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "**Model** holds the video model **Animate** uses. **Model: Info** reads what OpenRouter lists for it, for free and without the key, and **Info** shows it: the durations, resolutions, and aspect ratios it takes. Change the model here, and check **Info** before you change **Animate**'s settings."
+      ],
+      "title": "Note"
+    },
+    {
+      "id": 3,
+      "type": "MarkdownNote",
+      "pos": [
+        840,
         140
       ],
       "size": [
         720,
-        88
+        108
       ],
       "flags": {},
-      "order": 1,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -71,18 +104,18 @@
       "title": "Note"
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        1270,
+        1650,
         140
       ],
       "size": [
         720,
-        88
+        108
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -104,18 +137,18 @@
       "title": "Note"
     },
     {
-      "id": 4,
+      "id": 5,
       "type": "MarkdownNote",
       "pos": [
-        2080,
+        2460,
         140
       ],
       "size": [
         340,
-        88
+        108
       ],
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -137,18 +170,18 @@
       "title": "Note"
     },
     {
-      "id": 5,
+      "id": 6,
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        292
+        312
       ],
       "size": [
         340,
         88
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -179,18 +212,134 @@
       "title": "Brief"
     },
     {
-      "id": 6,
+      "id": 7,
+      "type": "PrimitiveString",
+      "pos": [
+        30,
+        742
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            10,
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        "minimax/hailuo-3-max"
+      ],
+      "title": "Model"
+    },
+    {
+      "id": 8,
+      "type": "OpenRouterModelInfo",
+      "pos": [
+        30,
+        864
+      ],
+      "size": [
+        340,
+        58
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "STRING",
+          "link": 10,
+          "widget": {
+            "name": "model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "info",
+          "type": "STRING",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenRouterModelInfo"
+      },
+      "widgets_values": [
+        "google/gemini-3.5-flash"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "PreviewAny",
+      "pos": [
+        410,
+        742
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Info"
+    },
+    {
+      "id": 10,
       "type": "OpenRouterImageGenerate",
       "pos": [
-        460,
-        292
+        840,
+        312
       ],
       "size": [
         340,
         392
       ],
       "flags": {},
-      "order": 5,
+      "order": 9,
       "mode": 0,
       "inputs": [
         {
@@ -338,18 +487,18 @@
       "bgcolor": "#653"
     },
     {
-      "id": 7,
+      "id": 11,
       "type": "PreviewImage",
       "pos": [
-        840,
-        292
+        1220,
+        312
       ],
       "size": [
         340,
         290
       ],
       "flags": {},
-      "order": 6,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -372,18 +521,18 @@
       "title": "Frame"
     },
     {
-      "id": 8,
+      "id": 12,
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
-        1270,
-        292
+        1650,
+        312
       ],
       "size": [
         340,
         190
       ],
       "flags": {},
-      "order": 7,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -437,18 +586,18 @@
       ]
     },
     {
-      "id": 9,
+      "id": 13,
       "type": "be60d90c-9e59-594e-b529-6a989c2e0943",
       "pos": [
-        1270,
-        546
+        1650,
+        566
       ],
       "size": [
         340,
         66
       ],
       "flags": {},
-      "order": 8,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -489,18 +638,18 @@
       "title": "Move"
     },
     {
-      "id": 10,
+      "id": 14,
       "type": "PreviewAny",
       "pos": [
-        1650,
-        292
+        2030,
+        312
       ],
       "size": [
         340,
         240
       ],
       "flags": {},
-      "order": 9,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -523,18 +672,18 @@
       "title": "Move"
     },
     {
-      "id": 11,
+      "id": 15,
       "type": "PreviewAny",
       "pos": [
-        1650,
-        596
+        2030,
+        616
       ],
       "size": [
         340,
         240
       ],
       "flags": {},
-      "order": 10,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -557,18 +706,18 @@
       "title": "Summary"
     },
     {
-      "id": 12,
+      "id": 16,
       "type": "f59cb1d8-c94a-542a-91fb-e1b9d3ebe2a4",
       "pos": [
-        2080,
-        292
+        2460,
+        312
       ],
       "size": [
         340,
-        88
+        112
       ],
       "flags": {},
-      "order": 11,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -583,12 +732,21 @@
           "widget": {
             "name": "move"
           }
+        },
+        {
+          "name": "model",
+          "type": "STRING",
+          "link": 12,
+          "widget": {
+            "name": "model"
+          }
         }
       ],
       "outputs": [],
       "properties": {},
       "widgets_values": [
-        ""
+        "",
+        "google/veo-3.1-fast"
       ],
       "title": "Animate"
     }
@@ -596,74 +754,98 @@
   "links": [
     [
       1,
-      5,
-      0,
       6,
+      0,
+      10,
       12,
       "STRING"
     ],
     [
       2,
-      6,
+      10,
       0,
-      7,
+      11,
       0,
       "IMAGE"
     ],
     [
       3,
-      5,
+      6,
       0,
-      9,
+      13,
       0,
       "STRING"
     ],
     [
       4,
-      6,
+      10,
       0,
-      9,
+      13,
       1,
       "IMAGE"
     ],
     [
       5,
-      8,
+      12,
       0,
-      9,
+      13,
       2,
       "DECISION_QUESTIONS"
     ],
     [
       6,
-      9,
+      13,
       0,
-      10,
+      14,
       0,
       "STRING"
     ],
     [
       7,
-      9,
+      13,
       1,
-      11,
+      15,
       0,
       "STRING"
     ],
     [
       8,
-      6,
+      10,
       0,
-      12,
+      16,
       0,
       "IMAGE"
     ],
     [
       9,
+      13,
+      0,
+      16,
+      1,
+      "STRING"
+    ],
+    [
+      10,
+      7,
+      0,
+      8,
+      0,
+      "STRING"
+    ],
+    [
+      11,
+      8,
+      0,
       9,
       0,
+      "STRING"
+    ],
+    [
       12,
-      1,
+      7,
+      0,
+      16,
+      2,
       "STRING"
     ]
   ],
@@ -675,7 +857,7 @@
         0,
         30,
         400,
-        380
+        400
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -683,25 +865,25 @@
     },
     {
       "id": 2,
-      "title": "Frame",
+      "title": "Model",
       "bounding": [
-        430,
-        30,
+        0,
+        460,
         780,
-        684
+        552
       ],
-      "color": "#68688c",
+      "color": "#55746b",
       "font_size": 24,
       "flags": {}
     },
     {
       "id": 3,
-      "title": "Move",
+      "title": "Frame",
       "bounding": [
-        1240,
+        810,
         30,
         780,
-        836
+        704
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -709,12 +891,25 @@
     },
     {
       "id": 4,
+      "title": "Move",
+      "bounding": [
+        1620,
+        30,
+        780,
+        856
+      ],
+      "color": "#68688c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 5,
       "title": "Animate",
       "bounding": [
-        2050,
+        2430,
         30,
         400,
-        380
+        424
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -901,7 +1096,7 @@
               },
               {
                 "name": "temperature",
-                "type": "FLOAT",
+                "type": "COMFY_DYNAMICCOMBO_V3",
                 "link": null,
                 "widget": {
                   "name": "temperature"
@@ -1024,7 +1219,7 @@
               "openai/gpt-6-sol",
               "model default",
               0,
-              1.0,
+              "model default",
               "text",
               "model default",
               "alloy",
@@ -1400,7 +1595,7 @@
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 202,
-          "lastLinkId": 3,
+          "lastLinkId": 4,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -1412,7 +1607,7 @@
             -10,
             140,
             120,
-            40
+            60
           ]
         },
         "outputNode": {
@@ -1448,6 +1643,18 @@
               110,
               160
             ]
+          },
+          {
+            "id": "c12879a8-1e7b-5406-b1cb-5faca8c9d502",
+            "name": "model",
+            "type": "STRING",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              110,
+              180
+            ]
           }
         ],
         "outputs": [],
@@ -1471,7 +1678,7 @@
               {
                 "name": "model",
                 "type": "STRING",
-                "link": null,
+                "link": 4,
                 "widget": {
                   "name": "model"
                 }
@@ -1598,7 +1805,7 @@
               "Node name for S&R": "OpenRouterVideoGenerate"
             },
             "widgets_values": [
-              "minimax/hailuo-3-max",
+              "google/veo-3.1-fast",
               6,
               "768p",
               "16:9",
@@ -1699,6 +1906,14 @@
             "origin_slot": 1,
             "target_id": 201,
             "target_slot": 15,
+            "type": "STRING"
+          },
+          {
+            "id": 4,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 201,
+            "target_slot": 0,
             "type": "STRING"
           }
         ],

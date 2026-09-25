@@ -61,7 +61,7 @@ class TranscriptionOperation:
     async def send(self, configuration: Configuration) -> TranscriptionResult:
         """Check the model and send the clip; Whisper starts its text and segments with a space, so all is stripped."""
         request = self.request
-        await validate_model(request.model_id, "transcription", configuration)
+        await validate_model(request.model_id, "transcription", configuration.settings)
         body: dict[str, Json] = {"model": request.model_id, "input_audio": {"data": request.clip, "format": "wav"}}
         if request.language:
             body["language"] = request.language

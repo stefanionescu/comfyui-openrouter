@@ -1,9 +1,8 @@
-"""Image fields and counts."""
+"""Image fields and compression."""
 
 DEFAULT_COMPRESSION = 90
 MAX_COMPRESSION = 100
 COMPRESSED_FORMATS = ("jpeg", "webp")
-MAX_IMAGES = 10
 # The image fields in the order the node shows them, with every value OpenRouter's image models take.
 FIELD_VALUES = {
     "resolution": ("512", "1K", "2K", "4K"),
@@ -20,6 +19,10 @@ FIELD_VALUES = {
         "5:4",
         "9:16",
         "16:9",
+        "9:19.5",
+        "19.5:9",
+        "9:20",
+        "20:9",
         "9:21",
         "21:9",
         "1:4",
@@ -45,5 +48,4 @@ __all__ = [
     "FIELD_LABELS",
     "FIELD_VALUES",
     "MAX_COMPRESSION",
-    "MAX_IMAGES",
 ]

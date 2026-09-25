@@ -574,7 +574,7 @@
               },
               {
                 "name": "temperature",
-                "type": "FLOAT",
+                "type": "COMFY_DYNAMICCOMBO_V3",
                 "link": null,
                 "widget": {
                   "name": "temperature"
@@ -697,7 +697,7 @@
               "openai/gpt-6-luna",
               "model default",
               0,
-              1.0,
+              "model default",
               "text",
               "model default",
               "alloy",

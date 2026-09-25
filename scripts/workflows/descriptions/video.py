@@ -58,7 +58,6 @@ ANIMATE = Subgraph(
             "animate",
             f"{NODE_PREFIX}VideoGenerate",
             {
-                "model": "minimax/hailuo-3-max",
                 "duration": 6,
                 "resolution": "768p",
                 "aspect_ratio": "16:9",
@@ -69,7 +68,7 @@ ANIMATE = Subgraph(
     ),
     links=(("animate.video", "save.video"),),
     columns=(("animate",), ("save",)),
-    inputs=(("image", "animate.first_frame"), ("move", "animate.prompt")),
+    inputs=(("image", "animate.first_frame"), ("move", "animate.prompt"), ("model", "animate.model")),
     description=ANIMATE_TEXTS["animate_description"],
 )
 
@@ -87,6 +86,9 @@ ANIMATE_PRODUCT = Workflow(
             },
             title=SHARED_TEXTS["brief"],
         ),
+        Node("model", HostNode.TEXT, {"value": "minimax/hailuo-3-max"}, title=SHARED_TEXTS["model"]),
+        Node("listing", f"{NODE_PREFIX}ModelInfo"),
+        Node("listed", HostNode.PREVIEW, title=SHARED_TEXTS["info"]),
         Node(
             "draw",
             f"{NODE_PREFIX}ImageGenerate",
@@ -121,9 +123,15 @@ ANIMATE_PRODUCT = Workflow(
         ("move.summary", "summary.source"),
         ("draw.images", "animate.image"),
         ("move.move", "animate.move"),
+        ("model.STRING", "listing.model"),
+        ("listing.info", "listed.source"),
+        ("model.STRING", "animate.model"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("brief",),), note=ANIMATE_TEXTS["input"]),),
+        (
+            Group(SHARED_TEXTS["input"], (("brief",),), note=ANIMATE_TEXTS["input"]),
+            Group(SHARED_TEXTS["model"], (("model", "listing"), ("listed",)), note=ANIMATE_TEXTS["model"]),
+        ),
         (Group(SHARED_TEXTS["frame"], (("draw",), ("frame",)), STAGE_COLOUR, ANIMATE_TEXTS["frame"]),),
         (
             Group(

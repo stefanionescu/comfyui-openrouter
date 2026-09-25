@@ -41,10 +41,9 @@ var TEXT = {
 var LIMIT_LABELS = /* @__PURE__ */ new Map([
   ["max_download_megabytes", "maximum download size (MiB)"],
   ["max_upload_megabytes", "maximum upload size (MiB)"],
-  ["parallel_requests", "parallel requests"],
   ["request_timeout_seconds", "request timeout (seconds)"],
   ["video_check_interval_seconds", "video check interval (seconds)"],
-  ["video_retry_delay_minutes", "video retry delay (minutes)"],
+  ["identical_video_block_minutes", "identical video block (minutes)"],
   ["video_wait_minutes", "maximum video wait (minutes)"]
 ]);
 function message(key) {
@@ -79,6 +78,7 @@ function requestLocal(route, options) {
 
 // web/scripts/nodes.ts
 var dynamicControlInputs = /* @__PURE__ */ new Map([
+  ["OpenRouterChatAsk", ["temperature"]],
   ["OpenRouterDecisionAddQuestion", ["answer_type"]]
 ]);
 

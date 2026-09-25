@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
-from typing import TYPE_CHECKING
+from typing import cast, TYPE_CHECKING
 from ...types.parsing import parse_json
 from comfy_execution.graph import ExecutionBlocker
 from ...openrouter.chat.operation import ChatOperation
@@ -27,9 +27,11 @@ from ...config.generation.chat import (
     DEFAULT_VOICE,
     AUDIO_CHANNELS,
     MAX_TEMPERATURE,
+    SET_TEMPERATURE,
     TEMPERATURE_STEP,
-    MAX_OUTPUT_TOKENS,
+    TEMPERATURE_INPUT,
     DEFAULT_TEMPERATURE,
+    TEMPERATURE_VALUE_INPUT,
 )
 
 if TYPE_CHECKING:
@@ -69,18 +71,31 @@ CONTROLS = (
         display_name="max tokens",
         default=0,
         min=0,
-        max=MAX_OUTPUT_TOKENS,
         advanced=True,
         tooltip="The longest answer in tokens; 0 leaves it to the model.",
     ),
-    io.Float.Input(
-        "temperature",
-        default=DEFAULT_TEMPERATURE,
-        min=0,
-        max=MAX_TEMPERATURE,
-        step=TEMPERATURE_STEP,
-        advanced=True,
-        tooltip="Higher values vary the answer more. Sent only to models that take a temperature.",
+    io.DynamicCombo.Input(
+        TEMPERATURE_INPUT,
+        options=[
+            io.DynamicCombo.Option(MODEL_DEFAULT, []),
+            io.DynamicCombo.Option(
+                SET_TEMPERATURE,
+                [
+                    io.Float.Input(
+                        TEMPERATURE_VALUE_INPUT,
+                        display_name="value",
+                        default=DEFAULT_TEMPERATURE,
+                        min=0,
+                        max=MAX_TEMPERATURE,
+                        step=TEMPERATURE_STEP,
+                        advanced=True,
+                        tooltip="Higher values vary the answer more.",
+                    )
+                ],
+            ),
+        ],
+        tooltip="How much the answer varies. Set sends a value to models that take a temperature.",
+        extra_dict={"advanced": True},
     ),
     io.Combo.Input(
         "outputs",
@@ -109,6 +124,13 @@ CONTROLS = (
         tooltip="How OpenRouter reads attached PDFs.",
     ),
 )
+
+
+def _read_temperature(choice: Mapping[str, object] | None) -> float | None:
+    """Read the set temperature; model default, or no choice from a node that calls this one, sends none."""
+    if choice is None or choice[TEMPERATURE_INPUT] != SET_TEMPERATURE:
+        return None
+    return float(cast("float", choice[TEMPERATURE_VALUE_INPUT]))
 
 
 def _read_schema(text: str) -> Mapping[str, Json] | None:
@@ -190,6 +212,7 @@ class ChatAsk(PaidNode):
                 io.Custom(CONVERSATION_TYPE).Output("conversation", display_name="conversation"),
             ],
             is_input_list=True,
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -201,7 +224,7 @@ class ChatAsk(PaidNode):
         seed: int,
         reasoning_effort: str = MODEL_DEFAULT,
         max_tokens: int = 0,
-        temperature: float = DEFAULT_TEMPERATURE,
+        temperature: Mapping[str, object] | None = None,
         answer_schema: str = "",
         outputs: str = "text",
         aspect_ratio: str = MODEL_DEFAULT,
@@ -220,7 +243,7 @@ class ChatAsk(PaidNode):
         settings = ChatSettings(
             effort=reasoning_effort if reasoning_effort != MODEL_DEFAULT else None,
             max_tokens=max_tokens,
-            temperature=temperature,
+            temperature=_read_temperature(temperature),
             answer_schema=_read_schema(answer_schema),
             outputs=frozenset(OUTPUTS[outputs]),
             aspect_ratio=aspect_ratio if aspect_ratio != MODEL_DEFAULT else None,
@@ -244,7 +267,9 @@ class ChatAsk(PaidNode):
                 settings=settings,
                 options=options,
             )
-            return await send_request(ChatOperation(request), lambda result: _build_outputs(result, history, prompt))
+            return await send_request(
+                ChatOperation(request), lambda result: _build_outputs(result, history, prompt), cls.hidden.unique_id
+            )
 
         return await wait_for_task(asyncio.create_task(send_encoded()))
 

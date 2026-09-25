@@ -44,13 +44,15 @@ def _describe_question(question: Question) -> dict[str, Json]:
 
 
 def _read_answer(question: Question, reply: AnswerReply | None) -> Answer:
-    """Read the answer to one question, which must be of the question's own kind."""
+    """Read the answer to one question, which must be of the question's own kind; a choice must be one of its keys."""
     if reply is None or reply.type != WIRE_TYPES[type(question)]:
         raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
     if isinstance(question, YesNoQuestion) and reply.noul is not None:
         return YesNoAnswer(question.name, reply.noul)
-    if isinstance(question, ChoiceQuestion) and reply.choice is not None:
-        return ChoiceAnswer(question.name, reply.choice, reply.confidence or 0.0, dict(reply.probabilities))
+    keys = [key for key, _description in question.options] if isinstance(question, ChoiceQuestion) else []
+    if reply.choice in keys:
+        level = keys.index(reply.choice)
+        return ChoiceAnswer(question.name, reply.choice, level, reply.confidence or 0.0, dict(reply.probabilities))
     if isinstance(question, ScoreQuestion) and reply.score is not None:
         legend = {key: value if isinstance(value, str) else str(value) for key, value in reply.legend.items()}
         return ScoreAnswer(question.name, reply.score, reply.confidence or 0.0, dict(reply.probabilities), legend)
@@ -70,7 +72,7 @@ class DecisionOperation:
     async def send(self, configuration: Configuration) -> AnswerSet:
         """Check the model, send the situation and questions, and read the answers in question order."""
         request = self.request
-        await validate_model(request.model_id, "decisions", configuration)
+        await validate_model(request.model_id, "decisions", configuration.settings)
         questions: dict[str, Json] = {
             question.name: _describe_question(question) for question in request.questions.questions
         }

@@ -213,7 +213,6 @@ PNG = Subgraph(
             "png",
             GENERATE,
             {
-                "model": GPT_IMAGE,
                 "aspect_ratio": "1:1",
                 "background": "transparent",
                 "quality": "medium",
@@ -233,7 +232,7 @@ PNG = Subgraph(
         ("mask.IMAGE", "preview.images"),
     ),
     columns=(("png",), ("join", "mask"), ("save", "preview")),
-    inputs=(("prompt", "png.prompt"),),
+    inputs=(("prompt", "png.prompt"), ("model", "png.model")),
     description=LOGO_TEXTS["png_description"],
     previews=(("save", IMAGE_PREVIEW),),
 )
@@ -252,6 +251,9 @@ DESIGN_LOGO = Workflow(
             },
             title=SHARED_TEXTS["brand"],
         ),
+        Node("model", HostNode.TEXT, {"value": GPT_IMAGE}, title=SHARED_TEXTS["model"]),
+        Node("listing", f"{NODE_PREFIX}ModelInfo"),
+        Node("listed", HostNode.PREVIEW, title=SHARED_TEXTS["info"]),
         Node(
             "best",
             QUESTION,
@@ -275,9 +277,15 @@ DESIGN_LOGO = Workflow(
         ("prompts.summary", "summary.source"),
         ("prompts.prompt", "svg.prompt"),
         ("prompts.prompt", "png.prompt"),
+        ("model.STRING", "listing.model"),
+        ("listing.info", "listed.source"),
+        ("model.STRING", "png.model"),
     ),
     stacks=(
-        (Group(SHARED_TEXTS["input"], (("brand",),), note=LOGO_TEXTS["input"]),),
+        (
+            Group(SHARED_TEXTS["input"], (("brand",),), note=LOGO_TEXTS["input"]),
+            Group(SHARED_TEXTS["model"], (("model", "listing"), ("listed",)), note=LOGO_TEXTS["model"]),
+        ),
         (
             Group(
                 SHARED_TEXTS["prompts"],

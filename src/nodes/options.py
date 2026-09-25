@@ -12,18 +12,9 @@ from typing import override, TYPE_CHECKING
 from ..config.patterns import PROVIDER_SLUG_PATTERN
 from ..config.generation.inputs import MODEL_DEFAULT
 from ..types.errors import ErrorCode, OpenRouterError
+from ..config.messages.inputs import OPTIONS_JSON, PROVIDER_SLUG
 from ..config.namespace import NODE_PREFIX, SHARED_MENU, OPTIONS_TYPE
-from ..config.messages.inputs import OPTIONS_JSON, OPTIONS_SIZE, PROVIDER_SLUG
-from ..config.openrouter import (
-    MAX_PRICE,
-    PRICE_STEP,
-    SORT_CHOICES,
-    MAX_PROVIDERS,
-    YES_NO_CHOICES,
-    PRICE_PRECISION,
-    MAX_OPTION_BYTES,
-    COLLECTION_CHOICES,
-)
+from ..config.openrouter import PRICE_STEP, SORT_CHOICES, PRICE_PRECISION, COLLECTION_CHOICES
 
 if TYPE_CHECKING:
     from ..types import Json
@@ -32,7 +23,6 @@ PROVIDER = re.compile(PROVIDER_SLUG_PATTERN)
 # The routing dropdowns: input, label, choices, and tooltip.
 ROUTING_CHOICES = (
     ("sort", "sort", SORT_CHOICES, "Prefer the cheapest, fastest, or quickest-to-answer provider."),
-    ("allow_fallbacks", "allow fallbacks", YES_NO_CHOICES, "Whether another provider may answer."),
     (
         "data_collection",
         "data collection",
@@ -51,18 +41,17 @@ JSON_FIELDS = (
 )
 # The provider lists: input and tooltip.
 PROVIDER_LISTS = (
-    ("order", "Providers to try first, in this order."),
     ("only", "Use only these providers."),
     ("ignore", "Never use these providers."),
 )
-SLUG_TOOLTIP = "Slugs such as google-vertex, separated by commas. The model's page on OpenRouter lists them."
+SLUG_TOOLTIP = "Slugs such as google-vertex, separated by commas. Model: Info lists a model's providers."
 
 
 def _read_providers(text: str) -> tuple[str, ...]:
-    """Split a comma-separated provider list, checking each slug and the count."""
+    """Split a comma-separated provider list, checking each slug."""
     slugs = tuple(slug.strip() for slug in text.split(",") if slug.strip())
-    if len(slugs) > MAX_PROVIDERS or any(PROVIDER.match(slug) is None for slug in slugs):
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
+    if any(PROVIDER.match(slug) is None for slug in slugs):
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG)
     return slugs
 
 
@@ -70,10 +59,8 @@ def _read_fields(text: str, field: str) -> dict[str, Json]:
     """Read a JSON object field, or nothing when it is empty."""
     if not text.strip():
         return {}
-    if len(text.encode()) > MAX_OPTION_BYTES:
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTIONS_SIZE.format(field=field))
     try:
-        value = parse_json(text, max_bytes=MAX_OPTION_BYTES)
+        value = parse_json(text)
     except OpenRouterError:
         value = None
     if not isinstance(value, dict):
@@ -86,7 +73,13 @@ class RequestOptions(io.ComfyNode):
 
     @classmethod
     def define_schema(cls) -> io.Schema:
-        """Offer every routing field, price cap, and passthrough field OpenRouter accepts."""
+        """Offer every routing field, price cap, and passthrough field OpenRouter accepts, except fallbacks."""
+        provider = io.String.Input(
+            "provider",
+            default="",
+            tooltip="The one provider to use, as a slug such as google-vertex; empty lets OpenRouter choose. "
+            "Model: Info lists a model's providers.",
+        )
         providers = [
             io.String.Input(name, default="", tooltip=f"{tooltip} {SLUG_TOOLTIP}") for name, tooltip in PROVIDER_LISTS
         ]
@@ -100,7 +93,6 @@ class RequestOptions(io.ComfyNode):
                 display_name=f"max {kind} price",
                 default=0.0,
                 min=0.0,
-                max=MAX_PRICE,
                 step=PRICE_STEP,
                 advanced=True,
                 tooltip=f"Skip providers that charge more than this, in USD per 1M {kind} tokens; 0 sets no cap.",
@@ -124,7 +116,7 @@ class RequestOptions(io.ComfyNode):
             display_name="Request Options",
             category=SHARED_MENU,
             description="Choose providers, price caps, and extra request fields for any OpenRouter node.",
-            inputs=[*providers, *routing, zdr, *prices, *fields],
+            inputs=[provider, *providers, *routing, zdr, *prices, *fields],
             outputs=[io.Custom(OPTIONS_TYPE).Output("options", display_name="options")],
         )
 
@@ -133,11 +125,10 @@ class RequestOptions(io.ComfyNode):
     def execute(  # pyright: ignore[reportIncompatibleMethodOverride] -- reason: ComfyUI calls by schema.
         cls,
         *,
-        order: str,
+        provider: str,
         only: str,
         ignore: str,
         sort: str,
-        allow_fallbacks: str,
         data_collection: str,
         zdr: bool,
         max_prompt_price: float,
@@ -147,15 +138,15 @@ class RequestOptions(io.ComfyNode):
     ) -> io.NodeOutput:
         """Check each field before any request; the endpoint checks happen when a paid node merges them."""
         per_provider = _read_fields(provider_options, "provider options")
-        if any(PROVIDER.match(slug) is None for slug in per_provider):
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG.format(maximum=MAX_PROVIDERS))
+        chosen = provider.strip()
+        if any(PROVIDER.match(slug) is None for slug in (*per_provider, *((chosen,) if chosen else ()))):
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG)
         prices = {"prompt": max_prompt_price, "completion": max_completion_price}
         options = Options(
-            order=_read_providers(order),
+            provider=chosen or None,
             only=_read_providers(only),
             ignore=_read_providers(ignore),
             sort=sort if sort != MODEL_DEFAULT else None,
-            allow_fallbacks={"yes": True, "no": False}.get(allow_fallbacks),
             data_collection=data_collection if data_collection != MODEL_DEFAULT else None,
             zdr=True if zdr else None,
             max_price=MappingProxyType(

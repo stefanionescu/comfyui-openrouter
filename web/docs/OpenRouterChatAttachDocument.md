@@ -8,7 +8,7 @@ several of these nodes to attach several files.
 | Input       | What it takes                                                                  |
 | ----------- | ------------------------------------------------------------------------------ |
 | `file`      | A PDF, text, Markdown, CSV, or JSON file at the top of ComfyUI's input folder. |
-| `documents` | Documents from another **Chat: Attach Document**. One request takes up to 8.   |
+| `documents` | Documents from another **Chat: Attach Document**.                              |
 
 ## Outputs
 

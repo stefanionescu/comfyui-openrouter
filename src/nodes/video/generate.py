@@ -21,13 +21,10 @@ from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.videos import (
     RESOLUTIONS,
-    MAX_DURATION,
     UPSCALE_STEP,
     ASPECT_RATIOS,
     AUDIO_CHOICES,
-    MAX_CREATIVITY,
     CREATIVITY_STEP,
-    MAX_UPSCALE_FACTOR,
 )
 
 if TYPE_CHECKING:
@@ -73,7 +70,6 @@ CONTROLS = (
         "duration",
         default=0,
         min=0,
-        max=MAX_DURATION,
         tooltip="The length in seconds; 0 leaves it to the model.",
     ),
     io.Combo.Input("resolution", options=list(RESOLUTIONS), default=MODEL_DEFAULT),
@@ -84,7 +80,6 @@ CONTROLS = (
         display_name="upscale factor",
         default=0.0,
         min=0.0,
-        max=MAX_UPSCALE_FACTOR,
         step=UPSCALE_STEP,
         advanced=True,
         tooltip="How much an upscaling model enlarges the video; 0 sends nothing.",
@@ -93,7 +88,6 @@ CONTROLS = (
         "creativity",
         default=0.0,
         min=0.0,
-        max=MAX_CREATIVITY,
         step=CREATIVITY_STEP,
         advanced=True,
         tooltip="How freely an upscaling model adds detail; 0 sends nothing.",
@@ -141,6 +135,7 @@ class VideoGenerate(PaidNode):
             ],
             outputs=[io.Video.Output("video", display_name="video")],
             is_input_list=True,
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -195,6 +190,7 @@ class VideoGenerate(PaidNode):
             return await send_request(
                 VideoOperation(request, get_runtime().jobs),
                 lambda content: io.NodeOutput(InputImpl.VideoFromFile(memory.BytesIO(content))),
+                cls.hidden.unique_id,
             )
 
         return await wait_for_task(asyncio.create_task(send_encoded()))

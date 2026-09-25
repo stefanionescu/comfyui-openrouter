@@ -13,7 +13,6 @@ from ...comfy.media import encode_images
 from ..inputs import build_request_inputs
 from ...openrouter.rerank import RankOperation
 from comfy_execution.graph import ExecutionBlocker
-from ...config.generation.search import MAX_SEARCH_ITEMS
 from ...config.namespace import NODE_PREFIX, SEARCH_MENU
 from ...config.generation.models import DEFAULT_RANK_MODEL
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
@@ -46,7 +45,6 @@ class SearchRank(PaidNode):
                     display_name="top n",
                     default=0,
                     min=0,
-                    max=MAX_SEARCH_ITEMS,
                     tooltip="How many documents to keep; 0 keeps all.",
                 ),
                 *build_request_inputs(has_seed=False),
@@ -61,6 +59,7 @@ class SearchRank(PaidNode):
                 io.String.Output("scores", display_name="scores"),
             ],
             is_input_list=True,
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -99,7 +98,7 @@ class SearchRank(PaidNode):
                 top_n=top_n,
                 options=options,
             )
-            return await send_request(RankOperation(request), build_outputs)
+            return await send_request(RankOperation(request), build_outputs, cls.hidden.unique_id)
 
         return await wait_for_task(asyncio.create_task(send_encoded()))
 

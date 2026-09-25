@@ -16,12 +16,10 @@ from ..config.media import (
     WAV_FORMAT,
     RGB_CHANNELS,
     RGBA_CHANNELS,
-    MAX_IMAGE_SIDE,
     IMAGE_DIMENSIONS,
     WAV_SAMPLE_BYTES,
 )
 from ..config.messages.media import (
-    IMAGE_SIZE,
     AUDIO_BATCH,
     AUDIO_EMPTY,
     IMAGE_SHAPE,
@@ -44,11 +42,9 @@ if TYPE_CHECKING:
 
 
 def encode_images(image: torch.Tensor) -> tuple[str, ...]:
-    """Send every image of a batch as a PNG data URL, never shrinking it; the size limits refuse large images."""
+    """Send every image of a batch as a PNG data URL, never shrinking it; the upload limit refuses large images."""
     if image.ndim != IMAGE_DIMENSIONS or image.shape[-1] not in {RGB_CHANNELS, RGBA_CHANNELS}:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_SHAPE)
-    if max(image.shape[1], image.shape[2]) > MAX_IMAGE_SIDE:
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_SIZE.format(maximum=MAX_IMAGE_SIDE))
     if not bool(torch.isfinite(image).all()):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_PIXELS)
     try:

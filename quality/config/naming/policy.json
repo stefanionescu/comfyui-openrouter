@@ -122,6 +122,14 @@
             "reason": "ComfyUI calls this extension hook by name."
         },
         {
+            "path_regexes": ["^src/nodes/model\\.py$"],
+            "languages": ["python"],
+            "categories": ["classes"],
+            "names": ["ModelInfo"],
+            "allowed_banned_terms": ["info"],
+            "reason": "Other extensions call Model: Info by its node ID, OpenRouterModelInfo, which ComfyUI builds from this class name."
+        },
+        {
             "path_regexes": ["^src/(config|types|openrouter|nodes)/.*\\.py$"],
             "languages": ["python"],
             "categories": ["variables", "constants", "attributes", "parameters"],

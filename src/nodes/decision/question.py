@@ -9,26 +9,15 @@ from ...config.patterns import QUESTION_NAME_PATTERN
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.namespace import NODE_PREFIX, DECISION_MENU, QUESTIONS_TYPE
 from ...types.decisions import QuestionSet, ScoreQuestion, YesNoQuestion, ChoiceQuestion
+from ...config.generation.decisions import SCORE_ANSWER, CHOICE_ANSWER, YES_NO_ANSWER, ANSWER_TYPE_INPUT
 from ...config.messages.inputs import (
     SCORE_LEVELS,
     QUESTION_NAME,
     CHOICE_OPTIONS,
-    QUESTION_LIMIT,
     YES_NO_CRITERIA,
     QUESTION_REPEATED,
     QUESTION_INSTRUCTIONS,
     CHOICE_OPTION_REPEATED,
-)
-from ...config.generation.decisions import (
-    SCORE_ANSWER,
-    CHOICE_ANSWER,
-    MAX_QUESTIONS,
-    YES_NO_ANSWER,
-    MAX_SCORE_LEVELS,
-    MIN_SCORE_LEVELS,
-    ANSWER_TYPE_INPUT,
-    MAX_CHOICE_OPTIONS,
-    MIN_CHOICE_OPTIONS,
 )
 
 if TYPE_CHECKING:
@@ -48,9 +37,8 @@ def _build_choice(name: str, instructions: str, text: str) -> ChoiceQuestion:
         if any(key.strip() == known for known, _description in options):
             raise OpenRouterError(ErrorCode.INVALID_INPUT, CHOICE_OPTION_REPEATED.format(key=key.strip()))
         options.append((key.strip(), description.strip()))
-    if not MIN_CHOICE_OPTIONS <= len(options) <= MAX_CHOICE_OPTIONS or not all(key for key, _text in options):
-        message = CHOICE_OPTIONS.format(minimum=MIN_CHOICE_OPTIONS, maximum=MAX_CHOICE_OPTIONS)
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
+    if not options or not all(key for key, _text in options):
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, CHOICE_OPTIONS)
     return ChoiceQuestion(name, instructions, tuple(options))
 
 
@@ -61,9 +49,8 @@ def _build_question(name: str, instructions: str, answer_type: Mapping[str, obje
         return _build_choice(name, instructions, str(answer_type.get("options", "")))
     if kind == SCORE_ANSWER:
         levels = tuple(line.strip() for line in str(answer_type.get("levels", "")).splitlines() if line.strip())
-        if not MIN_SCORE_LEVELS <= len(levels) <= MAX_SCORE_LEVELS:
-            message = SCORE_LEVELS.format(minimum=MIN_SCORE_LEVELS, maximum=MAX_SCORE_LEVELS)
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
+        if not levels:
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, SCORE_LEVELS)
         return ScoreQuestion(name, instructions, levels)
     yes_means, no_means = str(answer_type.get("yes_means", "")).strip(), str(answer_type.get("no_means", "")).strip()
     if bool(yes_means) != bool(no_means):
@@ -150,8 +137,6 @@ class DecisionAddQuestion(io.ComfyNode):
             raise OpenRouterError(ErrorCode.INVALID_INPUT, QUESTION_REPEATED.format(name=name))
         if not instructions.strip():
             raise OpenRouterError(ErrorCode.INVALID_INPUT, QUESTION_INSTRUCTIONS)
-        if len(earlier) >= MAX_QUESTIONS:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, QUESTION_LIMIT.format(maximum=MAX_QUESTIONS))
         question = _build_question(name, instructions.strip(), answer_type)
         return io.NodeOutput(QuestionSet((*earlier, question)))
 

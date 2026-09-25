@@ -108,7 +108,8 @@ WORKFLOW_TEXTS = {
         "input": (
             KEY_STEP + "2. Describe the brand in **Brand**: its name, its character, and where the logo is used.\n"
             "3. Press **Run**. The logo is saved under `logo` as an SVG file and as a PNG with a transparent "
-            "background."
+            "background.\n\n"
+            "To draw the PNG with another model, change **Model**."
         ),
         "prompts": (
             "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev picks "
@@ -123,11 +124,18 @@ WORKFLOW_TEXTS = {
             "the transparency; white marks the transparent area."
         ),
         "png_description": "Draws the logo on a transparent background and saves it as a PNG.",
+        "model": (
+            "**Model** holds the model **PNG** draws with. **Model: Info** reads what OpenRouter lists for it, "
+            "for free and without the key, and **Info** shows it: the aspect ratios, qualities, and "
+            "backgrounds it takes. Change the model here, and check **Info** before you change **PNG**'s "
+            "settings."
+        ),
     },
     "video-01-animate-a-product-shot": {
         "input": (
             KEY_STEP + "2. Describe the shot in **Brief**.\n"
-            "3. Press **Run**. The video is saved under `video/openrouter`."
+            "3. Press **Run**. The video is saved under `video/openrouter`.\n\n"
+            "To animate with another video model, change **Model**."
         ),
         "frame": (
             "MAI-Image-2.6 Flash draws the first frame at 16:9, and **Frame** shows it. For another frame, "
@@ -143,6 +151,12 @@ WORKFLOW_TEXTS = {
             "OpenRouter still makes the video; download it with **video-02-recover-a-cancelled-video**."
         ),
         "animate_description": "Turns the frame into a video with the chosen move and saves it.",
+        "model": (
+            "**Model** holds the video model **Animate** uses. **Model: Info** reads what OpenRouter lists for "
+            "it, for free and without the key, and **Info** shows it: the durations, resolutions, and aspect "
+            "ratios it takes. Change the model here, and check **Info** before you change **Animate**'s "
+            "settings."
+        ),
     },
     "video-02-recover-a-cancelled-video": {
         "recover": (

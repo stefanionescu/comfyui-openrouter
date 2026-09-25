@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.inputs import OPTION_UNSUPPORTED, OPTION_RESERVED_FIELD
-from ..config.openrouter import ENDPOINT_LABELS, ROUTING_FIELDS, RESERVED_FIELDS
+from ..config.openrouter import ROUTING_LABELS, ENDPOINT_LABELS, ROUTING_FIELDS, RESERVED_FIELDS
 
 if TYPE_CHECKING:
     from ..types import Json, Endpoint
@@ -13,31 +13,44 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 
-def build_request_body(body: Mapping[str, Json], options: Options | None, endpoint: Endpoint) -> dict[str, Json]:
-    """Add the options this endpoint accepts, refusing any it does not; the node's own provider fields stay."""
-    merged = dict(body)
-    if options is None:
-        return merged
+def _build_routing(options: Options, endpoint: Endpoint) -> dict[str, Json]:
+    """Read the provider fields the options set, refusing one this endpoint does not accept.
+
+    The one provider goes as a single-item order, since OpenRouter tries each provider in an order in turn.
+    """
     routing: dict[str, Json] = {
-        "order": list(options.order) or None,
+        "order": [options.provider] if options.provider else None,
         "only": list(options.only) or None,
         "ignore": list(options.ignore) or None,
         "sort": options.sort,
-        "allow_fallbacks": options.allow_fallbacks,
         "data_collection": options.data_collection,
         "zdr": options.zdr,
         "max_price": dict(options.max_price) or None,
         "options": dict(options.provider_options) or None,
     }
-    provider: dict[str, Json] = {field: value for field, value in routing.items() if value is not None}
-    for field in provider:
+    chosen: dict[str, Json] = {field: value for field, value in routing.items() if value is not None}
+    for field in chosen:
         if field not in ROUTING_FIELDS[endpoint]:
             label = ENDPOINT_LABELS[endpoint]
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_UNSUPPORTED.format(endpoint=label, field=field))
-    for field in options.extra_fields:
-        if field in RESERVED_FIELDS[endpoint]:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_RESERVED_FIELD.format(field=field))
-    merged.update(options.extra_fields)
+            name = ROUTING_LABELS.get(field, field)
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_UNSUPPORTED.format(endpoint=label, field=name))
+    return chosen
+
+
+def build_request_body(body: Mapping[str, Json], options: Options | None, endpoint: Endpoint) -> dict[str, Json]:
+    """Add the options this endpoint accepts, refusing any it does not; the node's own provider fields stay.
+
+    Every endpoint that takes provider routing gets allow_fallbacks false, so OpenRouter never moves a request to
+    another provider. Extra fields cannot set provider routing, since the node reserves it.
+    """
+    merged = dict(body)
+    provider: dict[str, Json] = {"allow_fallbacks": False} if "allow_fallbacks" in ROUTING_FIELDS[endpoint] else {}
+    if options is not None:
+        for field in options.extra_fields:
+            if field in RESERVED_FIELDS[endpoint]:
+                raise OpenRouterError(ErrorCode.INVALID_INPUT, OPTION_RESERVED_FIELD.format(field=field))
+        merged.update(options.extra_fields)
+        provider.update(_build_routing(options, endpoint))
     if provider:
         earlier = merged.get("provider")
         merged["provider"] = {**(earlier if isinstance(earlier, dict) else {}), **provider}

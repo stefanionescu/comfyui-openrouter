@@ -11,10 +11,10 @@ several questions.
 | `answer_type`           | **yes or no**, **one choice** from a list of options, or **score** on ordered levels. |
 | `answer_type.yes_means` | What yes means. Describe both yes and no, or neither.                                 |
 | `answer_type.no_means`  | What no means.                                                                        |
-| `answer_type.options`   | 2 to 32 options, one per line, as `key: description`. The description is optional.    |
-| `answer_type.levels`    | 2 to 10 levels, one per line, lowest first.                                           |
+| `answer_type.options`   | One option per line, as `key: description`. The description is optional.              |
+| `answer_type.levels`    | One level per line, lowest first.                                                     |
 | `instructions`          | The question.                                                                         |
-| `questions`             | Questions from another **Decision: Add Question**. One decision takes up to 32.       |
+| `questions`             | Questions from another **Decision: Add Question**.                                    |
 
 ## Outputs
 

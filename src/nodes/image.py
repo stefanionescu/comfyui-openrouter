@@ -18,7 +18,6 @@ from ..config.generation.models import DEFAULT_IMAGE_MODEL
 from ..comfy.execution import wait_for_thread, send_request, wait_for_task
 from ..config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
 from ..config.generation.images import (
-    MAX_IMAGES,
     FIELD_LABELS,
     FIELD_VALUES,
     MAX_COMPRESSION,
@@ -48,7 +47,7 @@ FIELDS = (
         advanced=True,
         tooltip="JPEG and WebP quality; higher keeps more detail.",
     ),
-    io.Int.Input("count", default=1, min=1, max=MAX_IMAGES, tooltip="How many images to make."),
+    io.Int.Input("count", default=1, min=1, tooltip="How many images to make, within what the model lists."),
     io.Image.Input(
         "references",
         optional=True,
@@ -84,6 +83,7 @@ class ImageGenerate(PaidNode):
                 io.SVG.Output("svg", display_name="svg"),
             ],
             is_input_list=True,
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -130,7 +130,7 @@ class ImageGenerate(PaidNode):
                 fields=fields,
                 options=options,
             )
-            return await send_request(ImageOperation(request), build_outputs)
+            return await send_request(ImageOperation(request), build_outputs, cls.hidden.unique_id)
 
         def build_outputs(result: ImageResult) -> io.NodeOutput:
             """Decode the raster images with their masks; hand SVG files to ComfyUI's own SVG type."""

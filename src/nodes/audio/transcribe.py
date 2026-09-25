@@ -75,6 +75,7 @@ class AudioTranscribe(PaidNode):
                 io.String.Output("subtitles", display_name="subtitles"),
                 io.String.Output("words", display_name="words"),
             ],
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -112,6 +113,7 @@ class AudioTranscribe(PaidNode):
                         ensure_ascii=False,
                     ),
                 ),
+                cls.hidden.unique_id,
             )
 
         return await wait_for_task(asyncio.create_task(send_encoded()))

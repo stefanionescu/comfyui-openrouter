@@ -1,9 +1,8 @@
-"""Run paid requests with ComfyUI's progress bar, its cancel, and the parallel request limit."""
+"""Run paid requests with ComfyUI's progress bar and its cancel."""
 
 from __future__ import annotations
 
 import asyncio
-import weakref
 from .runtime import get_runtime
 from typing import TYPE_CHECKING
 from comfy_api.latest import ComfyAPI
@@ -17,9 +16,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from ..openrouter.operation import Operation
 
-# One call limit per event loop, shared by every node.
-_LIMITS: weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Semaphore] = weakref.WeakKeyDictionary()
-
 
 async def _wait_shielded[T](task: asyncio.Task[T]) -> bool:
     """Wait until the task settles despite cancellation, and report whether cancellation arrived."""
@@ -32,18 +28,6 @@ async def _wait_shielded[T](task: asyncio.Task[T]) -> bool:
         except Exception:  # noqa: BLE001 -- reason: The caller reads the settled task's failure after resolving cancellation.
             break
     return cancelled
-
-
-def _read_request_limit(capacity: int) -> asyncio.Semaphore:
-    """Return the shared request limit of the running event loop.
-
-    ComfyUI runs each queued prompt on a new event loop, so a changed limit applies from the next prompt.
-    """
-    loop = asyncio.get_running_loop()
-    limit = _LIMITS.get(loop)
-    if limit is None:
-        limit = _LIMITS[loop] = asyncio.Semaphore(capacity)
-    return limit
 
 
 async def wait_for_thread[T](work: Callable[[], T]) -> T:
@@ -69,23 +53,27 @@ async def wait_for_task[T](task: asyncio.Task[T]) -> T:
 
 
 async def send_request[Result](
-    operation: Operation[Result], build_outputs: Callable[[Result], io.NodeOutput]
+    operation: Operation[Result], build_outputs: Callable[[Result], io.NodeOutput], node_id: str | None
 ) -> io.NodeOutput:
-    """Validate, send within the parallel limit, and build the node's outputs, showing only ComfyUI's progress bar.
+    """Validate, send, and build the node's outputs, showing only ComfyUI's progress bar.
 
+    The bar is the node's own: a node that another node calls has no ID, so it leaves the calling node's bar alone.
     Building the outputs decodes media, which blocks, so it runs in a worker thread.
     """
     progress = ComfyAPI().execution
-    await progress.set_progress(0, PROGRESS_STEPS)
+    if node_id is not None:
+        await progress.set_progress(0, PROGRESS_STEPS, node_id=node_id)
     configuration = await asyncio.to_thread(get_runtime().configuration.read_snapshot)
     operation.validate(configuration.settings)
-    await progress.set_progress(1, PROGRESS_STEPS)
+    if node_id is not None:
+        await progress.set_progress(1, PROGRESS_STEPS, node_id=node_id)
     try:
-        async with _read_request_limit(configuration.settings.parallel_requests):
-            result = await wait_for_task(asyncio.create_task(operation.send(configuration)))
-        await progress.set_progress(2, PROGRESS_STEPS)
+        result = await wait_for_task(asyncio.create_task(operation.send(configuration)))
+        if node_id is not None:
+            await progress.set_progress(2, PROGRESS_STEPS, node_id=node_id)
         outputs = await wait_for_thread(lambda: build_outputs(result))
-        await progress.set_progress(PROGRESS_STEPS, PROGRESS_STEPS)
+        if node_id is not None:
+            await progress.set_progress(PROGRESS_STEPS, PROGRESS_STEPS, node_id=node_id)
     except OpenRouterError as error:
         if error.code is ErrorCode.INTERRUPTED:
             raise InterruptProcessingException from None

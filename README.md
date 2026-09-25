@@ -128,7 +128,7 @@ After an update, open the examples in a new tab to get the new versions.
 
 The nodes are under **OpenRouter** in the node menu, and each has a help page.
 
-![Node map. Chat: Attach Document feeds Chat: Ask. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Video: Download collects a job Video: Generate left running, so no link joins them. Paid nodes have an indigo bar.](docs/images/node-map.svg)
+![Node map. Chat: Attach Document feeds Chat: Ask. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Model: Info stands alone and needs no key. Video: Download collects a job Video: Generate left running, so no link joins them. Paid nodes have an indigo bar.](docs/images/node-map.svg)
 
 | Node                                                                | What it does                                                           | Paid |
 | ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
@@ -145,6 +145,7 @@ The nodes are under **OpenRouter** in the node menu, and each has a help page.
 | [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, the questions about a situation.   | Yes  |
 | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                     | No   |
 | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for paid nodes. | No   |
+| [Model: Info](web/docs/OpenRouterModelInfo.md)                      | Shows what a model reads, makes, and accepts, as JSON.                 | No   |
 
 The decision nodes use OpenRouter's alpha decisions API
 (`/api/alpha/decisions`), which OpenRouter may still change.
@@ -153,7 +154,7 @@ The decision nodes use OpenRouter's alpha decisions API
 
 Each paid node takes any model ID from
 [openrouter.ai/models](https://openrouter.ai/models), with an optional variant
-suffix such as `:nitro`.
+suffix such as `:nitro`. **Model: Info** shows what any model takes.
 
 ![Chat: Ask on the canvas: sockets for a conversation, documents, images, videos, audio, and options; then the model field set to google/gemini-3.5-flash, the reasoning effort, max tokens, temperature, outputs, aspect ratio, voice, PDF engine, seed, and run number; and the answer schema, prompt, and system prompt boxes at the bottom.](docs/images/chat-ask-node.png)
 
@@ -171,10 +172,9 @@ several **Load Image** nodes with **Create List**.
 
 1. The node checks its inputs and the model, and stops before anything is
    paid.
-2. At most **parallel requests** requests run at once; the default is 4.
-3. It sends one request with your key. A video job is recorded, checked until
-   ready, and downloaded.
-4. Nodes connected to an empty output, such as `images` from a text-only model,
+2. It sends one request with your key, to one provider. Nothing is sent twice.
+   A video job is recorded, checked until ready, and downloaded.
+3. Nodes connected to an empty output, such as `images` from a text-only model,
    are skipped.
 
 The [advanced guide](ADVANCED.md#what-each-node-sends) lists what each node

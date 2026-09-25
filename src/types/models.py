@@ -23,13 +23,17 @@ class ModelEndpoint(Reply):
     """One provider that serves the model.
 
     Attributes:
+        tag: The provider's slug, which provider routing takes.
         supported_parameters: The request fields this provider accepts.
+        context_length: The most tokens this provider reads, when it says.
         max_completion_tokens: The longest answer this provider gives, when it says.
         supports_voice_cloning: Whether this provider copies a voice from a sample.
 
     """
 
+    tag: str = ""
     supported_parameters: tuple[str, ...] = ()
+    context_length: int | None = None
     max_completion_tokens: int | None = None
     supports_voice_cloning: bool = False
 
@@ -143,16 +147,20 @@ class Model:
         inputs: What the model reads; empty when OpenRouter does not say.
         outputs: What the model makes.
         parameters: The request fields at least one of its providers accepts.
-        max_tokens: The longest answer any provider gives, or 0 when none says.
+        context_length: The most tokens any provider reads, or None when none says.
+        max_completion_tokens: The longest answer any provider gives, or None when none says.
         has_voice_cloning: Whether any provider copies a voice from a sample.
+        providers: The slugs of the providers that serve it, in OpenRouter's order.
 
     """
 
     inputs: frozenset[str]
     outputs: frozenset[str]
     parameters: frozenset[str]
-    max_tokens: int
+    context_length: int | None
+    max_completion_tokens: int | None
     has_voice_cloning: bool
+    providers: tuple[str, ...]
 
 
 @dataclass(frozen=True, slots=True)

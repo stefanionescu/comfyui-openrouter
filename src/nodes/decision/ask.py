@@ -8,14 +8,14 @@ from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.parsing import parse_json
 from ..inputs import build_request_inputs
+from ...config.messages.inputs import SITUATION_EMPTY
 from ...openrouter.decisions import DecisionOperation
 from ...types.errors import ErrorCode, OpenRouterError
 from ...comfy.execution import send_request, wait_for_task
+from ...config.generation.decisions import DEFAULT_THRESHOLD
 from ...config.generation.models import DEFAULT_DECISION_MODEL
 from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
-from ...config.messages.inputs import SITUATION_EMPTY, SITUATION_LENGTH
 from ...types.decisions import AnswerSet, YesNoAnswer, ChoiceAnswer, DecisionRequest
-from ...config.generation.decisions import DEFAULT_THRESHOLD, MAX_SITUATION_CHARACTERS
 from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU, QUESTIONS_TYPE
 
 if TYPE_CHECKING:
@@ -25,11 +25,12 @@ if TYPE_CHECKING:
 
 
 def _read_state(situation: str) -> Json:
-    """Send a JSON object or array as JSON, and anything else as text, so a person can paste either."""
+    """Send a JSON object or array as JSON, and anything else as text, so a person can paste either.
+
+    OpenRouter refuses a situation longer than the model reads, so the length is left to it.
+    """
     if not situation.strip():
         raise OpenRouterError(ErrorCode.INVALID_INPUT, SITUATION_EMPTY)
-    if len(situation) > MAX_SITUATION_CHARACTERS:
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, SITUATION_LENGTH.format(maximum=MAX_SITUATION_CHARACTERS))
     try:
         state = parse_json(situation)
     except OpenRouterError:
@@ -82,6 +83,7 @@ class DecisionAsk(PaidNode):
                 io.Custom(ANSWERS_TYPE).Output("answers", display_name="answers"),
                 io.String.Output("summary", display_name="summary"),
             ],
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -101,7 +103,11 @@ class DecisionAsk(PaidNode):
             options=options,
         )
         task = asyncio.create_task(
-            send_request(DecisionOperation(request), lambda answers: io.NodeOutput(answers, _describe_answers(answers)))
+            send_request(
+                DecisionOperation(request),
+                lambda answers: io.NodeOutput(answers, _describe_answers(answers)),
+                cls.hidden.unique_id,
+            )
         )
         return await wait_for_task(task)
 

@@ -16,7 +16,6 @@ JOB_FOLDER_NAME = "jobs"
 JOB_FILE_SUFFIX = ".json"
 # An uncertain submission is recorded under this prefix and its request hash, since it has no job ID.
 UNCERTAIN_PREFIX = "uncertain-"
-MAX_LISTED_JOBS = 100
 MAX_JOB_FILE_BYTES = 16_384
 
 __all__ = [
@@ -25,7 +24,6 @@ __all__ = [
     "JOB_FOLDER_NAME",
     "KEY_VARIABLE",
     "MAX_JOB_FILE_BYTES",
-    "MAX_LISTED_JOBS",
     "MAX_SETTINGS_FILE_BYTES",
     "PRIVATE_FOLDER_MODE",
     "SETTINGS_FILE_NAME",

@@ -13,13 +13,12 @@ from ...types.chat import ChatResult
 from pydantic import ValidationError
 from ..operation import validate_upload_size
 from ..transport import send_json, download_media
+from ...config.messages.inputs import PROMPT_EMPTY
 from ..failures import sanitize_reason, read_failure
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.replies import ChatReply, ErrorReply, ChatMessage
 from ...config.openrouter import CHAT_URL, MEDIA_LABELS, SCHEMA_PARAMETERS
 from ...config.messages.models import MODEL_OUTPUT, MODEL_SCHEMA, MODEL_TOKENS
-from ...config.generation.chat import MAX_PROMPT_CHARACTERS, MAX_CONVERSATION_TURNS
-from ...config.messages.inputs import PROMPT_EMPTY, PROMPT_LENGTH, CONVERSATION_LIMIT
 from ...config.messages.run import ANSWER_CUT, REPLY_EMPTY, MODEL_REFUSED, ANSWER_FILTERED, REPLY_UNREADABLE
 
 if TYPE_CHECKING:
@@ -37,14 +36,10 @@ class ChatOperation:
         self.request = request
 
     def validate(self, settings: Settings) -> None:
-        """Refuse an empty or oversized prompt, a long conversation, and too much media."""
+        """Refuse an empty prompt and media over the upload limit."""
         request = self.request
         if not request.prompt.strip():
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
-        if len(request.prompt) > MAX_PROMPT_CHARACTERS:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_LENGTH.format(maximum=MAX_PROMPT_CHARACTERS))
-        if len(request.conversation.turns) > MAX_CONVERSATION_TURNS:
-            raise OpenRouterError(ErrorCode.INVALID_INPUT, CONVERSATION_LIMIT.format(maximum=MAX_CONVERSATION_TURNS))
         documents = (document.file_url or "" for document in request.documents)
         validate_upload_size((*request.image_urls, *request.video_urls, *request.audio_clips, *documents), settings)
 
@@ -52,9 +47,8 @@ class ChatOperation:
         """Check the model, then send; an answer cut at the output token limit is returned as it is."""
         request = self.request
         media = {"image": request.image_urls, "video": request.video_urls, "audio": request.audio_clips}
-        model = await validate_model(
-            request.model_id, "chat", configuration, [kind for kind, items in media.items() if items]
-        )
+        inputs = [kind for kind, items in media.items() if items]
+        model = await validate_model(request.model_id, "chat", configuration.settings, inputs)
         _validate_settings(request, model)
         body = build_body(request, model.parameters)
         if "audio" in request.settings.outputs:
@@ -68,7 +62,7 @@ class ChatOperation:
             text = "".join(str(part.get("text", "")) for part in parts if part.get("type") == "text")
         else:
             text = message.content or ""
-        images = tuple([await _read_image(item.image_url.url, configuration) for item in message.images])
+        images = tuple([await _read_image(item.image_url.url, configuration.settings) for item in message.images])
         images = tuple(image for image in images if image)
         if not text and not images:
             ended = {"length": ANSWER_CUT, "content_filter": ANSWER_FILTERED}.get(finish_reason or "", REPLY_EMPTY)
@@ -85,8 +79,8 @@ def _validate_settings(request: ChatRequest, model: Model) -> None:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
     if settings.answer_schema is not None and model.parameters.isdisjoint(SCHEMA_PARAMETERS):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_SCHEMA.format(model=request.model_id))
-    if settings.max_tokens > model.max_tokens > 0:
-        message = MODEL_TOKENS.format(model=request.model_id, maximum=model.max_tokens)
+    if model.max_completion_tokens is not None and settings.max_tokens > model.max_completion_tokens:
+        message = MODEL_TOKENS.format(model=request.model_id, maximum=model.max_completion_tokens)
         raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
 
 
@@ -109,10 +103,10 @@ def _read_message(document: Json) -> tuple[ChatMessage, str | None]:
     return message, choice.finish_reason
 
 
-async def _read_image(url: str, configuration: Configuration) -> bytes:
+async def _read_image(url: str, settings: Settings) -> bytes:
     """Read an image a chat model made: a data URL, or an address on a provider's host read without the key."""
     if url.startswith("https://"):
-        return await download_media(url, configuration)
+        return await download_media(url, settings)
     if not url.startswith("data:") or "," not in url:
         return b""
     try:

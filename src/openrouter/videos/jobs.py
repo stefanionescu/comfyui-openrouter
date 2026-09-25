@@ -17,7 +17,7 @@ from ...config.units import SECONDS_PER_MINUTE
 from ...config.messages.videos import JOB_UNKNOWN
 from ...storage.files import save_file, read_file
 from ...types.errors import ErrorCode, OpenRouterError
-from ...config.storage import JOB_FILE_SUFFIX, MAX_LISTED_JOBS, MAX_JOB_FILE_BYTES
+from ...config.storage import JOB_FILE_SUFFIX, MAX_JOB_FILE_BYTES
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -59,10 +59,10 @@ class JobStore:
             # bearer:disable python_lang_path_traversal
             path.unlink(missing_ok=True)
 
-    def find(self, request_hash: str, delay_minutes: int) -> VideoJob | None:
-        """Return the accepted job for an identical request, or an uncertain one still within the retry delay.
+    def find(self, request_hash: str, block_minutes: int) -> VideoJob | None:
+        """Return the accepted job for an identical request, or an uncertain one still within the block.
 
-        An uncertain record older than the delay is deleted, so the identical request may be sent again.
+        An uncertain record older than the block is deleted, so the identical request may be sent again.
         """
         now = datetime.now(UTC)
         with self._lock:
@@ -72,7 +72,7 @@ class JobStore:
                 if job.status == "accepted":
                     return job
                 age = (now - datetime.fromisoformat(job.submitted_at)).total_seconds()
-                if age < delay_minutes * SECONDS_PER_MINUTE:
+                if age < block_minutes * SECONDS_PER_MINUTE:
                     return job
                 (self.directory / f"{job.name}{JOB_FILE_SUFFIX}").unlink(missing_ok=True)
         return None
@@ -81,7 +81,7 @@ class JobStore:
         """List the accepted jobs, newest first."""
         with self._lock:
             jobs = [job for job in self._read_all() if job.status == "accepted"]
-        return sorted(jobs, key=lambda job: job.submitted_at, reverse=True)[:MAX_LISTED_JOBS]
+        return sorted(jobs, key=lambda job: job.submitted_at, reverse=True)
 
     def read(self, job_id: str) -> VideoJob:
         """Return the accepted job with this ID."""

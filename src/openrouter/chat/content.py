@@ -61,7 +61,7 @@ def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Js
     if settings.max_tokens > 0:
         field = "max_tokens" if "max_completion_tokens" not in parameters else "max_completion_tokens"
         body[field] = settings.max_tokens
-    if "temperature" in parameters:
+    if settings.temperature is not None and "temperature" in parameters:
         body["temperature"] = settings.temperature
     if "seed" in parameters:
         body["seed"] = request.seed

@@ -22,10 +22,8 @@ def _build_outputs(answer: Answer, threshold: float) -> tuple[str, bool, float, 
         return "yes" if is_yes else "no", is_yes, answer.probability, answer.probability, int(is_yes), confidence
     if isinstance(answer, ChoiceAnswer):
         probability = answer.probabilities.get(answer.choice, answer.confidence)
-        keys = list(answer.probabilities)
-        level = keys.index(answer.choice) if answer.choice in keys else 0
         is_yes = answer.confidence >= threshold
-        return answer.choice, is_yes, probability, probability, level, answer.confidence
+        return answer.choice, is_yes, probability, probability, answer.level, answer.confidence
     level = max(0, round(answer.score))
     probability = answer.probabilities.get(str(level), 0.0)
     text = answer.legend.get(str(level), str(level))

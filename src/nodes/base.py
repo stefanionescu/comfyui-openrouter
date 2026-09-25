@@ -38,13 +38,20 @@ class PaidNode(io.ComfyNode):
         inputs.pop(RUN_NUMBER_INPUT, None)
         if cls.list_inputs:
             for name, value in inputs.items():
-                if name in cls.list_inputs:
-                    continue
-                values = cast("list[object]", value)
-                if len(values) != 1:
-                    raise OpenRouterError(ErrorCode.INVALID_INPUT, SINGLE_VALUE.format(name=name.replace("_", " ")))
-                inputs[name] = values[0]
+                if name not in cls.list_inputs:
+                    inputs[name] = _read_single(name, value)
         return await cls.send(**inputs)
+
+
+def _read_single(name: str, value: object) -> object:
+    """Take the one value an input list holds; a dynamic dropdown holds one list for each of its fields."""
+    if isinstance(value, dict):
+        fields = cast("dict[str, object]", value)
+        return {field: _read_single(name, item) for field, item in fields.items()}
+    values = cast("list[object]", value)
+    if len(values) != 1:
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, SINGLE_VALUE.format(name=name.replace("_", " ")))
+    return values[0]
 
 
 __all__ = ["PaidNode"]

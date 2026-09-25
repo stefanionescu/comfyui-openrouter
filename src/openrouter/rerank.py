@@ -30,7 +30,7 @@ class RankOperation:
         self.request = request
 
     def validate(self, settings: Settings) -> None:
-        """Refuse an empty query, no documents, too many, and too much media."""
+        """Refuse an empty query, no documents, and media over the upload limit."""
         request = self.request
         if not request.query.strip():
             raise OpenRouterError(ErrorCode.INVALID_INPUT, QUERY_EMPTY)
@@ -40,7 +40,8 @@ class RankOperation:
     async def send(self, configuration: Configuration) -> RankResult:
         """Check the model and send the query and documents; the reply lists them highest relevance first."""
         request = self.request
-        await validate_model(request.model_id, "rerank", configuration, ["image"] if request.image_urls else [])
+        inputs = ["image"] if request.image_urls else []
+        await validate_model(request.model_id, "rerank", configuration.settings, inputs)
         documents: list[Json] = [*request.texts, *({"image": url} for url in request.image_urls)]
         body: dict[str, Json] = {"model": request.model_id, "query": request.query, "documents": documents}
         if request.top_n > 0:

@@ -89,6 +89,7 @@ class AudioSpeak(PaidNode):
                 io.String.Input("text", multiline=True, default="", tooltip="What to say."),
             ],
             outputs=[io.Audio.Output("audio", display_name="audio")],
+            hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
@@ -122,7 +123,7 @@ class AudioSpeak(PaidNode):
                 sample_transcript=sample_transcript,
                 options=options,
             )
-            return await send_request(SpeechOperation(request), _build_outputs)
+            return await send_request(SpeechOperation(request), _build_outputs, cls.hidden.unique_id)
 
         return await wait_for_task(asyncio.create_task(send_encoded()))
 

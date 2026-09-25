@@ -83,6 +83,7 @@ class ChoiceAnswer:
     Attributes:
         name: The question's name.
         choice: The chosen key.
+        level: The chosen key's place in the question's options, the first being 0.
         confidence: How sure the model is.
         probabilities: The probability of every key.
 
@@ -90,6 +91,7 @@ class ChoiceAnswer:
 
     name: str
     choice: str
+    level: int
     confidence: float
     probabilities: Mapping[str, float]
 

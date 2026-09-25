@@ -1,7 +1,5 @@
 """Image, audio, and video formats the extension sends and reads."""
 
-MAX_IMAGE_SIDE = 8192
-
 # The rank of a ComfyUI IMAGE tensor: batch, height, width, channels.
 IMAGE_DIMENSIONS = 4
 
@@ -28,7 +26,6 @@ WAV_SAMPLE_BYTES = 2
 
 __all__ = [
     "IMAGE_DIMENSIONS",
-    "MAX_IMAGE_SIDE",
     "MP4_URL_PREFIX",
     "RGBA_CHANNELS",
     "RGB_CHANNELS",
