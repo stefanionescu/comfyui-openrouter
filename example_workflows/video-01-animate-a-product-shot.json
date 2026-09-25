@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev, TypeSafe's decision model, picks the one that best suits a six-second teaser in **best**, and **Move** shows it."
+        "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev picks the one that best suits a six-second teaser in **best**, and **Move** shows it."
       ],
       "title": "Note"
     },

@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev, TypeSafe's decision model, finds it distorted."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it distorted."
       ],
       "title": "Start Here"
     },

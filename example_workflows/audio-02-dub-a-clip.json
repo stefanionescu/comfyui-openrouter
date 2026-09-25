@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev, TypeSafe's decision model, compares the two and answers **accurate**: does the translation say the same, with nothing added or left out?"
+        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and answers **accurate**: does the translation say the same, with nothing added or left out?"
       ],
       "title": "Note"
     },

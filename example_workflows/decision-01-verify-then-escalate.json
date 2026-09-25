@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Paste your notes in **Notes** and type the question in **Question**.\n3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev, TypeSafe's decision model, doubts it."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Paste your notes in **Notes** and type the question in **Question**.\n3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev doubts it."
       ],
       "title": "Start Here"
     },

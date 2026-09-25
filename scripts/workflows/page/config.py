@@ -25,7 +25,7 @@ INPUT_COLOUR = "#55746b"
 STAGE_COLOUR = "#68688c"
 # Nodes that send paid requests are drawn in these colours.
 PAID_COLOURS = {"color": "#432", "bgcolor": "#653"}
-# The page mode of a bypassed node: it passes its inputs through and runs nothing.
+# The page mode of a bypassed node.
 BYPASS_MODE = 4
 # Node IDs are one space across a workflow, so each subgraph numbers its nodes from its own hundred.
 SUBGRAPH_ID_STEP = 100

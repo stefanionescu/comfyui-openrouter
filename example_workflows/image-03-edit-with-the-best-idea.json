@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev, TypeSafe's decision model, reads the campaign and the ideas. **best** picks one, and **on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction."
+        "Jev reads the campaign and the ideas. **best** picks one, and **on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction."
       ],
       "title": "Note"
     },

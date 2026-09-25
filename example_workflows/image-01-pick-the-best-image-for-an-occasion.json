@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev, TypeSafe's decision model, finds a flaw."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev finds a flaw."
       ],
       "title": "Start Here"
     },

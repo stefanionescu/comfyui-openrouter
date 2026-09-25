@@ -18,7 +18,7 @@ WORKFLOW_TEXTS = {
         ),
         "write_description": "Writes the listing from the photos and the spec sheet, and lists the spec's facts.",
         "check": (
-            "Jev, TypeSafe's decision model, compares the listing with the spec facts and answers two questions: "
+            "Jev compares the listing with the spec facts and answers two questions: "
             "**supported** asks whether every claim is backed, and **persuasive** scores the copy.\n\n"
             "The listing is saved in the **approved** folder when every claim is supported, and in **review** "
             "otherwise."
@@ -37,7 +37,7 @@ WORKFLOW_TEXTS = {
         ),
         "caption_description": "Writes one caption per image in one request and saves them as one JSON file.",
         "check": (
-            "Jev, TypeSafe's decision model, reads the captions and answers **valid**: is every caption one "
+            "Jev reads the captions and answers **valid**: is every caption one "
             "sentence about visible content, without opinions or guesses?\n\n"
             "**Summary** gives the verdict, so you can fix the captions before training."
         ),
@@ -46,7 +46,7 @@ WORKFLOW_TEXTS = {
         "input": (
             KEY_STEP + "2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n"
             "3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when "
-            "Jev, TypeSafe's decision model, finds a flaw."
+            "Jev finds a flaw."
         ),
         "draw": (
             "GPT Image 2.5 Flare, MAI-Image-2.6 Flash, and Recraft V4.1 Flash each draw one image from the "
@@ -66,8 +66,8 @@ WORKFLOW_TEXTS = {
     "image-02-reject-distorted-images": {
         "input": (
             KEY_STEP + "2. Describe the picture in **Subject**.\n"
-            "3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev, "
-            "TypeSafe's decision model, finds it distorted."
+            "3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it "
+            "distorted."
         ),
         "draw": ("MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change **seed** and run again."),
         "inspect": (
@@ -94,7 +94,7 @@ WORKFLOW_TEXTS = {
         ),
         "ideas_description": "Writes three editing ideas for the photo.",
         "choose": (
-            "Jev, TypeSafe's decision model, reads the campaign and the ideas. **best** picks one, and "
+            "Jev reads the campaign and the ideas. **best** picks one, and "
             "**on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction."
         ),
         "choose_description": "Asks Jev for the best idea and whether it suits the campaign.",
@@ -111,7 +111,7 @@ WORKFLOW_TEXTS = {
             "background."
         ),
         "prompts": (
-            "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev, TypeSafe's decision model, picks "
+            "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev picks "
             "the one that will make the simplest, most memorable mark in **best**, and **Prompt** shows it."
         ),
         "prompts_description": "Writes three logo prompts and asks Jev for the best one.",
@@ -134,9 +134,8 @@ WORKFLOW_TEXTS = {
             "change **seed** and run again."
         ),
         "move": (
-            "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev, TypeSafe's "
-            "decision model, picks the one that best suits a six-second teaser in **best**, and **Move** shows "
-            "it."
+            "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev picks the one "
+            "that best suits a six-second teaser in **best**, and **Move** shows it."
         ),
         "move_description": "Writes three camera moves for the frame and asks Jev for the best one.",
         "animate": (
@@ -165,7 +164,7 @@ WORKFLOW_TEXTS = {
         ),
         "transcribe_description": "Transcribes the recording and saves the transcript.",
         "triage": (
-            "Jev, TypeSafe's decision model, reads the transcript and answers three questions: **department** "
+            "Jev reads the transcript and answers three questions: **department** "
             "picks sales, support, or billing; **callback** asks whether the caller wants a call back; "
             "**urgency** scores how soon. **Summary** shows all three."
         ),
@@ -187,9 +186,8 @@ WORKFLOW_TEXTS = {
         "transcribe": ("Universal-3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`."),
         "transcribe_description": "Transcribes the clip and saves its subtitles.",
         "translate": (
-            "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev, TypeSafe's "
-            "decision model, compares the two and answers **accurate**: does the translation say the same, with "
-            "nothing added or left out?"
+            "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and "
+            "answers **accurate**: does the translation say the same, with nothing added or left out?"
         ),
         "translate_description": "Translates the transcript and asks Jev whether the translation is accurate.",
         "speak": (
@@ -215,7 +213,7 @@ WORKFLOW_TEXTS = {
         ),
         "answer_description": "Answers the customer from the ranked articles.",
         "check": (
-            "Jev, TypeSafe's decision model, reads the articles and the answer and answers **supported**: does "
+            "Jev reads the articles and the answer and answers **supported**: does "
             "every sentence come from the articles? When it does, **Reply** shows the answer; when it does not, "
             "a note to pass the customer to a person."
         ),
@@ -232,7 +230,7 @@ WORKFLOW_TEXTS = {
         ),
         "rank_description": "Draws four candidates and keeps the one that best matches the brief.",
         "check": (
-            "GPT-6 Luna describes the winner. Jev, TypeSafe's decision model, then answers **ready**: does it "
+            "GPT-6 Luna describes the winner. Jev then answers **ready**: does it "
             "work as a homepage hero, with a clear subject, room for a headline, and no defects? The image is "
             "saved in the **approved** folder when it is ready, and in **review** otherwise."
         ),
@@ -241,8 +239,7 @@ WORKFLOW_TEXTS = {
     "decision-01-verify-then-escalate": {
         "input": (
             KEY_STEP + "2. Paste your notes in **Notes** and type the question in **Question**.\n"
-            "3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev, TypeSafe's "
-            "decision model, doubts it."
+            "3. Press **Run**. **Answer** shows the quick answer, or the careful one when Jev doubts it."
         ),
         "answer": "GPT-6 Luna, a fast model, answers the question using only the notes.",
         "answer_description": "Answers the question from the notes with a fast model.",

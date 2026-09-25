@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev, TypeSafe's decision model, compares the listing with the spec facts and answers two questions: **supported** asks whether every claim is backed, and **persuasive** scores the copy.\n\nThe listing is saved in the **approved** folder when every claim is supported, and in **review** otherwise."
+        "Jev compares the listing with the spec facts and answers two questions: **supported** asks whether every claim is backed, and **persuasive** scores the copy.\n\nThe listing is saved in the **approved** folder when every claim is supported, and in **review** otherwise."
       ],
       "title": "Note"
     },
