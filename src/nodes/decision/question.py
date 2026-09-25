@@ -7,9 +7,9 @@ from comfy_api.latest import io
 from typing import override, TYPE_CHECKING
 from ...config.patterns import QUESTION_NAME_PATTERN
 from ...types.errors import ErrorCode, OpenRouterError
-from ...config.namespace import NODE_PREFIX, DECISION_MENU, QUESTIONS_TYPE
+from ...config.generation.decisions import ANSWER_TYPES
+from ...config.namespace import NODE_PREFIX, MENUS, SOCKET_TYPES
 from ...types.decisions import QuestionSet, ScoreQuestion, YesNoQuestion, ChoiceQuestion
-from ...config.generation.decisions import SCORE_ANSWER, CHOICE_ANSWER, YES_NO_ANSWER, ANSWER_TYPE_INPUT
 from ...config.messages.inputs import (
     SCORE_LEVELS,
     QUESTION_NAME,
@@ -44,10 +44,10 @@ def _build_choice(name: str, instructions: str, text: str) -> ChoiceQuestion:
 
 def _build_question(name: str, instructions: str, answer_type: Mapping[str, object]) -> Question:
     """Build the question of the chosen answer type from the fields that type shows."""
-    kind = str(answer_type[ANSWER_TYPE_INPUT])
-    if kind == CHOICE_ANSWER:
+    kind = str(answer_type[ANSWER_TYPES["INPUT"]])
+    if kind == ANSWER_TYPES["CHOICE"]:
         return _build_choice(name, instructions, str(answer_type.get("options", "")))
-    if kind == SCORE_ANSWER:
+    if kind == ANSWER_TYPES["SCORE"]:
         levels = tuple(line.strip() for line in str(answer_type.get("levels", "")).splitlines() if line.strip())
         if not levels:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, SCORE_LEVELS)
@@ -67,10 +67,10 @@ class DecisionAddQuestion(io.ComfyNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Decision: Add Question",
-            category=DECISION_MENU,
+            category=MENUS["DECISION"],
             description="Add one question for a decision model: yes or no, one choice, or a score.",
             inputs=[
-                io.Custom(QUESTIONS_TYPE).Input(
+                io.Custom(SOCKET_TYPES["QUESTIONS"]).Input(
                     "questions",
                     optional=True,
                     tooltip="Connect another Decision: Add Question to ask several questions at once.",
@@ -81,18 +81,18 @@ class DecisionAddQuestion(io.ComfyNode):
                     tooltip="Lowercase letters, digits, and underscores; Decision: Read Answer finds the answer by it.",
                 ),
                 io.DynamicCombo.Input(
-                    ANSWER_TYPE_INPUT,
+                    ANSWER_TYPES["INPUT"],
                     display_name="answer type",
                     options=[
                         io.DynamicCombo.Option(
-                            YES_NO_ANSWER,
+                            ANSWER_TYPES["YES_NO"],
                             [
                                 io.String.Input("yes_means", display_name="yes means", default=""),
                                 io.String.Input("no_means", display_name="no means", default=""),
                             ],
                         ),
                         io.DynamicCombo.Option(
-                            CHOICE_ANSWER,
+                            ANSWER_TYPES["CHOICE"],
                             [
                                 io.String.Input(
                                     "options",
@@ -103,7 +103,7 @@ class DecisionAddQuestion(io.ComfyNode):
                             ],
                         ),
                         io.DynamicCombo.Option(
-                            SCORE_ANSWER,
+                            ANSWER_TYPES["SCORE"],
                             [
                                 io.String.Input(
                                     "levels", multiline=True, default="", tooltip="One level per line, lowest first."
@@ -115,7 +115,7 @@ class DecisionAddQuestion(io.ComfyNode):
                 ),
                 io.String.Input("instructions", multiline=True, default="", tooltip="What to decide."),
             ],
-            outputs=[io.Custom(QUESTIONS_TYPE).Output("questions", display_name="questions")],
+            outputs=[io.Custom(SOCKET_TYPES["QUESTIONS"]).Output("questions", display_name="questions")],
         )
 
     @classmethod

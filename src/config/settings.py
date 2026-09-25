@@ -1,4 +1,4 @@
-"""Define editable settings, their units, defaults, and supported ranges."""
+"""The editable settings with their defaults and ranges, and the size and time a settings request may take."""
 
 SETTING_RANGES: dict[str, dict[str, int]] = {
     "request_timeout_seconds": {"default": 600, "minimum": 10, "maximum": 3600},
@@ -9,16 +9,14 @@ SETTING_RANGES: dict[str, dict[str, int]] = {
     "identical_video_block_minutes": {"default": 30, "minimum": 5, "maximum": 1440},
 }
 
-MAX_SETTINGS_BYTES = 4096
-
-
-SETTINGS_TIMEOUT_SECONDS = 5
-
-REQUEST_CHUNK_BYTES = 1024
+# The settings route reads a request body of at most max_bytes, in chunks, within timeout_seconds.
+SETTINGS_BODY = {
+    "MAX_BYTES": 4096,
+    "CHUNK_BYTES": 1024,
+    "TIMEOUT_SECONDS": 5,
+}
 
 __all__ = [
-    "MAX_SETTINGS_BYTES",
-    "REQUEST_CHUNK_BYTES",
-    "SETTINGS_TIMEOUT_SECONDS",
+    "SETTINGS_BODY",
     "SETTING_RANGES",
 ]

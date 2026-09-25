@@ -5,18 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from comfy_api.latest import io, Input
 from ..config.media import MP4_URL_PREFIX
-from ..config.namespace import OPTIONS_TYPE
+from ..config.namespace import SOCKET_TYPES
 from ..comfy.media import encode_audio, encode_video, encode_images
-from ..config.generation.inputs import (
-    MAX_SEED,
-    SEED_INPUT,
-    DEFAULT_SEED,
-    OPTIONS_INPUT,
-    MAX_RUN_NUMBER,
-    MIN_RUN_NUMBER,
-    RUN_NUMBER_INPUT,
-    DEFAULT_RUN_NUMBER,
-)
+from ..config.generation.inputs import SEED, INPUT_NAMES, RUN_NUMBER
 
 if TYPE_CHECKING:
     import torch
@@ -26,24 +17,24 @@ if TYPE_CHECKING:
 def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
     """Build the seed, run number, and options inputs that follow a paid node's own inputs."""
     seed = io.Int.Input(
-        SEED_INPUT,
+        INPUT_NAMES["SEED"],
         display_name="seed",
         tooltip="Number used by the model to vary its output. Results can change after model updates.",
-        default=DEFAULT_SEED,
+        default=SEED["DEFAULT"],
         min=0,
-        max=MAX_SEED,
+        max=SEED["MAX"],
         control_after_generate=True,
     )
     run_number = io.Int.Input(
-        RUN_NUMBER_INPUT,
+        INPUT_NAMES["RUN_NUMBER"],
         display_name="run number",
         tooltip="Change this number to send the same request again" + (" with the same seed." if has_seed else "."),
-        default=DEFAULT_RUN_NUMBER,
-        min=MIN_RUN_NUMBER,
-        max=MAX_RUN_NUMBER,
+        default=RUN_NUMBER["DEFAULT"],
+        min=RUN_NUMBER["MIN"],
+        max=RUN_NUMBER["MAX"],
     )
-    options = io.Custom(OPTIONS_TYPE).Input(
-        OPTIONS_INPUT,
+    options = io.Custom(SOCKET_TYPES["OPTIONS"]).Input(
+        INPUT_NAMES["OPTIONS"],
         optional=True,
         tooltip="Connect Request Options to choose providers or pass extra fields.",
     )

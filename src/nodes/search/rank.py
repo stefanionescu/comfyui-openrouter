@@ -12,10 +12,10 @@ from ...types.search import RankRequest
 from ...comfy.media import encode_images
 from ..inputs import build_request_inputs
 from ...openrouter.rerank import RankOperation
+from ...config.namespace import NODE_PREFIX, MENUS
 from comfy_execution.graph import ExecutionBlocker
-from ...config.namespace import NODE_PREFIX, SEARCH_MENU
-from ...config.generation.models import DEFAULT_RANK_MODEL
-from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
+from ...config.generation.models import DEFAULT_MODELS
+from ...config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 
 if TYPE_CHECKING:
@@ -35,10 +35,10 @@ class SearchRank(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Search: Rank",
-            category=SEARCH_MENU,
+            category=MENUS["SEARCH"],
             description="Order text and images by how well they match a query.",
             inputs=[
-                io.String.Input(MODEL_INPUT, default=DEFAULT_RANK_MODEL, tooltip=MODEL_TOOLTIP),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["rerank"], tooltip=MODEL_TOOLTIP),
                 IMAGES,
                 io.Int.Input(
                     "top_n",

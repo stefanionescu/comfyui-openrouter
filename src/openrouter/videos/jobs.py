@@ -17,11 +17,12 @@ from ...config.units import SECONDS_PER_MINUTE
 from ...config.messages.videos import JOB_UNKNOWN
 from ...storage.files import save_file, read_file
 from ...types.errors import ErrorCode, OpenRouterError
-from ...config.storage import JOB_FILE_SUFFIX, MAX_JOB_FILE_BYTES
+from ...config.storage import JOB_FILES, MAX_FILE_BYTES
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+# A job ID in OpenRouter's documented format, which is also safe as a record's file name.
 JOB_ID = re.compile(JOB_ID_PATTERN)
 
 
@@ -38,22 +39,22 @@ class JobStore:
         if not self.directory.is_dir():
             return []
         jobs: list[VideoJob] = []
-        for path in sorted(self.directory.glob(f"*{JOB_FILE_SUFFIX}")):
+        for path in sorted(self.directory.glob(f"*{JOB_FILES['suffix']}")):
             try:
-                jobs.append(VideoJob.model_validate_json(read_file(path, max_bytes=MAX_JOB_FILE_BYTES)))
+                jobs.append(VideoJob.model_validate_json(read_file(path, max_bytes=MAX_FILE_BYTES["JOB"])))
             except (OSError, ValidationError, OpenRouterError):
                 continue
         return jobs
 
     def save(self, job: VideoJob) -> None:
         """Write one record atomically, named by its job ID or its uncertain request hash."""
-        path = self.directory / f"{job.name}{JOB_FILE_SUFFIX}"
+        path = self.directory / f"{job.name}{JOB_FILES['suffix']}"
         with self._lock:
             save_file(path, (job.model_dump_json(indent=2) + "\n").encode())
 
     def delete(self, name: str) -> None:
         """Delete one record; a record already gone needs no removal."""
-        path = self.directory / f"{name}{JOB_FILE_SUFFIX}"
+        path = self.directory / f"{name}{JOB_FILES['suffix']}"
         with self._lock:
             # reason: Record names are validated job IDs or request hashes inside the private jobs folder.
             # bearer:disable python_lang_path_traversal
@@ -74,7 +75,7 @@ class JobStore:
                 age = (now - datetime.fromisoformat(job.submitted_at)).total_seconds()
                 if age < block_minutes * SECONDS_PER_MINUTE:
                     return job
-                (self.directory / f"{job.name}{JOB_FILE_SUFFIX}").unlink(missing_ok=True)
+                (self.directory / f"{job.name}{JOB_FILES['suffix']}").unlink(missing_ok=True)
         return None
 
     def list_accepted(self) -> list[VideoJob]:
@@ -92,4 +93,4 @@ class JobStore:
         return job
 
 
-__all__ = ["JobStore"]
+__all__ = ["JOB_ID", "JobStore"]

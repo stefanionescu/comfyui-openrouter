@@ -6,8 +6,8 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING
 from .failures import read_failure
 from ..types.parsing import parse_json
+from ..config.openrouter import REPLY_BYTES
 from ..config.units import BYTES_PER_MEBIBYTE
-from ..config.openrouter import REPLY_CHUNK_BYTES
 from ..config.messages.media import DOWNLOAD_LIMIT
 from ..config.messages.run import REPLY_UNREADABLE
 from ..types.errors import ErrorCode, OpenRouterError
@@ -22,7 +22,7 @@ async def _read_lines(response: aiohttp.ClientResponse, max_bytes: int) -> Async
     """Split the reply into lines of any length, within the download limit."""
     buffer = bytearray()
     total = 0
-    async for chunk in response.content.iter_chunked(REPLY_CHUNK_BYTES):
+    async for chunk in response.content.iter_chunked(REPLY_BYTES["CHUNK"]):
         total += len(chunk)
         if total > max_bytes:
             raise OpenRouterError(ErrorCode.MEDIA, DOWNLOAD_LIMIT.format(maximum=max_bytes // BYTES_PER_MEBIBYTE))

@@ -12,7 +12,7 @@ from ...settings.store import read_settings
 from ...config.messages.inputs import DOCUMENT_MISSING
 from ...types.errors import ErrorCode, OpenRouterError
 from ...comfy.documents import list_documents, read_document
-from ...config.namespace import CHAT_MENU, NODE_PREFIX, DOCUMENTS_TYPE
+from ...config.namespace import MENUS, NODE_PREFIX, SOCKET_TYPES
 
 if TYPE_CHECKING:
     from ...types.chat import Document
@@ -27,7 +27,7 @@ class ChatAttachDocument(io.ComfyNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Chat: Attach Document",
-            category=CHAT_MENU,
+            category=MENUS["CHAT"],
             description="Attach a PDF or text file from ComfyUI's input folder to Chat: Ask.",
             inputs=[
                 io.Combo.Input(
@@ -36,13 +36,13 @@ class ChatAttachDocument(io.ComfyNode):
                     options=list_documents(),
                     tooltip="A PDF, text, Markdown, CSV, or JSON file at the top of ComfyUI's input folder.",
                 ),
-                io.Custom(DOCUMENTS_TYPE).Input(
+                io.Custom(SOCKET_TYPES["DOCUMENTS"]).Input(
                     "documents",
                     optional=True,
                     tooltip="Connect another Chat: Attach Document to send several documents.",
                 ),
             ],
-            outputs=[io.Custom(DOCUMENTS_TYPE).Output("documents", display_name="documents")],
+            outputs=[io.Custom(SOCKET_TYPES["DOCUMENTS"]).Output("documents", display_name="documents")],
         )
 
     @classmethod

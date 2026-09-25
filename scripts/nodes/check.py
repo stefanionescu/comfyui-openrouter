@@ -8,23 +8,14 @@ import sys
 import json
 import asyncio
 from pathlib import Path
+from src.config.namespace import MENUS
 from typing import cast, TYPE_CHECKING
 from scripts.paths import HELP_DIR, REPO_ROOT, SCHEMA_SCRIPT_PATH
-from src.config.namespace import (
-    CHAT_MENU,
-    AUDIO_MENU,
-    IMAGE_MENU,
-    VIDEO_MENU,
-    SEARCH_MENU,
-    SHARED_MENU,
-    DECISION_MENU,
-)
 
 if TYPE_CHECKING:
     from scripts.types import Schema
 
 SOCKET_ROW = re.compile(r"^\| `([a-z_.]+)` \|")
-MENUS = (SHARED_MENU, CHAT_MENU, IMAGE_MENU, VIDEO_MENU, AUDIO_MENU, SEARCH_MENU, DECISION_MENU)
 
 
 async def _read_schema_export(interpreter: Path, environment: dict[str, str]) -> str:
@@ -94,7 +85,7 @@ def main() -> int:
     problems += [
         f"Put {node_id} in an OpenRouter menu."
         for node_id, schema in schemas.items()
-        if schema["category"] not in MENUS
+        if schema["category"] not in MENUS.values()
     ]
     for problem in problems:
         sys.stderr.write(problem + "\n")

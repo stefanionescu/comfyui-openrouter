@@ -1,17 +1,20 @@
-"""Decision answer types and the default answer threshold."""
+"""Decision answer types and the answer threshold."""
 
-DEFAULT_THRESHOLD = 0.5
-THRESHOLD_STEP = 0.01
-ANSWER_TYPE_INPUT = "answer_type"
-YES_NO_ANSWER = "yes or no"
-CHOICE_ANSWER = "one choice"
-SCORE_ANSWER = "score"
+# The threshold at which a probability or confidence counts as yes.
+THRESHOLD = {
+    "DEFAULT": 0.5,
+    "STEP": 0.01,
+}
+
+# The answer type dropdown's input name and its choices.
+ANSWER_TYPES = {
+    "INPUT": "answer_type",
+    "YES_NO": "yes or no",
+    "CHOICE": "one choice",
+    "SCORE": "score",
+}
 
 __all__ = [
-    "ANSWER_TYPE_INPUT",
-    "CHOICE_ANSWER",
-    "DEFAULT_THRESHOLD",
-    "SCORE_ANSWER",
-    "THRESHOLD_STEP",
-    "YES_NO_ANSWER",
+    "ANSWER_TYPES",
+    "THRESHOLD",
 ]

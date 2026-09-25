@@ -6,8 +6,8 @@ from typing import cast, ClassVar
 from ..comfy.runtime import get_runtime
 from collections.abc import Callable, Awaitable
 from ..config.messages.inputs import SINGLE_VALUE
+from ..config.generation.inputs import INPUT_NAMES
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.generation.inputs import RUN_NUMBER_INPUT
 
 
 class PaidNode(io.ComfyNode):
@@ -35,7 +35,7 @@ class PaidNode(io.ComfyNode):
 
         A node that takes input lists receives every input as a list; only its media inputs may hold several items.
         """
-        inputs.pop(RUN_NUMBER_INPUT, None)
+        inputs.pop(INPUT_NAMES["RUN_NUMBER"], None)
         if cls.list_inputs:
             for name, value in inputs.items():
                 if name not in cls.list_inputs:

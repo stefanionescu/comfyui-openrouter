@@ -5,27 +5,21 @@ from __future__ import annotations
 import asyncio
 import io as memory
 from ..base import PaidNode
+from ...config.media import WAV
 from typing import TYPE_CHECKING
 from ...comfy.media import encode_images
 from ...comfy.runtime import get_runtime
 from ...types.videos import VideoRequest
-from ...config.media import WAV_URL_PREFIX
 from comfy_api.latest import io, InputImpl
 from ...config.messages.videos import IMAGE_BATCH
+from ...config.namespace import MENUS, NODE_PREFIX
+from ...config.generation.models import DEFAULT_MODELS
 from ...types.errors import ErrorCode, OpenRouterError
-from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ..inputs import encode_media, build_request_inputs
 from ...openrouter.videos.operation import VideoOperation
-from ...config.generation.models import DEFAULT_VIDEO_MODEL
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
-from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
-from ...config.generation.videos import (
-    RESOLUTIONS,
-    UPSCALE_STEP,
-    ASPECT_RATIOS,
-    AUDIO_CHOICES,
-    CREATIVITY_STEP,
-)
+from ...config.generation.inputs import INPUT_NAMES, MODEL_DEFAULT, MODEL_TOOLTIP
+from ...config.generation.videos import RESOLUTIONS, STEPS, ASPECT_RATIOS, AUDIO_CHOICES
 
 if TYPE_CHECKING:
     import torch
@@ -80,7 +74,7 @@ CONTROLS = (
         display_name="upscale factor",
         default=0.0,
         min=0.0,
-        step=UPSCALE_STEP,
+        step=STEPS["UPSCALE_FACTOR"],
         advanced=True,
         tooltip="How much an upscaling model enlarges the video; 0 sends nothing.",
     ),
@@ -88,7 +82,7 @@ CONTROLS = (
         "creativity",
         default=0.0,
         min=0.0,
-        step=CREATIVITY_STEP,
+        step=STEPS["CREATIVITY"],
         advanced=True,
         tooltip="How freely an upscaling model adds detail; 0 sends nothing.",
     ),
@@ -118,10 +112,10 @@ class VideoGenerate(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Video: Generate",
-            category=VIDEO_MENU,
+            category=MENUS["VIDEO"],
             description="Make a video with any OpenRouter video model, from text, frames, or references.",
             inputs=[
-                io.String.Input(MODEL_INPUT, default=DEFAULT_VIDEO_MODEL, tooltip=MODEL_TOOLTIP),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["videos"], tooltip=MODEL_TOOLTIP),
                 *CONTROLS,
                 *MEDIA,
                 *build_request_inputs(has_seed=True),
@@ -169,7 +163,7 @@ class VideoGenerate(PaidNode):
             references = (
                 *(("image", url) for url in image_urls),
                 *(("video", url) for url in video_urls),
-                *(("audio", WAV_URL_PREFIX + clip) for clip in clips),
+                *(("audio", WAV["URL_PREFIX"] + clip) for clip in clips),
             )
             # A control left at 0 or at the model's default sends nothing.
             request = VideoRequest(

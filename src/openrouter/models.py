@@ -10,15 +10,7 @@ from .transport import download_listing
 from ..config.patterns import MODEL_ID_PATTERN
 from ..types.errors import ErrorCode, OpenRouterError
 from ..types.models import Model, Limits, ModelReply, ImageModelReply, VideoModelsReply
-from ..config.openrouter import (
-    MODEL_URL,
-    FIELD_NAMES,
-    MEDIA_LABELS,
-    MODEL_OUTPUTS,
-    ENDPOINT_LABELS,
-    IMAGE_MODEL_URL,
-    VIDEO_MODELS_URL,
-)
+from ..config.openrouter import LISTING_URLS, FIELD_LABELS, MEDIA_LABELS, MODEL_OUTPUTS, ENDPOINT_LABELS
 from ..config.messages.models import (
     MODEL_KIND,
     MODEL_EMPTY,
@@ -116,7 +108,7 @@ async def read_model(model_id: str, settings: Settings) -> Model:
     if not model_id:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_EMPTY)
     if model_id not in _MODELS and MODEL_ID.match(model_id):
-        reply = await _read_listing(MODEL_URL.format(model_id=model_id), ModelReply, settings)
+        reply = await _read_listing(LISTING_URLS["MODEL"].format(model_id=model_id), ModelReply, settings)
         if reply is not None:
             listing = reply.model
             endpoints = listing.endpoints
@@ -155,7 +147,7 @@ async def validate_model(model_id: str, endpoint: Endpoint, settings: Settings, 
 async def read_image_limits(model_id: str, settings: Settings) -> Limits | None:
     """Read what an image model's providers accept, or None when OpenRouter lists no image providers for it."""
     if model_id not in _IMAGE_LIMITS:
-        reply = await _read_listing(IMAGE_MODEL_URL.format(model_id=model_id), ImageModelReply, settings)
+        reply = await _read_listing(LISTING_URLS["IMAGE_MODEL"].format(model_id=model_id), ImageModelReply, settings)
         endpoints = reply.endpoints if reply else ()
         parameters = [item for endpoint in endpoints for item in endpoint.supported_parameters.items()]
         choices: dict[str, tuple[str, ...]] = {}
@@ -177,7 +169,7 @@ async def read_video_limits(model_id: str, parameters: frozenset[str], settings:
     The parameters are the request fields the model's providers list, which settle what the video list leaves empty.
     """
     if not _VIDEO_MODELS:
-        reply = await _read_listing(VIDEO_MODELS_URL, VideoModelsReply, settings)
+        reply = await _read_listing(LISTING_URLS["VIDEO_MODELS"], VideoModelsReply, settings)
         _VIDEO_MODELS.update({video.id: video for video in (reply.models if reply else ())})
     video = _VIDEO_MODELS.get(model_id)
     return _build_video_limits(video, parameters) if video is not None else None
@@ -186,7 +178,7 @@ async def read_video_limits(model_id: str, parameters: frozenset[str], settings:
 def validate_limits(model_id: str, limits: Limits, values: Mapping[str, Json]) -> None:
     """Refuse a field the model does not take, a value it does not list, and a number outside its range."""
     for field, value in values.items():
-        name = FIELD_NAMES.get(field, field.replace("_", " "))
+        name = FIELD_LABELS.get(field, field.replace("_", " "))
         if field not in limits.fields:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_FIELD.format(model=model_id, field=name))
         choices = limits.choices.get(field)

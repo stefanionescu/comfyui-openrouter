@@ -6,9 +6,9 @@ from typing import cast
 from http import HTTPStatus
 from pydantic import ValidationError
 from ..types.replies import ErrorReply
+from ..config.patterns import REASON_PATTERNS
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.openrouter import REASON_ENDINGS, MAX_REASON_CHARACTERS
-from ..config.patterns import KEY_PATTERN, URL_PATTERN, OPENROUTER_URL_PATTERN
 from ..config.messages.run import (
     NO_REASON,
     NO_PROVIDER,
@@ -26,9 +26,9 @@ from ..config.messages.run import (
     PROVIDER_OVERLOADED,
 )
 
-KEY = re.compile(KEY_PATTERN)
-URL = re.compile(URL_PATTERN)
-OPENROUTER_URL = re.compile(OPENROUTER_URL_PATTERN)
+KEY = re.compile(REASON_PATTERNS["KEY"])
+URL = re.compile(REASON_PATTERNS["URL"])
+OPENROUTER_URL = re.compile(REASON_PATTERNS["OPENROUTER_URL"])
 # Statuses whose reason tells the person what to change, such as the durations a video model accepts, the tokens
 # the credit covers, or the data policy no provider meets. Any other 4xx or 5xx status also carries its reason.
 EXPLAINED_FAILURES: dict[int, tuple[ErrorCode, str]] = {

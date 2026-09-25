@@ -1,6 +1,6 @@
 """Create the shared stores when ComfyUI loads the extension."""
 
-from ..config.storage import JOB_FOLDER_NAME
+from ..config.storage import JOB_FILES
 from ..openrouter.videos.jobs import JobStore
 from ..settings.store import ConfigurationStore
 from ..storage.files import choose_state_directory
@@ -25,7 +25,7 @@ class Runtime:
     def __init__(self) -> None:
         """Create the shared stores and place their state under one private directory."""
         self.configuration = ConfigurationStore(choose_state_directory())
-        self.jobs = JobStore(self.configuration.directory / JOB_FOLDER_NAME)
+        self.jobs = JobStore(self.configuration.directory / JOB_FILES["FOLDER"])
 
 
 _runtime: Runtime | None = None

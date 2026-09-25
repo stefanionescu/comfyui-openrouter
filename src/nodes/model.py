@@ -9,9 +9,9 @@ from ..comfy.runtime import get_runtime
 from ..settings.store import read_settings
 from typing import override, TYPE_CHECKING
 from ..comfy.execution import wait_for_task
-from ..config.namespace import NODE_PREFIX, SHARED_MENU
-from ..config.generation.models import DEFAULT_CHAT_MODEL
-from ..config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
+from ..config.namespace import NODE_PREFIX, MENUS
+from ..config.generation.models import DEFAULT_MODELS
+from ..config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
 from ..openrouter.models import read_model, read_image_limits, read_video_limits
 
 if TYPE_CHECKING:
@@ -65,9 +65,9 @@ class ModelInfo(io.ComfyNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Model: Info",
-            category=SHARED_MENU,
+            category=MENUS["SHARED"],
             description="Show what any OpenRouter model reads, makes, and accepts, as JSON. Free, and needs no key.",
-            inputs=[io.String.Input(MODEL_INPUT, default=DEFAULT_CHAT_MODEL, tooltip=MODEL_TOOLTIP)],
+            inputs=[io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["chat"], tooltip=MODEL_TOOLTIP)],
             outputs=[io.String.Output("info", display_name="info")],
         )
 

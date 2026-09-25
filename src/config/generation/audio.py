@@ -1,29 +1,36 @@
-"""Speech formats and speeds, and transcription choices."""
+"""Audio: Speak and Audio: Transcribe choices."""
 
 # Most speech models send PCM, and Google's Gemini voices send nothing else; MiniMax sends only MP3.
 SPEECH_FORMATS = ("pcm", "mp3")
-DEFAULT_SPEECH_FORMAT = "pcm"
-# A voice of the default speech model, which needs one; other models name their own voices.
-DEFAULT_SPEECH_VOICE = "Kore"
-PCM_MEDIA_TYPE = "audio/pcm"
-DEFAULT_SPEED = 1.0
-MIN_SPEED = 0.25
-MAX_SPEED = 4.0
-SPEED_STEP = 0.05
+
+# The format Audio: Speak starts with, and a voice of the default speech model, which needs one; other models
+# name their own voices.
+SPEECH_DEFAULTS = {
+    "FORMAT": "pcm",
+    "VOICE": "Kore",
+}
+
+# OpenAI's documented speed range; other providers ignore the speed.
+SPEED = {
+    "DEFAULT": 1.0,
+    "MIN": 0.25,
+    "MAX": 4.0,
+    "STEP": 0.05,
+}
+
+# The timestamps Audio: Transcribe asks for.
 TIMESTAMP_CHOICES = ("none", "segments", "words and segments")
-MAX_TRANSCRIPTION_TEMPERATURE = 1.0
-TRANSCRIPTION_TEMPERATURE_STEP = 0.05
+
+# OpenAI's documented transcription temperature range.
+TRANSCRIPTION_TEMPERATURE = {
+    "MAX": 1.0,
+    "STEP": 0.05,
+}
 
 __all__ = [
-    "DEFAULT_SPEECH_FORMAT",
-    "DEFAULT_SPEECH_VOICE",
-    "DEFAULT_SPEED",
-    "MAX_SPEED",
-    "MAX_TRANSCRIPTION_TEMPERATURE",
-    "MIN_SPEED",
-    "PCM_MEDIA_TYPE",
+    "SPEECH_DEFAULTS",
     "SPEECH_FORMATS",
-    "SPEED_STEP",
+    "SPEED",
     "TIMESTAMP_CHOICES",
-    "TRANSCRIPTION_TEMPERATURE_STEP",
+    "TRANSCRIPTION_TEMPERATURE",
 ]

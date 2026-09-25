@@ -11,10 +11,9 @@ from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import STATE_UNREADABLE
 from ..config.messages.requests import LOCAL_CONNECTION_REQUIRED
 from ..config.security import (
-    HTTP_PORT,
-    HTTPS_PORT,
     LOCAL_HOSTS,
     CHANGE_HEADER,
+    DEFAULT_PORTS,
     PROXY_HEADERS,
     PRIVATE_HEADERS,
     CROSS_SITE_FETCHES,
@@ -44,7 +43,7 @@ def _is_local_target(request: web.Request, target: SplitResult, port: int) -> bo
 def _is_same_origin(origin: str, target: SplitResult, port: int) -> bool:
     """Accept only an origin with the request's exact scheme, host, and effective port."""
     source = urlsplit(origin)
-    source_port = source.port or (HTTPS_PORT if source.scheme == "https" else HTTP_PORT)
+    source_port = source.port or (DEFAULT_PORTS["HTTPS"] if source.scheme == "https" else DEFAULT_PORTS["HTTP"])
     return all(
         (
             source.scheme == target.scheme,
@@ -69,7 +68,7 @@ def _validate_local_request(request: web.Request, *, is_mutation: bool, is_multi
         ):
             raise forbidden
         target = urlsplit(f"{request.scheme}://{request.host}")
-        port = target.port or (HTTPS_PORT if request.secure else HTTP_PORT)
+        port = target.port or (DEFAULT_PORTS["HTTPS"] if request.secure else DEFAULT_PORTS["HTTP"])
         if not _is_local_target(request, target, port):
             raise forbidden
         origin = request.headers.get("Origin")

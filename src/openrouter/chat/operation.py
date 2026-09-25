@@ -17,8 +17,8 @@ from ...config.messages.inputs import PROMPT_EMPTY
 from ..failures import sanitize_reason, read_failure
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.replies import ChatReply, ErrorReply, ChatMessage
-from ...config.openrouter import CHAT_URL, MEDIA_LABELS, SCHEMA_PARAMETERS
 from ...config.messages.models import MODEL_OUTPUT, MODEL_SCHEMA, MODEL_TOKENS
+from ...config.openrouter import ENDPOINT_URLS, MEDIA_LABELS, SCHEMA_PARAMETERS
 from ...config.messages.run import ANSWER_CUT, REPLY_EMPTY, MODEL_REFUSED, ANSWER_FILTERED, REPLY_UNREADABLE
 
 if TYPE_CHECKING:
@@ -56,7 +56,7 @@ class ChatOperation:
             if not result.text and result.audio is None:
                 raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
             return result
-        message, finish_reason = _read_message(await send_json(CHAT_URL, body, configuration))
+        message, finish_reason = _read_message(await send_json(ENDPOINT_URLS["chat"], body, configuration))
         if isinstance(message.content, list):
             parts = (part for part in message.content if isinstance(part, dict))
             text = "".join(str(part.get("text", "")) for part in parts if part.get("type") == "text")

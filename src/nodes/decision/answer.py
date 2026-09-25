@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 from typing import override, TYPE_CHECKING
+from ...config.generation.decisions import THRESHOLD
 from ...config.messages.inputs import QUESTION_UNKNOWN
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.decisions import YesNoAnswer, ChoiceAnswer
-from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU
-from ...config.generation.decisions import THRESHOLD_STEP, DEFAULT_THRESHOLD
+from ...config.namespace import NODE_PREFIX, SOCKET_TYPES, MENUS
 
 if TYPE_CHECKING:
     from ...types.decisions import Answer, AnswerSet
@@ -39,17 +39,17 @@ class DecisionReadAnswer(io.ComfyNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Decision: Read Answer",
-            category=DECISION_MENU,
+            category=MENUS["DECISION"],
             description="Turn one decision answer into text, a yes flag, and numbers that switch nodes can use.",
             inputs=[
-                io.Custom(ANSWERS_TYPE).Input("answers", tooltip="Connect Decision: Ask."),
+                io.Custom(SOCKET_TYPES["ANSWERS"]).Input("answers", tooltip="Connect Decision: Ask."),
                 io.String.Input("question", default="question", tooltip="The name of the question to read."),
                 io.Float.Input(
                     "threshold",
-                    default=DEFAULT_THRESHOLD,
+                    default=THRESHOLD["DEFAULT"],
                     min=0.0,
                     max=1.0,
-                    step=THRESHOLD_STEP,
+                    step=THRESHOLD["STEP"],
                     tooltip="The probability or confidence at which is_yes becomes true.",
                 ),
             ],
@@ -66,7 +66,7 @@ class DecisionReadAnswer(io.ComfyNode):
     @classmethod
     @override
     def execute(  # pyright: ignore[reportIncompatibleMethodOverride] -- reason: ComfyUI calls by schema.
-        cls, *, answers: AnswerSet, question: str, threshold: float = DEFAULT_THRESHOLD
+        cls, *, answers: AnswerSet, question: str, threshold: float = THRESHOLD["DEFAULT"]
     ) -> io.NodeOutput:
         """Find the answer by name and read its values at the threshold."""
         name = question.strip()

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from ..options import build_request_body
-from ...config.generation.chat import AUDIO_FORMAT, ANSWER_SCHEMA_NAME
+from ...config.generation.chat import VOICE, ANSWER_SCHEMA_NAME
 
 if TYPE_CHECKING:
     from ...types import Json
@@ -45,7 +45,7 @@ def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
         fields["modalities"] = ["text", "audio"]
         fields["stream"] = True
         if settings.voice is not None:
-            fields["audio"] = {"voice": settings.voice, "format": AUDIO_FORMAT}
+            fields["audio"] = {"voice": settings.voice, "format": VOICE["FORMAT"]}
     return fields
 
 

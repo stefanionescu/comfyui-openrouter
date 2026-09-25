@@ -8,7 +8,7 @@ from .models import validate_model
 from pydantic import ValidationError
 from .options import build_request_body
 from ..types.replies import DecisionReply
-from ..config.openrouter import DECISIONS_URL
+from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.run import REPLY_UNREADABLE
 from ..types.errors import ErrorCode, OpenRouterError
 from ..types.decisions import (
@@ -77,7 +77,9 @@ class DecisionOperation:
             question.name: _describe_question(question) for question in request.questions.questions
         }
         body: dict[str, Json] = {"model": request.model_id, "state": request.state, "questions": questions}
-        document = await send_json(DECISIONS_URL, build_request_body(body, request.options, "decisions"), configuration)
+        document = await send_json(
+            ENDPOINT_URLS["decisions"], build_request_body(body, request.options, "decisions"), configuration
+        )
         try:
             reply = DecisionReply.model_validate(document)
         except ValidationError:

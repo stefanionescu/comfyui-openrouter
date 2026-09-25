@@ -10,20 +10,15 @@ from typing import TYPE_CHECKING
 from ..types.images import ImageRequest
 from .inputs import build_request_inputs
 from ..config.media import SVG_MEDIA_TYPE
+from ..config.openrouter import FIELD_LABELS
 from ..openrouter.images import ImageOperation
+from ..config.namespace import MENUS, NODE_PREFIX
 from comfy_execution.graph import ExecutionBlocker
 from ..comfy.media import decode_image, encode_images
-from ..config.namespace import IMAGE_MENU, NODE_PREFIX
-from ..config.generation.models import DEFAULT_IMAGE_MODEL
+from ..config.generation.models import DEFAULT_MODELS
 from ..comfy.execution import wait_for_thread, send_request, wait_for_task
-from ..config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
-from ..config.generation.images import (
-    FIELD_LABELS,
-    FIELD_VALUES,
-    MAX_COMPRESSION,
-    COMPRESSED_FORMATS,
-    DEFAULT_COMPRESSION,
-)
+from ..config.generation.inputs import INPUT_NAMES, MODEL_DEFAULT, MODEL_TOOLTIP
+from ..config.generation.images import FIELD_VALUES, COMPRESSION, COMPRESSED_FORMATS
 
 if TYPE_CHECKING:
     import torch
@@ -35,15 +30,20 @@ if TYPE_CHECKING:
 # The image fields, compression, count, and references; a field left at model default sends nothing.
 FIELDS = (
     *(
-        io.Combo.Input(field, display_name=FIELD_LABELS[field], options=[MODEL_DEFAULT, *values], default=MODEL_DEFAULT)
+        io.Combo.Input(
+            field,
+            display_name=FIELD_LABELS.get(field, field.replace("_", " ")),
+            options=[MODEL_DEFAULT, *values],
+            default=MODEL_DEFAULT,
+        )
         for field, values in FIELD_VALUES.items()
     ),
     io.Int.Input(
         "output_compression",
         display_name="compression",
-        default=DEFAULT_COMPRESSION,
+        default=COMPRESSION["DEFAULT"],
         min=0,
-        max=MAX_COMPRESSION,
+        max=COMPRESSION["MAX"],
         advanced=True,
         tooltip="JPEG and WebP quality; higher keeps more detail.",
     ),
@@ -67,10 +67,10 @@ class ImageGenerate(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Image: Generate",
-            category=IMAGE_MENU,
+            category=MENUS["IMAGE"],
             description="Generate or edit images with any OpenRouter image model.",
             inputs=[
-                io.String.Input(MODEL_INPUT, default=DEFAULT_IMAGE_MODEL, tooltip=MODEL_TOOLTIP),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["images"], tooltip=MODEL_TOOLTIP),
                 *FIELDS,
                 *build_request_inputs(has_seed=True),
                 io.String.Input(
@@ -98,7 +98,7 @@ class ImageGenerate(PaidNode):
         quality: str = MODEL_DEFAULT,
         background: str = MODEL_DEFAULT,
         output_format: str = MODEL_DEFAULT,
-        output_compression: int = DEFAULT_COMPRESSION,
+        output_compression: int = COMPRESSION["DEFAULT"],
         count: int = 1,
         references: list[torch.Tensor] | None = None,
         options: Options | None = None,

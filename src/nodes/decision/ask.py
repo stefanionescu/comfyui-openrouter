@@ -8,15 +8,15 @@ from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.parsing import parse_json
 from ..inputs import build_request_inputs
+from ...config.generation.decisions import THRESHOLD
 from ...config.messages.inputs import SITUATION_EMPTY
 from ...openrouter.decisions import DecisionOperation
+from ...config.generation.models import DEFAULT_MODELS
 from ...types.errors import ErrorCode, OpenRouterError
 from ...comfy.execution import send_request, wait_for_task
-from ...config.generation.decisions import DEFAULT_THRESHOLD
-from ...config.generation.models import DEFAULT_DECISION_MODEL
-from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
+from ...config.namespace import NODE_PREFIX, SOCKET_TYPES, MENUS
+from ...config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
 from ...types.decisions import AnswerSet, YesNoAnswer, ChoiceAnswer, DecisionRequest
-from ...config.namespace import NODE_PREFIX, ANSWERS_TYPE, DECISION_MENU, QUESTIONS_TYPE
 
 if TYPE_CHECKING:
     from ...types import Json
@@ -45,7 +45,7 @@ def _describe_answers(answers: AnswerSet) -> str:
         if isinstance(answer, ChoiceAnswer):
             lines.append(f"{answer.name}: {answer.choice} (confidence {answer.confidence:.2f})")
         elif isinstance(answer, YesNoAnswer):
-            verdict = "yes" if answer.probability >= DEFAULT_THRESHOLD else "no"
+            verdict = "yes" if answer.probability >= THRESHOLD["DEFAULT"] else "no"
             lines.append(f"{answer.name}: {verdict}, probability {answer.probability:.2f}")
         else:
             level = round(answer.score)
@@ -63,14 +63,14 @@ class DecisionAsk(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Decision: Ask",
-            category=DECISION_MENU,
+            category=MENUS["DECISION"],
             description=(
                 "Answer typed questions about a situation with a decision model on OpenRouter, such as TypeSafe's "
                 "Jev. Each answer comes with its probabilities."
             ),
             inputs=[
-                io.Custom(QUESTIONS_TYPE).Input("questions", tooltip="Connect Decision: Add Question."),
-                io.String.Input(MODEL_INPUT, default=DEFAULT_DECISION_MODEL, tooltip=MODEL_TOOLTIP),
+                io.Custom(SOCKET_TYPES["QUESTIONS"]).Input("questions", tooltip="Connect Decision: Add Question."),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["decisions"], tooltip=MODEL_TOOLTIP),
                 *build_request_inputs(has_seed=False),
                 io.String.Input(
                     "situation",
@@ -80,7 +80,7 @@ class DecisionAsk(PaidNode):
                 ),
             ],
             outputs=[
-                io.Custom(ANSWERS_TYPE).Output("answers", display_name="answers"),
+                io.Custom(SOCKET_TYPES["ANSWERS"]).Output("answers", display_name="answers"),
                 io.String.Output("summary", display_name="summary"),
             ],
             hidden=[io.Hidden.unique_id],

@@ -2,30 +2,29 @@
 
 from __future__ import annotations
 
-import re
 import json
 import math
 import time
 import asyncio
 import hashlib
+from .jobs import JOB_ID
 from typing import TYPE_CHECKING
 from datetime import UTC, datetime
 from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ..failures import sanitize_reason
+from ...config.storage import JOB_FILES
 from ..options import build_request_body
 from ...types.replies import VideoJobReply
 from ..transport import download, send_json
 from ..operation import validate_upload_size
-from ...config.patterns import JOB_ID_PATTERN
-from ...config.storage import UNCERTAIN_PREFIX
 from ...config.units import SECONDS_PER_MINUTE
 from ...config.messages.models import MODEL_FRAME
 from ...config.messages.run import REPLY_UNREADABLE
 from ...config.generation.videos import DONE_STATUSES
 from ...types.errors import ErrorCode, OpenRouterError
+from ...config.openrouter import ENDPOINT_URLS, VIDEO_JOB_URLS
 from ..models import validate_model, validate_limits, read_video_limits
-from ...config.openrouter import VIDEOS_URL, VIDEO_JOB_URL, VIDEO_CONTENT_URL
 from ...config.messages.videos import (
     JOB_FAILED,
     JOB_EXPIRED,
@@ -43,8 +42,6 @@ if TYPE_CHECKING:
     from ...types.videos import VideoRequest
     from ...types.models import Model, Limits
     from ...types.settings import Settings, Configuration
-
-JOB_ID = re.compile(JOB_ID_PATTERN)
 
 
 def _read_job_id(document: Json) -> str:
@@ -80,7 +77,7 @@ class VideoDownloadOperation:
         settings = configuration.settings
         deadline = time.monotonic() + settings.video_wait_minutes * SECONDS_PER_MINUTE
         while True:
-            status_url = VIDEO_JOB_URL.format(job_id=self.job.job_id)
+            status_url = VIDEO_JOB_URLS["STATUS"].format(job_id=self.job.job_id)
             content = await download(status_url, configuration.settings, credential=configuration.credential)
             try:
                 reply = VideoJobReply.model_validate_json(content)
@@ -96,7 +93,7 @@ class VideoDownloadOperation:
             reason = sanitize_reason(reply.error or "")
             ended = {"failed": JOB_FAILED, "cancelled": JOB_CANCELLED}.get(reply.status, JOB_EXPIRED)
             raise OpenRouterError(ErrorCode.UNAVAILABLE, ended.format(reason=reason))
-        content_url = VIDEO_CONTENT_URL.format(job_id=self.job.job_id)
+        content_url = VIDEO_JOB_URLS["CONTENT"].format(job_id=self.job.job_id)
         video = await download(content_url, configuration.settings, credential=configuration.credential)
         # The record goes only after the download, so a failed download can be collected again.
         await asyncio.to_thread(self.jobs.delete, self.job.name)
@@ -183,7 +180,7 @@ class VideoOperation:
             raise OpenRouterError(ErrorCode.UNCERTAIN, SUBMIT_DELAYED.format(minutes=minutes))
         job = VideoJob(
             version=1,
-            name=UNCERTAIN_PREFIX + request_hash,
+            name=JOB_FILES["UNCERTAIN_PREFIX"] + request_hash,
             job_id=None,
             model_id=request.model_id,
             request_hash=request_hash,
@@ -191,7 +188,7 @@ class VideoOperation:
             status="uncertain",
         )
         try:
-            job_id = _read_job_id(await send_json(VIDEOS_URL, body, configuration))
+            job_id = _read_job_id(await send_json(ENDPOINT_URLS["videos"], body, configuration))
         except OpenRouterError as error:
             # The request may have been accepted and billed, so an identical one is refused for a while.
             if error.code not in {ErrorCode.UNCERTAIN, ErrorCode.TIMEOUT}:

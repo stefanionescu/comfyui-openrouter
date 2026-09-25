@@ -6,28 +6,22 @@ import tempfile
 from pathlib import Path
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import STATE_FILE_SIZE, STATE_DIRECTORY_ABSOLUTE
-from ..config.storage import (
-    TEMPORARY_PREFIX,
-    STATE_FOLDER_NAME,
-    PRIVATE_FOLDER_MODE,
-    XDG_STATE_FOLDER_NAME,
-    STATE_DIRECTORY_VARIABLE,
-)
+from ..config.storage import TEMPORARY_PREFIX, STATE_FOLDER_NAMES, PRIVATE_FOLDER_MODE, ENVIRONMENT_VARIABLES
 
 
 def choose_state_directory() -> Path:
     """Choose the platform's private state location without creating it."""
-    override = os.environ.get(STATE_DIRECTORY_VARIABLE)
+    override = os.environ.get(ENVIRONMENT_VARIABLES["STATE_DIRECTORY"])
     if override:
         path = Path(override).expanduser()
         if not path.is_absolute():
             raise OpenRouterError(ErrorCode.CONFIGURATION, STATE_DIRECTORY_ABSOLUTE)
         return path
     if sys.platform == "darwin":
-        return Path.home() / "Library" / "Application Support" / STATE_FOLDER_NAME
+        return Path.home() / "Library" / "Application Support" / STATE_FOLDER_NAMES["DEFAULT"]
     if sys.platform == "win32":
-        return Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local")) / STATE_FOLDER_NAME
-    return Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")) / XDG_STATE_FOLDER_NAME
+        return Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local")) / STATE_FOLDER_NAMES["DEFAULT"]
+    return Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")) / STATE_FOLDER_NAMES["XDG"]
 
 
 def save_file(path: Path, content: bytes) -> None:

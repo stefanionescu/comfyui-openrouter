@@ -8,8 +8,8 @@ from .models import validate_model
 from pydantic import ValidationError
 from ..types.replies import RankReply
 from .options import build_request_body
-from ..config.openrouter import RERANK_URL
 from .operation import validate_upload_size
+from ..config.openrouter import ENDPOINT_URLS
 from .embeddings import validate_search_items
 from ..config.messages.inputs import QUERY_EMPTY
 from ..types.search import RankResult, RankedItem
@@ -46,7 +46,9 @@ class RankOperation:
         body: dict[str, Json] = {"model": request.model_id, "query": request.query, "documents": documents}
         if request.top_n > 0:
             body["top_n"] = request.top_n
-        document = await send_json(RERANK_URL, build_request_body(body, request.options, "rerank"), configuration)
+        document = await send_json(
+            ENDPOINT_URLS["rerank"], build_request_body(body, request.options, "rerank"), configuration
+        )
         try:
             reply = RankReply.model_validate(document)
         except ValidationError:

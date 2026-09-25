@@ -1,8 +1,14 @@
 """Image fields and compression."""
 
-DEFAULT_COMPRESSION = 90
-MAX_COMPRESSION = 100
+# The compression JPEG and WebP take, in percent.
+COMPRESSION = {
+    "DEFAULT": 90,
+    "MAX": 100,
+}
+
+# The formats that take a compression.
 COMPRESSED_FORMATS = ("jpeg", "webp")
+
 # The image fields in the order the node shows them, with every value OpenRouter's image models take.
 FIELD_VALUES = {
     "resolution": ("512", "1K", "2K", "4K"),
@@ -34,18 +40,9 @@ FIELD_VALUES = {
     "background": ("auto", "transparent", "opaque"),
     "output_format": ("png", "jpeg", "webp", "svg"),
 }
-FIELD_LABELS = {
-    "resolution": "resolution",
-    "aspect_ratio": "aspect ratio",
-    "quality": "quality",
-    "background": "background",
-    "output_format": "format",
-}
 
 __all__ = [
     "COMPRESSED_FORMATS",
-    "DEFAULT_COMPRESSION",
-    "FIELD_LABELS",
+    "COMPRESSION",
     "FIELD_VALUES",
-    "MAX_COMPRESSION",
 ]

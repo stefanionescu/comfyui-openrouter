@@ -6,12 +6,13 @@ from typing import TYPE_CHECKING
 from .models import validate_model
 from .transport import send_speech
 from .options import build_request_body
-from ..config.openrouter import SPEECH_URL
+from ..config.media import PCM_MEDIA_TYPE
+from ..config.generation.audio import SPEED
 from .operation import validate_upload_size
+from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.models import MODEL_VOICE
 from ..types.audio import PcmFormat, SpeechResult
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.generation.audio import DEFAULT_SPEED, PCM_MEDIA_TYPE
 from ..config.messages.inputs import PCM_RATE_MISSING, SPEECH_TEXT_EMPTY
 
 if TYPE_CHECKING:
@@ -68,14 +69,16 @@ class SpeechOperation:
         }
         if request.voice:
             body["voice"] = request.voice
-        if request.speed != DEFAULT_SPEED:
+        if request.speed != SPEED["DEFAULT"]:
             body["speed"] = request.speed
         if request.sample:
             references: list[Json] = [{"type": "input_audio", "input_audio": {"data": request.sample}}]
             if request.sample_transcript.strip():
                 references.append({"type": "text", "text": request.sample_transcript})
             body["input_references"] = references
-        audio = await send_speech(SPEECH_URL, build_request_body(body, request.options, "speech"), configuration)
+        audio = await send_speech(
+            ENDPOINT_URLS["speech"], build_request_body(body, request.options, "speech"), configuration
+        )
         return SpeechResult(audio, _read_pcm_format(audio.media_type))
 
 

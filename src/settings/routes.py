@@ -5,11 +5,11 @@ import asyncio
 from aiohttp import web
 from ..types import Json
 from .body import read_body
+from ..config.security import ROUTES
 from .access import build_local_route
 from .store import ConfigurationStore
 from ..types.parsing import validate_fields
 from ..config.patterns import REVISION_PATTERN
-from ..config.security import STATUS_ROUTE, SETTINGS_ROUTE, CREDENTIAL_ROUTE
 from ..config.messages.requests import CLEAR_KEY_BODY, SINGLE_KEY_REQUIRED, SETTINGS_REVISION_REQUIRED
 
 REVISION = re.compile(REVISION_PATTERN)
@@ -55,10 +55,10 @@ class ConfigurationRoutes:
     def register(self, routes: web.RouteTableDef) -> None:
         """Register guarded status, settings, key-save, and key-removal endpoints."""
         policy = {"is_multi_user": self.is_multi_user}
-        routes.get(STATUS_ROUTE)(build_local_route(self.read_status, is_mutation=False, **policy))
-        routes.patch(SETTINGS_ROUTE)(build_local_route(self.save_settings, is_mutation=True, **policy))
-        routes.put(CREDENTIAL_ROUTE)(build_local_route(self.save_credential, is_mutation=True, **policy))
-        routes.delete(CREDENTIAL_ROUTE)(build_local_route(self.delete_credential, is_mutation=True, **policy))
+        routes.get(ROUTES["STATUS"])(build_local_route(self.read_status, is_mutation=False, **policy))
+        routes.patch(ROUTES["SETTINGS"])(build_local_route(self.save_settings, is_mutation=True, **policy))
+        routes.put(ROUTES["CREDENTIAL"])(build_local_route(self.save_credential, is_mutation=True, **policy))
+        routes.delete(ROUTES["CREDENTIAL"])(build_local_route(self.delete_credential, is_mutation=True, **policy))
 
 
 __all__ = ["ConfigurationRoutes"]

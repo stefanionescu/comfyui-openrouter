@@ -2,21 +2,18 @@
 
 from __future__ import annotations
 
-import re
 import asyncio
 import io as memory
 from typing import override
 from ...comfy.runtime import get_runtime
 from comfy_api.latest import InputImpl, io
-from ...config.patterns import JOB_ID_PATTERN
+from ...openrouter.videos.jobs import JOB_ID
 from ...config.messages.videos import JOB_UNKNOWN
+from ...config.namespace import MENUS, NODE_PREFIX
 from ...types.errors import ErrorCode, OpenRouterError
-from ...config.namespace import VIDEO_MENU, NODE_PREFIX
 from ...comfy.execution import send_request, wait_for_task
 from ...openrouter.videos.operation import VideoDownloadOperation
 from ...config.generation.videos import JOB_LABEL_SEPARATOR, JOB_TIME_CHARACTERS
-
-JOB_ID = re.compile(JOB_ID_PATTERN)
 
 
 class VideoDownload(io.ComfyNode):
@@ -38,7 +35,7 @@ class VideoDownload(io.ComfyNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Video: Download",
-            category=VIDEO_MENU,
+            category=MENUS["VIDEO"],
             description="Collect a video job that kept running after a cancel or a restart.",
             inputs=[
                 io.Combo.Input(

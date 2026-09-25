@@ -12,8 +12,8 @@ from typing import override, TYPE_CHECKING
 from ..config.patterns import PROVIDER_SLUG_PATTERN
 from ..config.generation.inputs import MODEL_DEFAULT
 from ..types.errors import ErrorCode, OpenRouterError
+from ..config.namespace import NODE_PREFIX, MENUS, SOCKET_TYPES
 from ..config.messages.inputs import OPTIONS_JSON, PROVIDER_SLUG
-from ..config.namespace import NODE_PREFIX, SHARED_MENU, OPTIONS_TYPE
 from ..config.openrouter import PRICE_STEP, SORT_CHOICES, PRICE_PRECISION, COLLECTION_CHOICES
 
 if TYPE_CHECKING:
@@ -114,10 +114,10 @@ class RequestOptions(io.ComfyNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Request Options",
-            category=SHARED_MENU,
+            category=MENUS["SHARED"],
             description="Choose providers, price caps, and extra request fields for any OpenRouter node.",
             inputs=[provider, *providers, *routing, zdr, *prices, *fields],
-            outputs=[io.Custom(OPTIONS_TYPE).Output("options", display_name="options")],
+            outputs=[io.Custom(SOCKET_TYPES["OPTIONS"]).Output("options", display_name="options")],
         )
 
     @classmethod

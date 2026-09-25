@@ -11,14 +11,7 @@ import torch
 from comfy_api.latest import Types
 from typing import cast, TYPE_CHECKING
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.media import (
-    WAV_CODEC,
-    WAV_FORMAT,
-    RGB_CHANNELS,
-    RGBA_CHANNELS,
-    IMAGE_DIMENSIONS,
-    WAV_SAMPLE_BYTES,
-)
+from ..config.media import WAV, IMAGE_TENSOR, PCM_SAMPLE_BYTES
 from ..config.messages.media import (
     AUDIO_BATCH,
     AUDIO_EMPTY,
@@ -43,7 +36,10 @@ if TYPE_CHECKING:
 
 def encode_images(image: torch.Tensor) -> tuple[str, ...]:
     """Send every image of a batch as a PNG data URL, never shrinking it; the upload limit refuses large images."""
-    if image.ndim != IMAGE_DIMENSIONS or image.shape[-1] not in {RGB_CHANNELS, RGBA_CHANNELS}:
+    if image.ndim != IMAGE_TENSOR["DIMENSIONS"] or image.shape[-1] not in {
+        IMAGE_TENSOR["RGB_CHANNELS"],
+        IMAGE_TENSOR["RGBA_CHANNELS"],
+    }:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_SHAPE)
     if not bool(torch.isfinite(image).all()):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_PIXELS)
@@ -59,8 +55,8 @@ def decode_image(content: bytes) -> tuple[torch.Tensor, torch.Tensor]:
         pixels = bytesio_to_image_tensor(io.BytesIO(content))
     except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, IMAGE_UNREADABLE) from None
-    if pixels.shape[-1] == RGBA_CHANNELS:
-        return pixels[..., :RGB_CHANNELS].contiguous(), 1.0 - pixels[..., RGB_CHANNELS]
+    if pixels.shape[-1] == IMAGE_TENSOR["RGBA_CHANNELS"]:
+        return pixels[..., : IMAGE_TENSOR["RGB_CHANNELS"]].contiguous(), 1.0 - pixels[..., IMAGE_TENSOR["RGB_CHANNELS"]]
     return pixels, torch.zeros(pixels.shape[:3], dtype=pixels.dtype)
 
 
@@ -72,7 +68,7 @@ def encode_audio(audio: Input.Audio) -> str:
     if waveform.shape[-1] == 0:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, AUDIO_EMPTY)
     try:
-        return audio_to_base64_string(audio, container_format=WAV_FORMAT, codec_name=WAV_CODEC)
+        return audio_to_base64_string(audio, container_format=WAV["FORMAT"], codec_name=WAV["CODEC"])
     except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, AUDIO_UNWRITABLE) from None
 
@@ -88,12 +84,12 @@ def decode_audio(content: bytes) -> dict[str, object]:
 def decode_pcm(content: bytes, sample_rate: int, channels: int) -> dict[str, object]:
     """Read raw 16-bit PCM as ComfyUI audio by giving it the WAV header it lacks."""
     # Raw PCM has no header, so a length that splits a sample means the reply is not the PCM it claims.
-    if not content or len(content) % (WAV_SAMPLE_BYTES * channels):
+    if not content or len(content) % (PCM_SAMPLE_BYTES * channels):
         raise OpenRouterError(ErrorCode.MEDIA, AUDIO_UNREADABLE)
     container = io.BytesIO()
     with wave.open(container, "wb") as stream:
         stream.setnchannels(channels)
-        stream.setsampwidth(WAV_SAMPLE_BYTES)
+        stream.setsampwidth(PCM_SAMPLE_BYTES)
         stream.setframerate(sample_rate)
         stream.writeframes(content)
     return decode_audio(container.getvalue())

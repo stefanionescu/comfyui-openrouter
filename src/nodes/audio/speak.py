@@ -4,26 +4,18 @@ from __future__ import annotations
 
 import asyncio
 from ..base import PaidNode
+from ...config.media import WAV
 from comfy_api.latest import io
 from typing import TYPE_CHECKING
 from ...types.audio import SpeechRequest
 from ..inputs import build_request_inputs
-from ...config.media import WAV_URL_PREFIX
 from ...openrouter.speech import SpeechOperation
-from ...config.namespace import AUDIO_MENU, NODE_PREFIX
-from ...config.generation.models import DEFAULT_SPEECH_MODEL
+from ...config.namespace import MENUS, NODE_PREFIX
+from ...config.generation.models import DEFAULT_MODELS
 from ...comfy.media import decode_pcm, decode_audio, encode_audio
-from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
+from ...config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
-from ...config.generation.audio import (
-    MAX_SPEED,
-    MIN_SPEED,
-    SPEED_STEP,
-    DEFAULT_SPEED,
-    SPEECH_FORMATS,
-    DEFAULT_SPEECH_VOICE,
-    DEFAULT_SPEECH_FORMAT,
-)
+from ...config.generation.audio import SPEED, SPEECH_FORMATS, SPEECH_DEFAULTS
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
@@ -47,28 +39,28 @@ class AudioSpeak(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Audio: Speak",
-            category=AUDIO_MENU,
+            category=MENUS["AUDIO"],
             description="Turn text into speech with any OpenRouter speech model.",
             inputs=[
-                io.String.Input(MODEL_INPUT, default=DEFAULT_SPEECH_MODEL, tooltip=MODEL_TOOLTIP),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["speech"], tooltip=MODEL_TOOLTIP),
                 io.String.Input(
                     "voice",
-                    default=DEFAULT_SPEECH_VOICE,
+                    default=SPEECH_DEFAULTS["VOICE"],
                     tooltip="The voice ID, such as Kore for Gemini or alloy for OpenAI. Blank sends none.",
                 ),
                 io.Combo.Input(
                     "audio_format",
                     display_name="format",
                     options=list(SPEECH_FORMATS),
-                    default=DEFAULT_SPEECH_FORMAT,
+                    default=SPEECH_DEFAULTS["FORMAT"],
                     tooltip="The format OpenRouter sends. If the model refuses one, choose the other.",
                 ),
                 io.Float.Input(
                     "speed",
-                    default=DEFAULT_SPEED,
-                    min=MIN_SPEED,
-                    max=MAX_SPEED,
-                    step=SPEED_STEP,
+                    default=SPEED["DEFAULT"],
+                    min=SPEED["MIN"],
+                    max=SPEED["MAX"],
+                    step=SPEED["STEP"],
                     advanced=True,
                     tooltip="How fast the voice speaks, 1 being normal. Some providers ignore it.",
                 ),
@@ -98,9 +90,9 @@ class AudioSpeak(PaidNode):
         *,
         text: str,
         model: str,
-        voice: str = DEFAULT_SPEECH_VOICE,
-        audio_format: str = DEFAULT_SPEECH_FORMAT,
-        speed: float = DEFAULT_SPEED,
+        voice: str = SPEECH_DEFAULTS["VOICE"],
+        audio_format: str = SPEECH_DEFAULTS["FORMAT"],
+        speed: float = SPEED["DEFAULT"],
         sample_transcript: str = "",
         voice_sample: Input.Audio | None = None,
         options: Options | None = None,
@@ -112,7 +104,7 @@ class AudioSpeak(PaidNode):
             sample = None
             if voice_sample is not None:
                 clip = voice_sample
-                sample = WAV_URL_PREFIX + await wait_for_thread(lambda: encode_audio(clip))
+                sample = WAV["URL_PREFIX"] + await wait_for_thread(lambda: encode_audio(clip))
             request = SpeechRequest(
                 model_id=model.strip(),
                 text=text,

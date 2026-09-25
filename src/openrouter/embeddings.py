@@ -11,7 +11,7 @@ from .options import build_request_body
 from ..types.replies import EmbeddingReply
 from ..types.search import EmbeddingResult
 from .operation import validate_upload_size
-from ..config.openrouter import EMBEDDINGS_URL
+from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.run import REPLY_UNREADABLE
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.inputs import SEARCH_ITEMS_EMPTY
@@ -62,7 +62,7 @@ class EmbeddingOperation:
         if request.input_type is not None:
             body["input_type"] = request.input_type
         document = await send_json(
-            EMBEDDINGS_URL, build_request_body(body, request.options, "embeddings"), configuration
+            ENDPOINT_URLS["embeddings"], build_request_body(body, request.options, "embeddings"), configuration
         )
         try:
             reply = EmbeddingReply.model_validate(document)

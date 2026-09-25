@@ -9,9 +9,9 @@ from .models import validate_model
 from pydantic import ValidationError
 from .options import build_request_body
 from .operation import validate_upload_size
+from ..config.openrouter import ENDPOINT_URLS
 from ..config.patterns import LANGUAGE_PATTERN
 from ..types.replies import TranscriptionReply
-from ..config.openrouter import TRANSCRIPTION_URL
 from ..config.messages.inputs import LANGUAGE_CODE
 from ..types.errors import ErrorCode, OpenRouterError
 from ..types.audio import Segment, TranscriptionResult
@@ -71,7 +71,7 @@ class TranscriptionOperation:
             body["response_format"] = "verbose_json"
             body["timestamp_granularities"] = list(GRANULARITIES[request.timestamps])
         document = await send_json(
-            TRANSCRIPTION_URL, build_request_body(body, request.options, "transcription"), configuration
+            ENDPOINT_URLS["transcription"], build_request_body(body, request.options, "transcription"), configuration
         )
         try:
             reply = TranscriptionReply.model_validate(document)

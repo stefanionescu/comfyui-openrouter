@@ -7,7 +7,7 @@ import binascii
 from ..transport import send_stream
 from ...types.chat import ChatResult
 from typing import cast, TYPE_CHECKING
-from ...config.openrouter import CHAT_URL
+from ...config.openrouter import ENDPOINT_URLS
 from ...config.messages.run import REPLY_UNREADABLE
 from ...types.errors import ErrorCode, OpenRouterError
 
@@ -26,7 +26,7 @@ async def send_audio_chat(body: Mapping[str, Json], configuration: Configuration
     text: list[str] = []
     chunks: list[str] = []
     transcript: list[str] = []
-    async for event in send_stream(CHAT_URL, body, configuration):
+    async for event in send_stream(ENDPOINT_URLS["chat"], body, configuration):
         choices = cast("dict[str, Json]", event).get("choices") if isinstance(event, dict) else None
         delta = cast("dict[str, Json]", choices[0]).get("delta") if isinstance(choices, list) and choices else None
         if not isinstance(delta, dict):

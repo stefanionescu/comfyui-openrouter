@@ -11,16 +11,12 @@ from typing import TYPE_CHECKING
 from ...comfy.media import encode_audio
 from ..inputs import build_request_inputs
 from ...types.audio import TranscriptionRequest
-from ...config.namespace import AUDIO_MENU, NODE_PREFIX
-from ...config.generation.inputs import MODEL_INPUT, MODEL_TOOLTIP
-from ...config.generation.models import DEFAULT_TRANSCRIPTION_MODEL
+from ...config.namespace import MENUS, NODE_PREFIX
+from ...config.generation.models import DEFAULT_MODELS
+from ...config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
 from ...openrouter.transcription import TranscriptionOperation, format_subtitles
-from ...config.generation.audio import (
-    TIMESTAMP_CHOICES,
-    MAX_TRANSCRIPTION_TEMPERATURE,
-    TRANSCRIPTION_TEMPERATURE_STEP,
-)
+from ...config.generation.audio import TIMESTAMP_CHOICES, TRANSCRIPTION_TEMPERATURE
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
@@ -36,14 +32,14 @@ class AudioTranscribe(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Audio: Transcribe",
-            category=AUDIO_MENU,
+            category=MENUS["AUDIO"],
             description=(
                 "Turn speech into text, timed segments and words, and subtitles with any OpenRouter "
                 "transcription model."
             ),
             inputs=[
                 io.Audio.Input("audio", tooltip="One clip. Providers stop after about 60 seconds of processing."),
-                io.String.Input(MODEL_INPUT, default=DEFAULT_TRANSCRIPTION_MODEL, tooltip=MODEL_TOOLTIP),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["transcription"], tooltip=MODEL_TOOLTIP),
                 io.String.Input(
                     "language",
                     default="",
@@ -62,8 +58,8 @@ class AudioTranscribe(PaidNode):
                     "temperature",
                     default=0.0,
                     min=0.0,
-                    max=MAX_TRANSCRIPTION_TEMPERATURE,
-                    step=TRANSCRIPTION_TEMPERATURE_STEP,
+                    max=TRANSCRIPTION_TEMPERATURE["MAX"],
+                    step=TRANSCRIPTION_TEMPERATURE["STEP"],
                     advanced=True,
                     tooltip="Higher values vary the transcript more; 0 leaves it to the model.",
                 ),

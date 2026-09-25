@@ -18,14 +18,8 @@ from contextlib import asynccontextmanager
 from ..config.units import BYTES_PER_MEBIBYTE
 from ..config.messages.media import DOWNLOAD_LIMIT
 from ..types.errors import ErrorCode, OpenRouterError
+from ..config.openrouter import ATTRIBUTION_HEADERS, REPLY_BYTES
 from ..config.messages.run import REQUEST_TIMEOUT, REPLY_UNREADABLE, REQUEST_UNCERTAIN, OPENROUTER_UNREACHABLE
-from ..config.openrouter import (
-    ATTRIBUTION_URL,
-    MAX_ERROR_BYTES,
-    ATTRIBUTION_TITLE,
-    REPLY_CHUNK_BYTES,
-    ATTRIBUTION_CATEGORIES,
-)
 
 if TYPE_CHECKING:
     from ..types import Json, Reply
@@ -41,11 +35,7 @@ def _create_session(settings: Settings, credential: Credential | None) -> aiohtt
     neither the key nor a reply can pass through another host. aiohttp sends a GET again when its connection
     drops, and its only switch for that is private, so it is turned off here.
     """
-    headers = {
-        "HTTP-Referer": ATTRIBUTION_URL,
-        "X-OpenRouter-Title": ATTRIBUTION_TITLE,
-        "X-OpenRouter-Categories": ATTRIBUTION_CATEGORIES,
-    }
+    headers = dict(ATTRIBUTION_HEADERS)
     if credential is not None:
         headers["Authorization"] = f"Bearer {credential.reveal()}"
     session = aiohttp.ClientSession(
@@ -62,7 +52,7 @@ async def _read_body(response: aiohttp.ClientResponse, settings: Settings) -> by
     """Read a reply within the maximum download size."""
     maximum = settings.max_download_megabytes
     content = bytearray()
-    async for chunk in response.content.iter_chunked(REPLY_CHUNK_BYTES):
+    async for chunk in response.content.iter_chunked(REPLY_BYTES["CHUNK"]):
         content.extend(chunk)
         if len(content) > maximum * BYTES_PER_MEBIBYTE:
             raise OpenRouterError(ErrorCode.MEDIA, DOWNLOAD_LIMIT.format(maximum=maximum))
@@ -73,7 +63,7 @@ async def _validate_reply(response: aiohttp.ClientResponse) -> None:
     """Refuse a reply that is not a success, reading at most a short error body."""
     if response.status < HTTPStatus.MULTIPLE_CHOICES:
         return
-    body = await response.content.read(MAX_ERROR_BYTES)
+    body = await response.content.read(REPLY_BYTES["MAX_ERROR"])
     raise read_failure(response.status, body)
 
 

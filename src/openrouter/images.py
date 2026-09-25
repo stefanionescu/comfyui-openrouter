@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 from pydantic import ValidationError
 from ..types.replies import ImageReply
 from .options import build_request_body
-from ..config.openrouter import IMAGES_URL
 from .operation import validate_upload_size
+from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.models import MODEL_COUNT
 from ..types.images import ImageOutput, ImageResult
 from ..config.media import SVG_STARTS, SVG_MEDIA_TYPE
@@ -78,7 +78,9 @@ class ImageOperation:
             body["input_references"] = [
                 {"type": "image_url", "image_url": {"url": url}} for url in request.reference_urls
             ]
-        document = await send_json(IMAGES_URL, build_request_body(body, request.options, "images"), configuration)
+        document = await send_json(
+            ENDPOINT_URLS["images"], build_request_body(body, request.options, "images"), configuration
+        )
         try:
             reply = ImageReply.model_validate(document)
             files = [(base64.b64decode(item.b64_json, validate=True), item.media_type) for item in reply.images]

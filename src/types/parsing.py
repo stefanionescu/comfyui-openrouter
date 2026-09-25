@@ -4,8 +4,8 @@ import json
 import math
 from . import Json
 from typing import cast
+from ..config.security import JSON_LIMITS
 from .errors import ErrorCode, OpenRouterError
-from ..config.security import MAX_JSON_BYTES, MAX_JSON_DEPTH
 from ..config.messages.requests import JSON_SIZE, JSON_DEPTH, JSON_MAPPING, JSON_SYNTAX, JSON_VALUES, JSON_DUPLICATE_KEY
 
 
@@ -20,7 +20,7 @@ def _build_fields(pairs: list[tuple[str, Json]]) -> dict[str, Json]:
     return result
 
 
-def _validate_json(value: object, *, max_depth: int = MAX_JSON_DEPTH) -> Json:
+def _validate_json(value: object, *, max_depth: int = JSON_LIMITS["MAX_DEPTH"]) -> Json:
     """Copy JSON values within the nesting limit; reject other Python objects."""
     if max_depth < 0:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_DEPTH)
@@ -38,7 +38,9 @@ def _validate_json(value: object, *, max_depth: int = MAX_JSON_DEPTH) -> Json:
     raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_VALUES)
 
 
-def parse_json(text: str, *, max_bytes: int = MAX_JSON_BYTES, max_depth: int = MAX_JSON_DEPTH) -> Json:
+def parse_json(
+    text: str, *, max_bytes: int = JSON_LIMITS["MAX_BYTES"], max_depth: int = JSON_LIMITS["MAX_DEPTH"]
+) -> Json:
     """Reject oversized, nested, duplicate-key, and non-finite JSON input."""
     if len(text.encode("utf-8")) > max_bytes:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_SIZE)

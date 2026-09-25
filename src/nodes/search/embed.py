@@ -10,12 +10,12 @@ from typing import TYPE_CHECKING
 from ...comfy.media import encode_images
 from ..inputs import build_request_inputs
 from ...types.search import EmbeddingRequest
+from ...config.namespace import NODE_PREFIX, MENUS
 from ...config.generation.search import INPUT_TYPES
+from ...config.generation.models import DEFAULT_MODELS
 from ...openrouter.embeddings import EmbeddingOperation
-from ...config.namespace import NODE_PREFIX, SEARCH_MENU
-from ...config.generation.models import DEFAULT_EMBEDDING_MODEL
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
-from ...config.generation.inputs import MODEL_INPUT, MODEL_DEFAULT, MODEL_TOOLTIP
+from ...config.generation.inputs import INPUT_NAMES, MODEL_DEFAULT, MODEL_TOOLTIP
 
 if TYPE_CHECKING:
     import torch
@@ -41,10 +41,10 @@ class SearchEmbed(PaidNode):
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
             display_name="Search: Embed",
-            category=SEARCH_MENU,
+            category=MENUS["SEARCH"],
             description="Turn text and images into embedding vectors and compare each item with the first.",
             inputs=[
-                io.String.Input(MODEL_INPUT, default=DEFAULT_EMBEDDING_MODEL, tooltip=MODEL_TOOLTIP),
+                io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["embeddings"], tooltip=MODEL_TOOLTIP),
                 IMAGES,
                 io.Int.Input(
                     "dimensions",
