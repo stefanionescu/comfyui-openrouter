@@ -411,8 +411,8 @@ The README's and this guide's images are in `docs/images/`:
   with link midpoint markers off.
 - `chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels wide, at 100%
   zoom.
-- `settings-dialog.png` is the **OpenRouter settings** dialog with its advanced
-  limits closed.
+- `settings-dialog.png` is the **OpenRouter settings** dialog with default
+  settings and a saved key.
 
 Keep each image under 100 KB, and give it alt text.
 
