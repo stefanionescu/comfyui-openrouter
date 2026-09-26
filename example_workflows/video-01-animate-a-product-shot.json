@@ -165,7 +165,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "MiniMax H3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel, OpenRouter still makes the video; download it with **video-02-recover-a-cancelled-video**."
+        "MiniMax H3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel or the run times out, OpenRouter still makes the video; download it with **video-02-recover-a-cancelled-video**."
       ],
       "title": "Note"
     },

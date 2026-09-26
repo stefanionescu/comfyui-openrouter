@@ -89,10 +89,6 @@
   font-size: 0.875rem;
   min-height: 1.5em;
 }
-.openrouter-dialog summary {
-  cursor: pointer;
-  padding: 0.5rem 0;
-}
 .openrouter-dialog > footer {
   position: sticky;
   bottom: -1.25rem;

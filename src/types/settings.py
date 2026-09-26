@@ -11,21 +11,15 @@ class Settings:
     """Limits that a workflow cannot raise.
 
     Attributes:
-        request_timeout_seconds: Total time one paid request may take.
+        request_timeout_seconds: How long one generation may take; for a video, the whole job.
         max_upload_megabytes: Largest encoded media in one request.
         max_download_megabytes: Largest reply body, image, audio, or video accepted.
-        video_check_interval_seconds: Time between video status checks.
-        video_wait_minutes: How long one run waits for a video job.
-        identical_video_block_minutes: How long an identical video request is refused after an uncertain one.
 
     """
 
     request_timeout_seconds: int
     max_upload_megabytes: int
     max_download_megabytes: int
-    video_check_interval_seconds: int
-    video_wait_minutes: int
-    identical_video_block_minutes: int
 
     @property
     def revision(self) -> str:

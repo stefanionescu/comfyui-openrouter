@@ -46,26 +46,20 @@ class VideoRequest:
 
 
 class VideoJob(Value):
-    """One video job recorded as soon as OpenRouter accepts it, or one uncertain submission.
+    """One video job, recorded as soon as OpenRouter accepts it.
 
     Attributes:
         version: File format version.
-        name: The record's file stem: the job ID, or uncertain- and the request hash.
-        job_id: OpenRouter's job ID, or None for an uncertain submission.
+        job_id: OpenRouter's job ID, which also names the record's file.
         model_id: The model the job runs on.
-        request_hash: SHA-256 of the complete request body, so only an identical request matches.
         submitted_at: When the request was sent, in ISO 8601.
-        status: accepted once OpenRouter answered, uncertain when the connection closed first.
 
     """
 
     version: Literal[1]
-    name: str
-    job_id: str | None
+    job_id: str
     model_id: str
-    request_hash: str
     submitted_at: str
-    status: Literal["accepted", "uncertain"]
 
 
 __all__ = ["VideoJob", "VideoRequest"]

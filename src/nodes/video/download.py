@@ -28,9 +28,9 @@ class VideoDownload(io.ComfyNode):
         """List the recorded jobs when ComfyUI builds the node definitions; the R key reads them again."""
         labels = [
             JOB_LABEL_SEPARATOR.join(
-                (job.job_id or "", job.model_id, job.submitted_at[:JOB_TIME_CHARACTERS].replace("T", " "))
+                (job.job_id, job.model_id, job.submitted_at[:JOB_TIME_CHARACTERS].replace("T", " "))
             )
-            for job in get_runtime().jobs.list_accepted()
+            for job in get_runtime().jobs.list_jobs()
         ]
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",

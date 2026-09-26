@@ -147,8 +147,9 @@ WORKFLOW_TEXTS = {
         ),
         "move_description": "Writes three camera moves for the frame and asks Jev for the best one.",
         "animate": (
-            "MiniMax H3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel, "
-            "OpenRouter still makes the video; download it with **video-02-recover-a-cancelled-video**."
+            "MiniMax H3 Max turns the frame into a six-second 768p video with the chosen move. If you cancel or "
+            "the run times out, OpenRouter still makes the video; download it with "
+            "**video-02-recover-a-cancelled-video**."
         ),
         "animate_description": "Turns the frame into a video with the chosen move and saves it.",
         "model": (
@@ -160,8 +161,8 @@ WORKFLOW_TEXTS = {
     },
     "video-02-recover-a-cancelled-video": {
         "recover": (
-            "Use this after you cancel a run of **Video: Generate**, or after ComfyUI restarts while a video is "
-            "being made. OpenRouter still makes the video.\n\n"
+            "Use this after you cancel a run of **Video: Generate**, after it times out, or after ComfyUI "
+            "restarts while a video is being made. OpenRouter still makes the video.\n\n"
             "1. In **job**, choose the video. Each entry shows its ID, model, and start time. Press R to list "
             "jobs started after the page loaded.\n"
             "2. Press **Run**. The video is saved under `video/openrouter`.\n\n"

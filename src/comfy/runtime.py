@@ -13,7 +13,7 @@ class Runtime:
 
     Attributes:
         configuration: Private settings and key store.
-        jobs: Recorded video jobs and uncertain video requests.
+        jobs: Recorded video jobs.
 
     """
 

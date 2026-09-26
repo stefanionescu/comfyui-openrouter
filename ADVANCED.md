@@ -28,7 +28,7 @@
   transparent), and SVG files.
 - **Video: Generate** sends the prompt, the chosen settings, and the frames or
   references. It records the job as soon as OpenRouter accepts it, checks it
-  every **video check interval**, and downloads the MP4 when it is ready.
+  every 30 seconds, and downloads the MP4 when it is ready.
 - **Video: Download** checks one recorded job and downloads its video. Status
   checks and downloads are free.
 - **Audio: Speak** sends the text, the voice, the speed, and the voice sample as
@@ -75,16 +75,13 @@ owner-only permissions.
 
 Change these in **OpenRouter settings**. New requests use the saved values.
 
-![The OpenRouter Settings dialog: the saved key's status, the API key field with Save Key and Clear Saved Key, the request timeout and maximum video wait, and a collapsed Advanced limits section.](docs/images/settings-dialog.png)
+![The OpenRouter Settings dialog: the API key field with Save Key and Clear Saved Key, and the request timeout, maximum upload size, and maximum download size.](docs/images/settings-dialog.png)
 
-| Setting                         | Default | Range      | What it limits                                                         |
-| ------------------------------- | ------- | ---------- | ---------------------------------------------------------------------- |
-| request timeout (seconds)       | 600     | 10 to 3600 | How long one paid request may take.                                    |
-| maximum upload size (MiB)       | 64      | 1 to 512   | The media and documents in one request.                                |
-| maximum download size (MiB)     | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.                    |
-| video check interval (seconds)  | 15      | 5 to 120   | The time between video status checks.                                  |
-| maximum video wait (minutes)    | 30      | 1 to 240   | How long one run waits for a video.                                    |
-| identical video block (minutes) | 30      | 5 to 1440  | How long an identical video request is refused after an uncertain one. |
+| Setting                     | Default | Range      | What it limits                                          |
+| --------------------------- | ------- | ---------- | ------------------------------------------------------- |
+| request timeout (seconds)   | 180     | 10 to 3600 | How long one generation may take; for a video, the job. |
+| maximum upload size (MiB)   | 64      | 1 to 512   | The media and documents in one request.                 |
+| maximum download size (MiB) | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.     |
 
 ## Models
 
@@ -131,21 +128,17 @@ setting is sent only when changed from **model default** or 0.
   sends a new request. The examples use **fixed**.
 - Saving a different key invalidates the cached results; changing settings does
   not.
-- Model checks, video checks, and video downloads are retried up to three
-  times. Paid requests are sent exactly once.
+- Every request is sent once.
 - Cancelling stops the wait only: a chat model still bills the tokens it
   produced, and a video job keeps running.
 
 ## Recover a video
 
 **Video: Generate** records each job as soon as OpenRouter accepts it. The job
-runs to completion even when you cancel, ComfyUI restarts, or **maximum video
-wait** passes. Collect it with **Video: Download** (press R to list new jobs),
-or run the identical request again.
-
-If OpenRouter's answer to a request does not arrive or cannot be read, an
-identical request is refused for **identical video block (minutes)**. A job leaves the list once its
-video is downloaded, or when it fails, is cancelled, or expires.
+runs to completion even when you cancel, ComfyUI restarts, or the **request
+timeout** passes. Collect it with **Video: Download** (press R to list new
+jobs). A job leaves the list once its video is downloaded, or when it fails, is
+cancelled, or expires.
 
 ## Limits
 
@@ -182,8 +175,6 @@ Paid nodes check these before sending, along with the [model checks](#models).
 - There is no prompt and no first frame.
 - Frames and references are both connected, or a frame receives more than one
   image.
-- An identical request comes within **identical video block (minutes)** of an
-  uncertain submission.
 
 **Audio: Speak** stops when the text is empty, or the voice sample is over the
 upload limit. **Audio: Transcribe** stops when the language is not a two-letter

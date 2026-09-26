@@ -42,7 +42,7 @@ model's video listing does not include, naming what it does take.
 
 Example: **video-01-animate-a-product-shot**.
 
-A job runs to completion even if you cancel or ComfyUI restarts; collect it
-with **Video: Download**, or run the identical request again.
+A job runs to completion even if you cancel, ComfyUI restarts, or the request
+timeout passes; collect it with **Video: Download**.
 
 [OpenRouter video generation documentation](https://openrouter.ai/docs/guides/overview/multimodal/video-generation)

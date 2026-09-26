@@ -3,31 +3,28 @@ import { app } from "../../scripts/app.js";
 var TEXT = {
   close: "Close",
   settings: {
-    moreLimits: "Advanced limits",
     clearKey: "Clear Saved Key",
     close: "Close OpenRouter settings",
     credentialLabel: "OpenRouter API key",
     credentials: "Credentials",
-    environmentKey: "The server's OPENROUTER_API_KEY environment variable is active.",
+    environmentKey: "Set by OPENROUTER_API_KEY",
     invalidDefinition: "ComfyUI returned an invalid OpenRouter setting definition.",
     invalidLimit: "ComfyUI returned an invalid OpenRouter limit.",
     invalidResponse: "ComfyUI returned an invalid OpenRouter settings response.",
-    keyCleared: "Saved key cleared. Any environment key remains active.",
-    keyNotice: "The saved key stays on the ComfyUI server. An environment key takes precedence. Keys are not checked here.",
-    keySaved: "Key saved on this server. OpenRouter checks it on the next request.",
+    keyCleared: "Saved key cleared.",
+    keyNotice: "Add an OpenRouter key to use the extension. Your key stays on your ComfyUI server and is sent only to OpenRouter.",
+    keySaved: "Key saved.",
     limits: "Request limits",
-    limitsSaved: "Limits saved. They apply to new requests.",
-    reread: "Local settings loaded.",
-    reading: "Loading local settings...",
-    missingKey: "No OpenRouter key is configured.",
+    limitsSaved: "Limits saved.",
+    reread: "Settings loaded.",
+    reading: "Loading settings...",
     noLimitChanges: "No limit changes to save.",
     readOnly: "Changes are disabled in this host's multi-user mode.",
     reload: "Reload Settings",
     saveFailed: "ComfyUI could not save OpenRouter settings.",
     saveKey: "Save Key",
     saveLimits: "Save Limits",
-    savedKey: "A saved key is configured on this server.",
-    timeNotice: "The request timeout applies to each request. The maximum video wait applies to a whole video job.",
+    savedKey: "Saved key",
     title: "OpenRouter Settings",
     unreachable: "Cannot reach OpenRouter settings. Check ComfyUI and try again.",
     unreadableResponse: "ComfyUI returned an unreadable OpenRouter settings response.",
@@ -41,10 +38,7 @@ var TEXT = {
 var LIMIT_LABELS = /* @__PURE__ */ new Map([
   ["max_download_megabytes", "maximum download size (MiB)"],
   ["max_upload_megabytes", "maximum upload size (MiB)"],
-  ["request_timeout_seconds", "request timeout (seconds)"],
-  ["video_check_interval_seconds", "video check interval (seconds)"],
-  ["identical_video_block_minutes", "identical video block (minutes)"],
-  ["video_wait_minutes", "maximum video wait (minutes)"]
+  ["request_timeout_seconds", "request timeout (seconds)"]
 ]);
 function message(key) {
   let value = TEXT;
@@ -696,7 +690,6 @@ var SettingsDialog = class {
       this.credentials(),
       element("p", message("settings.keyNotice")),
       this.limits(),
-      element("p", message("settings.timeNotice")),
       footer
     );
     this.dialog.addEventListener("close", this.dispose.bind(this), { once: true });
@@ -706,7 +699,6 @@ var SettingsDialog = class {
   previousFocus = document.activeElement;
   controller = new AbortController();
   status = element("p", message("settings.reading"));
-  source = element("p");
   reload = button(message("settings.reload"));
   key = element("input");
   keyFields = element("fieldset");
@@ -738,12 +730,7 @@ var SettingsDialog = class {
     const actions = element("div");
     actions.className = "openrouter-actions";
     actions.append(button(message("settings.saveKey"), "submit"), clear);
-    this.keyFields.append(
-      element("legend", message("settings.credentials")),
-      this.source,
-      label,
-      actions
-    );
+    this.keyFields.append(element("legend", message("settings.credentials")), label, actions);
     form.append(this.keyFields);
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -777,8 +764,6 @@ var SettingsDialog = class {
    */
   populateLimits(configuration) {
     this.limitFields.replaceChildren(element("legend", message("settings.limits")));
-    const additionalLimits = element("details");
-    additionalLimits.append(element("summary", message("settings.moreLimits")));
     for (const [name, definition] of Object.entries(configuration.definitions)) {
       const label = element("label", LIMIT_LABELS.get(name) ?? name);
       const input = element("input");
@@ -789,10 +774,9 @@ var SettingsDialog = class {
       input.required = true;
       this.inputs.set(name, input);
       label.append(input);
-      const primary = name === "request_timeout_seconds" || name === "video_wait_minutes";
-      (primary ? this.limitFields : additionalLimits).append(label);
+      this.limitFields.append(label);
     }
-    this.limitFields.append(additionalLimits, button(message("settings.saveLimits"), "submit"));
+    this.limitFields.append(button(message("settings.saveLimits"), "submit"));
   }
   /**
    * Save only limits changed since the last successful read.
@@ -821,14 +805,11 @@ var SettingsDialog = class {
     this.configuration = configuration;
     if (this.inputs.size === 0) this.populateLimits(configuration);
     this.key.maxLength = configuration.credentialLimit;
-    setText(
-      this.source,
-      {
-        missing: message("settings.missingKey"),
-        saved: message("settings.savedKey"),
-        environment: message("settings.environmentKey")
-      }[configuration.credentialSource]
-    );
+    this.key.placeholder = {
+      missing: "",
+      saved: message("settings.savedKey"),
+      environment: message("settings.environmentKey")
+    }[configuration.credentialSource];
     const settings = new Map(Object.entries(configuration.settings));
     for (const [name, definition] of Object.entries(configuration.definitions)) {
       const input = this.inputs.get(name);

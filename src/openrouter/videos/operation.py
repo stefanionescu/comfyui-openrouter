@@ -2,37 +2,30 @@
 
 from __future__ import annotations
 
-import json
-import math
 import time
 import asyncio
-import hashlib
 from .jobs import JOB_ID
 from typing import TYPE_CHECKING
 from datetime import UTC, datetime
 from ...types.videos import VideoJob
 from pydantic import ValidationError
 from ..failures import sanitize_reason
-from ...config.storage import JOB_FILES
 from ..options import build_request_body
 from ...types.replies import VideoJobReply
 from ..transport import download, send_json
 from ..operation import validate_upload_size
-from ...config.units import SECONDS_PER_MINUTE
 from ...config.messages.models import MODEL_FRAME
 from ...config.messages.run import REPLY_UNREADABLE
-from ...config.generation.videos import DONE_STATUSES
 from ...types.errors import ErrorCode, OpenRouterError
 from ...config.openrouter import ENDPOINT_URLS, VIDEO_JOB_URLS
 from ..models import validate_model, validate_limits, read_video_limits
+from ...config.generation.videos import DONE_STATUSES, POLL_INTERVAL_SECONDS
 from ...config.messages.videos import (
     JOB_FAILED,
     JOB_EXPIRED,
     JOB_CANCELLED,
     JOB_WAIT_LIMIT,
-    SUBMIT_DELAYED,
     PROMPT_REQUIRED,
-    SUBMIT_UNCERTAIN,
     FRAMES_BESIDE_REFERENCES,
 )
 
@@ -72,10 +65,10 @@ class VideoDownloadOperation:
     async def send(self, configuration: Configuration) -> bytes:
         """Check the job at once, so a job that finished while ComfyUI was closed downloads immediately.
 
-        A cancel or the wait limit leaves the record in place, which is what lets Video: Download finish it.
+        A cancel or the request timeout leaves the record in place, which is what lets Video: Download finish it.
         """
         settings = configuration.settings
-        deadline = time.monotonic() + settings.video_wait_minutes * SECONDS_PER_MINUTE
+        deadline = time.monotonic() + settings.request_timeout_seconds
         while True:
             status_url = VIDEO_JOB_URLS["STATUS"].format(job_id=self.job.job_id)
             content = await download(status_url, configuration.settings, credential=configuration.credential)
@@ -86,22 +79,24 @@ class VideoDownloadOperation:
             if reply.status in DONE_STATUSES:
                 break
             if time.monotonic() >= deadline:
-                raise OpenRouterError(ErrorCode.TIMEOUT, JOB_WAIT_LIMIT.format(minutes=settings.video_wait_minutes))
-            await asyncio.sleep(settings.video_check_interval_seconds)
+                raise OpenRouterError(
+                    ErrorCode.TIMEOUT, JOB_WAIT_LIMIT.format(seconds=settings.request_timeout_seconds)
+                )
+            await asyncio.sleep(POLL_INTERVAL_SECONDS)
         if reply.status != "completed":
-            await asyncio.to_thread(self.jobs.delete, self.job.name)
+            await asyncio.to_thread(self.jobs.delete, self.job.job_id)
             reason = sanitize_reason(reply.error or "")
             ended = {"failed": JOB_FAILED, "cancelled": JOB_CANCELLED}.get(reply.status, JOB_EXPIRED)
             raise OpenRouterError(ErrorCode.UNAVAILABLE, ended.format(reason=reason))
         content_url = VIDEO_JOB_URLS["CONTENT"].format(job_id=self.job.job_id)
         video = await download(content_url, configuration.settings, credential=configuration.credential)
         # The record goes only after the download, so a failed download can be collected again.
-        await asyncio.to_thread(self.jobs.delete, self.job.name)
+        await asyncio.to_thread(self.jobs.delete, self.job.job_id)
         return video
 
 
 class VideoOperation:
-    """One video job, resumed instead of sent again when an identical one is already running."""
+    """One video job, sent once and recorded as soon as OpenRouter accepts it."""
 
     def __init__(self, request: VideoRequest, jobs: JobStore) -> None:
         """Keep the request to validate and send, and the store its job is recorded in."""
@@ -165,42 +160,15 @@ class VideoOperation:
         return build_request_body(body, request.options, "videos")
 
     async def send(self, configuration: Configuration) -> bytes:
-        """Resume an identical recorded job instead of paying for a second one, or submit and record a new job."""
-        settings = configuration.settings
-        request = self.request
+        """Submit the job, record it as soon as OpenRouter accepts it, and wait for its video."""
         model, limits = await self._read_model(configuration)
         body = self.build_body(model.parameters, limits)
-        request_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-        found = await asyncio.to_thread(self.jobs.find, request_hash, settings.identical_video_block_minutes)
-        if found is not None and found.status == "accepted":
-            return await VideoDownloadOperation(found, self.jobs).send(configuration)
-        if found is not None:
-            elapsed = (datetime.now(UTC) - datetime.fromisoformat(found.submitted_at)).total_seconds()
-            minutes = max(1, math.ceil(settings.identical_video_block_minutes - elapsed / SECONDS_PER_MINUTE))
-            raise OpenRouterError(ErrorCode.UNCERTAIN, SUBMIT_DELAYED.format(minutes=minutes))
-        job = VideoJob(
-            version=1,
-            name=JOB_FILES["UNCERTAIN_PREFIX"] + request_hash,
-            job_id=None,
-            model_id=request.model_id,
-            request_hash=request_hash,
-            submitted_at=datetime.now(UTC).isoformat(),
-            status="uncertain",
-        )
-        try:
-            job_id = _read_job_id(await send_json(ENDPOINT_URLS["videos"], body, configuration))
-        except OpenRouterError as error:
-            # The request may have been accepted and billed, so an identical one is refused for a while.
-            if error.code not in {ErrorCode.UNCERTAIN, ErrorCode.TIMEOUT}:
-                raise
-            await asyncio.to_thread(self.jobs.save, job)
-            raise OpenRouterError(
-                ErrorCode.UNCERTAIN, SUBMIT_UNCERTAIN.format(minutes=settings.identical_video_block_minutes)
-            ) from None
+        submitted_at = datetime.now(UTC).isoformat()
+        job_id = _read_job_id(await send_json(ENDPOINT_URLS["videos"], body, configuration))
         # The record is written before the first wait, so a cancel one moment later still leaves it.
-        accepted = job.model_copy(update={"name": job_id, "job_id": job_id, "status": "accepted"})
-        await asyncio.to_thread(self.jobs.save, accepted)
-        return await VideoDownloadOperation(accepted, self.jobs).send(configuration)
+        job = VideoJob(version=1, job_id=job_id, model_id=self.request.model_id, submitted_at=submitted_at)
+        await asyncio.to_thread(self.jobs.save, job)
+        return await VideoDownloadOperation(job, self.jobs).send(configuration)
 
 
 __all__ = ["VideoDownloadOperation", "VideoOperation"]

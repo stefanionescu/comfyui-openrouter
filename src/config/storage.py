@@ -25,12 +25,10 @@ FILE_NAMES = {
     "CREDENTIAL": "credential",
 }
 
-# The video job records. An uncertain submission is recorded under the uncertain prefix and its request hash,
-# since it has no job ID.
+# The video job records, one file per job ID.
 JOB_FILES = {
     "FOLDER": "jobs",
     "SUFFIX": ".json",
-    "UNCERTAIN_PREFIX": "uncertain-",
 }
 
 # The largest settings file and job record the extension reads.

@@ -17,8 +17,6 @@ class SettingsDialog {
 
   private readonly status = element('p', message('settings.reading'));
 
-  private readonly source = element('p');
-
   private readonly reload = button(message('settings.reload'));
 
   private readonly key = element('input');
@@ -55,7 +53,6 @@ class SettingsDialog {
       this.credentials(),
       element('p', message('settings.keyNotice')),
       this.limits(),
-      element('p', message('settings.timeNotice')),
       footer,
     );
     this.dialog.addEventListener('close', this.dispose.bind(this), { once: true });
@@ -86,12 +83,7 @@ class SettingsDialog {
     const actions = element('div');
     actions.className = 'openrouter-actions';
     actions.append(button(message('settings.saveKey'), 'submit'), clear);
-    this.keyFields.append(
-      element('legend', message('settings.credentials')),
-      this.source,
-      label,
-      actions,
-    );
+    this.keyFields.append(element('legend', message('settings.credentials')), label, actions);
     form.append(this.keyFields);
     form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -127,8 +119,6 @@ class SettingsDialog {
    */
   private populateLimits(configuration: Configuration): void {
     this.limitFields.replaceChildren(element('legend', message('settings.limits')));
-    const additionalLimits = element('details');
-    additionalLimits.append(element('summary', message('settings.moreLimits')));
     for (const [name, definition] of Object.entries(configuration.definitions)) {
       const label = element('label', LIMIT_LABELS.get(name) ?? name);
       const input = element('input');
@@ -139,10 +129,9 @@ class SettingsDialog {
       input.required = true;
       this.inputs.set(name, input);
       label.append(input);
-      const primary = name === 'request_timeout_seconds' || name === 'video_wait_minutes';
-      (primary ? this.limitFields : additionalLimits).append(label);
+      this.limitFields.append(label);
     }
-    this.limitFields.append(additionalLimits, button(message('settings.saveLimits'), 'submit'));
+    this.limitFields.append(button(message('settings.saveLimits'), 'submit'));
   }
 
   /**
@@ -173,14 +162,11 @@ class SettingsDialog {
     this.configuration = configuration;
     if (this.inputs.size === 0) this.populateLimits(configuration);
     this.key.maxLength = configuration.credentialLimit;
-    setText(
-      this.source,
-      {
-        missing: message('settings.missingKey'),
-        saved: message('settings.savedKey'),
-        environment: message('settings.environmentKey'),
-      }[configuration.credentialSource],
-    );
+    this.key.placeholder = {
+      missing: '',
+      saved: message('settings.savedKey'),
+      environment: message('settings.environmentKey'),
+    }[configuration.credentialSource];
     const settings = new Map(Object.entries(configuration.settings));
     for (const [name, definition] of Object.entries(configuration.definitions)) {
       const input = this.inputs.get(name);

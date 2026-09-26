@@ -20,6 +20,9 @@ AUDIO_CHOICES = (MODEL_DEFAULT, "on", "off")
 # The statuses of a job that has ended.
 DONE_STATUSES = ("completed", "failed", "cancelled", "expired")
 
+# The time between a job's status checks: the polling interval OpenRouter's video guide gives.
+POLL_INTERVAL_SECONDS = 30
+
 # Video: Download lists each job as its ID, model, and start time, joined by this separator.
 JOB_LABEL_SEPARATOR = " · "
 
@@ -32,6 +35,7 @@ __all__ = [
     "DONE_STATUSES",
     "JOB_LABEL_SEPARATOR",
     "JOB_TIME_CHARACTERS",
+    "POLL_INTERVAL_SECONDS",
     "RESOLUTIONS",
     "STEPS",
 ]
