@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from dataclasses import asdict
 from ..base import PaidNode
+from dataclasses import asdict
 from comfy_api.latest import io
 from typing import cast, TYPE_CHECKING
 from ...types.parsing import parse_json
