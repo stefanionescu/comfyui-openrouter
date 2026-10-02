@@ -96,15 +96,38 @@ class ChatChoiceReply(Reply):
     finish_reason: str | None = None
 
 
+class UsageReply(Reply):
+    """Usage OpenRouter reports for one chat completion.
+
+    Attributes:
+        prompt_tokens: Tokens OpenRouter reports for the prompt.
+        completion_tokens: Tokens OpenRouter reports for the completion.
+        total_tokens: Tokens OpenRouter reports for the whole completion.
+        cost: The reported charge in US dollars.
+
+    """
+
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    total_tokens: int | None = None
+    cost: float | None = None
+
+
 class ChatReply(Reply):
     """A chat completion.
 
     Attributes:
         choices: The model's answers; the extension reads the first.
+        id: OpenRouter's identifier for the completion.
+        model: The model OpenRouter reports for the completion.
+        usage: The token counts and charge OpenRouter reports.
 
     """
 
     choices: tuple[ChatChoiceReply, ...]
+    id: str | None = None
+    model: str | None = None
+    usage: UsageReply | None = None
 
 
 class ImageItem(Reply):

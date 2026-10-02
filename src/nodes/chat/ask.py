@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import asdict
 from ..base import PaidNode
 from comfy_api.latest import io
 from typing import cast, TYPE_CHECKING
@@ -149,7 +150,14 @@ def _build_outputs(result: ChatResult, history: Conversation, prompt: str) -> io
             else decode_audio(result.audio)
         )
     turns = (*history.turns, Turn("user", prompt), Turn("assistant", result.text))
-    return io.NodeOutput(result.text, result.reasoning, pictures or ExecutionBlocker(None), sound, Conversation(turns))
+    return io.NodeOutput(
+        result.text,
+        result.reasoning,
+        pictures or ExecutionBlocker(None),
+        sound,
+        Conversation(turns),
+        ui={"openrouter": [asdict(result.metadata)]},
+    )
 
 
 class ChatAsk(PaidNode):

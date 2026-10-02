@@ -114,6 +114,28 @@ class ChatRequest:
 
 
 @dataclass(frozen=True, slots=True)
+class ChatMetadata:
+    """The completion identifiers and usage OpenRouter reported.
+
+    Attributes:
+        completion_id: OpenRouter's identifier for the completion.
+        model: The model OpenRouter reports for the completion.
+        reported_prompt_tokens: Tokens OpenRouter reports for the prompt.
+        reported_completion_tokens: Tokens OpenRouter reports for the completion.
+        reported_total_tokens: Tokens OpenRouter reports for the whole completion.
+        reported_cost_usd: The charge OpenRouter reports in US dollars.
+
+    """
+
+    completion_id: str | None = None
+    model: str | None = None
+    reported_prompt_tokens: int | None = None
+    reported_completion_tokens: int | None = None
+    reported_total_tokens: int | None = None
+    reported_cost_usd: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class ChatResult:
     """What one chat completion returned.
 
@@ -123,6 +145,7 @@ class ChatResult:
         images: Encoded images the model made.
         audio: Audio the model made, or None.
         is_pcm: Whether the audio is raw 16-bit PCM rather than an encoded file.
+        metadata: The completion identifiers and usage OpenRouter reported.
 
     """
 
@@ -131,6 +154,7 @@ class ChatResult:
     images: tuple[bytes, ...]
     audio: bytes | None
     is_pcm: bool
+    metadata: ChatMetadata
 
 
-__all__ = ["ChatRequest", "ChatResult", "ChatSettings", "Conversation", "Document", "Turn"]
+__all__ = ["ChatMetadata", "ChatRequest", "ChatResult", "ChatSettings", "Conversation", "Document", "Turn"]
