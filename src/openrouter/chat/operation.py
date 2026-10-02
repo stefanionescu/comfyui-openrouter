@@ -9,11 +9,11 @@ from .content import build_body
 from typing import TYPE_CHECKING
 from .audio import send_audio_chat
 from ..models import validate_model
-from ...types.chat import ChatMetadata, ChatResult
 from pydantic import ValidationError
 from ..operation import validate_upload_size
 from ..transport import send_json, download_media
 from ...config.messages.inputs import PROMPT_EMPTY
+from ...types.chat import ChatMetadata, ChatResult
 from ..failures import sanitize_reason, read_failure
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.replies import ChatReply, ErrorReply, ChatMessage

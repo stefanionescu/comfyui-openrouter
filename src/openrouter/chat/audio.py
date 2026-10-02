@@ -5,9 +5,9 @@ from __future__ import annotations
 import base64
 import binascii
 from ..transport import send_stream
-from ...types.chat import ChatMetadata, ChatResult
 from typing import cast, TYPE_CHECKING
 from ...config.openrouter import ENDPOINT_URLS
+from ...types.chat import ChatMetadata, ChatResult
 from ...config.messages.run import REPLY_UNREADABLE
 from ...types.errors import ErrorCode, OpenRouterError
 
