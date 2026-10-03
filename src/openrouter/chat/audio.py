@@ -5,9 +5,9 @@ from __future__ import annotations
 import base64
 import binascii
 from ..transport import send_stream
-from ...types.chat import ChatResult
 from typing import cast, TYPE_CHECKING
 from ...config.openrouter import ENDPOINT_URLS
+from ...types.chat import ChatMetadata, ChatResult
 from ...config.messages.run import REPLY_UNREADABLE
 from ...types.errors import ErrorCode, OpenRouterError
 
@@ -45,7 +45,14 @@ async def send_audio_chat(body: Mapping[str, Json], configuration: Configuration
         raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
     # The spoken words arrive only as the transcript, so they stand in for empty text.
     answer = "".join(text) or "".join(transcript)
-    return ChatResult(text=answer, reasoning="", images=(), audio=content, is_pcm="audio" in body)
+    return ChatResult(
+        text=answer,
+        reasoning="",
+        images=(),
+        audio=content,
+        is_pcm="audio" in body,
+        metadata=ChatMetadata(),
+    )
 
 
 __all__ = ["send_audio_chat"]

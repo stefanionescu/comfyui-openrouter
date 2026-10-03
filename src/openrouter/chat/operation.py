@@ -9,11 +9,11 @@ from .content import build_body
 from typing import TYPE_CHECKING
 from .audio import send_audio_chat
 from ..models import validate_model
-from ...types.chat import ChatResult
 from pydantic import ValidationError
 from ..operation import validate_upload_size
 from ..transport import send_json, download_media
 from ...config.messages.inputs import PROMPT_EMPTY
+from ...types.chat import ChatMetadata, ChatResult
 from ..failures import sanitize_reason, read_failure
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.replies import ChatReply, ErrorReply, ChatMessage
@@ -56,7 +56,7 @@ class ChatOperation:
             if not result.text and result.audio is None:
                 raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
             return result
-        message, finish_reason = _read_message(await send_json(ENDPOINT_URLS["chat"], body, configuration))
+        message, finish_reason, metadata = _read_message(await send_json(ENDPOINT_URLS["chat"], body, configuration))
         if isinstance(message.content, list):
             parts = (part for part in message.content if isinstance(part, dict))
             text = "".join(str(part.get("text", "")) for part in parts if part.get("type") == "text")
@@ -67,7 +67,14 @@ class ChatOperation:
         if not text and not images:
             ended = {"length": ANSWER_CUT, "content_filter": ANSWER_FILTERED}.get(finish_reason or "", REPLY_EMPTY)
             raise OpenRouterError(ErrorCode.TRANSPORT, ended)
-        return ChatResult(text=text, reasoning=message.reasoning or "", images=images, audio=None, is_pcm=False)
+        return ChatResult(
+            text=text,
+            reasoning=message.reasoning or "",
+            images=images,
+            audio=None,
+            is_pcm=False,
+            metadata=metadata,
+        )
 
 
 def _validate_settings(request: ChatRequest, model: Model) -> None:
@@ -84,8 +91,8 @@ def _validate_settings(request: ChatRequest, model: Model) -> None:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
 
 
-def _read_message(document: Json) -> tuple[ChatMessage, str | None]:
-    """Read the first choice's message and why it ended, refusing a failed choice and a model's refusal."""
+def _read_message(document: Json) -> tuple[ChatMessage, str | None, ChatMetadata]:
+    """Read the first choice, completion metadata, and finish reason, refusing failures and refusals."""
     try:
         reply = ChatReply.model_validate(document)
     except ValidationError:
@@ -100,7 +107,16 @@ def _read_message(document: Json) -> tuple[ChatMessage, str | None]:
     if message.refusal:
         reason = sanitize_reason(message.refusal)
         raise OpenRouterError(ErrorCode.REFUSED, MODEL_REFUSED.format(reason=reason))
-    return message, choice.finish_reason
+    usage = reply.usage
+    metadata = ChatMetadata(
+        completion_id=reply.id,
+        model=reply.model,
+        reported_prompt_tokens=usage.prompt_tokens if usage else None,
+        reported_completion_tokens=usage.completion_tokens if usage else None,
+        reported_total_tokens=usage.total_tokens if usage else None,
+        reported_cost_usd=usage.cost if usage else None,
+    )
+    return message, choice.finish_reason, metadata
 
 
 async def _read_image(url: str, settings: Settings) -> bytes:
