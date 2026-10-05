@@ -20,12 +20,13 @@ VIDEO_JOB_URLS = {
     "CONTENT": "https://openrouter.ai/api/v1/videos/{job_id}/content",
 }
 
-# The public listings, read without the key: one model, one image model's providers, and every video model. An
-# unknown ID returns 404.
+# The public listings, read without the key: one model, one image model's providers, every video model, and every
+# reasoning model with the efforts it takes. An unknown ID returns 404.
 LISTING_URLS = {
     "MODEL": "https://openrouter.ai/api/v1/models/{model_id}/endpoints",
     "IMAGE_MODEL": "https://openrouter.ai/api/v1/images/models/{model_id}/endpoints",
     "VIDEO_MODELS": "https://openrouter.ai/api/v1/videos/models",
+    "REASONING_MODELS": "https://openrouter.ai/api/v1/models?supported_parameters=reasoning",
 }
 
 # OpenRouter attributes usage to this address and title, under the categories it recognizes for what the

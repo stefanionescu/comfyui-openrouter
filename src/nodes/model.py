@@ -37,6 +37,7 @@ def _format_report(model_id: str, model: Model, limits: Limits | None) -> str:
         "context_length": model.context_length,
         "max_completion_tokens": model.max_completion_tokens,
         "parameters": sorted(model.parameters),
+        "reasoning_efforts": list(model.efforts),
         "voice_cloning": model.has_voice_cloning,
         "providers": list(model.providers),
         "fields": fields,

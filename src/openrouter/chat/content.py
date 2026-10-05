@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from ..options import build_request_body
-from ...config.generation.chat import VOICE, ANSWER_SCHEMA_NAME
+from ...config.generation.chat import VOICE, EFFORTS, ANSWER_SCHEMA_NAME
 
 if TYPE_CHECKING:
     from ...types import Json
+    from ...types.models import Model
     from ...types.chat import ChatRequest, ChatSettings
 
 
@@ -49,15 +50,28 @@ def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
     return fields
 
 
-def build_body(request: ChatRequest, parameters: frozenset[str]) -> dict[str, Json]:
+def _choose_effort(effort: str, efforts: tuple[str, ...]) -> str:
+    """Choose the effort sent: one the model does not list steps down to the highest below it, or up to its lowest.
+
+    A model that lists no efforts this extension knows gets the effort as chosen.
+    """
+    known = sorted((level for level in efforts if level in EFFORTS), key=EFFORTS.index)
+    if not known or effort in known:
+        return effort
+    below = [level for level in known if EFFORTS.index(level) < EFFORTS.index(effort)]
+    return below[-1] if below else known[0]
+
+
+def build_body(request: ChatRequest, model: Model) -> dict[str, Json]:
     """Add each control that is set; the reasoning effort, temperature, and seed go only to a model that takes them.
 
-    With an answer schema, only providers that follow it may answer.
+    The reasoning effort steps to one the model lists. With an answer schema, only providers that follow it may answer.
     """
     settings = request.settings
+    parameters = model.parameters
     body: dict[str, Json] = {"model": request.model_id, "messages": _build_messages(request)}
     if settings.effort is not None and "reasoning" in parameters:
-        body["reasoning"] = {"effort": settings.effort}
+        body["reasoning"] = {"effort": _choose_effort(settings.effort, model.efforts)}
     if settings.max_tokens > 0:
         field = "max_tokens" if "max_completion_tokens" not in parameters else "max_completion_tokens"
         body[field] = settings.max_tokens

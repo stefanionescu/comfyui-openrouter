@@ -105,7 +105,9 @@ The message names what the model does take. Each listing is read once per model
 per ComfyUI session. **Model: Info** returns the same listing as JSON, for free.
 
 The seed, a set temperature, and reasoning effort go only to models that list them,
-and with an answer schema only providers that follow it answer. Every other
+and with an answer schema only providers that follow it answer. A reasoning effort
+the model does not list steps down to the highest one it lists below it, or up to
+its lowest. Every other
 setting is sent only when changed from **model default** or 0.
 
 | Node              | Default model                         |

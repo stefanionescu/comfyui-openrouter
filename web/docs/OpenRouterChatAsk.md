@@ -5,27 +5,27 @@ model reads them. Returns text, and images or speech from models that make them.
 
 ## Inputs
 
-| Input              | What it takes                                                                                                                                                   |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `model`            | Any chat model ID from openrouter.ai/models; the default is `google/gemini-3.5-flash`. A suffix such as `:nitro` picks a variant.                               |
-| `images`           | Images: one, a batch, or a list. Each goes in the request at its own size.                                                                                      |
-| `videos`           | Videos: one or a list. Each is sent as MP4.                                                                                                                     |
-| `audio`            | Audio clips: one, a batch, or a list. Each is sent as WAV.                                                                                                      |
-| `reasoning_effort` | How much a reasoning model thinks before answering. Sent only to models that reason.                                                                            |
-| `max_tokens`       | The longest answer in tokens; 0 leaves it to the model.                                                                                                         |
-| `temperature`      | **model default** sends none. **set** sends a value from 0 to 2; higher values vary the answer more. Sent only to models that take a temperature.               |
-| `outputs`          | **text**, **image and text**, or **audio and text**. Images and audio need a model that makes them.                                                             |
-| `aspect_ratio`     | The shape of the images a model draws.                                                                                                                          |
-| `voice`            | The voice of a spoken answer, such as `alloy`. Music models need it empty.                                                                                      |
-| `pdf_engine`       | How OpenRouter reads PDFs: `native`, `cloudflare-ai`, or `mistral-ocr`. **model default** uses the model's own file reading, or `mistral-ocr` when it has none. |
-| `seed`             | Varies the output, for models that take a seed.                                                                                                                 |
-| `run_number`       | Change it to send the same request again.                                                                                                                       |
-| `answer_schema`    | A JSON schema the answer must follow; only providers that follow it answer. Leave it empty for free text.                                                       |
-| `prompt`           | The question or instruction.                                                                                                                                    |
-| `conversation`     | Earlier turns, from another **Chat: Ask**.                                                                                                                      |
-| `documents`        | Files from **Chat: Attach Document**.                                                                                                                           |
-| `options`          | Settings from **Request Options**.                                                                                                                              |
-| `system_prompt`    | The system prompt: instructions for the whole answer.                                                                                                           |
+| Input              | What it takes                                                                                                                                                                          |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`            | Any chat model ID from openrouter.ai/models; the default is `google/gemini-3.5-flash`. A suffix such as `:nitro` picks a variant.                                                      |
+| `images`           | Images: one, a batch, or a list. Each goes in the request at its own size.                                                                                                             |
+| `videos`           | Videos: one or a list. Each is sent as MP4.                                                                                                                                            |
+| `audio`            | Audio clips: one, a batch, or a list. Each is sent as WAV.                                                                                                                             |
+| `reasoning_effort` | How much a reasoning model thinks before answering. Sent only to models that reason. A level the model does not list steps down to the highest it lists below it, or up to its lowest. |
+| `max_tokens`       | The longest answer in tokens; 0 leaves it to the model.                                                                                                                                |
+| `temperature`      | **model default** sends none. **set** sends a value from 0 to 2; higher values vary the answer more. Sent only to models that take a temperature.                                      |
+| `outputs`          | **text**, **image and text**, or **audio and text**. Images and audio need a model that makes them.                                                                                    |
+| `aspect_ratio`     | The shape of the images a model draws.                                                                                                                                                 |
+| `voice`            | The voice of a spoken answer, such as `alloy`. Music models need it empty.                                                                                                             |
+| `pdf_engine`       | How OpenRouter reads PDFs: `native`, `cloudflare-ai`, or `mistral-ocr`. **model default** uses the model's own file reading, or `mistral-ocr` when it has none.                        |
+| `seed`             | Varies the output, for models that take a seed.                                                                                                                                        |
+| `run_number`       | Change it to send the same request again.                                                                                                                                              |
+| `answer_schema`    | A JSON schema the answer must follow; only providers that follow it answer. Leave it empty for free text.                                                                              |
+| `prompt`           | The question or instruction.                                                                                                                                                           |
+| `conversation`     | Earlier turns, from another **Chat: Ask**.                                                                                                                                             |
+| `documents`        | Files from **Chat: Attach Document**.                                                                                                                                                  |
+| `options`          | Settings from **Request Options**.                                                                                                                                                     |
+| `system_prompt`    | The system prompt: instructions for the whole answer.                                                                                                                                  |
 
 ## Outputs
 

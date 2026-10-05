@@ -139,6 +139,41 @@ class VideoModelsReply(Reply):
     models: tuple[VideoModel, ...] = Field(default=(), alias="data")
 
 
+class Reasoning(Reply):
+    """How one model reasons.
+
+    Attributes:
+        supported_efforts: The reasoning efforts the model takes, in OpenRouter's order; None when it does not say.
+
+    """
+
+    supported_efforts: tuple[str, ...] | None = None
+
+
+class ReasoningModel(Reply):
+    """One model in OpenRouter's public list of reasoning models.
+
+    Attributes:
+        id: The model ID.
+        reasoning: How it reasons; None when the list does not say.
+
+    """
+
+    id: str
+    reasoning: Reasoning | None = None
+
+
+class ReasoningModelsReply(Reply):
+    """OpenRouter's public list of reasoning models.
+
+    Attributes:
+        models: Every reasoning model, which OpenRouter sends as data.
+
+    """
+
+    models: tuple[ReasoningModel, ...] = Field(default=(), alias="data")
+
+
 @dataclass(frozen=True, slots=True)
 class Model:
     """What the model check learned about one model.
@@ -147,6 +182,7 @@ class Model:
         inputs: What the model reads; empty when OpenRouter does not say.
         outputs: What the model makes.
         parameters: The request fields at least one of its providers accepts.
+        efforts: The reasoning efforts it takes, in OpenRouter's order; empty when OpenRouter does not list them.
         context_length: The most tokens any provider reads, or None when none says.
         max_completion_tokens: The longest answer any provider gives, or None when none says.
         has_voice_cloning: Whether any provider copies a voice from a sample.
@@ -157,6 +193,7 @@ class Model:
     inputs: frozenset[str]
     outputs: frozenset[str]
     parameters: frozenset[str]
+    efforts: tuple[str, ...]
     context_length: int | None
     max_completion_tokens: int | None
     has_voice_cloning: bool
@@ -189,6 +226,9 @@ __all__ = [
     "ModelEndpoint",
     "ModelListing",
     "ModelReply",
+    "Reasoning",
+    "ReasoningModel",
+    "ReasoningModelsReply",
     "VideoModel",
     "VideoModelsReply",
 ]

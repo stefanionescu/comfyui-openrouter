@@ -50,7 +50,7 @@ class ChatOperation:
         inputs = [kind for kind, items in media.items() if items]
         model = await validate_model(request.model_id, "chat", configuration.settings, inputs)
         _validate_settings(request, model)
-        body = build_body(request, model.parameters)
+        body = build_body(request, model)
         if "audio" in request.settings.outputs:
             result = await send_audio_chat(body, configuration)
             if not result.text and result.audio is None:

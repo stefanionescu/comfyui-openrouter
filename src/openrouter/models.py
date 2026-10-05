@@ -9,8 +9,8 @@ from typing import cast, TYPE_CHECKING
 from .transport import download_listing
 from ..config.patterns import MODEL_ID_PATTERN
 from ..types.errors import ErrorCode, OpenRouterError
-from ..types.models import Model, Limits, ModelReply, ImageModelReply, VideoModelsReply
 from ..config.openrouter import LISTING_URLS, FIELD_LABELS, MEDIA_LABELS, MODEL_OUTPUTS, ENDPOINT_LABELS
+from ..types.models import Model, Limits, ModelReply, ImageModelReply, VideoModelsReply, ReasoningModelsReply
 from ..config.messages.models import (
     MODEL_KIND,
     MODEL_EMPTY,
@@ -32,6 +32,7 @@ MODEL_ID = re.compile(MODEL_ID_PATTERN)
 _MODELS: dict[str, Model] = {}
 _IMAGE_LIMITS: dict[str, Limits | None] = {}
 _VIDEO_MODELS: dict[str, VideoModel] = {}
+_EFFORTS: dict[str, tuple[str, ...]] = {}
 # The listing reads in flight on each event loop, keyed by address, which callers asking at the same time share.
 _READS: weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, dict[str, asyncio.Task[Reply | None]]] = (
     weakref.WeakKeyDictionary()
@@ -100,10 +101,20 @@ def _build_video_limits(video: VideoModel, parameters: frozenset[str]) -> Limits
     return Limits(frozenset(fields), choices, ranges)
 
 
+async def _read_efforts(model_id: str, settings: Settings) -> tuple[str, ...]:
+    """Read the reasoning efforts one model takes from OpenRouter's list of reasoning models; empty when unlisted."""
+    if not _EFFORTS:
+        reply = await _read_listing(LISTING_URLS["REASONING_MODELS"], ReasoningModelsReply, settings)
+        models = reply.models if reply else ()
+        _EFFORTS.update({item.id: item.reasoning.supported_efforts or () for item in models if item.reasoning})
+    return _EFFORTS.get(model_id, ())
+
+
 async def read_model(model_id: str, settings: Settings) -> Model:
     """Read what OpenRouter lists for one model, refusing an empty ID and one OpenRouter does not list.
 
-    A length OpenRouter lists as 0 or leaves out is not stated, so it reads as None.
+    A length OpenRouter lists as 0 or leaves out is not stated, so it reads as None. The reasoning efforts are read
+    only for a model whose providers take reasoning.
     """
     if not model_id:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_EMPTY)
@@ -112,10 +123,12 @@ async def read_model(model_id: str, settings: Settings) -> Model:
         if reply is not None:
             listing = reply.model
             endpoints = listing.endpoints
+            parameters = frozenset(parameter for item in endpoints for parameter in item.supported_parameters)
             _MODELS[model_id] = Model(
                 inputs=frozenset(listing.architecture.input_modalities),
                 outputs=frozenset(listing.architecture.output_modalities),
-                parameters=frozenset(parameter for item in endpoints for parameter in item.supported_parameters),
+                parameters=parameters,
+                efforts=await _read_efforts(model_id, settings) if "reasoning" in parameters else (),
                 context_length=max((item.context_length for item in endpoints if item.context_length), default=None),
                 max_completion_tokens=max(
                     (item.max_completion_tokens for item in endpoints if item.max_completion_tokens), default=None

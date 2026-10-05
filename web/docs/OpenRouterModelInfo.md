@@ -18,17 +18,18 @@ OpenRouter's public listings, so it is free and needs no key.
 The paid nodes check each request against the same listings before paying, so
 **info** holds exactly what they accept.
 
-| Key                   | What it holds                                                                             |
-| --------------------- | ----------------------------------------------------------------------------------------- |
-| model                 | The model ID.                                                                             |
-| inputs                | What the model reads, such as `text`, `image`, `audio`, or `video`.                       |
-| outputs               | What the model makes, such as `text`, `image`, `video`, `speech`, or `embeddings`.        |
-| context_length        | The most tokens any provider reads, or `null` when none says.                             |
-| max_completion_tokens | The longest answer any provider gives, or `null` when none says.                          |
-| parameters            | The chat request fields at least one provider accepts, such as `seed` or `reasoning`.     |
-| voice_cloning         | Whether a provider copies a voice from a sample.                                          |
-| providers             | The provider slugs **Request Options** takes, such as `google-vertex`.                    |
-| fields                | The image or video fields the model takes. `{}` for a model that makes no image or video. |
+| Key                   | What it holds                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| model                 | The model ID.                                                                                                 |
+| inputs                | What the model reads, such as `text`, `image`, `audio`, or `video`.                                           |
+| outputs               | What the model makes, such as `text`, `image`, `video`, `speech`, or `embeddings`.                            |
+| context_length        | The most tokens any provider reads, or `null` when none says.                                                 |
+| max_completion_tokens | The longest answer any provider gives, or `null` when none says.                                              |
+| parameters            | The chat request fields at least one provider accepts, such as `seed` or `reasoning`.                         |
+| reasoning_efforts     | The reasoning efforts the model takes, such as `["high", "medium", "low"]`. Empty when OpenRouter lists none. |
+| voice_cloning         | Whether a provider copies a voice from a sample.                                                              |
+| providers             | The provider slugs **Request Options** takes, such as `google-vertex`.                                        |
+| fields                | The image or video fields the model takes. `{}` for a model that makes no image or video.                     |
 
 In `fields`, a field with fixed values holds `values`, a number holds `min` and
 `max`, and a field that is only on or off holds `{}`. For example:
