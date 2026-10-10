@@ -2,7 +2,7 @@
 
 PROJECT_METADATA_FILE = "pyproject.toml"
 LOCK_FILE = "uv.lock"
-PROJECT_PACKAGE_NAME = "comfyui-openrouter"
+PROJECT_PACKAGE_NAME = "openrouter"
 RUNTIME_EXTRAS: tuple[str, ...] = ()
 DEV_DEPENDENCY_GROUP = "dev"
 

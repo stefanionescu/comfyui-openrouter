@@ -40,7 +40,7 @@ Run any OpenRouter model in ComfyUI with your own API key.
 
 ## Install
 
-Put the extension in `ComfyUI/custom_nodes/comfyui-openrouter`, install its
+Put the extension in `ComfyUI/custom_nodes/openrouter`, install its
 `requirements.txt` with ComfyUI's Python, and restart ComfyUI.
 
 ### Comfy Desktop
@@ -52,7 +52,7 @@ Put the extension in `ComfyUI/custom_nodes/comfyui-openrouter`, install its
 3. Select **Terminal** in the same panel and run:
 
 ```sh
-pip install -r custom_nodes/comfyui-openrouter/requirements.txt
+pip install -r custom_nodes/openrouter/requirements.txt
 ```
 
 ### macOS or Linux
@@ -60,13 +60,13 @@ pip install -r custom_nodes/comfyui-openrouter/requirements.txt
 From the ComfyUI folder:
 
 ```sh
-.venv/bin/python -m pip install -r custom_nodes/comfyui-openrouter/requirements.txt
+.venv/bin/python -m pip install -r custom_nodes/openrouter/requirements.txt
 ```
 
 With uv:
 
 ```sh
-uv pip install --python .venv/bin/python -r custom_nodes/comfyui-openrouter/requirements.txt
+uv pip install --python .venv/bin/python -r custom_nodes/openrouter/requirements.txt
 ```
 
 ### Windows
@@ -74,7 +74,7 @@ uv pip install --python .venv/bin/python -r custom_nodes/comfyui-openrouter/requ
 From the ComfyUI folder, in PowerShell:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r .\custom_nodes\comfyui-openrouter\requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r .\custom_nodes\openrouter\requirements.txt
 ```
 
 ### Windows portable
@@ -82,7 +82,7 @@ From the ComfyUI folder, in PowerShell:
 From the folder that holds `ComfyUI` and `python_embeded`, in PowerShell:
 
 ```powershell
-.\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\comfyui-openrouter\requirements.txt
+.\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\openrouter\requirements.txt
 ```
 
 To update or remove the extension, see the
@@ -92,7 +92,7 @@ To update or remove the extension, see the
 
 1. Save your API key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
    settings**.
-2. Open **Browse Templates → comfyui-openrouter →
+2. Open **Browse Templates → openrouter →
    decision-01-verify-then-escalate** and select **Run**.
 3. Read the answer in **Answer**, and Jev's check in **Summary**.
 
@@ -116,7 +116,7 @@ To send the same request again, change **run number**.
 | [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)                               | A brief                             |
 | [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json)         | Notes and a question                |
 
-They are in **Browse Templates → comfyui-openrouter**. Start with each
+They are in **Browse Templates → openrouter**. Start with each
 workflow's **Start Here** note; each step is a subgraph. Media inputs start
 empty.
 
@@ -205,15 +205,15 @@ lists every task.
 
 ## Common problems
 
-| Problem                                      | Fix                                                                                                                                    |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| No OpenRouter nodes in the menu              | Check that the folder is `ComfyUI/custom_nodes/comfyui-openrouter`, ComfyUI is 0.34.6 or later, and the console shows no import error. |
-| No **OpenRouter** entry under **Extensions** | Check that `web/extension.js` exists in the extension's folder, then reload the window.                                                |
-| The settings cannot be changed               | ComfyUI runs in multi-user mode or is open from another computer. Set `OPENROUTER_API_KEY` where ComfyUI starts instead.               |
-| `pydantic` cannot be imported                | Install `requirements.txt` with the Python that runs ComfyUI, then restart.                                                            |
-| Node help is missing                         | Reinstall the whole extension, including `web/docs`.                                                                                   |
-| The templates are missing                    | Reinstall the whole extension, including `example_workflows`.                                                                          |
-| Nodes or menus appear twice                  | Keep one `comfyui-openrouter` folder in `custom_nodes`; move copies elsewhere.                                                         |
+| Problem                                      | Fix                                                                                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| No OpenRouter nodes in the menu              | Check that the folder is `ComfyUI/custom_nodes/openrouter`, ComfyUI is 0.34.6 or later, and the console shows no import error. |
+| No **OpenRouter** entry under **Extensions** | Check that `web/extension.js` exists in the extension's folder, then reload the window.                                        |
+| The settings cannot be changed               | ComfyUI runs in multi-user mode or is open from another computer. Set `OPENROUTER_API_KEY` where ComfyUI starts instead.       |
+| `pydantic` cannot be imported                | Install `requirements.txt` with the Python that runs ComfyUI, then restart.                                                    |
+| Node help is missing                         | Reinstall the whole extension, including `web/docs`.                                                                           |
+| The templates are missing                    | Reinstall the whole extension, including `example_workflows`.                                                                  |
+| Nodes or menus appear twice                  | Keep one `openrouter` folder in `custom_nodes`; move copies elsewhere.                                                         |
 
 More in the [advanced guide's troubleshooting](ADVANCED.md#troubleshooting).
 

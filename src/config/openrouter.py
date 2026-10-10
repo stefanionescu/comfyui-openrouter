@@ -32,7 +32,7 @@ LISTING_URLS = {
 # OpenRouter attributes usage to this address and title, under the categories it recognizes for what the
 # extension makes. The Registry page's name is fixed before the first release.
 ATTRIBUTION_HEADERS = {
-    "HTTP-Referer": "https://registry.comfy.org/nodes/comfyui-openrouter",
+    "HTTP-Referer": "https://registry.comfy.org/nodes/openrouter",
     "X-OpenRouter-Title": "ComfyUI OpenRouter",
     "X-OpenRouter-Categories": "image-gen,video-gen,audio-gen",
 }

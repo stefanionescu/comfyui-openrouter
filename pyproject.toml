@@ -1,5 +1,5 @@
 [project]
-name = "comfyui-openrouter"
+name = "openrouter"
 version = "0.1.0"
 description = """\
   Use any OpenRouter model in ComfyUI with your own key: chat, images, video, speech, transcription, embeddings, \

@@ -1,4 +1,7 @@
-export const LINK_ALIASES = [['web/', 'extensions/comfyui-openrouter']];
+export const LINK_ALIASES = [
+  ['web/', 'extensions/openrouter'],
+  ['web/', 'extensions/comfyui-openrouter'],
+];
 export const LINK_TEMPLATES = [];
 
 export const LINK_MODES = ['--local', '--external'];

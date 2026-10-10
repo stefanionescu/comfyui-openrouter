@@ -222,7 +222,7 @@ listing = json.loads(output.args[0])
 
 ## Update or remove
 
-To update, replace the `custom_nodes/comfyui-openrouter` folder, install its
+To update, replace the `custom_nodes/openrouter` folder, install its
 `requirements.txt` with ComfyUI's Python, and restart. Open the updated
 examples in a new tab.
 
