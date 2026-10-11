@@ -75,7 +75,7 @@ owner-only permissions.
 
 Change these in **OpenRouter Settings**. New requests use the saved values.
 
-![The OpenRouter Settings dialog: the OpenRouter API key field with Save Key and Clear Saved Key, and Request timeout (seconds), Maximum upload size (MiB), and Maximum download size (MiB).](docs/images/settings-dialog.png)
+![The OpenRouter Settings dialog: the OpenRouter API key field with Save Key and Clear Saved Key, and Request timeout (seconds), Maximum upload size (MiB), and Maximum download size (MiB).](docs/images/screenshots/settings-dialog.png)
 
 | Setting                     | Default | Range      | What it limits                                          |
 | --------------------------- | ------- | ---------- | ------------------------------------------------------- |
@@ -405,21 +405,21 @@ checks all four.
 
 The README's and this guide's images are in `docs/images/`:
 
-- `banner.svg`, `node-map.svg`, and the four `badge-*.svg` files are SVG files;
-  edit them as text. They use two palettes: ComfyUI's ink `#211927`, panels
-  `#312C34`, edges `#413B45`, text `#C2BFB9`, and yellow `#F0FF41`, and
-  OpenRouter's indigo `#6366F1`.
+- `brand/banner.svg`, `diagrams/node-map.svg`, and the four `badges/*.svg`
+  files are SVG files; edit them as text. They use two palettes: ComfyUI's ink
+  `#211927`, panels `#312C34`, edges `#413B45`, text `#C2BFB9`, and yellow
+  `#F0FF41`, and OpenRouter's indigo `#6366F1`.
 - In the node map, a paid node has an indigo bar and a free one a grey bar. An
   arrow is a solid yellow line from an output to the input it feeds; nodes that
   share no link have no arrow.
 - The badges under the banner name the ComfyUI, frontend, and Python versions
   and the license, on ink and grey; update them when those change.
-- `workflow-choose-group.png` is the **Choose** group of image-01 and its note,
-  at 100% zoom, with link midpoint markers off.
-- `chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels wide, at 100%
-  zoom.
-- `settings-dialog.png` is the **OpenRouter Settings** dialog with default
-  settings and a saved key.
+- `screenshots/image-01-choose-group.png` is the **Choose** group of image-01
+  and its note, at 100% zoom, with link midpoint markers off.
+- `screenshots/chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels
+  wide, at 100% zoom.
+- `screenshots/settings-dialog.png` is the **OpenRouter Settings** dialog with
+  default settings and a saved key.
 
 Keep each image under 100 KB, and give it alt text.
 

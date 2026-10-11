@@ -1,9 +1,9 @@
-# ![comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model](docs/images/banner.svg)
+# ![comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model](docs/images/brand/banner.svg)
 
-[![ComfyUI 0.34.6 or later](docs/images/badge-comfyui.svg)](#requirements)
-[![Frontend 1.49.6 or later](docs/images/badge-frontend.svg)](#requirements)
-[![Python 3.12 or later](docs/images/badge-python.svg)](#requirements)
-[![MIT license](docs/images/badge-license.svg)](LICENSE.md)
+[![ComfyUI 0.34.6 or later](docs/images/badges/comfyui.svg)](#requirements)
+[![Frontend 1.49.6 or later](docs/images/badges/frontend.svg)](#requirements)
+[![Python 3.12 or later](docs/images/badges/python.svg)](#requirements)
+[![MIT license](docs/images/badges/license.svg)](LICENSE.md)
 
 Run any OpenRouter model in ComfyUI with your own API key.
 
@@ -108,7 +108,7 @@ They are in **Browse Templates → openrouter**. Start with each
 workflow's **Start Here** note; each step is a subgraph. Media inputs start
 empty.
 
-![Screenshot of the Choose group in image-01: a note above the group explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/workflow-choose-group.png)
+![Screenshot of the Choose group in image-01: a note above the group explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/screenshots/image-01-choose-group.png)
 
 After an update, open the examples in a new tab to get the new versions.
 
@@ -116,7 +116,7 @@ After an update, open the examples in a new tab to get the new versions.
 
 The nodes are under **OpenRouter** in the node menu, and each has a help page.
 
-![Node map. Chat: Attach Document feeds Chat: Ask. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Model: Info stands alone and needs no key. Video: Download collects a job Video: Generate left running, so no link joins them. Paid nodes have an indigo bar.](docs/images/node-map.svg)
+![Node map. Chat: Attach Document feeds Chat: Ask. Decision: Add Question feeds Decision: Ask, which feeds Decision: Read Answer. Request Options feeds any paid node. Model: Info stands alone and needs no key. Video: Download collects a job Video: Generate left running, so no link joins them. Paid nodes have an indigo bar.](docs/images/diagrams/node-map.svg)
 
 | Node                                                                | What it does                                                           | Paid |
 | ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
@@ -144,7 +144,7 @@ Each paid node takes any model ID from
 [openrouter.ai/models](https://openrouter.ai/models), with an optional variant
 suffix such as `:nitro`. **Model: Info** shows what any model takes.
 
-![Chat: Ask on the canvas: the conversation, documents, images, videos, audio, and options sockets; then model set to google/gemini-3.5-flash, reasoning_effort, max_tokens, temperature, outputs, aspect_ratio, voice, pdf_engine, seed, and run_number; and the answer_schema, prompt, and system_prompt boxes at the bottom.](docs/images/chat-ask-node.png)
+![Chat: Ask on the canvas: the conversation, documents, images, videos, audio, and options sockets; then model set to google/gemini-3.5-flash, reasoning_effort, max_tokens, temperature, outputs, aspect_ratio, voice, pdf_engine, seed, and run_number; and the answer_schema, prompt, and system_prompt boxes at the bottom.](docs/images/screenshots/chat-ask-node.png)
 
 Before sending, the node checks the model against OpenRouter's public listings
 and stops if the ID is unknown, the model makes something else, or it does not
