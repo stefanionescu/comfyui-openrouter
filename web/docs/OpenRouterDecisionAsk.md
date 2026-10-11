@@ -23,7 +23,7 @@ about a situation. Each answer comes with its probabilities.
 ## Use
 
 1. Write the situation and connect the questions.
-2. Connect **answers** to **Decision: Read Answer**, and **summary** to
+2. Connect `answers` to **Decision: Read Answer**, and `summary` to
    **Preview as Text**.
 3. Select **Run**.
 
@@ -31,7 +31,7 @@ Examples: **decision-01-verify-then-escalate** and
 **audio-01-triage-a-voicemail**.
 
 The default model, `typesafe/jev-1.13`, is a fixed version. To follow TypeSafe's
-newest release, type `~typesafe/jev-latest` in **model**. **Model: Info** shows
+newest release, type `~typesafe/jev-latest` in `model`. **Model: Info** shows
 how many tokens a model reads, as `context_length`.
 
 This node uses OpenRouter's alpha decisions API (`/api/alpha/decisions`), which

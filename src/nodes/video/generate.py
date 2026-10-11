@@ -32,26 +32,22 @@ if TYPE_CHECKING:
 # everything connected goes in one request.
 MEDIA = (
     *(
-        io.Image.Input(
-            frame, display_name=frame.replace("_", " "), optional=True, tooltip=f"The image the video {end}."
-        )
+        io.Image.Input(frame, optional=True, tooltip=f"The image the video {end}.")
         for frame, end in (("first_frame", "starts from"), ("last_frame", "ends on"))
     ),
     io.Image.Input(
         "reference_images",
-        display_name="reference images",
         optional=True,
-        tooltip="Images the video follows: one, a batch, or a list. Leave the frames empty to use references.",
+        tooltip="Images the video follows: one, a batch, or a list. To use them, leave first_frame and last_frame "
+        "empty.",
     ),
     io.Video.Input(
         "reference_videos",
-        display_name="reference videos",
         optional=True,
         tooltip="Videos the video follows. Create List joins several.",
     ),
     io.Audio.Input(
         "reference_audio",
-        display_name="reference audio",
         optional=True,
         tooltip="Audio the video follows. Create List joins several.",
     ),
@@ -67,11 +63,10 @@ CONTROLS = (
         tooltip="The length in seconds; 0 leaves it to the model.",
     ),
     io.Combo.Input("resolution", options=list(RESOLUTIONS), default=MODEL_DEFAULT),
-    io.Combo.Input("aspect_ratio", display_name="aspect ratio", options=list(ASPECT_RATIOS), default=MODEL_DEFAULT),
-    io.Combo.Input("generate_audio", display_name="generate audio", options=list(AUDIO_CHOICES), default=MODEL_DEFAULT),
+    io.Combo.Input("aspect_ratio", options=list(ASPECT_RATIOS), default=MODEL_DEFAULT),
+    io.Combo.Input("generate_audio", options=list(AUDIO_CHOICES), default=MODEL_DEFAULT),
     io.Float.Input(
         "upscale_factor",
-        display_name="upscale factor",
         default=0.0,
         min=0.0,
         step=STEPS["UPSCALE_FACTOR"],
@@ -123,8 +118,7 @@ class VideoGenerate(PaidNode):
                     "prompt",
                     multiline=True,
                     default="",
-                    placeholder="prompt",
-                    tooltip="What the video shows. It may be empty when a first frame is connected.",
+                    tooltip="What the video shows. It can be empty when first_frame is connected.",
                 ),
             ],
             outputs=[io.Video.Output("video", display_name="video")],

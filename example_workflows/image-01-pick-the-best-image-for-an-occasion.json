@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev finds a flaw."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n2. Describe the occasion in **Brief**: who it is for, the mood, and what to leave out.\n3. Press **Run**. The chosen image is saved under `occasion/approved`, or `occasion/review` when Jev finds a flaw."
       ],
       "title": "Start Here"
     },
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT Image 2.5 Flare, MAI-Image-2.6 Flash, and Recraft V4.1 Flash each draw one image from the brief. GPT-6 Luna then describes all three in one request, as candidate_1 to candidate_3, and names any flaw.\n\nOpen **Draw** to change a model."
+        "GPT Image 2.5 Flare, MAI-Image-2.6 Flash, and Recraft V4.1 Flash each draw one image from the brief. GPT-6 Luna then describes all three in one request, as `candidate_1` to `candidate_3`, and names any flaw.\n\nOpen **Draw** to change a model."
       ],
       "title": "Note"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads the brief and the descriptions. **best** picks a candidate, and its position selects the image to save. **ready** asks whether it can go to the client as it is.\n\nThe image is saved in the **approved** folder when Jev says it is ready, and in **review** otherwise."
+        "Jev reads the brief and the descriptions. `best` picks a candidate, and its position selects the image to save. `ready` asks whether it can go to the client as it is.\n\nThe image is saved in the `approved` folder when Jev says it is ready, and in `review` otherwise."
       ],
       "title": "Note"
     },
@@ -208,7 +208,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null,
           "shape": 7
         },
@@ -240,7 +240,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             5
           ]
@@ -273,7 +273,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 5,
           "shape": 7
         },
@@ -305,7 +305,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             6
           ]
@@ -354,7 +354,7 @@
         },
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 6
         },
         {
@@ -472,7 +472,7 @@
       0,
       7,
       0,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       6,
@@ -480,7 +480,7 @@
       0,
       8,
       3,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       7,
@@ -722,7 +722,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -879,7 +879,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1036,7 +1036,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1174,13 +1174,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
               },
@@ -1276,7 +1276,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1331,7 +1331,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],
@@ -1507,7 +1507,7 @@
           {
             "id": "02acbf2e-64ac-56bc-bbc2-38da3f21bb32",
             "name": "questions",
-            "type": "DECISION_QUESTIONS",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               13
             ],
@@ -1635,7 +1635,7 @@
             "inputs": [
               {
                 "name": "questions",
-                "type": "DECISION_QUESTIONS",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
                 "link": 13
               },
               {
@@ -1656,7 +1656,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1672,7 +1672,7 @@
             "outputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "links": [
                   2,
                   3
@@ -1714,7 +1714,7 @@
             "inputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 2
               },
               {
@@ -1793,7 +1793,7 @@
             "inputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 3
               },
               {
@@ -2103,7 +2103,7 @@
             "origin_slot": 0,
             "target_id": 203,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 3,
@@ -2111,7 +2111,7 @@
             "origin_slot": 0,
             "target_id": 204,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 4,
@@ -2191,7 +2191,7 @@
             "origin_slot": 3,
             "target_id": 202,
             "target_slot": 0,
-            "type": "DECISION_QUESTIONS"
+            "type": "OPENROUTER_DECISION_QUESTIONS"
           },
           {
             "id": 14,

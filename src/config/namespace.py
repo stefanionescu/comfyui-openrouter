@@ -14,13 +14,13 @@ MENUS = {
     "DECISION": "OpenRouter/Decision",
 }
 
-# The socket types more than one node shares.
+# The socket types more than one node shares, prefixed so they cannot match another pack's types.
 SOCKET_TYPES = {
-    "OPTIONS": "REQUEST_OPTIONS",
-    "DOCUMENTS": "CHAT_DOCUMENTS",
-    "CONVERSATION": "CHAT_CONVERSATION",
-    "QUESTIONS": "DECISION_QUESTIONS",
-    "ANSWERS": "DECISION_ANSWERS",
+    "OPTIONS": "OPENROUTER_REQUEST_OPTIONS",
+    "DOCUMENTS": "OPENROUTER_CHAT_DOCUMENTS",
+    "CONVERSATION": "OPENROUTER_CHAT_CONVERSATION",
+    "QUESTIONS": "OPENROUTER_DECISION_QUESTIONS",
+    "ANSWERS": "OPENROUTER_DECISION_ANSWERS",
 }
 
 __all__ = [

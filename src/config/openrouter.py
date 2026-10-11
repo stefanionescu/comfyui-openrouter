@@ -79,13 +79,11 @@ ENDPOINT_LABELS = {
 # How messages name the media a model reads.
 MEDIA_LABELS = {"image": "images", "video": "video", "audio": "audio"}
 
-# How messages and nodes name the image and video fields whose OpenRouter name reads differently; any other
-# field drops its underscores.
+# The node input behind each image field whose OpenRouter name differs, for messages; any other field has the
+# input's name.
 FIELD_LABELS = {
     "n": "count",
     "input_references": "references",
-    "output_format": "format",
-    "output_compression": "compression",
 }
 
 # Every provider field OpenRouter's routing takes.
@@ -113,13 +111,12 @@ ROUTING_FIELDS = {
     "decisions": ALL_ROUTING_FIELDS,
 }
 
-# How Request Options names the provider fields whose OpenRouter name differs, for its messages.
+# The Request Options inputs behind each provider field whose OpenRouter name differs, for messages; any other
+# field has the input's name.
 ROUTING_LABELS = {
     "order": "provider",
-    "data_collection": "data collection",
-    "zdr": "zero data retention",
-    "max_price": "price limits",
-    "options": "provider options",
+    "max_price": "max_prompt_price or max_completion_price",
+    "options": "provider_options",
 }
 
 # The body fields each node sets itself, which extra fields may not replace. Provider routing is set only

@@ -50,10 +50,9 @@ class AudioSpeak(PaidNode):
                 ),
                 io.Combo.Input(
                     "audio_format",
-                    display_name="format",
                     options=list(SPEECH_FORMATS),
                     default=SPEECH_DEFAULTS["FORMAT"],
-                    tooltip="The format OpenRouter sends. If the model refuses one, choose the other.",
+                    tooltip="The audio file format OpenRouter sends back. If the model refuses one, choose the other.",
                 ),
                 io.Float.Input(
                     "speed",
@@ -66,16 +65,14 @@ class AudioSpeak(PaidNode):
                 ),
                 io.Audio.Input(
                     "voice_sample",
-                    display_name="voice sample",
                     optional=True,
                     tooltip="A short clip of the voice to copy. Only models that clone voices use it.",
                 ),
                 io.String.Input(
                     "sample_transcript",
-                    display_name="sample transcript",
                     default="",
                     advanced=True,
-                    tooltip="The words spoken in the voice sample.",
+                    tooltip="The words spoken in voice_sample.",
                 ),
                 *build_request_inputs(has_seed=False),
                 io.String.Input("text", multiline=True, default="", tooltip="What to say."),

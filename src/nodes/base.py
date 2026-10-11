@@ -50,7 +50,7 @@ def _read_single(name: str, value: object) -> object:
         return {field: _read_single(name, item) for field, item in fields.items()}
     values = cast("list[object]", value)
     if len(values) != 1:
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, SINGLE_VALUE.format(name=name.replace("_", " ")))
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, SINGLE_VALUE.format(name=name))
     return values[0]
 
 

@@ -82,13 +82,12 @@ class DecisionAddQuestion(io.ComfyNode):
                 ),
                 io.DynamicCombo.Input(
                     ANSWER_TYPES["INPUT"],
-                    display_name="answer type",
                     options=[
                         io.DynamicCombo.Option(
                             ANSWER_TYPES["YES_NO"],
                             [
-                                io.String.Input("yes_means", display_name="yes means", default=""),
-                                io.String.Input("no_means", display_name="no means", default=""),
+                                io.String.Input("yes_means", default=""),
+                                io.String.Input("no_means", default=""),
                             ],
                         ),
                         io.DynamicCombo.Option(

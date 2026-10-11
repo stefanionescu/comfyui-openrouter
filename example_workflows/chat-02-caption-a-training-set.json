@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. In **Load Image (from Folder)**, choose a folder of images in ComfyUI's input folder.\n3. Press **Run**. The captions are saved in `output/captions` as one JSON file, in image order."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n2. In **Load Image (from Folder)**, choose a folder of images in ComfyUI's input folder.\n3. Press **Run**. The captions are saved in `output/captions` as one JSON file, in image order."
       ],
       "title": "Start Here"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev reads the captions and answers **valid**: is every caption one sentence about visible content, without opinions or guesses?\n\n**Summary** gives the verdict, so you can fix the captions before training."
+        "Jev reads the captions and answers `valid`: is every caption one sentence about visible content, without opinions or guesses?\n\n**Summary** gives the verdict, so you can fix the captions before training."
       ],
       "title": "Note"
     },
@@ -195,7 +195,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null,
           "shape": 7
         },
@@ -227,7 +227,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             3
           ]
@@ -261,7 +261,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 3
         },
         {
@@ -282,7 +282,7 @@
         },
         {
           "name": "options",
-          "type": "REQUEST_OPTIONS",
+          "type": "OPENROUTER_REQUEST_OPTIONS",
           "link": null,
           "shape": 7
         },
@@ -298,7 +298,7 @@
       "outputs": [
         {
           "name": "answers",
-          "type": "DECISION_ANSWERS",
+          "type": "OPENROUTER_DECISION_ANSWERS",
           "links": []
         },
         {
@@ -378,7 +378,7 @@
       0,
       7,
       0,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       4,
@@ -528,13 +528,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
               },
@@ -630,7 +630,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -686,7 +686,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],

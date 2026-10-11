@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it distorted."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n2. Describe the picture in **Subject**.\n3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it distorted."
       ],
       "title": "Start Here"
     },
@@ -66,7 +66,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change **seed** and run again."
+        "MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change `seed` and run again."
       ],
       "title": "Note"
     },
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev weighs the scores and the defects and answers **distorted**. The draft is saved in the **rejected** folder when it is distorted, and in **approved** otherwise."
+        "Jev weighs the scores and the defects and answers `distorted`. The draft is saved in the `rejected` folder when it is distorted, and in `approved` otherwise."
       ],
       "title": "Note"
     },
@@ -282,7 +282,7 @@
         },
         {
           "name": "options",
-          "type": "REQUEST_OPTIONS",
+          "type": "OPENROUTER_REQUEST_OPTIONS",
           "link": null,
           "shape": 7
         },
@@ -407,7 +407,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null,
           "shape": 7
         },
@@ -439,7 +439,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             9
           ]
@@ -498,7 +498,7 @@
         },
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 9
         },
         {
@@ -648,7 +648,7 @@
       0,
       9,
       5,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       10,
@@ -933,7 +933,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1029,7 +1029,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1095,13 +1095,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
               },
@@ -1197,7 +1197,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1252,7 +1252,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],
@@ -1444,7 +1444,7 @@
           {
             "id": "00e620bd-f0e0-5384-8828-477c97802f4a",
             "name": "questions",
-            "type": "DECISION_QUESTIONS",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               12
             ],
@@ -1586,7 +1586,7 @@
             "inputs": [
               {
                 "name": "questions",
-                "type": "DECISION_QUESTIONS",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
                 "link": 12
               },
               {
@@ -1607,7 +1607,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1623,7 +1623,7 @@
             "outputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "links": [
                   2
                 ]
@@ -1664,7 +1664,7 @@
             "inputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 2
               },
               {
@@ -1920,7 +1920,7 @@
             "origin_slot": 0,
             "target_id": 203,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 3,
@@ -2000,7 +2000,7 @@
             "origin_slot": 5,
             "target_id": 202,
             "target_slot": 0,
-            "type": "DECISION_QUESTIONS"
+            "type": "OPENROUTER_DECISION_QUESTIONS"
           },
           {
             "id": 13,

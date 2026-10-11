@@ -142,7 +142,7 @@ class VideoOperation:
                 del chosen["generate_audio"]
             for frame in request.frame_urls:
                 if frame not in limits.fields:
-                    message = MODEL_FRAME.format(model=request.model_id, frame=frame.replace("_", " "))
+                    message = MODEL_FRAME.format(model=request.model_id, frame=frame)
                     raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
             validate_limits(request.model_id, limits, chosen)
         body: dict[str, Json] = {"model": request.model_id, "prompt": request.prompt, **chosen}

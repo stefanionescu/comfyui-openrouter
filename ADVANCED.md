@@ -20,7 +20,7 @@
 
 - **Chat: Ask** sends the prompt and the media: images as PNG, videos as MP4,
   and audio as WAV. PDFs go to OpenRouter's PDF engine; text files go as text.
-  Earlier turns come from **conversation**. It returns the text, the reasoning
+  Earlier turns come from `conversation`. It returns the text, the reasoning
   when the model shares it, and any images the model made. Speech comes back
   as 24 kHz mono PCM.
 - **Image: Generate** sends the prompt, the chosen settings, the count, and each
@@ -31,8 +31,8 @@
   every 30 seconds, and downloads the MP4 when it is ready.
 - **Video: Download** checks one recorded job and downloads its video. Status
   checks and downloads are free.
-- **Audio: Speak** sends the text, the voice, the speed, and the voice sample as
-  WAV when one is connected. It returns the audio as PCM or MP3.
+- **Audio: Speak** sends the text, the voice, the speed, and `voice_sample` as
+  WAV when it is connected. It returns the audio as PCM or MP3.
 - **Audio: Transcribe** sends the clip as WAV, with the language and the
   timestamps you ask for. It returns the text, the segments, SRT subtitles, and
   the timed words.
@@ -52,7 +52,7 @@ Every request goes out once. Requests that take provider routing send
 ## Keys and access
 
 Save the key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
-settings**. It is stored in the private folder and checked by the first request
+Settings**. It is stored in the private folder and checked by the first request
 that uses it. `OPENROUTER_API_KEY`, set where ComfyUI starts, takes precedence.
 
 The key and settings can be changed only over a direct local connection to the
@@ -73,15 +73,15 @@ owner-only permissions.
 
 ## Settings
 
-Change these in **OpenRouter settings**. New requests use the saved values.
+Change these in **OpenRouter Settings**. New requests use the saved values.
 
-![The OpenRouter Settings dialog: the API key field with Save Key and Clear Saved Key, and the request timeout, maximum upload size, and maximum download size.](docs/images/settings-dialog.png)
+![The OpenRouter Settings dialog: the OpenRouter API key field with Save Key and Clear Saved Key, and Request timeout (seconds), Maximum upload size (MiB), and Maximum download size (MiB).](docs/images/settings-dialog.png)
 
 | Setting                     | Default | Range      | What it limits                                          |
 | --------------------------- | ------- | ---------- | ------------------------------------------------------- |
-| request timeout (seconds)   | 180     | 10 to 3600 | How long one generation may take; for a video, the job. |
-| maximum upload size (MiB)   | 64      | 1 to 512   | The media and documents in one request.                 |
-| maximum download size (MiB) | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.     |
+| Request timeout (seconds)   | 180     | 10 to 3600 | How long one generation may take; for a video, the job. |
+| Maximum upload size (MiB)   | 64      | 1 to 512   | The media and documents in one request.                 |
+| Maximum download size (MiB) | 512     | 16 to 4096 | The largest reply, image, audio, or video accepted.     |
 
 ## Models
 
@@ -92,23 +92,25 @@ before anything is paid, when:
 - the model makes something the node does not return, such as a video model in
   **Image: Generate**;
 - connected images, video, or audio are media the model does not read;
-- **Chat: Ask** asks for images or audio the model does not make, an answer
-  schema it cannot follow, or more max tokens than its longest answer;
-- **Audio: Speak** has a voice sample and the model cannot clone voices;
-- **Image: Generate** asks for a value, count, or number of references the
+- **Chat: Ask** asks for images or audio the model does not make, an
+  `answer_schema` it cannot follow, or more `max_tokens` than its longest
+  answer;
+- **Audio: Speak** has `voice_sample` connected and the model cannot clone
+  voices;
+- **Image: Generate** asks for a value, `count`, or number of `references` the
   model's entry in OpenRouter's image list does not take;
-- **Video: Generate** asks for a duration, resolution, aspect ratio, frame,
-  sound, or upscale setting the model's entry in OpenRouter's video list does
-  not take.
+- **Video: Generate** uses a `duration`, `resolution`, `aspect_ratio`,
+  `generate_audio`, `upscale_factor`, `creativity`, `first_frame`, or
+  `last_frame` the model's entry in OpenRouter's video list does not take.
 
 The message names what the model does take. Each listing is read once per model
 per ComfyUI session. **Model: Info** returns the same listing as JSON, for free.
 
-The seed, a set temperature, and reasoning effort go only to models that list them,
-and with an answer schema only providers that follow it answer. A reasoning effort
-the model does not list steps down to the highest one it lists below it, or up to
-its lowest. Every other
-setting is sent only when changed from **model default** or 0.
+`seed`, a set `temperature`, and `reasoning_effort` go only to models that list
+them, and with an `answer_schema` only providers that follow it answer. A
+`reasoning_effort` the model does not list steps down to the highest one it
+lists below it, or up to its lowest. Every other setting is sent only when
+changed from `model default` or `0`.
 
 | Node              | Default model                         |
 | ----------------- | ------------------------------------- |
@@ -121,13 +123,14 @@ setting is sent only when changed from **model default** or 0.
 | Search: Rank      | `cohere/rerank-v3.5`                  |
 | Decision: Ask     | `typesafe/jev-1.13`                   |
 
-**Audio: Speak** starts with the voice `Kore`, which its default model needs.
+**Audio: Speak** starts with `voice` set to `Kore`, which its default model
+needs.
 
 ## Caching and reruns
 
-- Change **run number** to send the same request again.
-- A **seed** that is not **fixed** changes after each run, so running again
-  sends a new request. The examples use **fixed**.
+- Change `run_number` to send the same request again.
+- A `seed` that is not `fixed` changes after each run, so running again sends a
+  new request. The examples use `fixed`.
 - Saving a different key invalidates the cached results; changing settings does
   not.
 - Every request is sent once.
@@ -137,8 +140,8 @@ setting is sent only when changed from **model default** or 0.
 ## Recover a video
 
 **Video: Generate** records each job as soon as OpenRouter accepts it. The job
-runs to completion even when you cancel, ComfyUI restarts, or the **request
-timeout** passes. Collect it with **Video: Download** (press R to list new
+runs to completion even when you cancel, ComfyUI restarts, or the request
+timeout passes. Collect it with **Video: Download** (press R to list new
 jobs). A job leaves the list once its video is downloaded, or when it fails, is
 cancelled, or expires.
 
@@ -146,7 +149,7 @@ cancelled, or expires.
 
 The extension adds no limits of its own to what a request holds. Only your
 settings apply: the upload and download sizes and the request timeout in
-**OpenRouter settings**. **Model: Info** reports each model's listed limits,
+**OpenRouter Settings**. **Model: Info** reports each model's listed limits,
 and OpenRouter refuses a request outside them.
 
 ## When a node stops
@@ -155,11 +158,11 @@ Paid nodes check these before sending, along with the [model checks](#models).
 
 **Chat: Ask** stops when:
 
-- The prompt is empty.
+- `prompt` is empty.
 - The media are over the upload limit.
-- The answer schema is not a JSON object.
-- A field other than **images**, **videos**, or **audio** receives a list of
-  several values. The same holds for the media nodes below.
+- `answer_schema` is not a JSON object.
+- An input other than `images`, `videos`, or `audio` receives a list of several
+  values. The same holds for the media nodes below.
 
 **Chat: Attach Document** stops when:
 
@@ -169,28 +172,28 @@ Paid nodes check these before sending, along with the [model checks](#models).
 
 **Image: Generate** stops when:
 
-- The prompt is empty.
-- A transparent background is asked for with JPEG.
+- `prompt` is empty.
+- `background` is `transparent` and `output_format` is `jpeg`.
 
 **Video: Generate** stops when:
 
-- There is no prompt and no first frame.
+- `prompt` is empty and `first_frame` is not connected.
 - Frames and references are both connected, or a frame receives more than one
   image.
 
-**Audio: Speak** stops when the text is empty, or the voice sample is over the
-upload limit. **Audio: Transcribe** stops when the language is not a two-letter
-code, or the clip is a batch.
+**Audio: Speak** stops when `text` is empty, or `voice_sample` is over the
+upload limit. **Audio: Transcribe** stops when `language` is not a two-letter
+code, or `audio` is a batch.
 
 **Search: Embed** and **Search: Rank** stop when there are no items. **Search:
-Rank** also stops when the query is empty.
+Rank** also stops when `query` is empty.
 
-**Decision: Add Question** stops when the name is invalid or used twice, the
-question is empty, or the answer type's fields are incomplete.
+**Decision: Add Question** stops when `name` is invalid or used twice,
+`instructions` is empty, or the fields of `answer_type` are incomplete.
 
-**Decision: Ask** stops when the situation is empty. OpenRouter refuses a
+**Decision: Ask** stops when `situation` is empty. OpenRouter refuses a
 situation longer than the model reads. **Decision: Read Answer** stops when no
-question has the name.
+question has the name in `question`.
 
 **Request Options** stops when a provider list or a JSON field cannot be read.
 A paid node stops when the options include a setting its request does not
@@ -413,7 +416,7 @@ The README's and this guide's images are in `docs/images/`:
   with link midpoint markers off.
 - `chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels wide, at 100%
   zoom.
-- `settings-dialog.png` is the **OpenRouter settings** dialog with default
+- `settings-dialog.png` is the **OpenRouter Settings** dialog with default
   settings and a saved key.
 
 Keep each image under 100 KB, and give it alt text.
@@ -479,9 +482,9 @@ you packaged.
 
 Most messages say what to do. These need more.
 
-### Set your OpenRouter API key in OpenRouter settings
+### Set your OpenRouter API key in OpenRouter Settings
 
-Save the key in **OpenRouter settings**, or set `OPENROUTER_API_KEY` where
+Save the key in **OpenRouter Settings**, or set `OPENROUTER_API_KEY` where
 ComfyUI starts and restart.
 
 ### OpenRouter did not accept the API key
@@ -499,8 +502,8 @@ The model is down, or the key is not allowed to use it.
 
 ### No provider can take this request
 
-If **Request Options** is connected, loosen its provider lists, **zero data
-retention**, or price limits.
+If **Request Options** is connected, loosen its provider lists, `zdr`, or
+`max_prompt_price` and `max_completion_price`.
 
 ### The model's provider failed to answer
 

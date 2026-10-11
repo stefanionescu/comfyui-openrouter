@@ -1,6 +1,6 @@
 """The group notes and subgraph descriptions of the shipped workflows, in plain language."""
 
-KEY_STEP = "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n"
+KEY_STEP = "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n"
 
 WORKFLOW_TEXTS = {
     "chat-01-write-a-product-listing": {
@@ -19,8 +19,8 @@ WORKFLOW_TEXTS = {
         "write_description": "Writes the listing from the photos and the spec sheet, and lists the spec's facts.",
         "check": (
             "Jev compares the listing with the spec facts and answers two questions: "
-            "**supported** asks whether every claim is backed, and **persuasive** scores the copy.\n\n"
-            "The listing is saved in the **approved** folder when every claim is supported, and in **review** "
+            "`supported` asks whether every claim is backed, and `persuasive` scores the copy.\n\n"
+            "The listing is saved in the `approved` folder when every claim is supported, and in `review` "
             "otherwise."
         ),
         "check_description": "Asks Jev about the listing and saves it in the approved or review folder.",
@@ -37,7 +37,7 @@ WORKFLOW_TEXTS = {
         ),
         "caption_description": "Writes one caption per image in one request and saves them as one JSON file.",
         "check": (
-            "Jev reads the captions and answers **valid**: is every caption one "
+            "Jev reads the captions and answers `valid`: is every caption one "
             "sentence about visible content, without opinions or guesses?\n\n"
             "**Summary** gives the verdict, so you can fix the captions before training."
         ),
@@ -50,15 +50,15 @@ WORKFLOW_TEXTS = {
         ),
         "draw": (
             "GPT Image 2.5 Flare, MAI-Image-2.6 Flash, and Recraft V4.1 Flash each draw one image from the "
-            "brief. GPT-6 Luna then describes all three in one request, as candidate_1 to candidate_3, and names "
+            "brief. GPT-6 Luna then describes all three in one request, as `candidate_1` to `candidate_3`, and names "
             "any flaw.\n\n"
             "Open **Draw** to change a model."
         ),
         "draw_description": "Draws one candidate with each of three models, and describes the three.",
         "choose": (
-            "Jev reads the brief and the descriptions. **best** picks a candidate, and its position selects the "
-            "image to save. **ready** asks whether it can go to the client as it is.\n\n"
-            "The image is saved in the **approved** folder when Jev says it is ready, and in **review** "
+            "Jev reads the brief and the descriptions. `best` picks a candidate, and its position selects the "
+            "image to save. `ready` asks whether it can go to the client as it is.\n\n"
+            "The image is saved in the `approved` folder when Jev says it is ready, and in `review` "
             "otherwise."
         ),
         "choose_description": "Asks Jev for the best candidate and saves it in the approved or review folder.",
@@ -69,7 +69,7 @@ WORKFLOW_TEXTS = {
             "3. Press **Run**. The draft is saved under `drafts/approved`, or `drafts/rejected` when Jev finds it "
             "distorted."
         ),
-        "draw": ("MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change **seed** and run again."),
+        "draw": ("MAI-Image-2.6 Flash draws the subject at 4:3. For another draft, change `seed` and run again."),
         "inspect": (
             "Jev reads text only, so this step describes the draft in numbers and words. Gemini Embedding 2 "
             "scores how close the draft is to a clean description and to a distorted one; the second number of "
@@ -78,8 +78,8 @@ WORKFLOW_TEXTS = {
         ),
         "inspect_description": "Scores the draft against a clean and a distorted description, and lists defects.",
         "check": (
-            "Jev weighs the scores and the defects and answers **distorted**. The draft is saved in the "
-            "**rejected** folder when it is distorted, and in **approved** otherwise."
+            "Jev weighs the scores and the defects and answers `distorted`. The draft is saved in the "
+            "`rejected` folder when it is distorted, and in `approved` otherwise."
         ),
         "check_description": "Asks Jev whether the draft is distorted and saves it in the approved or rejected folder.",
     },
@@ -89,18 +89,18 @@ WORKFLOW_TEXTS = {
             "3. Press **Run**. The edited photo is saved under `campaign/approved` or `campaign/review`."
         ),
         "ideas": (
-            "GPT-6 Sol looks at the photo and writes three ideas for editing it into a campaign image, as idea_1 "
-            "to idea_3. Each idea keeps the product exactly as it is."
+            "GPT-6 Sol looks at the photo and writes three ideas for editing it into a campaign image, as `idea_1` "
+            "to `idea_3`. Each idea keeps the product exactly as it is."
         ),
         "ideas_description": "Writes three editing ideas for the photo.",
         "choose": (
-            "Jev reads the campaign and the ideas. **best** picks one, and "
-            "**on_brief** asks whether it suits the campaign at all. **Idea** shows the chosen instruction."
+            "Jev reads the campaign and the ideas. `best` picks one, and "
+            "`on_brief` asks whether it suits the campaign at all. **Idea** shows the chosen instruction."
         ),
         "choose_description": "Asks Jev for the best idea and whether it suits the campaign.",
         "edit": (
             "GPT Image 2.5 Flare edits the photo with the chosen idea, keeping the photo as its reference. The "
-            "result is saved in the **approved** folder when the idea is on brief, and in **review** otherwise."
+            "result is saved in the `approved` folder when the idea is on brief, and in `review` otherwise."
         ),
         "edit_description": "Edits the photo with the chosen idea and saves it in the approved or review folder.",
     },
@@ -112,8 +112,8 @@ WORKFLOW_TEXTS = {
             "To draw the PNG with another model, change **Model**."
         ),
         "prompts": (
-            "GPT-6 Sol writes three logo prompts, as prompt_1 to prompt_3. Jev picks "
-            "the one that will make the simplest, most memorable mark in **best**, and **Prompt** shows it."
+            "GPT-6 Sol writes three logo prompts, as `prompt_1` to `prompt_3`. Jev picks "
+            "the one that will make the simplest, most memorable mark in `best`, and **Prompt** shows it."
         ),
         "prompts_description": "Writes three logo prompts and asks Jev for the best one.",
         "svg": "Recraft V4.1 Vector draws the prompt as an SVG file, which scales to any size without blurring.",
@@ -139,11 +139,11 @@ WORKFLOW_TEXTS = {
         ),
         "frame": (
             "MAI-Image-2.6 Flash draws the first frame at 16:9, and **Frame** shows it. For another frame, "
-            "change **seed** and run again."
+            "change `seed` and run again."
         ),
         "move": (
-            "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev picks the one "
-            "that best suits a six-second teaser in **best**, and **Move** shows it."
+            "GPT-6 Sol looks at the frame and writes three camera moves, as `move_1` to `move_3`. Jev picks the one "
+            "that best suits a six-second teaser in `best`, and **Move** shows it."
         ),
         "move_description": "Writes three camera moves for the frame and asks Jev for the best one.",
         "animate": (
@@ -163,7 +163,7 @@ WORKFLOW_TEXTS = {
         "recover": (
             "Use this after you cancel a run of **Video: Generate**, after it times out, or after ComfyUI "
             "restarts while a video is being made. OpenRouter still makes the video.\n\n"
-            "1. In **job**, choose the video. Each entry shows its ID, model, and start time. Press R to list "
+            "1. In `job`, choose the video. Each entry shows its ID, model, and start time. Press R to list "
             "jobs started after the page loaded.\n"
             "2. Press **Run**. The video is saved under `video/openrouter`.\n\n"
             "A job leaves the list once its video is saved."
@@ -179,9 +179,9 @@ WORKFLOW_TEXTS = {
         ),
         "transcribe_description": "Transcribes the recording and saves the transcript.",
         "triage": (
-            "Jev reads the transcript and answers three questions: **department** "
-            "picks sales, support, or billing; **callback** asks whether the caller wants a call back; "
-            "**urgency** scores how soon. **Summary** shows all three."
+            "Jev reads the transcript and answers three questions: `department` "
+            "picks sales, support, or billing; `callback` asks whether the caller wants a call back; "
+            "`urgency` scores how soon. **Summary** shows all three."
         ),
         "triage_description": "Asks Jev which department replies, whether to call back, and how soon.",
         "reply": (
@@ -201,14 +201,14 @@ WORKFLOW_TEXTS = {
         "transcribe": ("Universal-3.5 Pro turns the clip into text, and saves timed subtitles under `dub/subtitles`."),
         "transcribe_description": "Transcribes the clip and saves its subtitles.",
         "translate": (
-            "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and "
-            "answers **accurate**: does the translation say the same, with nothing added or left out?"
+            "GPT-6 Sol translates the transcript into the `language` on **Translate**. Jev compares the two and "
+            "answers `accurate`: does the translation say the same, with nothing added or left out?"
         ),
         "translate_description": "Translates the transcript and asks Jev whether the translation is accurate.",
         "speak": (
             "Fish Audio S2.1 Pro reads the translation in the voice of the clip, using the transcript as the "
-            "sample text. The dub is saved in the **approved** folder when the translation is accurate, and in "
-            "**review** otherwise."
+            "sample text. The dub is saved in the `approved` folder when the translation is accurate, and in "
+            "`review` otherwise."
         ),
         "speak_description": "Speaks the translation in the clip's voice and saves it by Jev's verdict.",
     },
@@ -219,16 +219,14 @@ WORKFLOW_TEXTS = {
             "line.\n"
             "3. Press **Run**. **Reply** shows the answer, or a note to pass the customer to a person."
         ),
-        "search": (
-            "Rerank 4 Pro scores every article against the question and keeps the best three, set in **top n**."
-        ),
+        "search": ("Rerank 4 Pro scores every article against the question and keeps the best three, set in `top_n`."),
         "answer": (
             "GPT-6 Luna answers the customer in three sentences or fewer, using only the three articles. Open "
             "**Answer** to change the instructions."
         ),
         "answer_description": "Answers the customer from the ranked articles.",
         "check": (
-            "Jev reads the articles and the answer and answers **supported**: does "
+            "Jev reads the articles and the answer and answers `supported`: does "
             "every sentence come from the articles? When it does, **Reply** shows the answer; when it does not, "
             "a note to pass the customer to a person."
         ),
@@ -245,9 +243,9 @@ WORKFLOW_TEXTS = {
         ),
         "rank_description": "Draws four candidates and keeps the one that best matches the brief.",
         "check": (
-            "GPT-6 Luna describes the winner. Jev then answers **ready**: does it "
+            "GPT-6 Luna describes the winner. Jev then answers `ready`: does it "
             "work as a homepage hero, with a clear subject, room for a headline, and no defects? The image is "
-            "saved in the **approved** folder when it is ready, and in **review** otherwise."
+            "saved in the `approved` folder when it is ready, and in `review` otherwise."
         ),
         "check_description": "Asks Jev whether the winner works as a hero and saves it by the verdict.",
     },
@@ -259,7 +257,7 @@ WORKFLOW_TEXTS = {
         "answer": "GPT-6 Luna, a fast model, answers the question using only the notes.",
         "answer_description": "Answers the question from the notes with a fast model.",
         "check": (
-            "Jev answers **supported**: does every fact in the answer come from the notes? The answer passes "
+            "Jev answers `supported`: does every fact in the answer come from the notes? The answer passes "
             "when the probability of yes is at least 0.8."
         ),
         "check_description": "Asks Jev whether every fact in the answer comes from the notes.",

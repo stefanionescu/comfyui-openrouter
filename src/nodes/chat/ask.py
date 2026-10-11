@@ -55,7 +55,6 @@ MEDIA = (
 CONTROLS = (
     io.Combo.Input(
         "reasoning_effort",
-        display_name="reasoning effort",
         options=list(EFFORTS),
         default=MODEL_DEFAULT,
         advanced=True,
@@ -63,7 +62,6 @@ CONTROLS = (
     ),
     io.Int.Input(
         "max_tokens",
-        display_name="max tokens",
         default=0,
         min=0,
         advanced=True,
@@ -78,7 +76,6 @@ CONTROLS = (
                 [
                     io.Float.Input(
                         TEMPERATURE_CHOICE["VALUE"],
-                        display_name="value",
                         default=TEMPERATURE["DEFAULT"],
                         min=0,
                         max=TEMPERATURE["MAX"],
@@ -89,7 +86,7 @@ CONTROLS = (
                 ],
             ),
         ],
-        tooltip="How much the answer varies. Set sends a value to models that take a temperature.",
+        tooltip="How much the answer varies. Choose set to send a value to models that take a temperature.",
         extra_dict={"advanced": True},
     ),
     io.Combo.Input(
@@ -100,7 +97,6 @@ CONTROLS = (
     ),
     io.Combo.Input(
         "aspect_ratio",
-        display_name="aspect ratio",
         options=list(IMAGE_ASPECT_RATIOS),
         default=MODEL_DEFAULT,
         tooltip="The shape of the images the model makes.",
@@ -112,7 +108,6 @@ CONTROLS = (
     ),
     io.Combo.Input(
         "pdf_engine",
-        display_name="PDF engine",
         options=list(PDF_ENGINES),
         default=MODEL_DEFAULT,
         advanced=True,
@@ -182,20 +177,14 @@ class ChatAsk(PaidNode):
                 *build_request_inputs(has_seed=True),
                 io.String.Input(
                     "answer_schema",
-                    display_name="answer schema",
-                    placeholder="answer schema",
                     default="",
                     multiline=True,
                     advanced=True,
                     tooltip="A JSON schema the answer must follow; leave empty for free text.",
                 ),
-                io.String.Input(
-                    "prompt", multiline=True, default="", placeholder="prompt", tooltip="The question or instruction."
-                ),
+                io.String.Input("prompt", multiline=True, default="", tooltip="The question or instruction."),
                 io.String.Input(
                     "system_prompt",
-                    display_name="system prompt",
-                    placeholder="system prompt",
                     multiline=True,
                     default="",
                     optional=True,

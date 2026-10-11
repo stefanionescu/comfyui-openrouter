@@ -4,7 +4,7 @@ var TEXT = {
   close: "Close",
   settings: {
     clearKey: "Clear Saved Key",
-    close: "Close OpenRouter settings",
+    close: "Close OpenRouter Settings",
     credentialLabel: "OpenRouter API key",
     credentials: "Credentials",
     environmentKey: "Set by OPENROUTER_API_KEY",
@@ -12,7 +12,7 @@ var TEXT = {
     invalidLimit: "ComfyUI returned an invalid OpenRouter limit.",
     invalidResponse: "ComfyUI returned an invalid OpenRouter settings response.",
     keyCleared: "Saved key cleared.",
-    keyNotice: "Add an OpenRouter key to use the extension. Your key stays on your ComfyUI server and is sent only to OpenRouter.",
+    keyNotice: "Add an OpenRouter API key to use the extension. Your key stays on your ComfyUI server and is sent only to OpenRouter.",
     keySaved: "Key saved.",
     limits: "Request limits",
     limitsSaved: "Limits saved.",
@@ -30,15 +30,15 @@ var TEXT = {
     unreadableResponse: "ComfyUI returned an unreadable OpenRouter settings response.",
     updateFailed: "OpenRouter settings could not be saved.",
     readFailed: "ComfyUI could not read OpenRouter settings.",
-    removeFailed: "ComfyUI could not clear the saved OpenRouter key.",
-    menu: "OpenRouter settings"
+    removeFailed: "ComfyUI could not clear the saved OpenRouter API key.",
+    menu: "OpenRouter Settings"
   },
   working: "Working..."
 };
 var LIMIT_LABELS = /* @__PURE__ */ new Map([
-  ["max_download_megabytes", "maximum download size (MiB)"],
-  ["max_upload_megabytes", "maximum upload size (MiB)"],
-  ["request_timeout_seconds", "request timeout (seconds)"]
+  ["max_download_megabytes", "Maximum download size (MiB)"],
+  ["max_upload_megabytes", "Maximum upload size (MiB)"],
+  ["request_timeout_seconds", "Request timeout (seconds)"]
 ]);
 function message(key) {
   let value = TEXT;
@@ -906,23 +906,6 @@ function chainCallback(widget, after) {
 
 // web/scripts/extension.ts
 var controlRestorers = /* @__PURE__ */ new WeakMap();
-var childLabels = /* @__PURE__ */ new Map();
-function listOptionLabels(name, option) {
-  return Object.entries(option.inputs.required ?? {}).flatMap(
-    ([child, [, spec]]) => spec.display_name ? [[`${option.key}/${name}.${child}`, spec.display_name]] : []
-  );
-}
-function readChildLabels(definitions) {
-  for (const [nodeClass, definition] of Object.entries(definitions)) {
-    const controls = dynamicControlInputs.get(nodeClass) ?? [];
-    const labels = new Map(
-      Object.entries(definition.input?.required ?? {}).filter(([name]) => controls.includes(name)).flatMap(
-        ([name, [, spec]]) => (spec.options ?? []).flatMap((option) => listOptionLabels(name, option))
-      )
-    );
-    if (labels.size) childLabels.set(nodeClass, labels);
-  }
-}
 function addNodeControls(canvasNode) {
   const restorers = [];
   for (const name of dynamicControlInputs.get(canvasNode.comfyClass ?? "") ?? []) {
@@ -942,15 +925,12 @@ function watchControl(canvasNode, widget) {
 }
 function preserveControlValues(canvasNode, widget) {
   const restoredWidgets = /* @__PURE__ */ new WeakSet();
-  const labels = childLabels.get(canvasNode.comfyClass ?? "");
   const restoreValues = (restore = false) => {
     const selected = widget.value;
     for (const child of canvasNode.widgets ?? []) {
       if (!child.name.startsWith(`${widget.name}.`) || restoredWidgets.has(child)) continue;
       restoredWidgets.add(child);
       const key = `${selected}/${child.name}`;
-      const label = labels?.get(key);
-      if (label) child.label = label;
       const saved = canvasNode.properties.conditionalValues;
       if (restore && saved && Object.hasOwn(saved, key))
         child.value = saved[key];
@@ -984,7 +964,6 @@ app2.registerExtension({
     }
     if (!stylesheets.has(stylesheet.href)) document.head.append(stylesheet);
   },
-  addCustomNodeDefs: readChildLabels,
   nodeCreated: addNodeControls,
   afterConfigureGraph: refreshGraph,
   commands: [

@@ -27,7 +27,7 @@ segments, timed words, and subtitles if you ask for them.
 ## Use
 
 1. Connect the audio and type the model ID.
-2. Connect **text** to **Save Text** or **Preview as Text**.
+2. Connect `text` to **Save Text** or **Preview as Text**.
 3. Select **Run**.
 
 Examples: **audio-01-triage-a-voicemail** and **audio-02-dub-a-clip**. Providers

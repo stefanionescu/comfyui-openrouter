@@ -19,10 +19,10 @@ several of these nodes to attach several files.
 ## Use
 
 1. Put the file in ComfyUI's input folder and press R to refresh the list.
-2. Choose it in **document**.
-3. Connect **documents** to **Chat: Ask**.
+2. Choose it in `file`.
+3. Connect `documents` to **Chat: Ask**.
 
-**Chat: Ask**'s **PDF engine** sets how OpenRouter reads a PDF. A text file must
+`pdf_engine` on **Chat: Ask** sets how OpenRouter reads a PDF. A text file must
 be UTF-8. An edited file is read again on the next run.
 Example: **chat-01-write-a-product-listing**.
 

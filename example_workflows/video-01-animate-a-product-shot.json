@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Describe the shot in **Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`.\n\nTo animate with another video model, change **Model**."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n2. Describe the shot in **Brief**.\n3. Press **Run**. The video is saved under `video/openrouter`.\n\nTo animate with another video model, change **Model**."
       ],
       "title": "Start Here"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "MAI-Image-2.6 Flash draws the first frame at 16:9, and **Frame** shows it. For another frame, change **seed** and run again."
+        "MAI-Image-2.6 Flash draws the first frame at 16:9, and **Frame** shows it. For another frame, change `seed` and run again."
       ],
       "title": "Note"
     },
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol looks at the frame and writes three camera moves, as move_1 to move_3. Jev picks the one that best suits a six-second teaser in **best**, and **Move** shows it."
+        "GPT-6 Sol looks at the frame and writes three camera moves, as `move_1` to `move_3`. Jev picks the one that best suits a six-second teaser in `best`, and **Move** shows it."
       ],
       "title": "Note"
     },
@@ -430,7 +430,7 @@
         },
         {
           "name": "options",
-          "type": "REQUEST_OPTIONS",
+          "type": "OPENROUTER_REQUEST_OPTIONS",
           "link": null,
           "shape": 7
         },
@@ -537,7 +537,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null,
           "shape": 7
         },
@@ -569,7 +569,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             5
           ]
@@ -612,7 +612,7 @@
         },
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 5
         }
       ],
@@ -790,7 +790,7 @@
       0,
       13,
       2,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       6,
@@ -987,7 +987,7 @@
           {
             "id": "8e0a18a8-3c8b-55eb-9c66-57e726e4c166",
             "name": "questions",
-            "type": "DECISION_QUESTIONS",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               8
             ],
@@ -1050,13 +1050,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
               },
@@ -1152,7 +1152,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1208,7 +1208,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],
@@ -1312,7 +1312,7 @@
             "inputs": [
               {
                 "name": "questions",
-                "type": "DECISION_QUESTIONS",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
                 "link": 8
               },
               {
@@ -1333,7 +1333,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1349,7 +1349,7 @@
             "outputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "links": [
                   3
                 ]
@@ -1390,7 +1390,7 @@
             "inputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 3
               },
               {
@@ -1526,7 +1526,7 @@
             "origin_slot": 0,
             "target_id": 104,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 4,
@@ -1566,7 +1566,7 @@
             "origin_slot": 2,
             "target_id": 103,
             "target_slot": 0,
-            "type": "DECISION_QUESTIONS"
+            "type": "OPENROUTER_DECISION_QUESTIONS"
           },
           {
             "id": 9,
@@ -1779,7 +1779,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },

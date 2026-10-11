@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 from ..types.images import ImageRequest
 from .inputs import build_request_inputs
 from ..config.media import SVG_MEDIA_TYPE
-from ..config.openrouter import FIELD_LABELS
 from ..openrouter.images import ImageOperation
 from ..config.namespace import MENUS, NODE_PREFIX
 from comfy_execution.graph import ExecutionBlocker
@@ -27,25 +26,27 @@ if TYPE_CHECKING:
     from ..types.images import ImageResult
 
 
-# The image fields, compression, count, and references; a field left at model default sends nothing.
+# The image fields, compression, count, and references; a field left at model default sends nothing. The format,
+# the last field, has a tooltip that explains its name.
 FIELDS = (
     *(
-        io.Combo.Input(
-            field,
-            display_name=FIELD_LABELS.get(field, field.replace("_", " ")),
-            options=[MODEL_DEFAULT, *values],
-            default=MODEL_DEFAULT,
-        )
+        io.Combo.Input(field, options=[MODEL_DEFAULT, *values], default=MODEL_DEFAULT)
         for field, values in FIELD_VALUES.items()
+        if field != "output_format"
+    ),
+    io.Combo.Input(
+        "output_format",
+        options=[MODEL_DEFAULT, *FIELD_VALUES["output_format"]],
+        default=MODEL_DEFAULT,
+        tooltip="The file format of the images. svg needs a model that draws vectors.",
     ),
     io.Int.Input(
         "output_compression",
-        display_name="compression",
         default=COMPRESSION["DEFAULT"],
         min=0,
         max=COMPRESSION["MAX"],
         advanced=True,
-        tooltip="JPEG and WebP quality; higher keeps more detail.",
+        tooltip="The quality of JPEG and WebP images; higher keeps more detail.",
     ),
     io.Int.Input("count", default=1, min=1, tooltip="How many images to make, within what the model lists."),
     io.Image.Input(
@@ -73,9 +74,7 @@ class ImageGenerate(PaidNode):
                 io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["images"], tooltip=MODEL_TOOLTIP),
                 *FIELDS,
                 *build_request_inputs(has_seed=True),
-                io.String.Input(
-                    "prompt", multiline=True, default="", placeholder="prompt", tooltip="What to draw or change."
-                ),
+                io.String.Input("prompt", multiline=True, default="", tooltip="What to draw or change."),
             ],
             outputs=[
                 io.Image.Output("images", display_name="images", is_output_list=True),

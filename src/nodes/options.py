@@ -20,24 +20,22 @@ if TYPE_CHECKING:
     from ..types import Json
 
 PROVIDER = re.compile(PROVIDER_SLUG_PATTERN)
-# The routing dropdowns: input, label, choices, and tooltip.
+# The routing dropdowns: input, choices, and tooltip.
 ROUTING_CHOICES = (
-    ("sort", "sort", SORT_CHOICES, "Prefer the cheapest, fastest, or quickest-to-answer provider."),
+    ("sort", SORT_CHOICES, "Prefer the cheapest, fastest, or quickest-to-answer provider."),
     (
         "data_collection",
-        "data collection",
         COLLECTION_CHOICES,
-        "Deny to use only providers that do not store or train on requests.",
+        "Choose deny to use only providers that do not store or train on requests.",
     ),
 )
-# The JSON text fields: input, label, and tooltip.
+# The JSON text fields: input and tooltip.
 JSON_FIELDS = (
     (
         "provider_options",
-        "provider options",
         "A JSON object of fields for one provider, keyed by its slug. The model's page on OpenRouter lists them.",
     ),
-    ("extra_fields", "extra fields", "A JSON object of request fields, added to the body as they are written."),
+    ("extra_fields", "A JSON object of request fields, added to the body as they are written."),
 )
 # The provider lists: input and tooltip.
 PROVIDER_LISTS = (
@@ -84,13 +82,12 @@ class RequestOptions(io.ComfyNode):
             io.String.Input(name, default="", tooltip=f"{tooltip} {SLUG_TOOLTIP}") for name, tooltip in PROVIDER_LISTS
         ]
         routing = [
-            io.Combo.Input(name, display_name=label, options=list(choices), default=MODEL_DEFAULT, tooltip=tooltip)
-            for name, label, choices, tooltip in ROUTING_CHOICES
+            io.Combo.Input(name, options=list(choices), default=MODEL_DEFAULT, tooltip=tooltip)
+            for name, choices, tooltip in ROUTING_CHOICES
         ]
         prices = [
             io.Float.Input(
                 name,
-                display_name=f"max {kind} price",
                 default=0.0,
                 min=0.0,
                 step=PRICE_STEP,
@@ -100,16 +97,13 @@ class RequestOptions(io.ComfyNode):
             for name, kind in (("max_prompt_price", "prompt"), ("max_completion_price", "completion"))
         ]
         fields = [
-            io.String.Input(
-                name, display_name=label, placeholder=label, multiline=True, default="", advanced=True, tooltip=tooltip
-            )
-            for name, label, tooltip in JSON_FIELDS
+            io.String.Input(name, multiline=True, default="", advanced=True, tooltip=tooltip)
+            for name, tooltip in JSON_FIELDS
         ]
         zdr = io.Boolean.Input(
             "zdr",
-            display_name="zero data retention",
             default=False,
-            tooltip="Use only providers with zero data retention.",
+            tooltip="Turn it on to use only providers with a zero data retention (ZDR) policy.",
         )
         return io.Schema(
             node_id=f"{NODE_PREFIX}{cls.__name__}",
@@ -137,7 +131,7 @@ class RequestOptions(io.ComfyNode):
         extra_fields: str,
     ) -> io.NodeOutput:
         """Check each field before any request; the endpoint checks happen when a paid node merges them."""
-        per_provider = _read_fields(provider_options, "provider options")
+        per_provider = _read_fields(provider_options, "provider_options")
         chosen = provider.strip()
         if any(PROVIDER.match(slug) is None for slug in (*per_provider, *((chosen,) if chosen else ()))):
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROVIDER_SLUG)
@@ -157,7 +151,7 @@ class RequestOptions(io.ComfyNode):
                 }
             ),
             provider_options=MappingProxyType(per_provider),
-            extra_fields=MappingProxyType(_read_fields(extra_fields, "extra fields")),
+            extra_fields=MappingProxyType(_read_fields(extra_fields, "extra_fields")),
         )
         return io.NodeOutput(options)
 

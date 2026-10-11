@@ -16,7 +16,7 @@ OpenRouter's public listings, so it is free and needs no key.
 | `info` | The model's listing as JSON, with the keys listed below. |
 
 The paid nodes check each request against the same listings before paying, so
-**info** holds exactly what they accept.
+`info` holds exactly what they accept.
 
 | Key                   | What it holds                                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -38,10 +38,10 @@ In `fields`, a field with fixed values holds `values`, a number holds `min` and
 ## Use
 
 1. Type or connect the model ID.
-2. Connect **info** to **Preview as Text** to read it, or to **Extract Text from
+2. Connect `info` to **Preview as Text** to read it, or to **Extract Text from
    JSON** to use one top-level key.
 
-Another extension can run the node and read **info** instead of copying a
+Another extension can run the node and read `info` instead of copying a
 model's limits; the advanced guide explains how. Examples:
 **image-04-design-a-logo** and **video-01-animate-a-product-shot**.
 

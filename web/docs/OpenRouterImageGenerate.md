@@ -20,8 +20,8 @@ Generates or edits images with any image model on OpenRouter.
 | `prompt`             | What to draw or change.                                                                       |
 | `options`            | Settings from **Request Options**.                                                            |
 
-**model default** sends nothing. Before anything is paid, the node refuses a
-value, count, or number of references the model's image listing does not
+`model default` sends nothing. Before anything is paid, the node refuses a
+value, `count`, or number of `references` the model's image listing does not
 include, naming what it does take.
 
 ## Outputs
@@ -35,9 +35,9 @@ include, naming what it does take.
 ## Use
 
 1. Write the prompt and type the model ID.
-2. Connect any reference images. **Create List** joins several **Load Image**
-   nodes.
-3. Connect **images** to **Save Image**, or **svg** to **Save SVG**, and select
+2. Connect any reference images to `references`. **Create List** joins several
+   **Load Image** nodes.
+3. Connect `images` to **Save Image**, or `svg` to **Save SVG**, and select
    **Run**.
 
 Examples: **image-01-pick-the-best-image-for-an-occasion** and

@@ -5,7 +5,7 @@ const TEXT = {
   close: 'Close',
   settings: {
     clearKey: 'Clear Saved Key',
-    close: 'Close OpenRouter settings',
+    close: 'Close OpenRouter Settings',
     credentialLabel: 'OpenRouter API key',
     credentials: 'Credentials',
     environmentKey: 'Set by OPENROUTER_API_KEY',
@@ -14,7 +14,7 @@ const TEXT = {
     invalidResponse: 'ComfyUI returned an invalid OpenRouter settings response.',
     keyCleared: 'Saved key cleared.',
     keyNotice:
-      'Add an OpenRouter key to use the extension. Your key stays on your ComfyUI server and is sent only to OpenRouter.',
+      'Add an OpenRouter API key to use the extension. Your key stays on your ComfyUI server and is sent only to OpenRouter.',
     keySaved: 'Key saved.',
     limits: 'Request limits',
     limitsSaved: 'Limits saved.',
@@ -32,17 +32,17 @@ const TEXT = {
     unreadableResponse: 'ComfyUI returned an unreadable OpenRouter settings response.',
     updateFailed: 'OpenRouter settings could not be saved.',
     readFailed: 'ComfyUI could not read OpenRouter settings.',
-    removeFailed: 'ComfyUI could not clear the saved OpenRouter key.',
-    menu: 'OpenRouter settings',
+    removeFailed: 'ComfyUI could not clear the saved OpenRouter API key.',
+    menu: 'OpenRouter Settings',
   },
   working: 'Working...',
 } as const;
 
 /** Labels of the server's execution limits, keyed by setting name. */
 export const LIMIT_LABELS = new Map<string, string>([
-  ['max_download_megabytes', 'maximum download size (MiB)'],
-  ['max_upload_megabytes', 'maximum upload size (MiB)'],
-  ['request_timeout_seconds', 'request timeout (seconds)'],
+  ['max_download_megabytes', 'Maximum download size (MiB)'],
+  ['max_upload_megabytes', 'Maximum upload size (MiB)'],
+  ['request_timeout_seconds', 'Request timeout (seconds)'],
 ]);
 
 type MessagePaths<Messages> = {

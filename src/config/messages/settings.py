@@ -3,10 +3,10 @@
 KEY_EMPTY = "Enter an OpenRouter API key of 1 to {maximum} characters without spaces at either end."
 
 KEY_REQUIRED = (
-    "Set your OpenRouter API key in OpenRouter settings or in the server's OPENROUTER_API_KEY before running."
+    "Set your OpenRouter API key in OpenRouter Settings or in the server's OPENROUTER_API_KEY before running."
 )
 
-KEY_UNREADABLE = "The saved OpenRouter key could not be read. Save the key again in OpenRouter settings."
+KEY_UNREADABLE = "The saved OpenRouter API key could not be read. Save the key again in OpenRouter Settings."
 
 KEY_WHITESPACE = "Remove spaces and line breaks from the OpenRouter API key."
 

@@ -19,14 +19,15 @@ frames, or reference media.
 | `reference_audio`  | Audio the video follows: one, a batch, or a list.                                      |
 | `seed`             | Varies the output, for models that take a seed.                                        |
 | `run_number`       | Change it to send the same request again.                                              |
-| `prompt`           | What the video shows. It can be empty when a first frame is connected.                 |
+| `prompt`           | What the video shows. It can be empty when `first_frame` is connected.                 |
 | `first_frame`      | One image the video starts from; a batch or list is refused.                           |
 | `last_frame`       | One image the video ends on; a batch or list is refused.                               |
 | `options`          | Settings from **Request Options**.                                                     |
 
-**model default** or 0 sends nothing. Before anything is paid, the node refuses
-a duration, resolution, aspect ratio, frame, sound, or upscale setting the
-model's video listing does not include, naming what it does take.
+`model default` or `0` sends nothing. Before anything is paid, the node refuses
+a `duration`, `resolution`, `aspect_ratio`, `generate_audio`, `upscale_factor`,
+`creativity`, `first_frame`, or `last_frame` the model's video listing does not
+include, naming what it does take.
 
 ## Outputs
 
@@ -37,7 +38,7 @@ model's video listing does not include, naming what it does take.
 ## Use
 
 1. Write the prompt, type the model ID and duration, and connect any frames.
-2. Connect **video** to **Save Video**.
+2. Connect `video` to **Save Video**.
 3. Select **Run**. A video takes from half a minute to several minutes.
 
 Example: **video-01-animate-a-product-shot**.

@@ -9,7 +9,7 @@ AUDIO_UNREADABLE = "The audio OpenRouter returned could not be decoded."
 AUDIO_UNWRITABLE = "The connected audio could not be written as WAV. Use mono or stereo audio."
 
 DOWNLOAD_LIMIT = (
-    "OpenRouter's reply is larger than the maximum download size of {maximum} MiB in OpenRouter settings. "
+    "OpenRouter's reply is larger than the maximum download size of {maximum} MiB in OpenRouter Settings. "
     "Raise it or request smaller output."
 )
 
@@ -21,7 +21,7 @@ IMAGE_UNREADABLE = "An image OpenRouter returned could not be decoded."
 
 UPLOAD_LIMIT = (
     "The media in this request is {size} MiB, above the maximum upload size of {maximum} MiB in OpenRouter "
-    "settings. Send fewer or smaller files."
+    "Settings. Send fewer or smaller files."
 )
 
 VIDEO_UNREADABLE = "The connected video could not be written as MP4."

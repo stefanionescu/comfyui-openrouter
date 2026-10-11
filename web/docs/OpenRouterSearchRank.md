@@ -25,7 +25,7 @@ Ranks lines of text and images by how well they match a query, best first.
 ## Use
 
 1. Write the query and the documents, and connect any images.
-2. Connect **texts** or **images** to the nodes that use the best results.
+2. Connect `texts` or `images` to the nodes that use the best results.
 3. Select **Run**.
 
 All documents go in one request. A text-only model refuses images. Examples:

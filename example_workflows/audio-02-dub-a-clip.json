@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a short clip of one speaker in **Load Audio**. The clip is also the voice sample, so use your own voice or one you have permission to copy.\n3. Press **Run**. The dub is saved under `dub/approved` or `dub/review`, and the subtitles under `dub/subtitles`."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n2. Upload a short clip of one speaker in **Load Audio**. The clip is also the voice sample, so use your own voice or one you have permission to copy.\n3. Press **Run**. The dub is saved under `dub/approved` or `dub/review`, and the subtitles under `dub/subtitles`."
       ],
       "title": "Start Here"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Sol translates the transcript into the **language** on **Translate**. Jev compares the two and answers **accurate**: does the translation say the same, with nothing added or left out?"
+        "GPT-6 Sol translates the transcript into the `language` on **Translate**. Jev compares the two and answers `accurate`: does the translation say the same, with nothing added or left out?"
       ],
       "title": "Note"
     },
@@ -132,7 +132,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Fish Audio S2.1 Pro reads the translation in the voice of the clip, using the transcript as the sample text. The dub is saved in the **approved** folder when the translation is accurate, and in **review** otherwise."
+        "Fish Audio S2.1 Pro reads the translation in the voice of the clip, using the transcript as the sample text. The dub is saved in the `approved` folder when the translation is accurate, and in `review` otherwise."
       ],
       "title": "Note"
     },
@@ -229,7 +229,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null,
           "shape": 7
         },
@@ -261,7 +261,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             3
           ]
@@ -300,7 +300,7 @@
         },
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 3
         },
         {
@@ -479,7 +479,7 @@
       0,
       8,
       1,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       4,
@@ -711,7 +711,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               }
@@ -886,7 +886,7 @@
           {
             "id": "42ef6a24-5dd5-56a4-bb38-5abb555e8a6d",
             "name": "questions",
-            "type": "DECISION_QUESTIONS",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               9
             ],
@@ -1076,13 +1076,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": null,
                 "shape": 7
               },
@@ -1178,7 +1178,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1234,7 +1234,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],
@@ -1345,7 +1345,7 @@
             "inputs": [
               {
                 "name": "questions",
-                "type": "DECISION_QUESTIONS",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
                 "link": 9
               },
               {
@@ -1366,7 +1366,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1382,7 +1382,7 @@
             "outputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "links": [
                   6
                 ]
@@ -1423,7 +1423,7 @@
             "inputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 6
               },
               {
@@ -1534,7 +1534,7 @@
             "origin_slot": 0,
             "target_id": 206,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 7,
@@ -1558,7 +1558,7 @@
             "origin_slot": 1,
             "target_id": 205,
             "target_slot": 0,
-            "type": "DECISION_QUESTIONS"
+            "type": "OPENROUTER_DECISION_QUESTIONS"
           },
           {
             "id": 10,
@@ -1775,7 +1775,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },

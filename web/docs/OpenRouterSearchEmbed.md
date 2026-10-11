@@ -25,7 +25,7 @@ first.
 ## Use
 
 1. Write one item per line, with the item to compare against first.
-2. Connect **similarities** to **Preview as Text**.
+2. Connect `similarities` to **Preview as Text**.
 3. Select **Run**.
 
 All items go in one request. A text-only model refuses images.

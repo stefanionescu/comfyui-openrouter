@@ -55,7 +55,6 @@ class SearchEmbed(PaidNode):
                 ),
                 io.Combo.Input(
                     "input_type",
-                    display_name="input type",
                     options=list(INPUT_TYPES),
                     default=MODEL_DEFAULT,
                     advanced=True,

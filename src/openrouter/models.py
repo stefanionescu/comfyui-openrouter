@@ -191,7 +191,7 @@ async def read_video_limits(model_id: str, parameters: frozenset[str], settings:
 def validate_limits(model_id: str, limits: Limits, values: Mapping[str, Json]) -> None:
     """Refuse a field the model does not take, a value it does not list, and a number outside its range."""
     for field, value in values.items():
-        name = FIELD_LABELS.get(field, field.replace("_", " "))
+        name = FIELD_LABELS.get(field, field)
         if field not in limits.fields:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_FIELD.format(model=model_id, field=name))
         choices = limits.choices.get(field)

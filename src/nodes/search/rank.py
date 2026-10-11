@@ -42,7 +42,6 @@ class SearchRank(PaidNode):
                 IMAGES,
                 io.Int.Input(
                     "top_n",
-                    display_name="top n",
                     default=0,
                     min=0,
                     tooltip="How many documents to keep; 0 keeps all.",

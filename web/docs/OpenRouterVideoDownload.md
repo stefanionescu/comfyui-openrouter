@@ -17,9 +17,9 @@ it, ComfyUI restarted, or it waited too long.
 
 ## Use
 
-1. Choose the job in **job**. Press R to list jobs started after the page
+1. Choose the job in `job`. Press R to list jobs started after the page
    loaded.
-2. Connect **video** to **Save Video**.
+2. Connect `video` to **Save Video**.
 3. Select **Run**.
 
 A job leaves the list once its video is downloaded, or when it fails, is

@@ -7,18 +7,6 @@
 
 Run any OpenRouter model in ComfyUI with your own API key.
 
-- **Chat:** ask with images, video, audio, or documents; get text, images, or
-  speech.
-- **Image:** generate and edit images, with masks and SVG files.
-- **Video:** make a video from a prompt, frames, or references.
-- **Audio:** text to speech, with voice cloning, and transcription with
-  timestamps and subtitles.
-- **Search:** embed and rank text and images.
-- **Decision:** ask a decision model, such as TypeSafe's Jev, typed questions
-  and get probabilities.
-- **Request Options:** providers, price limits, and extra request fields for any
-  paid node.
-
 ## Contents
 
 - [Requirements](#requirements)
@@ -91,12 +79,12 @@ To update or remove the extension, see the
 ## First run
 
 1. Save your API key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
-   settings**.
+   Settings**.
 2. Open **Browse Templates → openrouter →
    decision-01-verify-then-escalate** and select **Run**.
 3. Read the answer in **Answer**, and Jev's check in **Summary**.
 
-To send the same request again, change **run number**.
+To send the same request again, change `run_number`.
 
 ## Example workflows
 
@@ -132,7 +120,7 @@ The nodes are under **OpenRouter** in the node menu, and each has a help page.
 
 | Node                                                                | What it does                                                           | Paid |
 | ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---- |
-| [Chat: Ask](web/docs/OpenRouterChatAsk.md)                          | Asks a model a question, with images, video, audio, or documents.      | Yes  |
+| [Chat: Ask](web/docs/OpenRouterChatAsk.md)                          | Asks a model, with media or documents, for text, images, or speech.    | Yes  |
 | [Chat: Attach Document](web/docs/OpenRouterChatAttachDocument.md)   | Attaches a PDF or text file from ComfyUI's input folder.               | No   |
 | [Image: Generate](web/docs/OpenRouterImageGenerate.md)              | Generates or edits images, with masks and SVG files.                   | Yes  |
 | [Video: Generate](web/docs/OpenRouterVideoGenerate.md)              | Makes a video from a prompt, frames, or reference media.               | Yes  |
@@ -142,7 +130,7 @@ The nodes are under **OpenRouter** in the node menu, and each has a help page.
 | [Search: Embed](web/docs/OpenRouterSearchEmbed.md)                  | Turns text and images into embeddings and compares them.               | Yes  |
 | [Search: Rank](web/docs/OpenRouterSearchRank.md)                    | Ranks text and images by how well they match a query.                  | Yes  |
 | [Decision: Add Question](web/docs/OpenRouterDecisionAddQuestion.md) | Adds a yes-or-no, one-choice, or score question.                       | No   |
-| [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Asks a decision model, such as Jev, the questions about a situation.   | Yes  |
+| [Decision: Ask](web/docs/OpenRouterDecisionAsk.md)                  | Gets answers with probabilities from a decision model, such as Jev.    | Yes  |
 | [Decision: Read Answer](web/docs/OpenRouterDecisionReadAnswer.md)   | Reads one answer as text, a yes flag, and numbers.                     | No   |
 | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for paid nodes. | No   |
 | [Model: Info](web/docs/OpenRouterModelInfo.md)                      | Shows what a model reads, makes, and accepts, as JSON.                 | No   |
@@ -156,7 +144,7 @@ Each paid node takes any model ID from
 [openrouter.ai/models](https://openrouter.ai/models), with an optional variant
 suffix such as `:nitro`. **Model: Info** shows what any model takes.
 
-![Chat: Ask on the canvas: sockets for a conversation, documents, images, videos, audio, and options; then the model field set to google/gemini-3.5-flash, the reasoning effort, max tokens, temperature, outputs, aspect ratio, voice, PDF engine, seed, and run number; and the answer schema, prompt, and system prompt boxes at the bottom.](docs/images/chat-ask-node.png)
+![Chat: Ask on the canvas: the conversation, documents, images, videos, audio, and options sockets; then model set to google/gemini-3.5-flash, reasoning_effort, max_tokens, temperature, outputs, aspect_ratio, voice, pdf_engine, seed, and run_number; and the answer_schema, prompt, and system_prompt boxes at the bottom.](docs/images/chat-ask-node.png)
 
 Before sending, the node checks the model against OpenRouter's public listings
 and stops if the ID is unknown, the model makes something else, or it does not
@@ -164,7 +152,7 @@ take what you connected or chose. The error names what the model does take. The
 [advanced guide](ADVANCED.md#models) lists every check and each node's default
 model.
 
-Each media socket, such as **images**, takes one item, a batch, or a list, and
+Each media socket, such as `images`, takes one item, a batch, or a list, and
 everything connected goes in one request, each image at its own size. Join
 several **Load Image** nodes with **Create List**.
 

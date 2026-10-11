@@ -33,7 +33,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter settings**.\n2. Upload a front photo in **Front** and a close-up in **Detail**.\n3. In **Chat: Attach Document**, choose the spec sheet: a PDF or text file in ComfyUI's input folder.\n4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`.\n\n**Request Options** keeps the listing away from providers that store or train on requests."
+        "1. Set your key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter Settings**.\n2. Upload a front photo in **Front** and a close-up in **Detail**.\n3. In **Chat: Attach Document**, choose the spec sheet: a PDF or text file in ComfyUI's input folder.\n4. Press **Run**. The listing is saved as JSON under `listings/approved` or `listings/review`.\n\n**Request Options** keeps the listing away from providers that store or train on requests."
       ],
       "title": "Start Here"
     },
@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "Jev compares the listing with the spec facts and answers two questions: **supported** asks whether every claim is backed, and **persuasive** scores the copy.\n\nThe listing is saved in the **approved** folder when every claim is supported, and in **review** otherwise."
+        "Jev compares the listing with the spec facts and answers two questions: `supported` asks whether every claim is backed, and `persuasive` scores the copy.\n\nThe listing is saved in the `approved` folder when every claim is supported, and in `review` otherwise."
       ],
       "title": "Note"
     },
@@ -222,7 +222,7 @@
         },
         {
           "name": "documents",
-          "type": "CHAT_DOCUMENTS",
+          "type": "OPENROUTER_CHAT_DOCUMENTS",
           "link": null,
           "shape": 7
         }
@@ -230,7 +230,7 @@
       "outputs": [
         {
           "name": "documents",
-          "type": "CHAT_DOCUMENTS",
+          "type": "OPENROUTER_CHAT_DOCUMENTS",
           "links": [
             3
           ]
@@ -342,7 +342,7 @@
       "outputs": [
         {
           "name": "options",
-          "type": "REQUEST_OPTIONS",
+          "type": "OPENROUTER_REQUEST_OPTIONS",
           "links": [
             4
           ]
@@ -391,12 +391,12 @@
         },
         {
           "name": "documents",
-          "type": "CHAT_DOCUMENTS",
+          "type": "OPENROUTER_CHAT_DOCUMENTS",
           "link": 3
         },
         {
           "name": "options",
-          "type": "REQUEST_OPTIONS",
+          "type": "OPENROUTER_REQUEST_OPTIONS",
           "link": 4
         }
       ],
@@ -437,7 +437,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null,
           "shape": 7
         },
@@ -469,7 +469,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             7
           ]
@@ -503,7 +503,7 @@
       "inputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 7,
           "shape": 7
         },
@@ -535,7 +535,7 @@
       "outputs": [
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "links": [
             8
           ]
@@ -578,7 +578,7 @@
         },
         {
           "name": "questions",
-          "type": "DECISION_QUESTIONS",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": 8
         },
         {
@@ -680,7 +680,7 @@
       0,
       8,
       2,
-      "CHAT_DOCUMENTS"
+      "OPENROUTER_CHAT_DOCUMENTS"
     ],
     [
       4,
@@ -688,7 +688,7 @@
       0,
       8,
       3,
-      "REQUEST_OPTIONS"
+      "OPENROUTER_REQUEST_OPTIONS"
     ],
     [
       5,
@@ -712,7 +712,7 @@
       0,
       10,
       0,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       8,
@@ -720,7 +720,7 @@
       0,
       11,
       2,
-      "DECISION_QUESTIONS"
+      "OPENROUTER_DECISION_QUESTIONS"
     ],
     [
       9,
@@ -843,7 +843,7 @@
           {
             "id": "46465c68-b0c0-532c-9a1a-dd43b048d13a",
             "name": "documents",
-            "type": "CHAT_DOCUMENTS",
+            "type": "OPENROUTER_CHAT_DOCUMENTS",
             "linkIds": [
               4,
               5
@@ -856,7 +856,7 @@
           {
             "id": "4c9764ae-2260-5263-b1fc-b14ff127b330",
             "name": "options",
-            "type": "REQUEST_OPTIONS",
+            "type": "OPENROUTER_REQUEST_OPTIONS",
             "linkIds": [
               6
             ],
@@ -971,13 +971,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": 4,
                 "shape": 7
               },
@@ -1073,7 +1073,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": 6,
                 "shape": 7
               },
@@ -1128,7 +1128,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],
@@ -1180,13 +1180,13 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "link": null,
                 "shape": 7
               },
               {
                 "name": "documents",
-                "type": "CHAT_DOCUMENTS",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
                 "link": 5,
                 "shape": 7
               },
@@ -1282,7 +1282,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1337,7 +1337,7 @@
               },
               {
                 "name": "conversation",
-                "type": "CHAT_CONVERSATION",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
                 "links": []
               }
             ],
@@ -1397,7 +1397,7 @@
             "origin_slot": 2,
             "target_id": 102,
             "target_slot": 2,
-            "type": "CHAT_DOCUMENTS"
+            "type": "OPENROUTER_CHAT_DOCUMENTS"
           },
           {
             "id": 5,
@@ -1405,7 +1405,7 @@
             "origin_slot": 2,
             "target_id": 103,
             "target_slot": 2,
-            "type": "CHAT_DOCUMENTS"
+            "type": "OPENROUTER_CHAT_DOCUMENTS"
           },
           {
             "id": 6,
@@ -1413,7 +1413,7 @@
             "origin_slot": 3,
             "target_id": 102,
             "target_slot": 15,
-            "type": "REQUEST_OPTIONS"
+            "type": "OPENROUTER_REQUEST_OPTIONS"
           },
           {
             "id": 7,
@@ -1495,7 +1495,7 @@
           {
             "id": "1f4d61e2-286e-51d7-badb-dab01a730b13",
             "name": "questions",
-            "type": "DECISION_QUESTIONS",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               10
             ],
@@ -1623,7 +1623,7 @@
             "inputs": [
               {
                 "name": "questions",
-                "type": "DECISION_QUESTIONS",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
                 "link": 10
               },
               {
@@ -1644,7 +1644,7 @@
               },
               {
                 "name": "options",
-                "type": "REQUEST_OPTIONS",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
               },
@@ -1660,7 +1660,7 @@
             "outputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "links": [
                   2
                 ]
@@ -1701,7 +1701,7 @@
             "inputs": [
               {
                 "name": "answers",
-                "type": "DECISION_ANSWERS",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 2
               },
               {
@@ -1966,7 +1966,7 @@
             "origin_slot": 0,
             "target_id": 203,
             "target_slot": 0,
-            "type": "DECISION_ANSWERS"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 3,
@@ -2030,7 +2030,7 @@
             "origin_slot": 2,
             "target_id": 202,
             "target_slot": 0,
-            "type": "DECISION_QUESTIONS"
+            "type": "OPENROUTER_DECISION_QUESTIONS"
           },
           {
             "id": 11,

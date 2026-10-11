@@ -1,17 +1,17 @@
 """Messages for OpenRouter failures and refusals; {reason} is OpenRouter's cleaned reason, ending as a sentence."""
 
 ANSWER_CUT = (
-    "The model used up max tokens before answering, often on reasoning. Raise max tokens or lower the reasoning effort."
+    "The model used up max_tokens before answering, often on reasoning. Raise max_tokens or lower reasoning_effort."
 )
 
 ANSWER_FILTERED = "The provider's content filter stopped the answer. Change the prompt, or choose another model."
 
 CREDITS_REQUIRED = (
     "OpenRouter needs more credit for this request: {reason} Add credits at openrouter.ai/credits, raise the key's "
-    "limit, or lower max tokens."
+    "limit, or lower max_tokens."
 )
 
-KEY_REJECTED = "OpenRouter did not accept the API key. Check the key in OpenRouter settings."
+KEY_REJECTED = "OpenRouter did not accept the API key. Check the key in OpenRouter Settings."
 
 MODEL_REFUSED = "The model refused to answer: {reason}"
 
@@ -47,7 +47,7 @@ REQUEST_FAILED = "OpenRouter returned HTTP {status}. Try again later."
 
 REQUEST_REJECTED = "OpenRouter refused the request: {reason}"
 
-REQUEST_TIMEOUT = "The request took longer than the request timeout of {seconds} seconds in OpenRouter settings."
+REQUEST_TIMEOUT = "The request took longer than the request timeout of {seconds} seconds in OpenRouter Settings."
 
 REQUEST_UNCERTAIN = (
     "The connection closed before OpenRouter answered. It may have run and billed this request; check "

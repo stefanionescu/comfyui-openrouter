@@ -20,25 +20,25 @@ nodes.
 
 ## Outputs
 
-| Output    | What it carries                              |
-| --------- | -------------------------------------------- |
-| `options` | The settings, for a paid node's **options**. |
+| Output    | What it carries                            |
+| --------- | ------------------------------------------ |
+| `options` | The settings, for a paid node's `options`. |
 
 ## Use
 
 1. Fill in the fields you need, and leave the rest at their defaults.
-2. Connect **options** to the **options** input of one or more paid nodes.
+2. Connect `options` to the `options` input of one or more paid nodes.
 
 Which fields each request type accepts. A paid node stops with an error, before
 sending, on a field its request type rejects:
 
-| Field                                | Chat | Image | Video | Speech | Transcribe | Embed | Rank | Decision |
-| ------------------------------------ | ---- | ----- | ----- | ------ | ---------- | ----- | ---- | -------- |
-| provider, only, ignore               | Yes  | Yes   | No    | No     | No         | Yes   | Yes  | Yes      |
-| sort                                 | Yes  | Yes   | No    | No     | No         | Yes   | Yes  | Yes      |
-| data collection, zero data retention | Yes  | No    | No    | No     | No         | Yes   | Yes  | Yes      |
-| price limits                         | Yes  | No    | No    | No     | No         | Yes   | Yes  | Yes      |
-| provider options                     | Yes  | Yes   | Yes   | Yes    | Yes        | Yes   | Yes  | Yes      |
+| Field                                      | Chat | Image | Video | Speech | Transcribe | Embed | Rank | Decision |
+| ------------------------------------------ | ---- | ----- | ----- | ------ | ---------- | ----- | ---- | -------- |
+| `provider`, `only`, `ignore`               | Yes  | Yes   | No    | No     | No         | Yes   | Yes  | Yes      |
+| `sort`                                     | Yes  | Yes   | No    | No     | No         | Yes   | Yes  | Yes      |
+| `data_collection`, `zdr`                   | Yes  | No    | No    | No     | No         | Yes   | Yes  | Yes      |
+| `max_prompt_price`, `max_completion_price` | Yes  | No    | No    | No     | No         | Yes   | Yes  | Yes      |
+| `provider_options`                         | Yes  | Yes   | Yes   | Yes    | Yes        | Yes   | Yes  | Yes      |
 
 Each request goes to one provider, and OpenRouter never moves it to another. A
 node also refuses an extra field it sets itself, such as `model`, `messages`, or

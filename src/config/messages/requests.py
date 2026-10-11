@@ -16,7 +16,7 @@ JSON_TYPE = "Send the request as application/json."
 
 JSON_VALUES = "The request holds values JSON cannot carry."
 
-LOCAL_CONNECTION_REQUIRED = "OpenRouter settings require a local, same-origin ComfyUI connection."
+LOCAL_CONNECTION_REQUIRED = "OpenRouter Settings needs a local, same-origin ComfyUI connection."
 
 REQUEST_TIMEOUT = "The request took too long to arrive."
 
