@@ -108,7 +108,7 @@ They are in **Browse Templates → openrouter**. Start with each
 workflow's **Start Here** note; each step is a subgraph. Media inputs start
 empty.
 
-![Screenshot of the Choose group in image-01: a note explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/workflow-choose-group.png)
+![Screenshot of the Choose group in image-01: a note above the group explains the step, two Decision: Add Question nodes hold Jev's questions, and the Choose subgraph node shows its inputs and its approved and review folders.](docs/images/workflow-choose-group.png)
 
 After an update, open the examples in a new tab to get the new versions.
 

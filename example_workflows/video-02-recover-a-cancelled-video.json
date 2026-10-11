@@ -8,11 +8,11 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        720,
+        780,
         106
       ],
       "flags": {},
@@ -42,7 +42,7 @@
       "type": "OpenRouterVideoDownload",
       "pos": [
         30,
-        310
+        306
       ],
       "size": [
         340,
@@ -82,7 +82,7 @@
       "type": "SaveVideo",
       "pos": [
         410,
-        310
+        306
       ],
       "size": [
         340,
@@ -155,9 +155,9 @@
       "title": "Recover",
       "bounding": [
         0,
-        30,
+        196,
         780,
-        416
+        246
       ],
       "color": "#68688c",
       "font_size": 24,

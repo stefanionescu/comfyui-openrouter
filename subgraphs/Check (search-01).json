@@ -1,0 +1,616 @@
+{
+  "id": "4a9f418c-53aa-567d-a2b2-2f5eb0b99498",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "ea5f4ed3-ce66-5075-94c9-04f90877d0b0",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        86
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "articles",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "question",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "answer",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "questions",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "reply",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [],
+      "title": "Check"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "ea5f4ed3-ce66-5075-94c9-04f90877d0b0",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 105,
+          "lastLinkId": 12,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Check",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            80
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1390,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "88b96d1e-741e-535b-8ff0-dfe6716b99ae",
+            "name": "articles",
+            "type": "*",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "9443b6c8-aec9-5f86-a51e-c7bee89f5cab",
+            "name": "question",
+            "type": "*",
+            "linkIds": [
+              6,
+              7
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "1acd102a-91d2-5266-96f7-8dbd861ed7bc",
+            "name": "answer",
+            "type": "STRING",
+            "linkIds": [
+              8,
+              9
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "a55f4aa7-1b7f-53c0-8a47-c96c3bf04139",
+            "name": "questions",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
+            "linkIds": [
+              10
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "11951470-2630-5630-8ae8-c41322d1b6d6",
+            "name": "reply",
+            "type": "STRING",
+            "linkIds": [
+              11
+            ],
+            "pos": [
+              1390,
+              140
+            ]
+          },
+          {
+            "id": "f31148ac-d455-591b-9e15-0ee9c5c3e703",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              12
+            ],
+            "pos": [
+              1390,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              168
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 5,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 6,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": 8,
+                "shape": 7
+              },
+              {
+                "label": "d",
+                "name": "values.d",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Articles:\n{a}\n\nCustomer: {b}\n\nAnswer: {c}"
+            ]
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterDecisionAsk",
+            "pos": [
+              200,
+              372
+            ],
+            "size": [
+              340,
+              156
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "questions",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
+                "link": 10
+              },
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "situation"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "links": [
+                  2
+                ]
+              },
+              {
+                "name": "summary",
+                "type": "STRING",
+                "links": [
+                  12
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionAsk"
+            },
+            "widgets_values": [
+              "typesafe/jev-1.13",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "link": 2
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": [
+                  3
+                ]
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "supported",
+              0.5
+            ]
+          },
+          {
+            "id": 104,
+            "type": "StringFormat",
+            "pos": [
+              580,
+              386
+            ],
+            "size": [
+              340,
+              128
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 7,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  4
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Pass this customer to a person. They asked: {a}"
+            ]
+          },
+          {
+            "id": 105,
+            "type": "ComfySwitchNode",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              78
+            ],
+            "flags": {},
+            "order": 104,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "switch",
+                "type": "BOOLEAN",
+                "link": 3,
+                "widget": {
+                  "name": "switch"
+                }
+              },
+              {
+                "name": "on_false",
+                "type": "STRING",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "name": "on_true",
+                "type": "STRING",
+                "link": 9,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "STRING",
+                "links": [
+                  11
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 4,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_ANSWERS"
+          },
+          {
+            "id": 3,
+            "origin_id": 103,
+            "origin_slot": 1,
+            "target_id": 105,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 4,
+            "origin_id": 104,
+            "origin_slot": 0,
+            "target_id": 105,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 6,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 7,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 8,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 101,
+            "target_slot": 2,
+            "type": "*"
+          },
+          {
+            "id": 9,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 105,
+            "target_slot": 2,
+            "type": "STRING"
+          },
+          {
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_QUESTIONS"
+          },
+          {
+            "id": 11,
+            "origin_id": 105,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 12,
+            "origin_id": 102,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Asks Jev whether the answer is supported, and returns it or a note to escalate."
+        },
+        "category": "OpenRouter/Search",
+        "description": "Asks Jev whether the answer is supported, and returns it or a note to escalate."
+      }
+    ]
+  }
+}

@@ -6,13 +6,13 @@ import sys
 import json
 import uuid
 import argparse
+from src.config.namespace import MENUS
 from typing import cast, TYPE_CHECKING
 from scripts.nodes.check import read_schemas
-from scripts.workflows.page.config import NOTE
 from scripts.workflows.page.palette import Palette
+from scripts.workflows.page.config import NOTE, GUTTER
 from scripts.workflows.page.graph import Node, NAMESPACE
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
-from scripts.paths import REPO_ROOT, README_PATH, EXAMPLES_DIR
 from scripts.workflows.descriptions.chat import CHAT_WORKFLOWS
 from scripts.workflows.page.sizes import measure, measure_note
 from scripts.workflows.descriptions.audio import AUDIO_WORKFLOWS
@@ -22,10 +22,12 @@ from scripts.workflows.descriptions.design import DESIGN_WORKFLOWS
 from scripts.workflows.descriptions.search import SEARCH_WORKFLOWS
 from scripts.workflows.page.layout import place_stacks, place_columns
 from scripts.workflows.descriptions.decision import DECISION_WORKFLOWS
+from scripts.paths import REPO_ROOT, README_PATH, EXAMPLES_DIR, SUBGRAPHS_DIR
 from scripts.workflows.page.serialize import (
     encode_links,
     encode_nodes,
     encode_subgraph,
+    encode_blueprint,
     read_preview_exposures,
 )
 
@@ -35,15 +37,17 @@ if TYPE_CHECKING:
     from collections.abc import Mapping, Iterable
     from scripts.workflows.page.graph import Workflow
 
-WORKFLOWS = (
-    *CHAT_WORKFLOWS,
-    *IMAGE_WORKFLOWS,
-    *DESIGN_WORKFLOWS,
-    *VIDEO_WORKFLOWS,
-    *AUDIO_WORKFLOWS,
-    *SEARCH_WORKFLOWS,
-    *DECISION_WORKFLOWS,
+# Each family's workflows, with the node menu their subgraph blueprints are listed in.
+FAMILIES = (
+    (CHAT_WORKFLOWS, MENUS["CHAT"]),
+    (IMAGE_WORKFLOWS, MENUS["IMAGE"]),
+    (DESIGN_WORKFLOWS, MENUS["IMAGE"]),
+    (VIDEO_WORKFLOWS, MENUS["VIDEO"]),
+    (AUDIO_WORKFLOWS, MENUS["AUDIO"]),
+    (SEARCH_WORKFLOWS, MENUS["SEARCH"]),
+    (DECISION_WORKFLOWS, MENUS["DECISION"]),
 )
+WORKFLOWS = tuple(workflow for workflows, _menu in FAMILIES for workflow in workflows)
 
 
 def _build_palette(export: dict[str, object], workflow: Workflow) -> Palette:
@@ -78,7 +82,7 @@ def _build_notes(
 ) -> tuple[dict[str, Node], dict[str, tuple[int, int]]]:
     """Make each group's note, keyed by the group's title, with its size.
 
-    A note is as wide as its group's columns, and every note is as tall as the tallest, so the nodes below the
+    A note is as wide as its group's frame, and every note is as tall as the tallest, so the frames below the
     notes start on one line across the groups.
     """
     groups = [group for stack in workflow.stacks for group in stack]
@@ -94,16 +98,17 @@ def _build_notes(
         )
         for number, group in enumerate(groups, 1)
     }
-    # A group's columns, placed from the left edge, end at its width.
+    # A group's frame holds its columns with a gutter on each side.
     widths = {
-        group.title: max(box.right for box in place_columns(group.columns, sizes, (0, 0)).values()) for group in groups
+        group.title: max(box.right for box in place_columns(group.columns, sizes, (0, 0)).values()) + 2 * GUTTER
+        for group in groups
     }
     height = max(measure_note(group.note, widths[group.title]) for group in groups)
     return notes, {notes[title].key: (width, height) for title, width in widths.items()}
 
 
 def _encode_workflow(workflow: Workflow, palette: Palette) -> Json:
-    """Serialize one workflow: a note in every group, the placed nodes, links, group frames and subgraphs."""
+    """Serialize one workflow: a note above every group, the placed nodes, links, group frames and subgraphs."""
     # A growing row of sockets shows each linked slot and one more, so the links decide a node's height.
     targets = [end.split(".", 1) for _start, end in workflow.links]
     sizes = {
@@ -154,6 +159,22 @@ def _encode_workflow(workflow: Workflow, palette: Palette) -> Json:
     return serialized
 
 
+def _encode_blueprints(export: dict[str, object]) -> dict[Path, Json]:
+    """Serialize every subgraph as a blueprint, named after the subgraph and its workflow, such as Check (chat-01).
+
+    Two workflows can each have their own Check, so the workflow's family and number keep the names apart.
+    """
+    blueprints: dict[Path, Json] = {}
+    for workflows, menu in FAMILIES:
+        for workflow in workflows:
+            palette = _build_palette(export, workflow)
+            number = "-".join(workflow.slug.split("-")[:2])
+            for subgraph in workflow.subgraphs:
+                name = f"{subgraph.name} ({number})"
+                blueprints[SUBGRAPHS_DIR / f"{name}.json"] = encode_blueprint(subgraph, palette, name, menu)
+    return blueprints
+
+
 def _find_file_problem(path: Path, content: Json) -> str | None:
     """Say whether a shipped file matches its build."""
     if not path.is_file():
@@ -163,7 +184,7 @@ def _find_file_problem(path: Path, content: Json) -> str | None:
 
 
 def main() -> int:
-    """Build every workflow, or report the shipped files that differ."""
+    """Build every workflow and subgraph blueprint, or report the shipped files that differ."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     arguments = parser.parse_args()
@@ -172,9 +193,11 @@ def main() -> int:
         EXAMPLES_DIR / f"{workflow.slug}.json": _encode_workflow(workflow, _build_palette(export, workflow))
         for workflow in WORKFLOWS
     }
+    outputs |= _encode_blueprints(export)
     problems = [
         f"Remove or describe {path.relative_to(REPO_ROOT)}."
-        for path in EXAMPLES_DIR.glob("*.json")
+        for folder in (EXAMPLES_DIR, SUBGRAPHS_DIR)
+        for path in folder.glob("*.json")
         if path not in outputs
     ]
     problems += _list_coverage_problems(cast("dict[str, object]", export["nodes"]))

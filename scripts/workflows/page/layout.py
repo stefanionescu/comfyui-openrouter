@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from types import MappingProxyType
-from scripts.workflows.page.config import GUTTER, NODE_GAP, GROUP_TOP, STACK_GAP, CANVAS_ORIGIN
+from scripts.workflows.page.config import GUTTER, NODE_GAP, GROUP_TOP, STACK_GAP, TITLE_HEIGHT, CANVAS_ORIGIN
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -35,16 +35,19 @@ class Box:
 def _place_group(
     group: Group, sizes: Mapping[str, tuple[int, int]], origin: tuple[int, int], note: str | None
 ) -> tuple[dict[str, Box], Box]:
-    """Place a group's note across its top and its columns below, and return the frame."""
+    """Place a group's note above its frame and its columns inside, and return the frame.
+
+    The note sits outside the frame, so moving or bypassing the group leaves it in place.
+    """
     boxes: dict[str, Box] = {}
-    top = origin[1] + GROUP_TOP
+    top = origin[1]
     if note is not None:
-        boxes[note] = Box(origin[0] + GUTTER, top, *sizes[note])
-        top = boxes[note].bottom + STACK_GAP
-    boxes |= place_columns(group.columns, sizes, (origin[0] + GUTTER, top))
-    right = max(box.right for box in boxes.values()) + GUTTER
-    bottom = max(box.bottom for box in boxes.values()) + GUTTER
-    return boxes, Box(origin[0], origin[1], right - origin[0], bottom - origin[1])
+        boxes[note] = Box(origin[0], top + TITLE_HEIGHT, *sizes[note])
+        top = boxes[note].bottom + GUTTER
+    placed = place_columns(group.columns, sizes, (origin[0] + GUTTER, top + GROUP_TOP))
+    right = max(box.right for box in placed.values()) + GUTTER
+    bottom = max(box.bottom for box in placed.values()) + GUTTER
+    return boxes | placed, Box(origin[0], top, right - origin[0], bottom - top)
 
 
 def place_columns(
@@ -69,9 +72,9 @@ def place_stacks(
     origin: tuple[int, int] = CANVAS_ORIGIN,
     notes: Mapping[str, str] = MappingProxyType({}),
 ) -> tuple[dict[str, Box], list[dict[str, object]]]:
-    """Place the stacks side by side, each group with its note, and serialize each group's frame.
+    """Place the stacks side by side, each group under its note, and serialize each group's frame.
 
-    The notes map a group's title to the key of the note placed across its top.
+    The notes map a group's title to the key of the note placed above its frame.
     """
     boxes: dict[str, Box] = {}
     frames: list[dict[str, object]] = []

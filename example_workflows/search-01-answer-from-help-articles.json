@@ -8,11 +8,11 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
+        400,
         98
       ],
       "flags": {},
@@ -41,11 +41,11 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        460,
-        140
+        430,
+        60
       ],
       "size": [
-        340,
+        400,
         98
       ],
       "flags": {},
@@ -74,11 +74,11 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        890,
-        140
+        860,
+        60
       ],
       "size": [
-        340,
+        400,
         98
       ],
       "flags": {},
@@ -107,11 +107,11 @@
       "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        1320,
-        140
+        1290,
+        60
       ],
       "size": [
-        720,
+        780,
         98
       ],
       "flags": {},
@@ -141,7 +141,7 @@
       "type": "PrimitiveString",
       "pos": [
         30,
-        302
+        298
       ],
       "size": [
         340,
@@ -184,7 +184,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        424
+        420
       ],
       "size": [
         340,
@@ -225,7 +225,7 @@
       "type": "OpenRouterSearchRank",
       "pos": [
         460,
-        302
+        298
       ],
       "size": [
         340,
@@ -327,7 +327,7 @@
       "type": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
       "pos": [
         890,
-        302
+        298
       ],
       "size": [
         340,
@@ -366,7 +366,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         1320,
-        302
+        298
       ],
       "size": [
         340,
@@ -432,7 +432,7 @@
       "type": "ea5f4ed3-ce66-5075-94c9-04f90877d0b0",
       "pos": [
         1320,
-        550
+        546
       ],
       "size": [
         340,
@@ -488,7 +488,7 @@
       "type": "PreviewAny",
       "pos": [
         1700,
-        302
+        298
       ],
       "size": [
         340,
@@ -522,7 +522,7 @@
       "type": "PreviewAny",
       "pos": [
         1700,
-        606
+        602
       ],
       "size": [
         340,
@@ -640,9 +640,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        188,
         400,
-        512
+        350
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -653,9 +653,9 @@
       "title": "Search",
       "bounding": [
         430,
-        30,
+        188,
         400,
-        556
+        394
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -666,9 +666,9 @@
       "title": "Answer",
       "bounding": [
         860,
-        30,
+        188,
         400,
-        348
+        186
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -679,9 +679,9 @@
       "title": "Check",
       "bounding": [
         1290,
-        30,
+        188,
         780,
-        846
+        684
       ],
       "color": "#68688c",
       "font_size": 24,

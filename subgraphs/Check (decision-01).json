@@ -1,0 +1,476 @@
+{
+  "id": "3f8713d9-05aa-5053-83e1-58b8a770f5c8",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "e7fdb144-fdb9-5a91-8d30-b9f091f4a3a4",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        86
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "notes",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "question",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "answer",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "questions",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "supported",
+          "type": "BOOLEAN",
+          "links": []
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [],
+      "title": "Check"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "e7fdb144-fdb9-5a91-8d30-b9f091f4a3a4",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 103,
+          "lastLinkId": 8,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Check",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            80
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "2648489a-864d-5729-867a-0a2ed77be2e7",
+            "name": "notes",
+            "type": "*",
+            "linkIds": [
+              3
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "75947a50-40a9-50be-940b-36aeb6bd3bef",
+            "name": "question",
+            "type": "*",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "f41cca86-5eae-56b1-80c0-424bdacb09d3",
+            "name": "answer",
+            "type": "*",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "1ce92c9a-4bf3-5373-b701-aa0bfc3ed115",
+            "name": "questions",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
+            "linkIds": [
+              6
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "9bb4a993-dc9b-5e38-bb5a-39900ae3f7ec",
+            "name": "supported",
+            "type": "BOOLEAN",
+            "linkIds": [
+              7
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          },
+          {
+            "id": "23ea84b4-ddcb-5dcf-b38f-bbcc11811c87",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              8
+            ],
+            "pos": [
+              1010,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              168
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": 5,
+                "shape": 7
+              },
+              {
+                "label": "d",
+                "name": "values.d",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"
+            ]
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterDecisionAsk",
+            "pos": [
+              200,
+              372
+            ],
+            "size": [
+              340,
+              156
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "questions",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
+                "link": 6
+              },
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "situation"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "links": [
+                  2
+                ]
+              },
+              {
+                "name": "summary",
+                "type": "STRING",
+                "links": [
+                  8
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionAsk"
+            },
+            "widgets_values": [
+              "typesafe/jev-1.13",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "link": 2
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": [
+                  7
+                ]
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "supported",
+              0.8
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 4,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_ANSWERS"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 4,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 101,
+            "target_slot": 2,
+            "type": "*"
+          },
+          {
+            "id": 6,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_QUESTIONS"
+          },
+          {
+            "id": 7,
+            "origin_id": 103,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 8,
+            "origin_id": 102,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Asks Jev whether every fact in the answer comes from the notes."
+        },
+        "category": "OpenRouter/Decision",
+        "description": "Asks Jev whether every fact in the answer comes from the notes."
+      }
+    ]
+  }
+}

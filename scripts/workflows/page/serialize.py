@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import uuid
 from typing import cast, TYPE_CHECKING
-from scripts.workflows.page.graph import NAMESPACE
+from scripts.workflows.page.graph import Node, NAMESPACE
 from scripts.workflows.page.widgets import encode_widget_values
 from scripts.workflows.page.palette import Palette, read_slot_type
 from scripts.workflows.page.sizes import measure, list_shown_slots
@@ -24,7 +24,7 @@ from scripts.workflows.page.config import (
 if TYPE_CHECKING:
     from scripts.types import Item, Json, Schema
     from collections.abc import Mapping, Sequence
-    from scripts.workflows.page.graph import Node, Subgraph
+    from scripts.workflows.page.graph import Subgraph
 
 
 def _encode_inputs(schema: Schema, linked: frozenset[str]) -> list[Json]:
@@ -279,4 +279,32 @@ def encode_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> Json
     }
 
 
-__all__ = ["encode_links", "encode_nodes", "encode_subgraph", "read_preview_exposures"]
+def encode_blueprint(subgraph: Subgraph, palette: Palette, name: str, category: str) -> Json:
+    """Serialize one subgraph as a blueprint for ComfyUI's node library: one node that places it, and its definition.
+
+    ComfyUI names the blueprint after its file and lists it under Subgraph Blueprints, in its category, with its
+    description.
+    """
+    node = Node("blueprint", subgraph.name)
+    size = measure(node.kind, palette.find_schema(node), node.values, frozenset())
+    entry = encode_nodes((node,), palette, {node.key: (0, 0, *size)}, [])[node.key]
+    exposures = read_preview_exposures(subgraph, 1)
+    if exposures:
+        cast("Json", entry["properties"])["previewExposures"] = exposures
+    definition = encode_subgraph(subgraph, palette, 1) | {"category": category, "description": subgraph.description}
+    return {
+        "id": str(uuid.uuid5(NAMESPACE, f"blueprint.{name}")),
+        "revision": 0,
+        "last_node_id": 1,
+        "last_link_id": 0,
+        "nodes": [entry],
+        "links": [],
+        "groups": [],
+        "config": {},
+        "extra": {},
+        "version": 0.4,
+        "definitions": {"subgraphs": [definition]},
+    }
+
+
+__all__ = ["encode_blueprint", "encode_links", "encode_nodes", "encode_subgraph", "read_preview_exposures"]

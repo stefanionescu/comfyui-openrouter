@@ -8,12 +8,12 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
-        110
+        400,
+        98
       ],
       "flags": {},
       "order": 0,
@@ -41,12 +41,12 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        460,
-        140
+        430,
+        60
       ],
       "size": [
-        340,
-        110
+        400,
+        98
       ],
       "flags": {},
       "order": 1,
@@ -74,12 +74,12 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        890,
-        140
+        860,
+        60
       ],
       "size": [
-        720,
-        110
+        780,
+        98
       ],
       "flags": {},
       "order": 2,
@@ -108,7 +108,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        314
+        298
       ],
       "size": [
         340,
@@ -150,7 +150,7 @@
       "type": "3ca73f26-85ef-5a12-a1c7-a716c1fdee30",
       "pos": [
         460,
-        314
+        298
       ],
       "size": [
         340,
@@ -196,7 +196,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        314
+        298
       ],
       "size": [
         340,
@@ -261,7 +261,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        568
+        552
       ],
       "size": [
         340,
@@ -327,7 +327,7 @@
       "type": "4e433557-85d7-5121-a1e3-353abe56dae2",
       "pos": [
         1270,
-        314
+        298
       ],
       "size": [
         340,
@@ -403,7 +403,7 @@
       "type": "PreviewAny",
       "pos": [
         1270,
-        520
+        504
       ],
       "size": [
         340,
@@ -497,9 +497,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        188,
         400,
-        402
+        228
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -510,9 +510,9 @@
       "title": "Draw",
       "bounding": [
         430,
-        30,
+        188,
         400,
-        422
+        248
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -523,9 +523,9 @@
       "title": "Choose",
       "bounding": [
         860,
-        30,
+        188,
         780,
-        760
+        586
       ],
       "color": "#68688c",
       "font_size": 24,

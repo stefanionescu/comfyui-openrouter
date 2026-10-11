@@ -1,0 +1,594 @@
+{
+  "id": "f58fd7fd-83e9-556e-b844-66f363f0e2e4",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "09104698-f3b3-5651-9f46-c3cfc0d5c3be",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        46
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "department",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "previewExposures": [
+          {
+            "name": "audioUI",
+            "sourceNodeId": "104",
+            "sourcePreviewName": "audioUI"
+          }
+        ]
+      },
+      "widgets_values": [],
+      "title": "Reply"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "09104698-f3b3-5651-9f46-c3cfc0d5c3be",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 104,
+          "lastLinkId": 5,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Reply",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            40
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1390,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "0b00e7d6-22ba-57f5-aa88-9c5e40d2322d",
+            "name": "text",
+            "type": "*",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "6f89f8ed-78a6-5c22-b3e4-84bc3e4c259a",
+            "name": "department",
+            "type": "*",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          }
+        ],
+        "outputs": [],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              148
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 5,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "You work in the {b} team. Write what you say when you call this customer back: under 60 words, friendly, and answering what they asked.\n\nTheir voicemail:\n{a}"
+            ]
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              560
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "videos",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning_effort",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning_effort"
+                }
+              },
+              {
+                "name": "max_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  2
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "openai/gpt-6-luna",
+              "model default",
+              0,
+              "model default",
+              "text",
+              "model default",
+              "alloy",
+              "model default",
+              42,
+              "fixed",
+              0,
+              "",
+              "",
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterAudioSpeak",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              252
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "audio_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "audio_format"
+                }
+              },
+              {
+                "name": "speed",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "speed"
+                }
+              },
+              {
+                "name": "voice_sample",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "sample_transcript",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "sample_transcript"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "text"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": [
+                  3
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterAudioSpeak"
+            },
+            "widgets_values": [
+              "google/gemini-3.8-flash-tts",
+              "Kore",
+              "pcm",
+              1.0,
+              "",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 104,
+            "type": "SaveAudioAdvanced",
+            "pos": [
+              960,
+              456
+            ],
+            "size": [
+              340,
+              136
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 3
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              },
+              {
+                "name": "format",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveAudioAdvanced"
+            },
+            "widgets_values": [
+              "voicemail/reply",
+              "flac"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 17,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 8,
+            "type": "STRING"
+          },
+          {
+            "id": 3,
+            "origin_id": 103,
+            "origin_slot": 0,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 4,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 1,
+            "type": "*"
+          }
+        ],
+        "extra": {
+          "description": "Writes the department's reply, speaks it, and saves it."
+        },
+        "category": "OpenRouter/Audio",
+        "description": "Writes the department's reply, speaks it, and saves it."
+      }
+    ]
+  }
+}

@@ -8,11 +8,11 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
+        400,
         120
       ],
       "flags": {},
@@ -41,11 +41,11 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        582
+        0,
+        498
       ],
       "size": [
-        720,
+        780,
         120
       ],
       "flags": {},
@@ -74,11 +74,11 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        840,
-        140
+        810,
+        60
       ],
       "size": [
-        720,
+        780,
         120
       ],
       "flags": {},
@@ -107,11 +107,11 @@
       "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        1650,
-        140
+        1620,
+        60
       ],
       "size": [
-        340,
+        400,
         120
       ],
       "flags": {},
@@ -140,11 +140,11 @@
       "id": 5,
       "type": "MarkdownNote",
       "pos": [
-        2080,
-        140
+        2050,
+        60
       ],
       "size": [
-        340,
+        400,
         120
       ],
       "flags": {},
@@ -174,7 +174,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        324
+        320
       ],
       "size": [
         340,
@@ -215,7 +215,7 @@
       "type": "PrimitiveString",
       "pos": [
         30,
-        766
+        758
       ],
       "size": [
         340,
@@ -257,7 +257,7 @@
       "type": "OpenRouterModelInfo",
       "pos": [
         30,
-        888
+        880
       ],
       "size": [
         340,
@@ -297,7 +297,7 @@
       "type": "PreviewAny",
       "pos": [
         410,
-        766
+        758
       ],
       "size": [
         340,
@@ -331,7 +331,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         840,
-        324
+        320
       ],
       "size": [
         340,
@@ -396,7 +396,7 @@
       "type": "596362ae-4cb6-5076-b4a4-28915aabb123",
       "pos": [
         840,
-        578
+        574
       ],
       "size": [
         340,
@@ -449,7 +449,7 @@
       "type": "PreviewAny",
       "pos": [
         1220,
-        324
+        320
       ],
       "size": [
         340,
@@ -483,7 +483,7 @@
       "type": "PreviewAny",
       "pos": [
         1220,
-        628
+        624
       ],
       "size": [
         340,
@@ -517,7 +517,7 @@
       "type": "ca663bab-d49e-52c2-9391-aa73e87f5d0d",
       "pos": [
         1650,
-        324
+        320
       ],
       "size": [
         340,
@@ -548,7 +548,7 @@
       "type": "83cfbe62-41b1-5f90-9973-87a914ac8980",
       "pos": [
         2080,
-        324
+        320
       ],
       "size": [
         340,
@@ -672,9 +672,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        210,
         400,
-        412
+        228
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -685,9 +685,9 @@
       "title": "Model",
       "bounding": [
         0,
-        472,
+        648,
         780,
-        564
+        380
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -698,9 +698,9 @@
       "title": "Prompts",
       "bounding": [
         810,
-        30,
+        210,
         780,
-        868
+        684
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -711,9 +711,9 @@
       "title": "SVG",
       "bounding": [
         1620,
-        30,
+        210,
         400,
-        412
+        228
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -724,9 +724,9 @@
       "title": "PNG",
       "bounding": [
         2050,
-        30,
+        210,
         400,
-        436
+        252
       ],
       "color": "#68688c",
       "font_size": 24,

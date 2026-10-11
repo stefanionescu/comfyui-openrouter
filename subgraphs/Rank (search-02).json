@@ -1,0 +1,443 @@
+{
+  "id": "ccdfebe3-9268-579a-bff8-0b01daea0265",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        108
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "brief",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "brief"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "shape": 6,
+          "links": []
+        },
+        {
+          "name": "scores",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        ""
+      ],
+      "title": "Rank"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 102,
+          "lastLinkId": 5,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Rank",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            20
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "02f88d78-c4b0-5c87-98ab-04958b449938",
+            "name": "brief",
+            "type": "STRING",
+            "linkIds": [
+              2,
+              3
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "acee5343-0527-5fbb-b7d9-84bc4a312c16",
+            "name": "image",
+            "type": "IMAGE",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          },
+          {
+            "id": "ca85b7a8-750a-537d-a0aa-34f536230143",
+            "name": "scores",
+            "type": "STRING",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              1010,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterImageGenerate",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              392
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "quality",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "quality"
+                }
+              },
+              {
+                "name": "background",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "background"
+                }
+              },
+              {
+                "name": "output_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "output_format"
+                }
+              },
+              {
+                "name": "output_compression",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "output_compression"
+                }
+              },
+              {
+                "name": "count",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "count"
+                }
+              },
+              {
+                "name": "references",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "masks",
+                "type": "MASK",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "svg",
+                "type": "SVG",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterImageGenerate"
+            },
+            "widgets_values": [
+              "recraft/recraft-v4.1-flash",
+              "model default",
+              "16:9",
+              "model default",
+              "model default",
+              "model default",
+              90,
+              4,
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterSearchRank",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              254
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "name": "top_n",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "top_n"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "query",
+                "type": "STRING",
+                "link": 3,
+                "widget": {
+                  "name": "query"
+                }
+              },
+              {
+                "name": "documents",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "documents"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "texts",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "scores",
+                "type": "STRING",
+                "links": [
+                  5
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterSearchRank"
+            },
+            "widgets_values": [
+              "nvidia/llama-nemotron-rerank-vl-1b-v2:free",
+              1,
+              0,
+              "",
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 12,
+            "type": "STRING"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 5,
+            "type": "STRING"
+          },
+          {
+            "id": 4,
+            "origin_id": 102,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 5,
+            "origin_id": 102,
+            "origin_slot": 2,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Draws four candidates and keeps the one that best matches the brief."
+        },
+        "category": "OpenRouter/Search",
+        "description": "Draws four candidates and keeps the one that best matches the brief."
+      }
+    ]
+  }
+}

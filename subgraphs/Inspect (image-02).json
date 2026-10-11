@@ -1,0 +1,690 @@
+{
+  "id": "c6d7f6e2-e874-5e43-b6c7-aca6ec88b43d",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "7b1d2c38-15b0-54f9-8f8a-66ba6d4aa668",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        66
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "subject",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "clean",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "distorted",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "defects",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [],
+      "title": "Inspect"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "7b1d2c38-15b0-54f9-8f8a-66ba6d4aa668",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 104,
+          "lastLinkId": 8,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Inspect",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            40
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1390,
+            140,
+            120,
+            60
+          ]
+        },
+        "inputs": [
+          {
+            "id": "288db2d1-ee68-5d21-8eb6-7121dec5d1cc",
+            "name": "subject",
+            "type": "*",
+            "linkIds": [
+              2
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "fdb9ff49-2688-5d4b-b8ac-e91c65142e1e",
+            "name": "image",
+            "type": "IMAGE",
+            "linkIds": [
+              3,
+              4,
+              5
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "13e76b2f-db03-5b5a-99b5-98b674b76f5c",
+            "name": "clean",
+            "type": "STRING",
+            "linkIds": [
+              6
+            ],
+            "pos": [
+              1390,
+              140
+            ]
+          },
+          {
+            "id": "3c6c9cd1-4c39-5732-9fc9-c421e56eb719",
+            "name": "distorted",
+            "type": "STRING",
+            "linkIds": [
+              7
+            ],
+            "pos": [
+              1390,
+              160
+            ]
+          },
+          {
+            "id": "f1620c84-0767-5ceb-b20c-4db5385ef9fd",
+            "name": "defects",
+            "type": "STRING",
+            "linkIds": [
+              8
+            ],
+            "pos": [
+              1390,
+              180
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              128
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "A clean, sharp, undistorted photo of {a}, with natural hands, faces, and objects"
+            ]
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterSearchEmbed",
+            "pos": [
+              200,
+              332
+            ],
+            "size": [
+              340,
+              204
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "name": "dimensions",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "dimensions"
+                }
+              },
+              {
+                "name": "input_type",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "input_type"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "texts",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "texts"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "vectors",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "similarities",
+                "type": "STRING",
+                "links": [
+                  6
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterSearchEmbed"
+            },
+            "widgets_values": [
+              "google/gemini-embedding-2",
+              0,
+              "model default",
+              0,
+              ""
+            ],
+            "title": "Clean",
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterSearchEmbed",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              204
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "name": "dimensions",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "dimensions"
+                }
+              },
+              {
+                "name": "input_type",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "input_type"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "texts",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "texts"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "vectors",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "similarities",
+                "type": "STRING",
+                "links": [
+                  7
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterSearchEmbed"
+            },
+            "widgets_values": [
+              "google/gemini-embedding-2",
+              0,
+              "model default",
+              0,
+              "A distorted AI image with warped hands, extra fingers, melted faces, broken objects, and garbled text"
+            ],
+            "title": "Distorted",
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 104,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              560
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 5,
+                "shape": 7
+              },
+              {
+                "name": "videos",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning_effort",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning_effort"
+                }
+              },
+              {
+                "name": "max_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  8
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "openai/gpt-6-luna",
+              "model default",
+              0,
+              "model default",
+              "text",
+              "model default",
+              "alloy",
+              "model default",
+              42,
+              "fixed",
+              0,
+              "",
+              "List every visible defect in this image: extra or missing fingers, warped faces or limbs, broken objects, impossible geometry, or garbled text. Answer none if there are none.",
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 6,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 102,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 4,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 103,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 104,
+            "target_slot": 3,
+            "type": "IMAGE"
+          },
+          {
+            "id": 6,
+            "origin_id": 102,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": 103,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 8,
+            "origin_id": 104,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 2,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Scores the draft against a clean and a distorted description, and lists defects."
+        },
+        "category": "OpenRouter/Image",
+        "description": "Scores the draft against a clean and a distorted description, and lists defects."
+      }
+    ]
+  }
+}

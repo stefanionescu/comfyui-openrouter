@@ -8,11 +8,11 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
+        400,
         98
       ],
       "flags": {},
@@ -41,11 +41,11 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        460,
-        140
+        430,
+        60
       ],
       "size": [
-        340,
+        400,
         98
       ],
       "flags": {},
@@ -74,11 +74,11 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        890,
-        140
+        860,
+        60
       ],
       "size": [
-        1100,
+        1160,
         98
       ],
       "flags": {},
@@ -107,11 +107,11 @@
       "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        2080,
-        140
+        2050,
+        60
       ],
       "size": [
-        340,
+        400,
         98
       ],
       "flags": {},
@@ -141,7 +141,7 @@
       "type": "LoadImage",
       "pos": [
         30,
-        302
+        298
       ],
       "size": [
         340,
@@ -188,7 +188,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        716
+        712
       ],
       "size": [
         340,
@@ -230,7 +230,7 @@
       "type": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
       "pos": [
         460,
-        302
+        298
       ],
       "size": [
         340,
@@ -269,7 +269,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        302
+        298
       ],
       "size": [
         340,
@@ -334,7 +334,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        556
+        552
       ],
       "size": [
         340,
@@ -400,7 +400,7 @@
       "type": "449b7034-0646-5783-aa7f-c91ed162c80a",
       "pos": [
         1270,
-        302
+        298
       ],
       "size": [
         340,
@@ -464,7 +464,7 @@
       "type": "PreviewAny",
       "pos": [
         1270,
-        494
+        490
       ],
       "size": [
         340,
@@ -498,7 +498,7 @@
       "type": "PreviewAny",
       "pos": [
         1650,
-        302
+        298
       ],
       "size": [
         340,
@@ -532,7 +532,7 @@
       "type": "ff75c7fa-8756-5e1e-8046-b12306b5c003",
       "pos": [
         2080,
-        302
+        298
       ],
       "size": [
         340,
@@ -695,9 +695,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        188,
         400,
-        804
+        642
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -708,9 +708,9 @@
       "title": "Ideas",
       "bounding": [
         430,
-        30,
+        188,
         400,
-        348
+        186
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -721,9 +721,9 @@
       "title": "Choose",
       "bounding": [
         860,
-        30,
+        188,
         1160,
-        740
+        578
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -734,9 +734,9 @@
       "title": "Edit",
       "bounding": [
         2050,
-        30,
+        188,
         400,
-        462
+        300
       ],
       "color": "#68688c",
       "font_size": 24,

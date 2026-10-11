@@ -15,6 +15,8 @@ NODE_GAP = 40
 # Space under a node when another sits below it: the lower node's title bar and its source badge draw above it.
 STACK_GAP = 64
 GROUP_TOP = 110
+# A node's title bar, which the page draws above the node's position.
+TITLE_HEIGHT = 30
 CANVAS_ORIGIN = (0, 30)
 INNER_ORIGIN = (200, 140)
 # A subgraph's input and output ports: their width, and the room their links take to reach the nodes.
@@ -109,6 +111,7 @@ __all__ = [
     "STAGE_COLOUR",
     "SUBGRAPH_ID_STEP",
     "TEXT_PREVIEW",
+    "TITLE_HEIGHT",
     "WIDGETS_PADDING",
     "WIDGET_GAP",
     "WIDGET_HEIGHT",

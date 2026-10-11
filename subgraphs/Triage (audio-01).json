@@ -1,0 +1,355 @@
+{
+  "id": "c615908b-901f-5c69-86e6-e2ba395e3a11",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "58b9a9c1-e294-5468-8ff3-77068e6e4fd0",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        108
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "department",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        ""
+      ],
+      "title": "Triage"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "58b9a9c1-e294-5468-8ff3-77068e6e4fd0",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 102,
+          "lastLinkId": 5,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Triage",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            40
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "5477cb92-b2f7-527c-a248-3a3bc72354ae",
+            "name": "text",
+            "type": "STRING",
+            "linkIds": [
+              2
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "aab2c436-baa3-5e42-af81-2e972229bb2e",
+            "name": "questions",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
+            "linkIds": [
+              3
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "e286231d-e55c-59e8-bcf2-1786dda719a6",
+            "name": "department",
+            "type": "STRING",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          },
+          {
+            "id": "456fb8bb-feac-555f-af22-94ba8a5c3a85",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              1010,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterDecisionAsk",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              156
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "questions",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
+                "link": 3
+              },
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "situation"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "summary",
+                "type": "STRING",
+                "links": [
+                  5
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionAsk"
+            },
+            "widgets_values": [
+              "typesafe/jev-1.13",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "link": 1
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": []
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "department",
+              0.5
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_ANSWERS"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 4,
+            "type": "STRING"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_QUESTIONS"
+          },
+          {
+            "id": 4,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 5,
+            "origin_id": 101,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Asks Jev which department replies, whether to call back, and how soon."
+        },
+        "category": "OpenRouter/Audio",
+        "description": "Asks Jev which department replies, whether to call back, and how soon."
+      }
+    ]
+  }
+}

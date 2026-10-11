@@ -1,0 +1,437 @@
+{
+  "id": "bbcb9817-005c-51d7-9f6a-630cb8e3fa12",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        46
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "articles",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "question",
+          "type": "*",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [],
+      "title": "Answer"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 102,
+          "lastLinkId": 4,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Answer",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            40
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "5666985a-c6c6-5f85-b34b-cbba76f512ce",
+            "name": "articles",
+            "type": "*",
+            "linkIds": [
+              2
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "1e5d0644-2b2d-511a-a993-4f3d80bf930e",
+            "name": "question",
+            "type": "*",
+            "linkIds": [
+              3
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "ba1b385d-dade-5574-ba39-4096929c21b9",
+            "name": "answer",
+            "type": "STRING",
+            "linkIds": [
+              4
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              148
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Answer the customer in three sentences or fewer, using only these help articles.\n\nArticles:\n{a}\n\nCustomer: {b}"
+            ]
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              560
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "videos",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning_effort",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning_effort"
+                }
+              },
+              {
+                "name": "max_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "openai/gpt-6-luna",
+              "model default",
+              0,
+              "model default",
+              "text",
+              "model default",
+              "alloy",
+              "model default",
+              42,
+              "fixed",
+              0,
+              "",
+              "",
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 17,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 3,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 4,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Answers the customer from the ranked articles."
+        },
+        "category": "OpenRouter/Search",
+        "description": "Answers the customer from the ranked articles."
+      }
+    ]
+  }
+}

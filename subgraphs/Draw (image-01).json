@@ -1,0 +1,953 @@
+{
+  "id": "63670450-621a-56b7-8d74-75d6441dee3e",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "3ca73f26-85ef-5a12-a1c7-a716c1fdee30",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        108
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "brief",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "brief"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "descriptions",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        ""
+      ],
+      "title": "Draw"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "3ca73f26-85ef-5a12-a1c7-a716c1fdee30",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 105,
+          "lastLinkId": 9,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Draw",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            20
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1010,
+            140,
+            120,
+            40
+          ]
+        },
+        "inputs": [
+          {
+            "id": "b503e53c-7f60-5434-95e5-56836c809b2c",
+            "name": "brief",
+            "type": "STRING",
+            "linkIds": [
+              5,
+              6,
+              7
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "7fc93f48-002f-5615-a48c-d9c70fb8e4d9",
+            "name": "images",
+            "type": "IMAGE",
+            "linkIds": [
+              8
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          },
+          {
+            "id": "656a5db0-71bc-5a10-881b-e11b7f95c83e",
+            "name": "descriptions",
+            "type": "STRING",
+            "linkIds": [
+              9
+            ],
+            "pos": [
+              1010,
+              160
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterImageGenerate",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              392
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "quality",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "quality"
+                }
+              },
+              {
+                "name": "background",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "background"
+                }
+              },
+              {
+                "name": "output_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "output_format"
+                }
+              },
+              {
+                "name": "output_compression",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "output_compression"
+                }
+              },
+              {
+                "name": "count",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "count"
+                }
+              },
+              {
+                "name": "references",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 5,
+                "widget": {
+                  "name": "prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "masks",
+                "type": "MASK",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "svg",
+                "type": "SVG",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterImageGenerate"
+            },
+            "widgets_values": [
+              "openai/gpt-image-2.5-flare",
+              "model default",
+              "1:1",
+              "medium",
+              "model default",
+              "model default",
+              90,
+              1,
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterImageGenerate",
+            "pos": [
+              200,
+              596
+            ],
+            "size": [
+              340,
+              392
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "quality",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "quality"
+                }
+              },
+              {
+                "name": "background",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "background"
+                }
+              },
+              {
+                "name": "output_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "output_format"
+                }
+              },
+              {
+                "name": "output_compression",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "output_compression"
+                }
+              },
+              {
+                "name": "count",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "count"
+                }
+              },
+              {
+                "name": "references",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 6,
+                "widget": {
+                  "name": "prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  2
+                ]
+              },
+              {
+                "name": "masks",
+                "type": "MASK",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "svg",
+                "type": "SVG",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterImageGenerate"
+            },
+            "widgets_values": [
+              "microsoft/mai-image-2.6-flash",
+              "model default",
+              "1:1",
+              "model default",
+              "model default",
+              "model default",
+              90,
+              1,
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterImageGenerate",
+            "pos": [
+              200,
+              1052
+            ],
+            "size": [
+              340,
+              392
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "quality",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "quality"
+                }
+              },
+              {
+                "name": "background",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "background"
+                }
+              },
+              {
+                "name": "output_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "output_format"
+                }
+              },
+              {
+                "name": "output_compression",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "output_compression"
+                }
+              },
+              {
+                "name": "count",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "count"
+                }
+              },
+              {
+                "name": "references",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 7,
+                "widget": {
+                  "name": "prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  3
+                ]
+              },
+              {
+                "name": "masks",
+                "type": "MASK",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "svg",
+                "type": "SVG",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterImageGenerate"
+            },
+            "widgets_values": [
+              "recraft/recraft-v4.1-flash",
+              "model default",
+              "1:1",
+              "model default",
+              "model default",
+              "model default",
+              90,
+              1,
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 104,
+            "type": "BatchImagesNode",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              106
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "image0",
+                "name": "images.image0",
+                "type": "IMAGE",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "label": "image1",
+                "name": "images.image1",
+                "type": "IMAGE",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "image2",
+                "name": "images.image2",
+                "type": "IMAGE",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "label": "image3",
+                "name": "images.image3",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [
+                  4,
+                  8
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "BatchImagesNode"
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 105,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              580,
+              310
+            ],
+            "size": [
+              340,
+              560
+            ],
+            "flags": {},
+            "order": 104,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "name": "videos",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning_effort",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning_effort"
+                }
+              },
+              {
+                "name": "max_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  9
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "openai/gpt-6-luna",
+              "model default",
+              0,
+              "model default",
+              "text",
+              "model default",
+              "alloy",
+              "model default",
+              42,
+              "fixed",
+              0,
+              "",
+              "Describe each image in two sentences, as candidate_1, candidate_2, and candidate_3 in the order given. Mention any visible flaw, such as warped shapes or stray lettering.",
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 2,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 104,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 3,
+            "origin_id": 103,
+            "origin_slot": 0,
+            "target_id": 104,
+            "target_slot": 2,
+            "type": "IMAGE"
+          },
+          {
+            "id": 4,
+            "origin_id": 104,
+            "origin_slot": 0,
+            "target_id": 105,
+            "target_slot": 3,
+            "type": "IMAGE"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 12,
+            "type": "STRING"
+          },
+          {
+            "id": 6,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 12,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 12,
+            "type": "STRING"
+          },
+          {
+            "id": 8,
+            "origin_id": 104,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 9,
+            "origin_id": 105,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Draws one candidate with each of three models, and describes the three."
+        },
+        "category": "OpenRouter/Image",
+        "description": "Draws one candidate with each of three models, and describes the three."
+      }
+    ]
+  }
+}

@@ -1,0 +1,878 @@
+{
+  "id": "82ad8e39-0197-5eeb-8e41-8021cb4c7d6b",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "4e433557-85d7-5121-a1e3-353abe56dae2",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        142
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "brief",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "descriptions",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "questions",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
+          "link": null
+        },
+        {
+          "name": "approved",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "approved"
+          }
+        },
+        {
+          "name": "review",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "review"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "109",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
+      },
+      "widgets_values": [
+        "occasion/approved",
+        "occasion/review"
+      ],
+      "title": "Choose"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "4e433557-85d7-5121-a1e3-353abe56dae2",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 109,
+          "lastLinkId": 16,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Choose",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            120
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1770,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "9c3083a4-d99a-503c-b5d9-b7ba891dfbe1",
+            "name": "brief",
+            "type": "*",
+            "linkIds": [
+              10
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "17480460-0e62-5dbd-8b0b-20c76e1f6980",
+            "name": "descriptions",
+            "type": "*",
+            "linkIds": [
+              11
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "d36cec75-6ab3-590d-9a87-9e9cde43bbf6",
+            "name": "images",
+            "type": "IMAGE",
+            "linkIds": [
+              12
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "02acbf2e-64ac-56bc-bbc2-38da3f21bb32",
+            "name": "questions",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
+            "linkIds": [
+              13
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          },
+          {
+            "id": "838f16d8-3a9d-5b76-8d09-f2b7d4e58bba",
+            "name": "approved",
+            "type": "STRING",
+            "linkIds": [
+              14
+            ],
+            "pos": [
+              110,
+              220
+            ]
+          },
+          {
+            "id": "1105353c-78d5-58a9-94fe-9545eb433838",
+            "name": "review",
+            "type": "STRING",
+            "linkIds": [
+              15
+            ],
+            "pos": [
+              110,
+              240
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "af546b69-003e-57f5-83b2-ea09ec7b5226",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              16
+            ],
+            "pos": [
+              1770,
+              140
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "StringFormat",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              148
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "a",
+                "name": "values.a",
+                "type": "*",
+                "link": 10,
+                "shape": 7
+              },
+              {
+                "label": "b",
+                "name": "values.b",
+                "type": "*",
+                "link": 11,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "f_string",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "f_string"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "StringFormat"
+            },
+            "widgets_values": [
+              "Brief:\n{a}\n\nCandidates:\n{b}"
+            ]
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterDecisionAsk",
+            "pos": [
+              200,
+              352
+            ],
+            "size": [
+              340,
+              156
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "questions",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
+                "link": 13
+              },
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 1,
+                "widget": {
+                  "name": "situation"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "links": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "name": "summary",
+                "type": "STRING",
+                "links": [
+                  16
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionAsk"
+            },
+            "widgets_values": [
+              "typesafe/jev-1.13",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "link": 2
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": []
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "best",
+              0.5
+            ]
+          },
+          {
+            "id": 104,
+            "type": "OpenRouterDecisionReadAnswer",
+            "pos": [
+              580,
+              386
+            ],
+            "size": [
+              340,
+              182
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
+                "link": 3
+              },
+              {
+                "name": "question",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "question"
+                }
+              },
+              {
+                "name": "threshold",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "threshold"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "answer",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": [
+                  5
+                ]
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
+            },
+            "widgets_values": [
+              "ready",
+              0.5
+            ]
+          },
+          {
+            "id": 105,
+            "type": "ImageFromBatch",
+            "pos": [
+              580,
+              632
+            ],
+            "size": [
+              340,
+              82
+            ],
+            "flags": {},
+            "order": 104,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": 12
+              },
+              {
+                "name": "batch_index",
+                "type": "INT",
+                "link": 4,
+                "widget": {
+                  "name": "batch_index"
+                }
+              },
+              {
+                "name": "length",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "length"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [
+                  9
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ImageFromBatch"
+            },
+            "widgets_values": [
+              0,
+              1
+            ]
+          },
+          {
+            "id": 106,
+            "type": "PrimitiveString",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 105,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 14,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  6
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "occasion/approved"
+            ],
+            "title": "Approved"
+          },
+          {
+            "id": 107,
+            "type": "PrimitiveString",
+            "pos": [
+              960,
+              262
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 106,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 15,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  7
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "occasion/review"
+            ],
+            "title": "Review"
+          },
+          {
+            "id": 108,
+            "type": "ComfySwitchNode",
+            "pos": [
+              960,
+              384
+            ],
+            "size": [
+              340,
+              78
+            ],
+            "flags": {},
+            "order": 107,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "switch",
+                "type": "BOOLEAN",
+                "link": 5,
+                "widget": {
+                  "name": "switch"
+                }
+              },
+              {
+                "name": "on_false",
+                "type": "STRING",
+                "link": 7,
+                "shape": 7
+              },
+              {
+                "name": "on_true",
+                "type": "STRING",
+                "link": 6,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "STRING",
+                "links": [
+                  8
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 109,
+            "type": "SaveImage",
+            "pos": [
+              1340,
+              140
+            ],
+            "size": [
+              340,
+              290
+            ],
+            "flags": {},
+            "order": 108,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 9
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": 8,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveImage"
+            },
+            "widgets_values": [
+              "ComfyUI"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 4,
+            "type": "STRING"
+          },
+          {
+            "id": 2,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_ANSWERS"
+          },
+          {
+            "id": 3,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_ANSWERS"
+          },
+          {
+            "id": 4,
+            "origin_id": 103,
+            "origin_slot": 4,
+            "target_id": 105,
+            "target_slot": 1,
+            "type": "INT"
+          },
+          {
+            "id": 5,
+            "origin_id": 104,
+            "origin_slot": 1,
+            "target_id": 108,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 6,
+            "origin_id": 106,
+            "origin_slot": 0,
+            "target_id": 108,
+            "target_slot": 2,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": 107,
+            "origin_slot": 0,
+            "target_id": 108,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 8,
+            "origin_id": 108,
+            "origin_slot": 0,
+            "target_id": 109,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 9,
+            "origin_id": 105,
+            "origin_slot": 0,
+            "target_id": 109,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
+          },
+          {
+            "id": 11,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 1,
+            "type": "*"
+          },
+          {
+            "id": 12,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 105,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 13,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_QUESTIONS"
+          },
+          {
+            "id": 14,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 106,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 15,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 107,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 16,
+            "origin_id": 102,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Asks Jev for the best candidate and saves it in the approved or review folder."
+        },
+        "category": "OpenRouter/Image",
+        "description": "Asks Jev for the best candidate and saves it in the approved or review folder."
+      }
+    ]
+  }
+}

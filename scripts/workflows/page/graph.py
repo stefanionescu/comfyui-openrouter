@@ -29,7 +29,7 @@ class Node:
 
 @dataclass(frozen=True, slots=True)
 class Group:
-    """One titled frame around columns of nodes, with a note across its top that says what the group does."""
+    """One titled frame around columns of nodes, with a note above it that says what the group does."""
 
     title: str
     columns: tuple[tuple[str, ...], ...]

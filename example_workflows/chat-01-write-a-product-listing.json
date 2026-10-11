@@ -8,11 +8,11 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        720,
+        780,
         96
       ],
       "flags": {},
@@ -41,11 +41,11 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        840,
-        140
+        810,
+        60
       ],
       "size": [
-        340,
+        400,
         96
       ],
       "flags": {},
@@ -74,11 +74,11 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        1270,
-        140
+        1240,
+        60
       ],
       "size": [
-        720,
+        780,
         96
       ],
       "flags": {},
@@ -108,7 +108,7 @@
       "type": "LoadImage",
       "pos": [
         30,
-        300
+        296
       ],
       "size": [
         340,
@@ -155,7 +155,7 @@
       "type": "LoadImage",
       "pos": [
         30,
-        714
+        710
       ],
       "size": [
         340,
@@ -202,7 +202,7 @@
       "type": "OpenRouterChatAttachDocument",
       "pos": [
         410,
-        300
+        296
       ],
       "size": [
         340,
@@ -248,7 +248,7 @@
       "type": "OpenRouterRequestOptions",
       "pos": [
         410,
-        422
+        418
       ],
       "size": [
         340,
@@ -369,7 +369,7 @@
       "type": "03101bf2-751c-5267-9370-229909312915",
       "pos": [
         840,
-        300
+        296
       ],
       "size": [
         340,
@@ -425,7 +425,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         1270,
-        300
+        296
       ],
       "size": [
         340,
@@ -491,7 +491,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         1270,
-        548
+        544
       ],
       "size": [
         340,
@@ -556,7 +556,7 @@
       "type": "fddc54ac-124b-53dc-a6cc-60482c09f55b",
       "pos": [
         1650,
-        300
+        296
       ],
       "size": [
         340,
@@ -627,7 +627,7 @@
       "type": "PreviewAny",
       "pos": [
         1650,
-        486
+        482
       ],
       "size": [
         340,
@@ -737,9 +737,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        186,
         780,
-        1064
+        904
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -750,9 +750,9 @@
       "title": "Write",
       "bounding": [
         810,
-        30,
+        186,
         400,
-        386
+        226
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -763,9 +763,9 @@
       "title": "Check",
       "bounding": [
         1240,
-        30,
+        186,
         780,
-        738
+        578
       ],
       "color": "#68688c",
       "font_size": 24,

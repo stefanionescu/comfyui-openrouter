@@ -1,0 +1,502 @@
+{
+  "id": "ca10cf31-4a76-5c17-9a93-13a7bb1424a6",
+  "revision": 0,
+  "last_node_id": 1,
+  "last_link_id": 0,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "83cfbe62-41b1-5f90-9973-87a914ac8980",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        340,
+        112
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "model",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "model"
+          }
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "103",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
+      },
+      "widgets_values": [
+        "",
+        "google/gemini-3.1-flash-image"
+      ],
+      "title": "PNG"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4,
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "83cfbe62-41b1-5f90-9973-87a914ac8980",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 105,
+          "lastLinkId": 7,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "PNG",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -10,
+            140,
+            120,
+            40
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1390,
+            140,
+            120,
+            20
+          ]
+        },
+        "inputs": [
+          {
+            "id": "f8f08c8f-7c98-572e-9307-afbfef38f6b6",
+            "name": "prompt",
+            "type": "STRING",
+            "linkIds": [
+              6
+            ],
+            "pos": [
+              110,
+              140
+            ]
+          },
+          {
+            "id": "a121c930-c22d-52ff-b736-d27d0ebb9a57",
+            "name": "model",
+            "type": "STRING",
+            "linkIds": [
+              7
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          }
+        ],
+        "outputs": [],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 101,
+            "type": "OpenRouterImageGenerate",
+            "pos": [
+              200,
+              140
+            ],
+            "size": [
+              340,
+              392
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": 7,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "resolution",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "resolution"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "quality",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "quality"
+                }
+              },
+              {
+                "name": "background",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "background"
+                }
+              },
+              {
+                "name": "output_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "output_format"
+                }
+              },
+              {
+                "name": "output_compression",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "output_compression"
+                }
+              },
+              {
+                "name": "count",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "count"
+                }
+              },
+              {
+                "name": "references",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": 6,
+                "widget": {
+                  "name": "prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": [
+                  1
+                ]
+              },
+              {
+                "name": "masks",
+                "type": "MASK",
+                "shape": 6,
+                "links": [
+                  2,
+                  4
+                ]
+              },
+              {
+                "name": "svg",
+                "type": "SVG",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterImageGenerate"
+            },
+            "widgets_values": [
+              "google/gemini-3.1-flash-image",
+              "model default",
+              "1:1",
+              "medium",
+              "transparent",
+              "model default",
+              90,
+              1,
+              42,
+              "fixed",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "JoinImageWithAlpha",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              46
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "image",
+                "type": "IMAGE",
+                "link": 1
+              },
+              {
+                "name": "alpha",
+                "type": "MASK",
+                "link": 2
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [
+                  3
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "JoinImageWithAlpha"
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 103,
+            "type": "SaveImage",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              290
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 3
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveImage"
+            },
+            "widgets_values": [
+              "logo/fernwood"
+            ]
+          },
+          {
+            "id": 104,
+            "type": "MaskToImage",
+            "pos": [
+              580,
+              250
+            ],
+            "size": [
+              340,
+              26
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "mask",
+                "type": "MASK",
+                "link": 4
+              }
+            ],
+            "outputs": [
+              {
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "links": [
+                  5
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "MaskToImage"
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 105,
+            "type": "PreviewImage",
+            "pos": [
+              960,
+              494
+            ],
+            "size": [
+              340,
+              290
+            ],
+            "flags": {},
+            "order": 104,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 5
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PreviewImage"
+            },
+            "widgets_values": [],
+            "title": "Mask"
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 1,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 2,
+            "origin_id": 101,
+            "origin_slot": 1,
+            "target_id": 102,
+            "target_slot": 1,
+            "type": "MASK"
+          },
+          {
+            "id": 3,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 4,
+            "origin_id": 101,
+            "origin_slot": 1,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "MASK"
+          },
+          {
+            "id": 5,
+            "origin_id": 104,
+            "origin_slot": 0,
+            "target_id": 105,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 6,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 12,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "description": "Draws the logo on a transparent background and saves it as a PNG."
+        },
+        "category": "OpenRouter/Image",
+        "description": "Draws the logo on a transparent background and saves it as a PNG."
+      }
+    ]
+  }
+}

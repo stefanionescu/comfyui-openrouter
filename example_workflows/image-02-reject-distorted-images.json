@@ -8,12 +8,12 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
-        98
+        400,
+        88
       ],
       "flags": {},
       "order": 0,
@@ -41,12 +41,12 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        460,
-        140
+        430,
+        60
       ],
       "size": [
-        340,
-        98
+        400,
+        88
       ],
       "flags": {},
       "order": 1,
@@ -74,12 +74,12 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        890,
-        140
+        860,
+        60
       ],
       "size": [
-        340,
-        98
+        400,
+        88
       ],
       "flags": {},
       "order": 2,
@@ -107,12 +107,12 @@
       "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        1320,
-        140
+        1290,
+        60
       ],
       "size": [
-        720,
-        98
+        780,
+        88
       ],
       "flags": {},
       "order": 3,
@@ -141,7 +141,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        302
+        288
       ],
       "size": [
         340,
@@ -184,7 +184,7 @@
       "type": "OpenRouterImageGenerate",
       "pos": [
         460,
-        302
+        288
       ],
       "size": [
         340,
@@ -342,7 +342,7 @@
       "type": "7b1d2c38-15b0-54f9-8f8a-66ba6d4aa668",
       "pos": [
         890,
-        302
+        288
       ],
       "size": [
         340,
@@ -395,7 +395,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         1320,
-        302
+        288
       ],
       "size": [
         340,
@@ -461,7 +461,7 @@
       "type": "79a3c19e-f750-5769-8b9c-c3b163c6fc76",
       "pos": [
         1700,
-        302
+        288
       ],
       "size": [
         340,
@@ -547,7 +547,7 @@
       "type": "PreviewAny",
       "pos": [
         1700,
-        548
+        534
       ],
       "size": [
         340,
@@ -665,9 +665,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        178,
         400,
-        390
+        228
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -678,9 +678,9 @@
       "title": "Draw",
       "bounding": [
         430,
-        30,
+        178,
         400,
-        694
+        532
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -691,9 +691,9 @@
       "title": "Inspect",
       "bounding": [
         860,
-        30,
+        178,
         400,
-        368
+        206
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -704,9 +704,9 @@
       "title": "Check",
       "bounding": [
         1290,
-        30,
+        178,
         780,
-        788
+        626
       ],
       "color": "#68688c",
       "font_size": 24,

@@ -8,11 +8,11 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
+        400,
         88
       ],
       "flags": {},
@@ -41,11 +41,11 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        460,
-        140
+        430,
+        60
       ],
       "size": [
-        340,
+        400,
         88
       ],
       "flags": {},
@@ -74,11 +74,11 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        890,
-        140
+        860,
+        60
       ],
       "size": [
-        720,
+        780,
         88
       ],
       "flags": {},
@@ -108,7 +108,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        292
+        288
       ],
       "size": [
         340,
@@ -150,7 +150,7 @@
       "type": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
       "pos": [
         460,
-        292
+        288
       ],
       "size": [
         340,
@@ -197,7 +197,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         890,
-        292
+        288
       ],
       "size": [
         340,
@@ -263,7 +263,7 @@
       "type": "9dadd14e-c511-5712-8dce-3d3792969ad8",
       "pos": [
         1270,
-        292
+        288
       ],
       "size": [
         340,
@@ -339,7 +339,7 @@
       "type": "PreviewAny",
       "pos": [
         1270,
-        498
+        494
       ],
       "size": [
         340,
@@ -425,9 +425,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        178,
         400,
-        380
+        228
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -438,9 +438,9 @@
       "title": "Rank",
       "bounding": [
         430,
-        30,
+        178,
         400,
-        400
+        248
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -451,9 +451,9 @@
       "title": "Check",
       "bounding": [
         860,
-        30,
+        178,
         780,
-        738
+        586
       ],
       "color": "#68688c",
       "font_size": 24,

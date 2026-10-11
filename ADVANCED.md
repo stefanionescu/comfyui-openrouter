@@ -261,7 +261,10 @@ mise run comfy:workflows:build     # Build the 13 example workflows
 
 The example workflows are generated from `scripts/workflows/descriptions/`:
 one module per category, the group notes in `notes.py`, and the titles in
-`texts.py`. The build reads the node definitions through ComfyUI's Python.
+`texts.py`. The build reads the node definitions through ComfyUI's Python. It
+also writes every subgraph to `subgraphs/`, which ComfyUI lists under
+**Subgraph Blueprints** in its node library, named after the subgraph and its
+workflow, such as `Check (chat-01)`.
 
 ### Full check
 
@@ -412,8 +415,8 @@ The README's and this guide's images are in `docs/images/`:
   share no link have no arrow.
 - The badges under the banner name the ComfyUI, frontend, and Python versions
   and the license, on ink and grey; update them when those change.
-- `workflow-choose-group.png` is the **Choose** group of image-01 at 100% zoom,
-  with link midpoint markers off.
+- `workflow-choose-group.png` is the **Choose** group of image-01 and its note,
+  at 100% zoom, with link midpoint markers off.
 - `chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels wide, at 100%
   zoom.
 - `settings-dialog.png` is the **OpenRouter Settings** dialog with default

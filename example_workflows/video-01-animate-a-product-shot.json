@@ -8,12 +8,12 @@
       "id": 1,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        140
+        0,
+        60
       ],
       "size": [
-        340,
-        108
+        400,
+        96
       ],
       "flags": {},
       "order": 0,
@@ -41,12 +41,12 @@
       "id": 2,
       "type": "MarkdownNote",
       "pos": [
-        30,
-        570
+        0,
+        474
       ],
       "size": [
-        720,
-        108
+        780,
+        96
       ],
       "flags": {},
       "order": 1,
@@ -74,12 +74,12 @@
       "id": 3,
       "type": "MarkdownNote",
       "pos": [
-        840,
-        140
+        810,
+        60
       ],
       "size": [
-        720,
-        108
+        780,
+        96
       ],
       "flags": {},
       "order": 2,
@@ -107,12 +107,12 @@
       "id": 4,
       "type": "MarkdownNote",
       "pos": [
-        1650,
-        140
+        1620,
+        60
       ],
       "size": [
-        720,
-        108
+        780,
+        96
       ],
       "flags": {},
       "order": 3,
@@ -140,12 +140,12 @@
       "id": 5,
       "type": "MarkdownNote",
       "pos": [
-        2460,
-        140
+        2430,
+        60
       ],
       "size": [
-        340,
-        108
+        400,
+        96
       ],
       "flags": {},
       "order": 4,
@@ -174,7 +174,7 @@
       "type": "PrimitiveStringMultiline",
       "pos": [
         30,
-        312
+        296
       ],
       "size": [
         340,
@@ -216,7 +216,7 @@
       "type": "PrimitiveString",
       "pos": [
         30,
-        742
+        710
       ],
       "size": [
         340,
@@ -258,7 +258,7 @@
       "type": "OpenRouterModelInfo",
       "pos": [
         30,
-        864
+        832
       ],
       "size": [
         340,
@@ -298,7 +298,7 @@
       "type": "PreviewAny",
       "pos": [
         410,
-        742
+        710
       ],
       "size": [
         340,
@@ -332,7 +332,7 @@
       "type": "OpenRouterImageGenerate",
       "pos": [
         840,
-        312
+        296
       ],
       "size": [
         340,
@@ -491,7 +491,7 @@
       "type": "PreviewImage",
       "pos": [
         1220,
-        312
+        296
       ],
       "size": [
         340,
@@ -525,7 +525,7 @@
       "type": "OpenRouterDecisionAddQuestion",
       "pos": [
         1650,
-        312
+        296
       ],
       "size": [
         340,
@@ -590,7 +590,7 @@
       "type": "be60d90c-9e59-594e-b529-6a989c2e0943",
       "pos": [
         1650,
-        566
+        550
       ],
       "size": [
         340,
@@ -642,7 +642,7 @@
       "type": "PreviewAny",
       "pos": [
         2030,
-        312
+        296
       ],
       "size": [
         340,
@@ -676,7 +676,7 @@
       "type": "PreviewAny",
       "pos": [
         2030,
-        616
+        600
       ],
       "size": [
         340,
@@ -710,7 +710,7 @@
       "type": "f59cb1d8-c94a-542a-91fb-e1b9d3ebe2a4",
       "pos": [
         2460,
-        312
+        296
       ],
       "size": [
         340,
@@ -855,9 +855,9 @@
       "title": "Input",
       "bounding": [
         0,
-        30,
+        186,
         400,
-        400
+        228
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -868,9 +868,9 @@
       "title": "Model",
       "bounding": [
         0,
-        460,
+        600,
         780,
-        552
+        380
       ],
       "color": "#55746b",
       "font_size": 24,
@@ -881,9 +881,9 @@
       "title": "Frame",
       "bounding": [
         810,
-        30,
+        186,
         780,
-        704
+        532
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -894,9 +894,9 @@
       "title": "Move",
       "bounding": [
         1620,
-        30,
+        186,
         780,
-        856
+        684
       ],
       "color": "#68688c",
       "font_size": 24,
@@ -907,9 +907,9 @@
       "title": "Animate",
       "bounding": [
         2430,
-        30,
+        186,
         400,
-        424
+        252
       ],
       "color": "#68688c",
       "font_size": 24,
