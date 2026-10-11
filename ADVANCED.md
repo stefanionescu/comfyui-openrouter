@@ -263,8 +263,7 @@ The example workflows are generated from `scripts/workflows/descriptions/`:
 one module per category, the group notes in `notes.py`, and the titles in
 `texts.py`. The build reads the node definitions through ComfyUI's Python. It
 also writes every subgraph to `subgraphs/`, which ComfyUI lists under
-**Subgraph Blueprints** in its node library, named after the subgraph and its
-workflow, such as `Check (chat-01)`.
+**Subgraph Blueprints** in its node library.
 
 ### Full check
 

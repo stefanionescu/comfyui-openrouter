@@ -99,7 +99,7 @@
         "Node name for S&R": "MarkdownNote"
       },
       "widgets_values": [
-        "GPT-6 Luna answers the customer in three sentences or fewer, using only the three articles. Open **Answer** to change the instructions."
+        "GPT-6 Luna answers the customer in three sentences or fewer, using only the three articles. Open **Draft** to change the instructions."
       ],
       "title": "Note"
     },
@@ -324,7 +324,7 @@
     },
     {
       "id": 8,
-      "type": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
+      "type": "ac55ad4f-2a2a-5281-92be-e1f31c4981cb",
       "pos": [
         890,
         298
@@ -359,7 +359,7 @@
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Answer"
+      "title": "Draft"
     },
     {
       "id": 9,
@@ -429,7 +429,7 @@
     },
     {
       "id": 10,
-      "type": "ea5f4ed3-ce66-5075-94c9-04f90877d0b0",
+      "type": "04e61ec9-5a18-5ed8-8014-f78bdb4d1609",
       "pos": [
         1320,
         546
@@ -481,7 +481,7 @@
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Check"
+      "title": "Review"
     },
     {
       "id": 11,
@@ -663,7 +663,7 @@
     },
     {
       "id": 3,
-      "title": "Answer",
+      "title": "Draft",
       "bounding": [
         860,
         188,
@@ -676,7 +676,7 @@
     },
     {
       "id": 4,
-      "title": "Check",
+      "title": "Review",
       "bounding": [
         1290,
         188,
@@ -702,7 +702,7 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
+        "id": "ac55ad4f-2a2a-5281-92be-e1f31c4981cb",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -712,7 +712,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Answer",
+        "name": "Draft",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -733,7 +733,7 @@
         },
         "inputs": [
           {
-            "id": "5666985a-c6c6-5f85-b34b-cbba76f512ce",
+            "id": "f0e0af8a-71d0-5672-b91d-33ace16071d3",
             "name": "articles",
             "type": "*",
             "linkIds": [
@@ -745,7 +745,7 @@
             ]
           },
           {
-            "id": "1e5d0644-2b2d-511a-a993-4f3d80bf930e",
+            "id": "ea51f287-6824-5ae0-b776-66f076d892a3",
             "name": "question",
             "type": "*",
             "linkIds": [
@@ -759,7 +759,7 @@
         ],
         "outputs": [
           {
-            "id": "ba1b385d-dade-5574-ba39-4096929c21b9",
+            "id": "d08bf482-5c28-5f15-b0c9-4c129bf1c57f",
             "name": "answer",
             "type": "STRING",
             "linkIds": [
@@ -1083,7 +1083,7 @@
         }
       },
       {
-        "id": "ea5f4ed3-ce66-5075-94c9-04f90877d0b0",
+        "id": "04e61ec9-5a18-5ed8-8014-f78bdb4d1609",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -1093,7 +1093,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Check",
+        "name": "Review",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -1114,7 +1114,7 @@
         },
         "inputs": [
           {
-            "id": "88b96d1e-741e-535b-8ff0-dfe6716b99ae",
+            "id": "1f850659-f36c-566e-85ab-1e2f94f2f8f4",
             "name": "articles",
             "type": "*",
             "linkIds": [
@@ -1126,7 +1126,7 @@
             ]
           },
           {
-            "id": "9443b6c8-aec9-5f86-a51e-c7bee89f5cab",
+            "id": "75d995fc-f52e-5685-8725-322270e72003",
             "name": "question",
             "type": "*",
             "linkIds": [
@@ -1139,7 +1139,7 @@
             ]
           },
           {
-            "id": "1acd102a-91d2-5266-96f7-8dbd861ed7bc",
+            "id": "7d75adb0-8de6-5be1-9051-724b7d582078",
             "name": "answer",
             "type": "STRING",
             "linkIds": [
@@ -1152,7 +1152,7 @@
             ]
           },
           {
-            "id": "a55f4aa7-1b7f-53c0-8a47-c96c3bf04139",
+            "id": "46066c0d-51d6-5b9c-b0a9-0caa2f2dd891",
             "name": "questions",
             "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
@@ -1166,7 +1166,7 @@
         ],
         "outputs": [
           {
-            "id": "11951470-2630-5630-8ae8-c41322d1b6d6",
+            "id": "761fbc9a-e766-5c5f-a79b-dce5e43701c1",
             "name": "reply",
             "type": "STRING",
             "linkIds": [
@@ -1178,7 +1178,7 @@
             ]
           },
           {
-            "id": "f31148ac-d455-591b-9e15-0ee9c5c3e703",
+            "id": "d784aca0-7897-5c4d-90a1-d6c87d16803c",
             "name": "summary",
             "type": "STRING",
             "linkIds": [

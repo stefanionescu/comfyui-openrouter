@@ -43,7 +43,7 @@ IDEAS = Subgraph(
 )
 
 CHOOSE_IDEA = Subgraph(
-    name=SHARED_TEXTS["choose"],
+    name=SHARED_TEXTS["pick"],
     nodes=(
         Node("situation", HostNode.FORMAT, {"f_string": "Campaign:\n{a}\n\nIdeas:\n{b}"}),
         Node("decide", DECIDE, is_paid=True),
@@ -144,7 +144,7 @@ EDIT_BEST_IDEA = Workflow(
         (Group(SHARED_TEXTS["ideas"], (("ideas",),), STAGE_COLOUR, EDIT_TEXTS["ideas"]),),
         (
             Group(
-                SHARED_TEXTS["choose"],
+                SHARED_TEXTS["pick"],
                 (("best", "on_brief"), ("choose", "idea"), ("summary",)),
                 STAGE_COLOUR,
                 EDIT_TEXTS["choose"],

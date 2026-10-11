@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from pathlib import Path
     from scripts.types import Json
     from collections.abc import Mapping, Iterable
-    from scripts.workflows.page.graph import Workflow
+    from scripts.workflows.page.graph import Subgraph, Workflow
 
 # Each family's workflows, with the node menu their subgraph blueprints are listed in.
 FAMILIES = (
@@ -160,18 +160,20 @@ def _encode_workflow(workflow: Workflow, palette: Palette) -> Json:
 
 
 def _encode_blueprints(export: dict[str, object]) -> dict[Path, Json]:
-    """Serialize every subgraph as a blueprint, named after the subgraph and its workflow, such as Check (chat-01).
+    """Serialize every subgraph as a blueprint named after it; ComfyUI lists each by its file name.
 
-    Two workflows can each have their own Check, so the workflow's family and number keep the names apart.
+    Two workflows may place the same subgraph, but two different subgraphs may not share a name.
     """
     blueprints: dict[Path, Json] = {}
+    placed: dict[str, Subgraph] = {}
     for workflows, menu in FAMILIES:
         for workflow in workflows:
             palette = _build_palette(export, workflow)
-            number = "-".join(workflow.slug.split("-")[:2])
             for subgraph in workflow.subgraphs:
-                name = f"{subgraph.name} ({number})"
-                blueprints[SUBGRAPHS_DIR / f"{name}.json"] = encode_blueprint(subgraph, palette, name, menu)
+                if placed.setdefault(subgraph.name, subgraph) != subgraph:
+                    message = f"Give the subgraph {subgraph.name} in {workflow.slug} a name no other subgraph has."
+                    raise ValueError(message)
+                blueprints[SUBGRAPHS_DIR / f"{subgraph.name}.json"] = encode_blueprint(subgraph, palette, menu)
     return blueprints
 
 

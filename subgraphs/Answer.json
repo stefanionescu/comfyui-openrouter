@@ -1,12 +1,12 @@
 {
-  "id": "3713264e-eda6-5f97-8b45-c254db55dc01",
+  "id": "15a35496-35c4-5c6b-8931-11cddc2f8c8e",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
+      "type": "c5d60db5-e243-5bb4-90d2-5fb8ee084ab0",
       "pos": [
         0,
         0
@@ -20,26 +20,31 @@
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
-          "type": "IMAGE",
+          "name": "notes",
+          "type": "*",
           "link": null
         },
         {
-          "name": "campaign",
+          "name": "question",
           "type": "*",
           "link": null
         }
       ],
       "outputs": [
         {
-          "name": "ideas",
+          "name": "answer",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "prompt",
           "type": "STRING",
           "links": []
         }
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Ideas"
+      "title": "Answer"
     }
   ],
   "links": [],
@@ -50,17 +55,17 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
+        "id": "c5d60db5-e243-5bb4-90d2-5fb8ee084ab0",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 4,
+          "lastLinkId": 5,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Ideas",
+        "name": "Answer",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -76,14 +81,14 @@
             1010,
             140,
             120,
-            20
+            40
           ]
         },
         "inputs": [
           {
-            "id": "46444815-b388-513d-ae54-a6815b5ce1aa",
-            "name": "image",
-            "type": "IMAGE",
+            "id": "a466cfa2-d48f-588a-9868-e6a17db72bbf",
+            "name": "notes",
+            "type": "*",
             "linkIds": [
               2
             ],
@@ -93,8 +98,8 @@
             ]
           },
           {
-            "id": "5eb1dc6e-b1e0-5c78-a8ca-84ff1a9d7263",
-            "name": "campaign",
+            "id": "636064ad-4ebc-5f6e-80a9-bcd7fcc7189d",
+            "name": "question",
             "type": "*",
             "linkIds": [
               3
@@ -107,8 +112,8 @@
         ],
         "outputs": [
           {
-            "id": "def32d58-99aa-5d45-8f74-583c6152316e",
-            "name": "ideas",
+            "id": "361264a9-7fcf-5f49-a4a0-ac721a2b54d0",
+            "name": "answer",
             "type": "STRING",
             "linkIds": [
               4
@@ -116,6 +121,18 @@
             "pos": [
               1010,
               140
+            ]
+          },
+          {
+            "id": "2507c2ca-94b0-531e-8b92-7e87de37d7c2",
+            "name": "prompt",
+            "type": "STRING",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              1010,
+              160
             ]
           }
         ],
@@ -130,7 +147,7 @@
             ],
             "size": [
               340,
-              128
+              148
             ],
             "flags": {},
             "order": 100,
@@ -140,12 +157,19 @@
                 "label": "a",
                 "name": "values.a",
                 "type": "*",
-                "link": 3,
+                "link": 2,
                 "shape": 7
               },
               {
                 "label": "b",
                 "name": "values.b",
+                "type": "*",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "label": "c",
+                "name": "values.c",
                 "type": "*",
                 "link": null,
                 "shape": 7
@@ -164,7 +188,8 @@
                 "name": "STRING",
                 "type": "STRING",
                 "links": [
-                  1
+                  1,
+                  5
                 ]
               }
             ],
@@ -172,7 +197,7 @@
               "Node name for S&R": "StringFormat"
             },
             "widgets_values": [
-              "Campaign: {a}\n\nWrite three different ideas for editing this product photo into a campaign image. Each idea is one detailed editing instruction that keeps the product exactly as it is."
+              "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"
             ]
           },
           {
@@ -213,7 +238,7 @@
               {
                 "name": "images",
                 "type": "IMAGE",
-                "link": 2,
+                "link": null,
                 "shape": 7
               },
               {
@@ -365,7 +390,7 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "openai/gpt-6-sol",
+              "openai/gpt-6-luna",
               "model default",
               0,
               "model default",
@@ -376,7 +401,7 @@
               42,
               "fixed",
               0,
-              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"idea_1\": {\n      \"type\": \"string\"\n    },\n    \"idea_2\": {\n      \"type\": \"string\"\n    },\n    \"idea_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"idea_1\",\n    \"idea_2\",\n    \"idea_3\"\n  ],\n  \"additionalProperties\": false\n}",
+              "",
               "",
               ""
             ],
@@ -398,16 +423,16 @@
             "id": 2,
             "origin_id": -10,
             "origin_slot": 0,
-            "target_id": 102,
-            "target_slot": 3,
-            "type": "IMAGE"
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
           },
           {
             "id": 3,
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 101,
-            "target_slot": 0,
+            "target_slot": 1,
             "type": "*"
           },
           {
@@ -417,13 +442,21 @@
             "target_id": -20,
             "target_slot": 0,
             "type": "STRING"
+          },
+          {
+            "id": 5,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Writes three editing ideas for the photo."
+          "description": "Answers the question from the notes with a fast model."
         },
-        "category": "OpenRouter/Image",
-        "description": "Writes three editing ideas for the photo."
+        "category": "OpenRouter/Decision",
+        "description": "Answers the question from the notes with a fast model."
       }
     ]
   }

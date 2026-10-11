@@ -138,7 +138,7 @@ TRIAGE_VOICEMAIL = Workflow(
 )
 
 TRANSCRIBE_CLIP = Subgraph(
-    name=SHARED_TEXTS["transcribe"],
+    name=SHARED_TEXTS["subtitle"],
     nodes=(
         Node("transcribe", TRANSCRIBE, {"model": TRANSCRIBER, "timestamps": "segments"}, is_paid=True),
         Node("save", HostNode.SAVE_TEXT, {"filename_prefix": "dub/subtitles"}),
@@ -249,7 +249,7 @@ DUB_CLIP = Workflow(
     ),
     stacks=(
         (Group(SHARED_TEXTS["input"], (("clip",),), note=DUB_TEXTS["input"]),),
-        (Group(SHARED_TEXTS["transcribe"], (("transcribe",),), STAGE_COLOUR, DUB_TEXTS["transcribe"]),),
+        (Group(SHARED_TEXTS["subtitle"], (("transcribe",),), STAGE_COLOUR, DUB_TEXTS["transcribe"]),),
         (
             Group(
                 SHARED_TEXTS["translate"],

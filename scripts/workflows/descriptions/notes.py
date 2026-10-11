@@ -222,7 +222,7 @@ WORKFLOW_TEXTS = {
         "search": ("Rerank 4 Pro scores every article against the question and keeps the best three, set in `top_n`."),
         "answer": (
             "GPT-6 Luna answers the customer in three sentences or fewer, using only the three articles. Open "
-            "**Answer** to change the instructions."
+            "**Draft** to change the instructions."
         ),
         "answer_description": "Answers the customer from the ranked articles.",
         "check": (

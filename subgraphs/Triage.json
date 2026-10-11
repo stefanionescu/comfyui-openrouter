@@ -1,40 +1,55 @@
 {
-  "id": "d4bcb120-a0b9-5279-94b7-f1ee9560c6da",
+  "id": "fb0c8644-c611-576b-aeda-490cfa50823c",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "43368639-46a6-549f-882b-b08e16775ed5",
+      "type": "58b9a9c1-e294-5468-8ff3-77068e6e4fd0",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        26
+        108
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "audio",
-          "type": "AUDIO",
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "name": "questions",
+          "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null
         }
       ],
       "outputs": [
         {
-          "name": "text",
+          "name": "department",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "summary",
           "type": "STRING",
           "links": []
         }
       ],
       "properties": {},
-      "widgets_values": [],
-      "title": "Transcribe"
+      "widgets_values": [
+        ""
+      ],
+      "title": "Triage"
     }
   ],
   "links": [],
@@ -45,24 +60,24 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "43368639-46a6-549f-882b-b08e16775ed5",
+        "id": "58b9a9c1-e294-5468-8ff3-77068e6e4fd0",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 3,
+          "lastLinkId": 5,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Transcribe",
+        "name": "Triage",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            20
+            40
           ]
         },
         "outputNode": {
@@ -71,14 +86,14 @@
             1010,
             140,
             120,
-            20
+            40
           ]
         },
         "inputs": [
           {
-            "id": "3c945932-7a92-5f2e-b0d6-6839316076f8",
-            "name": "audio",
-            "type": "AUDIO",
+            "id": "5477cb92-b2f7-527c-a248-3a3bc72354ae",
+            "name": "text",
+            "type": "STRING",
             "linkIds": [
               2
             ],
@@ -86,19 +101,43 @@
               110,
               140
             ]
-          }
-        ],
-        "outputs": [
+          },
           {
-            "id": "0e95f68e-a1e5-55cd-b512-4b044b5f1ce3",
-            "name": "text",
-            "type": "STRING",
+            "id": "aab2c436-baa3-5e42-af81-2e972229bb2e",
+            "name": "questions",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               3
             ],
             "pos": [
+              110,
+              160
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "e286231d-e55c-59e8-bcf2-1786dda719a6",
+            "name": "department",
+            "type": "STRING",
+            "linkIds": [
+              4
+            ],
+            "pos": [
               1010,
               140
+            ]
+          },
+          {
+            "id": "456fb8bb-feac-555f-af22-94ba8a5c3a85",
+            "name": "summary",
+            "type": "STRING",
+            "linkIds": [
+              5
+            ],
+            "pos": [
+              1010,
+              160
             ]
           }
         ],
@@ -106,23 +145,23 @@
         "nodes": [
           {
             "id": 101,
-            "type": "OpenRouterAudioTranscribe",
+            "type": "OpenRouterDecisionAsk",
             "pos": [
               200,
               140
             ],
             "size": [
               340,
-              214
+              156
             ],
             "flags": {},
             "order": 100,
             "mode": 0,
             "inputs": [
               {
-                "name": "audio",
-                "type": "AUDIO",
-                "link": 2
+                "name": "questions",
+                "type": "OPENROUTER_DECISION_QUESTIONS",
+                "link": 3
               },
               {
                 "name": "model",
@@ -130,30 +169,6 @@
                 "link": null,
                 "widget": {
                   "name": "model"
-                }
-              },
-              {
-                "name": "language",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "language"
-                }
-              },
-              {
-                "name": "timestamps",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "timestamps"
-                }
-              },
-              {
-                "name": "temperature",
-                "type": "FLOAT",
-                "link": null,
-                "widget": {
-                  "name": "temperature"
                 }
               },
               {
@@ -169,97 +184,120 @@
                 "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
+              },
+              {
+                "name": "situation",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "situation"
+                }
               }
             ],
             "outputs": [
               {
-                "name": "text",
-                "type": "STRING",
-                "links": [
-                  3
-                ]
-              },
-              {
-                "name": "segments",
-                "type": "STRING",
-                "links": []
-              },
-              {
-                "name": "subtitles",
-                "type": "STRING",
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "links": [
                   1
                 ]
               },
               {
-                "name": "words",
+                "name": "summary",
                 "type": "STRING",
-                "links": []
+                "links": [
+                  5
+                ]
               }
             ],
             "properties": {
-              "Node name for S&R": "OpenRouterAudioTranscribe"
+              "Node name for S&R": "OpenRouterDecisionAsk"
             },
             "widgets_values": [
-              "assemblyai/universal-3-5-pro",
-              "",
-              "segments",
-              0.0,
-              0
+              "typesafe/jev-1.13",
+              0,
+              ""
             ],
             "color": "#432",
             "bgcolor": "#653"
           },
           {
             "id": 102,
-            "type": "SaveText",
+            "type": "OpenRouterDecisionReadAnswer",
             "pos": [
               580,
               140
             ],
             "size": [
               340,
-              170
+              182
             ],
             "flags": {},
             "order": 101,
             "mode": 0,
             "inputs": [
               {
-                "name": "text",
-                "type": "STRING",
+                "name": "answers",
+                "type": "OPENROUTER_DECISION_ANSWERS",
                 "link": 1
               },
               {
-                "name": "filename_prefix",
+                "name": "question",
                 "type": "STRING",
                 "link": null,
                 "widget": {
-                  "name": "filename_prefix"
+                  "name": "question"
                 }
               },
               {
-                "name": "format",
-                "type": "COMBO",
+                "name": "threshold",
+                "type": "FLOAT",
                 "link": null,
                 "widget": {
-                  "name": "format"
+                  "name": "threshold"
                 }
               }
             ],
             "outputs": [
               {
-                "name": "text",
+                "name": "answer",
                 "type": "STRING",
+                "links": [
+                  4
+                ]
+              },
+              {
+                "name": "is_yes",
+                "type": "BOOLEAN",
+                "links": []
+              },
+              {
+                "name": "probability",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "score",
+                "type": "FLOAT",
+                "links": []
+              },
+              {
+                "name": "level",
+                "type": "INT",
+                "links": []
+              },
+              {
+                "name": "confidence",
+                "type": "FLOAT",
                 "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "SaveText"
+              "Node name for S&R": "OpenRouterDecisionReadAnswer"
             },
             "widgets_values": [
-              "dub/subtitles",
-              "txt"
+              "department",
+              0.5
             ]
           }
         ],
@@ -268,33 +306,49 @@
           {
             "id": 1,
             "origin_id": 101,
-            "origin_slot": 2,
+            "origin_slot": 0,
             "target_id": 102,
             "target_slot": 0,
-            "type": "STRING"
+            "type": "OPENROUTER_DECISION_ANSWERS"
           },
           {
             "id": 2,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 0,
-            "type": "AUDIO"
+            "target_slot": 4,
+            "type": "STRING"
           },
           {
             "id": 3,
-            "origin_id": 101,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "OPENROUTER_DECISION_QUESTIONS"
+          },
+          {
+            "id": 4,
+            "origin_id": 102,
             "origin_slot": 0,
             "target_id": -20,
             "target_slot": 0,
             "type": "STRING"
+          },
+          {
+            "id": 5,
+            "origin_id": 101,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Transcribes the clip and saves its subtitles."
+          "description": "Asks Jev which department replies, whether to call back, and how soon."
         },
         "category": "OpenRouter/Audio",
-        "description": "Transcribes the clip and saves its subtitles."
+        "description": "Asks Jev which department replies, whether to call back, and how soon."
       }
     ]
   }

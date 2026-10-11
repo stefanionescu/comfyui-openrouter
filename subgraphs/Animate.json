@@ -1,51 +1,53 @@
 {
-  "id": "ccdfebe3-9268-579a-bff8-0b01daea0265",
+  "id": "2b12a27e-e745-50d2-931f-6b7dd557a368",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
+      "type": "f59cb1d8-c94a-542a-91fb-e1b9d3ebe2a4",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        108
+        112
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "brief",
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "move",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "brief"
+            "name": "move"
+          }
+        },
+        {
+          "name": "model",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "model"
           }
         }
       ],
-      "outputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "shape": 6,
-          "links": []
-        },
-        {
-          "name": "scores",
-          "type": "STRING",
-          "links": []
-        }
-      ],
+      "outputs": [],
       "properties": {},
       "widgets_values": [
-        ""
+        "",
+        "google/veo-3.1-fast"
       ],
-      "title": "Rank"
+      "title": "Animate"
     }
   ],
   "links": [],
@@ -56,24 +58,24 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "f507220c-28b2-5aaf-a30a-5d7ab529e90d",
+        "id": "f59cb1d8-c94a-542a-91fb-e1b9d3ebe2a4",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 5,
+          "lastLinkId": 4,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Rank",
+        "name": "Animate",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            20
+            60
           ]
         },
         "outputNode": {
@@ -82,62 +84,60 @@
             1010,
             140,
             120,
-            40
+            20
           ]
         },
         "inputs": [
           {
-            "id": "02f88d78-c4b0-5c87-98ab-04958b449938",
-            "name": "brief",
-            "type": "STRING",
+            "id": "af1bf721-f194-5ce2-9a1a-bd54a57ebb8b",
+            "name": "image",
+            "type": "IMAGE",
             "linkIds": [
-              2,
-              3
+              2
             ],
             "pos": [
               110,
               140
             ]
-          }
-        ],
-        "outputs": [
+          },
           {
-            "id": "acee5343-0527-5fbb-b7d9-84bc4a312c16",
-            "name": "image",
-            "type": "IMAGE",
+            "id": "09a4fbb0-af12-57f6-b0e2-619f67b4c846",
+            "name": "move",
+            "type": "STRING",
+            "linkIds": [
+              3
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "c12879a8-1e7b-5406-b1cb-5faca8c9d502",
+            "name": "model",
+            "type": "STRING",
             "linkIds": [
               4
             ],
             "pos": [
-              1010,
-              140
-            ]
-          },
-          {
-            "id": "ca85b7a8-750a-537d-a0aa-34f536230143",
-            "name": "scores",
-            "type": "STRING",
-            "linkIds": [
-              5
-            ],
-            "pos": [
-              1010,
-              160
+              110,
+              180
             ]
           }
         ],
+        "outputs": [],
         "widgets": [],
         "nodes": [
           {
             "id": 101,
-            "type": "OpenRouterImageGenerate",
+            "type": "OpenRouterVideoGenerate",
             "pos": [
               200,
               140
             ],
             "size": [
               340,
-              392
+              428
             ],
             "flags": {},
             "order": 100,
@@ -146,9 +146,17 @@
               {
                 "name": "model",
                 "type": "STRING",
-                "link": null,
+                "link": 4,
                 "widget": {
                   "name": "model"
+                }
+              },
+              {
+                "name": "duration",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "duration"
                 }
               },
               {
@@ -168,48 +176,56 @@
                 }
               },
               {
-                "name": "quality",
+                "name": "generate_audio",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "quality"
+                  "name": "generate_audio"
                 }
               },
               {
-                "name": "background",
-                "type": "COMBO",
+                "name": "upscale_factor",
+                "type": "FLOAT",
                 "link": null,
                 "widget": {
-                  "name": "background"
+                  "name": "upscale_factor"
                 }
               },
               {
-                "name": "output_format",
-                "type": "COMBO",
+                "name": "creativity",
+                "type": "FLOAT",
                 "link": null,
                 "widget": {
-                  "name": "output_format"
+                  "name": "creativity"
                 }
               },
               {
-                "name": "output_compression",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "output_compression"
-                }
-              },
-              {
-                "name": "count",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "count"
-                }
-              },
-              {
-                "name": "references",
+                "name": "first_frame",
                 "type": "IMAGE",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "name": "last_frame",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reference_images",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reference_videos",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reference_audio",
+                "type": "AUDIO",
                 "link": null,
                 "shape": 7
               },
@@ -238,7 +254,7 @@
               {
                 "name": "prompt",
                 "type": "STRING",
-                "link": 2,
+                "link": 3,
                 "widget": {
                   "name": "prompt"
                 }
@@ -246,37 +262,24 @@
             ],
             "outputs": [
               {
-                "name": "images",
-                "type": "IMAGE",
-                "shape": 6,
+                "name": "video",
+                "type": "VIDEO",
                 "links": [
                   1
                 ]
-              },
-              {
-                "name": "masks",
-                "type": "MASK",
-                "shape": 6,
-                "links": []
-              },
-              {
-                "name": "svg",
-                "type": "SVG",
-                "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "OpenRouterImageGenerate"
+              "Node name for S&R": "OpenRouterVideoGenerate"
             },
             "widgets_values": [
-              "recraft/recraft-v4.1-flash",
-              "model default",
+              "google/veo-3.1-fast",
+              6,
+              "768p",
               "16:9",
               "model default",
-              "model default",
-              "model default",
-              90,
-              4,
+              0.0,
+              0.0,
               42,
               "fixed",
               0,
@@ -287,106 +290,64 @@
           },
           {
             "id": 102,
-            "type": "OpenRouterSearchRank",
+            "type": "SaveVideo",
             "pos": [
               580,
               140
             ],
             "size": [
               340,
-              254
+              106
             ],
             "flags": {},
             "order": 101,
             "mode": 0,
             "inputs": [
               {
-                "name": "model",
+                "name": "video",
+                "type": "VIDEO",
+                "link": 1
+              },
+              {
+                "name": "filename_prefix",
                 "type": "STRING",
                 "link": null,
                 "widget": {
-                  "name": "model"
+                  "name": "filename_prefix"
                 }
               },
               {
-                "name": "images",
-                "type": "IMAGE",
-                "link": 1,
-                "shape": 7
-              },
-              {
-                "name": "top_n",
-                "type": "INT",
+                "name": "format",
+                "type": "COMFY_DYNAMICCOMBO_V3",
                 "link": null,
                 "widget": {
-                  "name": "top_n"
+                  "name": "format"
                 }
               },
               {
-                "name": "run_number",
-                "type": "INT",
+                "name": "codec",
+                "type": "COMFY_DYNAMICCOMBO_V3",
                 "link": null,
                 "widget": {
-                  "name": "run_number"
-                }
-              },
-              {
-                "name": "options",
-                "type": "OPENROUTER_REQUEST_OPTIONS",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "query",
-                "type": "STRING",
-                "link": 3,
-                "widget": {
-                  "name": "query"
-                }
-              },
-              {
-                "name": "documents",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "documents"
+                  "name": "codec"
                 }
               }
             ],
             "outputs": [
               {
-                "name": "texts",
-                "type": "STRING",
+                "name": "video",
+                "type": "VIDEO",
                 "links": []
-              },
-              {
-                "name": "images",
-                "type": "IMAGE",
-                "shape": 6,
-                "links": [
-                  4
-                ]
-              },
-              {
-                "name": "scores",
-                "type": "STRING",
-                "links": [
-                  5
-                ]
               }
             ],
             "properties": {
-              "Node name for S&R": "OpenRouterSearchRank"
+              "Node name for S&R": "SaveVideo"
             },
             "widgets_values": [
-              "nvidia/llama-nemotron-rerank-vl-1b-v2:free",
-              1,
-              0,
-              "",
-              ""
-            ],
-            "color": "#432",
-            "bgcolor": "#653"
+              "video/openrouter/product-teaser",
+              "auto",
+              "auto"
+            ]
           }
         ],
         "groups": [],
@@ -396,47 +357,39 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 1,
-            "type": "IMAGE"
+            "target_slot": 0,
+            "type": "VIDEO"
           },
           {
             "id": 2,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 12,
-            "type": "STRING"
+            "target_slot": 7,
+            "type": "IMAGE"
           },
           {
             "id": 3,
             "origin_id": -10,
-            "origin_slot": 0,
-            "target_id": 102,
-            "target_slot": 5,
+            "origin_slot": 1,
+            "target_id": 101,
+            "target_slot": 15,
             "type": "STRING"
           },
           {
             "id": 4,
-            "origin_id": 102,
-            "origin_slot": 1,
-            "target_id": -20,
-            "target_slot": 0,
-            "type": "IMAGE"
-          },
-          {
-            "id": 5,
-            "origin_id": 102,
+            "origin_id": -10,
             "origin_slot": 2,
-            "target_id": -20,
-            "target_slot": 1,
+            "target_id": 101,
+            "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Draws four candidates and keeps the one that best matches the brief."
+          "description": "Turns the frame into a video with the chosen move and saves it."
         },
-        "category": "OpenRouter/Search",
-        "description": "Draws four candidates and keeps the one that best matches the brief."
+        "category": "OpenRouter/Video",
+        "description": "Turns the frame into a video with the chosen move and saves it."
       }
     ]
   }

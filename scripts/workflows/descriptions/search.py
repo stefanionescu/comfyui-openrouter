@@ -29,7 +29,7 @@ ARTICLE_TEXTS = WORKFLOW_TEXTS["search-01-answer-from-help-articles"]
 HERO_TEXTS = WORKFLOW_TEXTS["search-02-choose-a-hero-image"]
 
 ANSWER = Subgraph(
-    name=SHARED_TEXTS["answer"],
+    name=SHARED_TEXTS["draft"],
     nodes=(
         Node(
             "request",
@@ -51,7 +51,7 @@ ANSWER = Subgraph(
 )
 
 CHECK_ANSWER = Subgraph(
-    name=SHARED_TEXTS["check"],
+    name=SHARED_TEXTS["review"],
     nodes=(
         Node("situation", HostNode.FORMAT, {"f_string": "Articles:\n{a}\n\nCustomer: {b}\n\nAnswer: {c}"}),
         Node("decide", DECIDE, is_paid=True),
@@ -114,10 +114,10 @@ ANSWER_FROM_ARTICLES = Workflow(
     stacks=(
         (Group(SHARED_TEXTS["input"], (("question", "articles"),), note=ARTICLE_TEXTS["input"]),),
         (Group(SHARED_TEXTS["search"], (("rank",),), STAGE_COLOUR, ARTICLE_TEXTS["search"]),),
-        (Group(SHARED_TEXTS["answer"], (("answer",),), STAGE_COLOUR, ARTICLE_TEXTS["answer"]),),
+        (Group(SHARED_TEXTS["draft"], (("answer",),), STAGE_COLOUR, ARTICLE_TEXTS["answer"]),),
         (
             Group(
-                SHARED_TEXTS["check"],
+                SHARED_TEXTS["review"],
                 (("supported", "check"), ("reply", "summary")),
                 STAGE_COLOUR,
                 ARTICLE_TEXTS["check"],
@@ -146,7 +146,7 @@ RANK_IMAGES = Subgraph(
 )
 
 CHECK_HERO = Subgraph(
-    name=SHARED_TEXTS["check"],
+    name=SHARED_TEXTS["approve"],
     nodes=(
         Node(
             "describe",
@@ -232,7 +232,7 @@ CHOOSE_HERO_IMAGE = Workflow(
     stacks=(
         (Group(SHARED_TEXTS["input"], (("brief",),), note=HERO_TEXTS["input"]),),
         (Group(SHARED_TEXTS["rank"], (("rank",),), STAGE_COLOUR, HERO_TEXTS["rank"]),),
-        (Group(SHARED_TEXTS["check"], (("ready",), ("check", "summary")), STAGE_COLOUR, HERO_TEXTS["check"]),),
+        (Group(SHARED_TEXTS["approve"], (("ready",), ("check", "summary")), STAGE_COLOUR, HERO_TEXTS["check"]),),
     ),
     subgraphs=(RANK_IMAGES, CHECK_HERO),
 )

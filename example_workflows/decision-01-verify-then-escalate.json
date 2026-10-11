@@ -335,7 +335,7 @@
     },
     {
       "id": 9,
-      "type": "e7fdb144-fdb9-5a91-8d30-b9f091f4a3a4",
+      "type": "c6f7ae15-8231-55d2-b5a0-c6cff0ab105f",
       "pos": [
         1270,
         288
@@ -387,7 +387,7 @@
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Check"
+      "title": "Verify"
     },
     {
       "id": 10,
@@ -630,7 +630,7 @@
     },
     {
       "id": 3,
-      "title": "Check",
+      "title": "Verify",
       "bounding": [
         860,
         178,
@@ -1071,7 +1071,7 @@
         }
       },
       {
-        "id": "e7fdb144-fdb9-5a91-8d30-b9f091f4a3a4",
+        "id": "c6f7ae15-8231-55d2-b5a0-c6cff0ab105f",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -1081,7 +1081,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Check",
+        "name": "Verify",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -1102,7 +1102,7 @@
         },
         "inputs": [
           {
-            "id": "2648489a-864d-5729-867a-0a2ed77be2e7",
+            "id": "a77da973-1bcb-5083-9273-25456c5862cc",
             "name": "notes",
             "type": "*",
             "linkIds": [
@@ -1114,7 +1114,7 @@
             ]
           },
           {
-            "id": "75947a50-40a9-50be-940b-36aeb6bd3bef",
+            "id": "6559b79a-1388-5788-9701-3567262a0c4d",
             "name": "question",
             "type": "*",
             "linkIds": [
@@ -1126,7 +1126,7 @@
             ]
           },
           {
-            "id": "f41cca86-5eae-56b1-80c0-424bdacb09d3",
+            "id": "c0f84c2f-c9e7-517c-a2cd-e4bd0b7877d2",
             "name": "answer",
             "type": "*",
             "linkIds": [
@@ -1138,7 +1138,7 @@
             ]
           },
           {
-            "id": "1ce92c9a-4bf3-5373-b701-aa0bfc3ed115",
+            "id": "620302d4-347a-5688-9614-52d39e7e46d7",
             "name": "questions",
             "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
@@ -1152,7 +1152,7 @@
         ],
         "outputs": [
           {
-            "id": "9bb4a993-dc9b-5e38-bb5a-39900ae3f7ec",
+            "id": "ee4dcdb8-7a98-5f15-8a79-8d0800e4f072",
             "name": "supported",
             "type": "BOOLEAN",
             "linkIds": [
@@ -1164,7 +1164,7 @@
             ]
           },
           {
-            "id": "23ea84b4-ddcb-5dcf-b38f-bbcc11811c87",
+            "id": "85e2a7f2-72cc-5070-be9a-7a177b298dd3",
             "name": "summary",
             "type": "STRING",
             "linkIds": [

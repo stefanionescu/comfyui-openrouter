@@ -1,55 +1,60 @@
 {
-  "id": "4a936a4d-a2c2-59dc-a0e3-d629a770f04a",
+  "id": "389f3e49-20c6-55e9-ac52-55627eac656b",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "596362ae-4cb6-5076-b4a4-28915aabb123",
+      "type": "03101bf2-751c-5267-9370-229909312915",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        108
+        86
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "brand",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "brand"
-          }
+          "name": "front",
+          "type": "*",
+          "link": null
         },
         {
-          "name": "questions",
-          "type": "OPENROUTER_DECISION_QUESTIONS",
+          "name": "detail",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "documents",
+          "type": "OPENROUTER_CHAT_DOCUMENTS",
+          "link": null
+        },
+        {
+          "name": "options",
+          "type": "OPENROUTER_REQUEST_OPTIONS",
           "link": null
         }
       ],
       "outputs": [
         {
-          "name": "prompt",
+          "name": "listing",
           "type": "STRING",
           "links": []
         },
         {
-          "name": "summary",
+          "name": "facts",
           "type": "STRING",
           "links": []
         }
       ],
       "properties": {},
-      "widgets_values": [
-        ""
-      ],
-      "title": "Prompts"
+      "widgets_values": [],
+      "title": "Write"
     }
   ],
   "links": [],
@@ -60,24 +65,24 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "596362ae-4cb6-5076-b4a4-28915aabb123",
+        "id": "03101bf2-751c-5267-9370-229909312915",
         "version": 1,
         "state": {
           "lastGroupId": 0,
-          "lastNodeId": 105,
-          "lastLinkId": 10,
+          "lastNodeId": 103,
+          "lastLinkId": 8,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Prompts",
+        "name": "Write",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            40
+            80
           ]
         },
         "outputNode": {
@@ -91,12 +96,11 @@
         },
         "inputs": [
           {
-            "id": "66f602dd-58ba-54c3-859b-d2019a51d771",
-            "name": "brand",
-            "type": "STRING",
+            "id": "2891d7a1-8faa-5b8d-81b8-1558365a3aa6",
+            "name": "front",
+            "type": "*",
             "linkIds": [
-              6,
-              7
+              2
             ],
             "pos": [
               110,
@@ -104,25 +108,50 @@
             ]
           },
           {
-            "id": "0120c39c-44f7-5fc8-b7c9-0e2fdb1faf18",
-            "name": "questions",
-            "type": "OPENROUTER_DECISION_QUESTIONS",
+            "id": "dd043bfa-d296-557d-b114-3cf88bc65d3a",
+            "name": "detail",
+            "type": "*",
             "linkIds": [
-              8
+              3
             ],
             "pos": [
               110,
               160
             ]
+          },
+          {
+            "id": "46465c68-b0c0-532c-9a1a-dd43b048d13a",
+            "name": "documents",
+            "type": "OPENROUTER_CHAT_DOCUMENTS",
+            "linkIds": [
+              4,
+              5
+            ],
+            "pos": [
+              110,
+              180
+            ]
+          },
+          {
+            "id": "4c9764ae-2260-5263-b1fc-b14ff127b330",
+            "name": "options",
+            "type": "OPENROUTER_REQUEST_OPTIONS",
+            "linkIds": [
+              6
+            ],
+            "pos": [
+              110,
+              200
+            ]
           }
         ],
         "outputs": [
           {
-            "id": "456edca9-91c7-56d9-8334-4a54252ad4fe",
-            "name": "prompt",
+            "id": "553429ba-f462-5d26-b0f4-8e5eb5b2bb1c",
+            "name": "listing",
             "type": "STRING",
             "linkIds": [
-              9
+              7
             ],
             "pos": [
               1390,
@@ -130,11 +159,11 @@
             ]
           },
           {
-            "id": "07373a6f-8606-54d6-b505-179f168c89fb",
-            "name": "summary",
+            "id": "0f8cd424-0690-5c0f-81d1-8c96895416cb",
+            "name": "facts",
             "type": "STRING",
             "linkIds": [
-              10
+              8
             ],
             "pos": [
               1390,
@@ -146,9 +175,61 @@
         "nodes": [
           {
             "id": 101,
-            "type": "OpenRouterChatAsk",
+            "type": "CreateList",
             "pos": [
               200,
+              140
+            ],
+            "size": [
+              340,
+              86
+            ],
+            "flags": {},
+            "order": 100,
+            "mode": 0,
+            "inputs": [
+              {
+                "label": "input0",
+                "name": "inputs.input0",
+                "type": "*",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "label": "input1",
+                "name": "inputs.input1",
+                "type": "*",
+                "link": 3,
+                "shape": 7
+              },
+              {
+                "label": "input2",
+                "name": "inputs.input2",
+                "type": "*",
+                "link": null,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "list",
+                "type": "*",
+                "shape": 6,
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "CreateList"
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 102,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              580,
               140
             ],
             "size": [
@@ -156,7 +237,7 @@
               560
             ],
             "flags": {},
-            "order": 100,
+            "order": 101,
             "mode": 0,
             "inputs": [
               {
@@ -176,7 +257,216 @@
               {
                 "name": "documents",
                 "type": "OPENROUTER_CHAT_DOCUMENTS",
+                "link": 4,
+                "shape": 7
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 1,
+                "shape": 7
+              },
+              {
+                "name": "videos",
+                "type": "VIDEO",
                 "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "reasoning_effort",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "reasoning_effort"
+                }
+              },
+              {
+                "name": "max_tokens",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "max_tokens"
+                }
+              },
+              {
+                "name": "temperature",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "temperature"
+                }
+              },
+              {
+                "name": "outputs",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "outputs"
+                }
+              },
+              {
+                "name": "aspect_ratio",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "aspect_ratio"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "pdf_engine",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "pdf_engine"
+                }
+              },
+              {
+                "name": "seed",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "seed"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": 6,
+                "shape": 7
+              },
+              {
+                "name": "answer_schema",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "answer_schema"
+                }
+              },
+              {
+                "name": "prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "prompt"
+                }
+              },
+              {
+                "name": "system_prompt",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "system_prompt"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  7
+                ]
+              },
+              {
+                "name": "reasoning",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "shape": 6,
+                "links": []
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterChatAsk"
+            },
+            "widgets_values": [
+              "openai/gpt-6-sol",
+              "model default",
+              0,
+              "model default",
+              "text",
+              "model default",
+              "alloy",
+              "model default",
+              42,
+              "fixed",
+              0,
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": {\n      \"type\": \"string\"\n    },\n    \"bullets\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"price\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"title\",\n    \"bullets\",\n    \"price\"\n  ],\n  \"additionalProperties\": false\n}",
+              "Write a marketplace listing for this product from the photos and the spec sheet. Use only facts you can see or read. Keep the title under 80 characters and write five bullet points.",
+              ""
+            ],
+            "title": "Listing",
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterChatAsk",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              560
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "conversation",
+                "type": "OPENROUTER_CHAT_CONVERSATION",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "documents",
+                "type": "OPENROUTER_CHAT_DOCUMENTS",
+                "link": 5,
                 "shape": 7
               },
               {
@@ -286,7 +576,7 @@
               {
                 "name": "prompt",
                 "type": "STRING",
-                "link": 6,
+                "link": null,
                 "widget": {
                   "name": "prompt"
                 }
@@ -305,8 +595,7 @@
                 "name": "text",
                 "type": "STRING",
                 "links": [
-                  1,
-                  4
+                  8
                 ]
               },
               {
@@ -335,7 +624,7 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "openai/gpt-6-sol",
+              "openai/gpt-6-luna",
               "model default",
               0,
               "model default",
@@ -346,279 +635,13 @@
               42,
               "fixed",
               0,
-              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"prompt_1\": {\n      \"type\": \"string\"\n    },\n    \"prompt_2\": {\n      \"type\": \"string\"\n    },\n    \"prompt_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"prompt_1\",\n    \"prompt_2\",\n    \"prompt_3\"\n  ],\n  \"additionalProperties\": false\n}",
               "",
-              "Write three different prompts for a flat, two-colour logo mark for the brand the person describes. Each prompt describes one simple symbol and its colours, with no text in the mark."
-            ],
-            "color": "#432",
-            "bgcolor": "#653"
-          },
-          {
-            "id": 102,
-            "type": "StringFormat",
-            "pos": [
-              580,
-              140
-            ],
-            "size": [
-              340,
-              148
-            ],
-            "flags": {},
-            "order": 101,
-            "mode": 0,
-            "inputs": [
-              {
-                "label": "a",
-                "name": "values.a",
-                "type": "*",
-                "link": 7,
-                "shape": 7
-              },
-              {
-                "label": "b",
-                "name": "values.b",
-                "type": "*",
-                "link": 1,
-                "shape": 7
-              },
-              {
-                "label": "c",
-                "name": "values.c",
-                "type": "*",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "f_string",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "f_string"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "STRING",
-                "type": "STRING",
-                "links": [
-                  2
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "StringFormat"
-            },
-            "widgets_values": [
-              "Brand:\n{a}\n\nPrompts:\n{b}"
-            ]
-          },
-          {
-            "id": 103,
-            "type": "OpenRouterDecisionAsk",
-            "pos": [
-              580,
-              352
-            ],
-            "size": [
-              340,
-              156
-            ],
-            "flags": {},
-            "order": 102,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "questions",
-                "type": "OPENROUTER_DECISION_QUESTIONS",
-                "link": 8
-              },
-              {
-                "name": "model",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "model"
-                }
-              },
-              {
-                "name": "run_number",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "run_number"
-                }
-              },
-              {
-                "name": "options",
-                "type": "OPENROUTER_REQUEST_OPTIONS",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "situation",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "situation"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "answers",
-                "type": "OPENROUTER_DECISION_ANSWERS",
-                "links": [
-                  3
-                ]
-              },
-              {
-                "name": "summary",
-                "type": "STRING",
-                "links": [
-                  10
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "OpenRouterDecisionAsk"
-            },
-            "widgets_values": [
-              "typesafe/jev-1.13",
-              0,
+              "List every fact in this spec sheet, one short line each. Add nothing else.",
               ""
             ],
+            "title": "Facts",
             "color": "#432",
             "bgcolor": "#653"
-          },
-          {
-            "id": 104,
-            "type": "OpenRouterDecisionReadAnswer",
-            "pos": [
-              960,
-              140
-            ],
-            "size": [
-              340,
-              182
-            ],
-            "flags": {},
-            "order": 103,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "answers",
-                "type": "OPENROUTER_DECISION_ANSWERS",
-                "link": 3
-              },
-              {
-                "name": "question",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "question"
-                }
-              },
-              {
-                "name": "threshold",
-                "type": "FLOAT",
-                "link": null,
-                "widget": {
-                  "name": "threshold"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "answer",
-                "type": "STRING",
-                "links": [
-                  5
-                ]
-              },
-              {
-                "name": "is_yes",
-                "type": "BOOLEAN",
-                "links": []
-              },
-              {
-                "name": "probability",
-                "type": "FLOAT",
-                "links": []
-              },
-              {
-                "name": "score",
-                "type": "FLOAT",
-                "links": []
-              },
-              {
-                "name": "level",
-                "type": "INT",
-                "links": []
-              },
-              {
-                "name": "confidence",
-                "type": "FLOAT",
-                "links": []
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "OpenRouterDecisionReadAnswer"
-            },
-            "widgets_values": [
-              "best",
-              0.5
-            ]
-          },
-          {
-            "id": 105,
-            "type": "JsonExtractString",
-            "pos": [
-              960,
-              386
-            ],
-            "size": [
-              340,
-              112
-            ],
-            "flags": {},
-            "order": 104,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "json_string",
-                "type": "STRING",
-                "link": 4,
-                "widget": {
-                  "name": "json_string"
-                }
-              },
-              {
-                "name": "key",
-                "type": "STRING",
-                "link": 5,
-                "widget": {
-                  "name": "key"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "STRING",
-                "type": "STRING",
-                "links": [
-                  9
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "JsonExtractString"
-            },
-            "widgets_values": [
-              "",
-              ""
-            ]
           }
         ],
         "groups": [],
@@ -628,87 +651,71 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 1,
-            "type": "STRING"
+            "target_slot": 3,
+            "type": "*"
           },
           {
             "id": 2,
-            "origin_id": 102,
-            "origin_slot": 0,
-            "target_id": 103,
-            "target_slot": 4,
-            "type": "STRING"
-          },
-          {
-            "id": 3,
-            "origin_id": 103,
-            "origin_slot": 0,
-            "target_id": 104,
-            "target_slot": 0,
-            "type": "OPENROUTER_DECISION_ANSWERS"
-          },
-          {
-            "id": 4,
-            "origin_id": 101,
-            "origin_slot": 0,
-            "target_id": 105,
-            "target_slot": 0,
-            "type": "STRING"
-          },
-          {
-            "id": 5,
-            "origin_id": 104,
-            "origin_slot": 0,
-            "target_id": 105,
-            "target_slot": 1,
-            "type": "STRING"
-          },
-          {
-            "id": 6,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 17,
-            "type": "STRING"
-          },
-          {
-            "id": 7,
-            "origin_id": -10,
-            "origin_slot": 0,
-            "target_id": 102,
             "target_slot": 0,
             "type": "*"
           },
           {
-            "id": 8,
+            "id": 3,
             "origin_id": -10,
             "origin_slot": 1,
-            "target_id": 103,
-            "target_slot": 0,
-            "type": "OPENROUTER_DECISION_QUESTIONS"
+            "target_id": 101,
+            "target_slot": 1,
+            "type": "*"
           },
           {
-            "id": 9,
-            "origin_id": 105,
+            "id": 4,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 102,
+            "target_slot": 2,
+            "type": "OPENROUTER_CHAT_DOCUMENTS"
+          },
+          {
+            "id": 5,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 103,
+            "target_slot": 2,
+            "type": "OPENROUTER_CHAT_DOCUMENTS"
+          },
+          {
+            "id": 6,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 102,
+            "target_slot": 15,
+            "type": "OPENROUTER_REQUEST_OPTIONS"
+          },
+          {
+            "id": 7,
+            "origin_id": 102,
             "origin_slot": 0,
             "target_id": -20,
             "target_slot": 0,
             "type": "STRING"
           },
           {
-            "id": 10,
+            "id": 8,
             "origin_id": 103,
-            "origin_slot": 1,
+            "origin_slot": 0,
             "target_id": -20,
             "target_slot": 1,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Writes three logo prompts and asks Jev for the best one."
+          "description": "Writes the listing from the photos and the spec sheet, and lists the spec's facts."
         },
-        "category": "OpenRouter/Image",
-        "description": "Writes three logo prompts and asks Jev for the best one."
+        "category": "OpenRouter/Chat",
+        "description": "Writes the listing from the photos and the spec sheet, and lists the spec's facts."
       }
     ]
   }

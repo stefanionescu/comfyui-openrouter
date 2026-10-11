@@ -1,19 +1,19 @@
 {
-  "id": "d65fb0a4-88a3-50f1-b316-327a2c2ac922",
+  "id": "fd67920e-3c40-5326-a651-14d5a3c00d7e",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "be60d90c-9e59-594e-b529-6a989c2e0943",
+      "type": "7a1efdce-4ade-5de3-bb8d-f47a701de1da",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        66
+        142
       ],
       "flags": {},
       "order": 0,
@@ -30,26 +30,53 @@
           "link": null
         },
         {
+          "name": "scores",
+          "type": "*",
+          "link": null
+        },
+        {
           "name": "questions",
           "type": "OPENROUTER_DECISION_QUESTIONS",
           "link": null
+        },
+        {
+          "name": "approved",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "approved"
+          }
+        },
+        {
+          "name": "review",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "review"
+          }
         }
       ],
       "outputs": [
-        {
-          "name": "move",
-          "type": "STRING",
-          "links": []
-        },
         {
           "name": "summary",
           "type": "STRING",
           "links": []
         }
       ],
-      "properties": {},
-      "widgets_values": [],
-      "title": "Move"
+      "properties": {
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "108",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
+      },
+      "widgets_values": [
+        "hero/approved",
+        "hero/review"
+      ],
+      "title": "Approve"
     }
   ],
   "links": [],
@@ -60,96 +87,121 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "be60d90c-9e59-594e-b529-6a989c2e0943",
+        "id": "7a1efdce-4ade-5de3-bb8d-f47a701de1da",
         "version": 1,
         "state": {
           "lastGroupId": 0,
-          "lastNodeId": 105,
-          "lastLinkId": 10,
+          "lastNodeId": 108,
+          "lastLinkId": 15,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Move",
+        "name": "Approve",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            60
+            120
           ]
         },
         "outputNode": {
           "id": -20,
           "bounding": [
-            1390,
+            1770,
             140,
             120,
-            40
+            20
           ]
         },
         "inputs": [
           {
-            "id": "77504211-a984-578b-835d-6c61b2bfcdb6",
+            "id": "138fd140-b142-5f0f-9d4a-3f8c31ea2189",
             "name": "brief",
             "type": "*",
-            "linkIds": [
-              6
-            ],
-            "pos": [
-              110,
-              140
-            ]
-          },
-          {
-            "id": "1a6a93ef-7aa6-5dc4-81cb-32ee03c22fe4",
-            "name": "image",
-            "type": "IMAGE",
-            "linkIds": [
-              7
-            ],
-            "pos": [
-              110,
-              160
-            ]
-          },
-          {
-            "id": "8e0a18a8-3c8b-55eb-9c66-57e726e4c166",
-            "name": "questions",
-            "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
               8
             ],
             "pos": [
               110,
+              140
+            ]
+          },
+          {
+            "id": "99edfc2c-b7d2-5324-8c0d-6c3952bff1aa",
+            "name": "image",
+            "type": "IMAGE",
+            "linkIds": [
+              9,
+              10
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "66c5e8ee-9e77-56bd-9174-691a41cd4692",
+            "name": "scores",
+            "type": "*",
+            "linkIds": [
+              11
+            ],
+            "pos": [
+              110,
               180
+            ]
+          },
+          {
+            "id": "4390b4c9-a3aa-5bf3-9073-273ca791b1fc",
+            "name": "questions",
+            "type": "OPENROUTER_DECISION_QUESTIONS",
+            "linkIds": [
+              12
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          },
+          {
+            "id": "8715d3e3-e0f6-5075-ae8a-1c57cbb9bcd4",
+            "name": "approved",
+            "type": "STRING",
+            "linkIds": [
+              13
+            ],
+            "pos": [
+              110,
+              220
+            ]
+          },
+          {
+            "id": "8a7f3442-cda4-5d04-81e2-5fa4cdd845a6",
+            "name": "review",
+            "type": "STRING",
+            "linkIds": [
+              14
+            ],
+            "pos": [
+              110,
+              240
             ]
           }
         ],
         "outputs": [
           {
-            "id": "df47e013-08f5-5601-a17b-354b55eaff1b",
-            "name": "move",
-            "type": "STRING",
-            "linkIds": [
-              9
-            ],
-            "pos": [
-              1390,
-              140
-            ]
-          },
-          {
-            "id": "c064f01c-31d4-51d1-9b6f-9249c531fb44",
+            "id": "1ecddddb-3f28-5469-85c4-d492db21278f",
             "name": "summary",
             "type": "STRING",
             "linkIds": [
-              10
+              15
             ],
             "pos": [
-              1390,
-              160
+              1770,
+              140
             ]
           }
         ],
@@ -193,7 +245,7 @@
               {
                 "name": "images",
                 "type": "IMAGE",
-                "link": 7,
+                "link": 9,
                 "shape": 7
               },
               {
@@ -316,8 +368,7 @@
                 "name": "text",
                 "type": "STRING",
                 "links": [
-                  1,
-                  4
+                  1
                 ]
               },
               {
@@ -346,7 +397,7 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "openai/gpt-6-sol",
+              "openai/gpt-6-luna",
               "model default",
               0,
               "model default",
@@ -357,8 +408,8 @@
               42,
               "fixed",
               0,
-              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"move_1\": {\n      \"type\": \"string\"\n    },\n    \"move_2\": {\n      \"type\": \"string\"\n    },\n    \"move_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"move_1\",\n    \"move_2\",\n    \"move_3\"\n  ],\n  \"additionalProperties\": false\n}",
-              "This still is the first frame of a six-second product teaser. Write three different camera moves for it. Each is one sentence a video model can follow, such as a slow push-in.",
+              "",
+              "Describe this image in three sentences: the subject, where the empty space is, and any visible defect.",
               ""
             ],
             "color": "#432",
@@ -373,7 +424,7 @@
             ],
             "size": [
               340,
-              148
+              168
             ],
             "flags": {},
             "order": 101,
@@ -383,7 +434,7 @@
                 "label": "a",
                 "name": "values.a",
                 "type": "*",
-                "link": 6,
+                "link": 8,
                 "shape": 7
               },
               {
@@ -396,6 +447,13 @@
               {
                 "label": "c",
                 "name": "values.c",
+                "type": "*",
+                "link": 11,
+                "shape": 7
+              },
+              {
+                "label": "d",
+                "name": "values.d",
                 "type": "*",
                 "link": null,
                 "shape": 7
@@ -422,7 +480,7 @@
               "Node name for S&R": "StringFormat"
             },
             "widgets_values": [
-              "Product shot:\n{a}\n\nCamera moves:\n{b}"
+              "Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}"
             ]
           },
           {
@@ -430,7 +488,7 @@
             "type": "OpenRouterDecisionAsk",
             "pos": [
               580,
-              352
+              372
             ],
             "size": [
               340,
@@ -443,7 +501,7 @@
               {
                 "name": "questions",
                 "type": "OPENROUTER_DECISION_QUESTIONS",
-                "link": 8
+                "link": 12
               },
               {
                 "name": "model",
@@ -488,7 +546,7 @@
                 "name": "summary",
                 "type": "STRING",
                 "links": [
-                  10
+                  15
                 ]
               }
             ],
@@ -507,8 +565,8 @@
             "id": 104,
             "type": "OpenRouterDecisionReadAnswer",
             "pos": [
-              960,
-              140
+              580,
+              592
             ],
             "size": [
               340,
@@ -544,14 +602,14 @@
               {
                 "name": "answer",
                 "type": "STRING",
-                "links": [
-                  5
-                ]
+                "links": []
               },
               {
                 "name": "is_yes",
                 "type": "BOOLEAN",
-                "links": []
+                "links": [
+                  4
+                ]
               },
               {
                 "name": "probability",
@@ -578,39 +636,31 @@
               "Node name for S&R": "OpenRouterDecisionReadAnswer"
             },
             "widgets_values": [
-              "best",
+              "ready",
               0.5
             ]
           },
           {
             "id": 105,
-            "type": "JsonExtractString",
+            "type": "PrimitiveString",
             "pos": [
               960,
-              386
+              140
             ],
             "size": [
               340,
-              112
+              58
             ],
             "flags": {},
             "order": 104,
             "mode": 0,
             "inputs": [
               {
-                "name": "json_string",
+                "name": "value",
                 "type": "STRING",
-                "link": 4,
+                "link": 13,
                 "widget": {
-                  "name": "json_string"
-                }
-              },
-              {
-                "name": "key",
-                "type": "STRING",
-                "link": 5,
-                "widget": {
-                  "name": "key"
+                  "name": "value"
                 }
               }
             ],
@@ -619,16 +669,152 @@
                 "name": "STRING",
                 "type": "STRING",
                 "links": [
-                  9
+                  5
                 ]
               }
             ],
             "properties": {
-              "Node name for S&R": "JsonExtractString"
+              "Node name for S&R": "PrimitiveString"
             },
             "widgets_values": [
-              "",
-              ""
+              "hero/approved"
+            ],
+            "title": "Approved"
+          },
+          {
+            "id": 106,
+            "type": "PrimitiveString",
+            "pos": [
+              960,
+              262
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 105,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 14,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  6
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "hero/review"
+            ],
+            "title": "Review"
+          },
+          {
+            "id": 107,
+            "type": "ComfySwitchNode",
+            "pos": [
+              960,
+              384
+            ],
+            "size": [
+              340,
+              78
+            ],
+            "flags": {},
+            "order": 106,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "switch",
+                "type": "BOOLEAN",
+                "link": 4,
+                "widget": {
+                  "name": "switch"
+                }
+              },
+              {
+                "name": "on_false",
+                "type": "STRING",
+                "link": 6,
+                "shape": 7
+              },
+              {
+                "name": "on_true",
+                "type": "STRING",
+                "link": 5,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "STRING",
+                "links": [
+                  7
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 108,
+            "type": "SaveImage",
+            "pos": [
+              1340,
+              140
+            ],
+            "size": [
+              340,
+              290
+            ],
+            "flags": {},
+            "order": 107,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "link": 10
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": 7,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "images",
+                "type": "IMAGE",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveImage"
+            },
+            "widgets_values": [
+              "ComfyUI"
             ]
           }
         ],
@@ -660,22 +846,38 @@
           },
           {
             "id": 4,
-            "origin_id": 101,
-            "origin_slot": 0,
-            "target_id": 105,
+            "origin_id": 104,
+            "origin_slot": 1,
+            "target_id": 107,
             "target_slot": 0,
-            "type": "STRING"
+            "type": "BOOLEAN"
           },
           {
             "id": 5,
-            "origin_id": 104,
+            "origin_id": 105,
             "origin_slot": 0,
-            "target_id": 105,
-            "target_slot": 1,
+            "target_id": 107,
+            "target_slot": 2,
             "type": "STRING"
           },
           {
             "id": 6,
+            "origin_id": 106,
+            "origin_slot": 0,
+            "target_id": 107,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 7,
+            "origin_id": 107,
+            "origin_slot": 0,
+            "target_id": 108,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 8,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 102,
@@ -683,7 +885,7 @@
             "type": "*"
           },
           {
-            "id": 7,
+            "id": 9,
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 101,
@@ -691,35 +893,59 @@
             "type": "IMAGE"
           },
           {
-            "id": 8,
+            "id": 10,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 108,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 11,
             "origin_id": -10,
             "origin_slot": 2,
+            "target_id": 102,
+            "target_slot": 2,
+            "type": "*"
+          },
+          {
+            "id": 12,
+            "origin_id": -10,
+            "origin_slot": 3,
             "target_id": 103,
             "target_slot": 0,
             "type": "OPENROUTER_DECISION_QUESTIONS"
           },
           {
-            "id": 9,
-            "origin_id": 105,
-            "origin_slot": 0,
-            "target_id": -20,
+            "id": 13,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 105,
             "target_slot": 0,
             "type": "STRING"
           },
           {
-            "id": 10,
+            "id": 14,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 106,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 15,
             "origin_id": 103,
             "origin_slot": 1,
             "target_id": -20,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Writes three camera moves for the frame and asks Jev for the best one."
+          "description": "Asks Jev whether the winner works as a hero and saves it by the verdict."
         },
-        "category": "OpenRouter/Video",
-        "description": "Writes three camera moves for the frame and asks Jev for the best one."
+        "category": "OpenRouter/Search",
+        "description": "Asks Jev whether the winner works as a hero and saves it by the verdict."
       }
     ]
   }

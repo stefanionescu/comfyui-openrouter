@@ -1,39 +1,40 @@
 {
-  "id": "f38d40ab-fd0a-5e77-b5b9-3f9e974b3eee",
+  "id": "ee8eaebf-3cc8-53fc-9485-7e911f05a748",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "ca663bab-d49e-52c2-9391-aa73e87f5d0d",
+      "type": "ad77be2a-3724-5979-a453-2b7aa970ec39",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        88
+        26
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "prompt",
-          "type": "STRING",
-          "link": null,
-          "widget": {
-            "name": "prompt"
-          }
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null
         }
       ],
-      "outputs": [],
-      "properties": {},
-      "widgets_values": [
-        ""
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": []
+        }
       ],
-      "title": "SVG"
+      "properties": {},
+      "widgets_values": [],
+      "title": "Subtitle"
     }
   ],
   "links": [],
@@ -44,17 +45,17 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "ca663bab-d49e-52c2-9391-aa73e87f5d0d",
+        "id": "ad77be2a-3724-5979-a453-2b7aa970ec39",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 2,
+          "lastLinkId": 3,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "SVG",
+        "name": "Subtitle",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -75,9 +76,9 @@
         },
         "inputs": [
           {
-            "id": "eba28a01-0c25-58d5-818d-5f857b4b5afb",
-            "name": "prompt",
-            "type": "STRING",
+            "id": "edff8d03-1852-54d5-88c8-537155ea2b30",
+            "name": "audio",
+            "type": "AUDIO",
             "linkIds": [
               2
             ],
@@ -87,24 +88,42 @@
             ]
           }
         ],
-        "outputs": [],
+        "outputs": [
+          {
+            "id": "261a10ca-0b4a-5ab5-a154-0ebfb99bf1af",
+            "name": "text",
+            "type": "STRING",
+            "linkIds": [
+              3
+            ],
+            "pos": [
+              1010,
+              140
+            ]
+          }
+        ],
         "widgets": [],
         "nodes": [
           {
             "id": 101,
-            "type": "OpenRouterImageGenerate",
+            "type": "OpenRouterAudioTranscribe",
             "pos": [
               200,
               140
             ],
             "size": [
               340,
-              392
+              214
             ],
             "flags": {},
             "order": 100,
             "mode": 0,
             "inputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 2
+              },
               {
                 "name": "model",
                 "type": "STRING",
@@ -114,73 +133,27 @@
                 }
               },
               {
-                "name": "resolution",
+                "name": "language",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "language"
+                }
+              },
+              {
+                "name": "timestamps",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "resolution"
+                  "name": "timestamps"
                 }
               },
               {
-                "name": "aspect_ratio",
-                "type": "COMBO",
+                "name": "temperature",
+                "type": "FLOAT",
                 "link": null,
                 "widget": {
-                  "name": "aspect_ratio"
-                }
-              },
-              {
-                "name": "quality",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "quality"
-                }
-              },
-              {
-                "name": "background",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "background"
-                }
-              },
-              {
-                "name": "output_format",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "output_format"
-                }
-              },
-              {
-                "name": "output_compression",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "output_compression"
-                }
-              },
-              {
-                "name": "count",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "count"
-                }
-              },
-              {
-                "name": "references",
-                "type": "IMAGE",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "seed",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "seed"
+                  "name": "temperature"
                 }
               },
               {
@@ -196,75 +169,65 @@
                 "type": "OPENROUTER_REQUEST_OPTIONS",
                 "link": null,
                 "shape": 7
-              },
-              {
-                "name": "prompt",
-                "type": "STRING",
-                "link": 2,
-                "widget": {
-                  "name": "prompt"
-                }
               }
             ],
             "outputs": [
               {
-                "name": "images",
-                "type": "IMAGE",
-                "shape": 6,
+                "name": "text",
+                "type": "STRING",
+                "links": [
+                  3
+                ]
+              },
+              {
+                "name": "segments",
+                "type": "STRING",
                 "links": []
               },
               {
-                "name": "masks",
-                "type": "MASK",
-                "shape": 6,
-                "links": []
-              },
-              {
-                "name": "svg",
-                "type": "SVG",
+                "name": "subtitles",
+                "type": "STRING",
                 "links": [
                   1
                 ]
+              },
+              {
+                "name": "words",
+                "type": "STRING",
+                "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "OpenRouterImageGenerate"
+              "Node name for S&R": "OpenRouterAudioTranscribe"
             },
             "widgets_values": [
-              "recraft/recraft-v4.1-vector",
-              "model default",
-              "1:1",
-              "model default",
-              "model default",
-              "model default",
-              90,
-              1,
-              42,
-              "fixed",
-              0,
-              ""
+              "assemblyai/universal-3-5-pro",
+              "",
+              "segments",
+              0.0,
+              0
             ],
             "color": "#432",
             "bgcolor": "#653"
           },
           {
             "id": 102,
-            "type": "SaveSVGNode",
+            "type": "SaveText",
             "pos": [
               580,
               140
             ],
             "size": [
               340,
-              58
+              170
             ],
             "flags": {},
             "order": 101,
             "mode": 0,
             "inputs": [
               {
-                "name": "svg",
-                "type": "SVG",
+                "name": "text",
+                "type": "STRING",
                 "link": 1
               },
               {
@@ -274,20 +237,29 @@
                 "widget": {
                   "name": "filename_prefix"
                 }
+              },
+              {
+                "name": "format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
               }
             ],
             "outputs": [
               {
-                "name": "svg",
-                "type": "SVG",
+                "name": "text",
+                "type": "STRING",
                 "links": []
               }
             ],
             "properties": {
-              "Node name for S&R": "SaveSVGNode"
+              "Node name for S&R": "SaveText"
             },
             "widgets_values": [
-              "logo/fernwood"
+              "dub/subtitles",
+              "txt"
             ]
           }
         ],
@@ -299,22 +271,30 @@
             "origin_slot": 2,
             "target_id": 102,
             "target_slot": 0,
-            "type": "SVG"
+            "type": "STRING"
           },
           {
             "id": 2,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 12,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 3,
+            "origin_id": 101,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Draws the logo as SVG and saves it."
+          "description": "Transcribes the clip and saves its subtitles."
         },
-        "category": "OpenRouter/Image",
-        "description": "Draws the logo as SVG and saves it."
+        "category": "OpenRouter/Audio",
+        "description": "Transcribes the clip and saves its subtitles."
       }
     ]
   }

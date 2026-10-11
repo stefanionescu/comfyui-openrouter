@@ -35,7 +35,7 @@ ANSWER = Subgraph(
 )
 
 CHECK = Subgraph(
-    name=SHARED_TEXTS["check"],
+    name=SHARED_TEXTS["verify"],
     nodes=(
         Node("situation", HostNode.FORMAT, {"f_string": "Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}"}),
         Node("decide", f"{NODE_PREFIX}DecisionAsk", is_paid=True),
@@ -111,7 +111,7 @@ VERIFY_ESCALATE = Workflow(
     stacks=(
         (Group(SHARED_TEXTS["input"], (("notes", "question"),), note=TEXTS["input"]),),
         (Group(SHARED_TEXTS["answer"], (("answer",),), STAGE_COLOUR, TEXTS["answer"]),),
-        (Group(SHARED_TEXTS["check"], (("supported",), ("check", "summary")), STAGE_COLOUR, TEXTS["check"]),),
+        (Group(SHARED_TEXTS["verify"], (("supported",), ("check", "summary")), STAGE_COLOUR, TEXTS["check"]),),
         (Group(SHARED_TEXTS["escalate"], (("escalate",), ("result",)), STAGE_COLOUR, TEXTS["escalate"]),),
     ),
     subgraphs=(ANSWER, CHECK, ESCALATE),

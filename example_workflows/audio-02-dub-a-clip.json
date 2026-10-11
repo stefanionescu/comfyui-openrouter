@@ -179,7 +179,7 @@
     },
     {
       "id": 6,
-      "type": "43368639-46a6-549f-882b-b08e16775ed5",
+      "type": "ad77be2a-3724-5979-a453-2b7aa970ec39",
       "pos": [
         460,
         310
@@ -210,7 +210,7 @@
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Transcribe"
+      "title": "Subtitle"
     },
     {
       "id": 7,
@@ -538,7 +538,7 @@
     },
     {
       "id": 2,
-      "title": "Transcribe",
+      "title": "Subtitle",
       "bounding": [
         430,
         200,
@@ -590,7 +590,7 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "43368639-46a6-549f-882b-b08e16775ed5",
+        "id": "ad77be2a-3724-5979-a453-2b7aa970ec39",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -600,7 +600,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Transcribe",
+        "name": "Subtitle",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -621,7 +621,7 @@
         },
         "inputs": [
           {
-            "id": "3c945932-7a92-5f2e-b0d6-6839316076f8",
+            "id": "edff8d03-1852-54d5-88c8-537155ea2b30",
             "name": "audio",
             "type": "AUDIO",
             "linkIds": [
@@ -635,7 +635,7 @@
         ],
         "outputs": [
           {
-            "id": "0e95f68e-a1e5-55cd-b512-4b044b5f1ce3",
+            "id": "261a10ca-0b4a-5ab5-a154-0ebfb99bf1af",
             "name": "text",
             "type": "STRING",
             "linkIds": [

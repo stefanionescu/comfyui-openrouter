@@ -1,55 +1,45 @@
 {
-  "id": "c6d7f6e2-e874-5e43-b6c7-aca6ec88b43d",
+  "id": "5908d0eb-ac54-53ad-8127-67f4a7957f30",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "7b1d2c38-15b0-54f9-8f8a-66ba6d4aa668",
+      "type": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        66
+        46
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "subject",
-          "type": "*",
+          "name": "image",
+          "type": "IMAGE",
           "link": null
         },
         {
-          "name": "image",
-          "type": "IMAGE",
+          "name": "campaign",
+          "type": "*",
           "link": null
         }
       ],
       "outputs": [
         {
-          "name": "clean",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "distorted",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "defects",
+          "name": "ideas",
           "type": "STRING",
           "links": []
         }
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Inspect"
+      "title": "Ideas"
     }
   ],
   "links": [],
@@ -60,17 +50,17 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "7b1d2c38-15b0-54f9-8f8a-66ba6d4aa668",
+        "id": "2bfdaaad-93d0-5267-a0d6-c2459932381d",
         "version": 1,
         "state": {
           "lastGroupId": 0,
-          "lastNodeId": 104,
-          "lastLinkId": 8,
+          "lastNodeId": 102,
+          "lastLinkId": 4,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Inspect",
+        "name": "Ideas",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -83,17 +73,17 @@
         "outputNode": {
           "id": -20,
           "bounding": [
-            1390,
+            1010,
             140,
             120,
-            60
+            20
           ]
         },
         "inputs": [
           {
-            "id": "288db2d1-ee68-5d21-8eb6-7121dec5d1cc",
-            "name": "subject",
-            "type": "*",
+            "id": "46444815-b388-513d-ae54-a6815b5ce1aa",
+            "name": "image",
+            "type": "IMAGE",
             "linkIds": [
               2
             ],
@@ -103,13 +93,11 @@
             ]
           },
           {
-            "id": "fdb9ff49-2688-5d4b-b8ac-e91c65142e1e",
-            "name": "image",
-            "type": "IMAGE",
+            "id": "5eb1dc6e-b1e0-5c78-a8ca-84ff1a9d7263",
+            "name": "campaign",
+            "type": "*",
             "linkIds": [
-              3,
-              4,
-              5
+              3
             ],
             "pos": [
               110,
@@ -119,39 +107,15 @@
         ],
         "outputs": [
           {
-            "id": "13e76b2f-db03-5b5a-99b5-98b674b76f5c",
-            "name": "clean",
+            "id": "def32d58-99aa-5d45-8f74-583c6152316e",
+            "name": "ideas",
             "type": "STRING",
             "linkIds": [
-              6
+              4
             ],
             "pos": [
-              1390,
+              1010,
               140
-            ]
-          },
-          {
-            "id": "3c6c9cd1-4c39-5732-9fc9-c421e56eb719",
-            "name": "distorted",
-            "type": "STRING",
-            "linkIds": [
-              7
-            ],
-            "pos": [
-              1390,
-              160
-            ]
-          },
-          {
-            "id": "f1620c84-0767-5ceb-b20c-4db5385ef9fd",
-            "name": "defects",
-            "type": "STRING",
-            "linkIds": [
-              8
-            ],
-            "pos": [
-              1390,
-              180
             ]
           }
         ],
@@ -176,7 +140,7 @@
                 "label": "a",
                 "name": "values.a",
                 "type": "*",
-                "link": 2,
+                "link": 3,
                 "shape": 7
               },
               {
@@ -208,206 +172,14 @@
               "Node name for S&R": "StringFormat"
             },
             "widgets_values": [
-              "A clean, sharp, undistorted photo of {a}, with natural hands, faces, and objects"
+              "Campaign: {a}\n\nWrite three different ideas for editing this product photo into a campaign image. Each idea is one detailed editing instruction that keeps the product exactly as it is."
             ]
           },
           {
             "id": 102,
-            "type": "OpenRouterSearchEmbed",
-            "pos": [
-              200,
-              332
-            ],
-            "size": [
-              340,
-              204
-            ],
-            "flags": {},
-            "order": 101,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "model",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "model"
-                }
-              },
-              {
-                "name": "images",
-                "type": "IMAGE",
-                "link": 3,
-                "shape": 7
-              },
-              {
-                "name": "dimensions",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "dimensions"
-                }
-              },
-              {
-                "name": "input_type",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "input_type"
-                }
-              },
-              {
-                "name": "run_number",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "run_number"
-                }
-              },
-              {
-                "name": "options",
-                "type": "OPENROUTER_REQUEST_OPTIONS",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "texts",
-                "type": "STRING",
-                "link": 1,
-                "widget": {
-                  "name": "texts"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "vectors",
-                "type": "STRING",
-                "links": []
-              },
-              {
-                "name": "similarities",
-                "type": "STRING",
-                "links": [
-                  6
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "OpenRouterSearchEmbed"
-            },
-            "widgets_values": [
-              "google/gemini-embedding-2",
-              0,
-              "model default",
-              0,
-              ""
-            ],
-            "title": "Clean",
-            "color": "#432",
-            "bgcolor": "#653"
-          },
-          {
-            "id": 103,
-            "type": "OpenRouterSearchEmbed",
-            "pos": [
-              580,
-              140
-            ],
-            "size": [
-              340,
-              204
-            ],
-            "flags": {},
-            "order": 102,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "model",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "model"
-                }
-              },
-              {
-                "name": "images",
-                "type": "IMAGE",
-                "link": 4,
-                "shape": 7
-              },
-              {
-                "name": "dimensions",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "dimensions"
-                }
-              },
-              {
-                "name": "input_type",
-                "type": "COMBO",
-                "link": null,
-                "widget": {
-                  "name": "input_type"
-                }
-              },
-              {
-                "name": "run_number",
-                "type": "INT",
-                "link": null,
-                "widget": {
-                  "name": "run_number"
-                }
-              },
-              {
-                "name": "options",
-                "type": "OPENROUTER_REQUEST_OPTIONS",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "texts",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "texts"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "vectors",
-                "type": "STRING",
-                "links": []
-              },
-              {
-                "name": "similarities",
-                "type": "STRING",
-                "links": [
-                  7
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "OpenRouterSearchEmbed"
-            },
-            "widgets_values": [
-              "google/gemini-embedding-2",
-              0,
-              "model default",
-              0,
-              "A distorted AI image with warped hands, extra fingers, melted faces, broken objects, and garbled text"
-            ],
-            "title": "Distorted",
-            "color": "#432",
-            "bgcolor": "#653"
-          },
-          {
-            "id": 104,
             "type": "OpenRouterChatAsk",
             "pos": [
-              960,
+              580,
               140
             ],
             "size": [
@@ -415,7 +187,7 @@
               560
             ],
             "flags": {},
-            "order": 103,
+            "order": 101,
             "mode": 0,
             "inputs": [
               {
@@ -441,7 +213,7 @@
               {
                 "name": "images",
                 "type": "IMAGE",
-                "link": 5,
+                "link": 2,
                 "shape": 7
               },
               {
@@ -545,7 +317,7 @@
               {
                 "name": "prompt",
                 "type": "STRING",
-                "link": null,
+                "link": 1,
                 "widget": {
                   "name": "prompt"
                 }
@@ -564,7 +336,7 @@
                 "name": "text",
                 "type": "STRING",
                 "links": [
-                  8
+                  4
                 ]
               },
               {
@@ -593,7 +365,7 @@
               "Node name for S&R": "OpenRouterChatAsk"
             },
             "widgets_values": [
-              "openai/gpt-6-luna",
+              "openai/gpt-6-sol",
               "model default",
               0,
               "model default",
@@ -604,8 +376,8 @@
               42,
               "fixed",
               0,
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"idea_1\": {\n      \"type\": \"string\"\n    },\n    \"idea_2\": {\n      \"type\": \"string\"\n    },\n    \"idea_3\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"idea_1\",\n    \"idea_2\",\n    \"idea_3\"\n  ],\n  \"additionalProperties\": false\n}",
               "",
-              "List every visible defect in this image: extra or missing fingers, warped faces or limbs, broken objects, impossible geometry, or garbled text. Answer none if there are none.",
               ""
             ],
             "color": "#432",
@@ -619,71 +391,39 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 6,
+            "target_slot": 17,
             "type": "STRING"
           },
           {
             "id": 2,
             "origin_id": -10,
             "origin_slot": 0,
-            "target_id": 101,
-            "target_slot": 0,
-            "type": "*"
+            "target_id": 102,
+            "target_slot": 3,
+            "type": "IMAGE"
           },
           {
             "id": 3,
             "origin_id": -10,
             "origin_slot": 1,
-            "target_id": 102,
-            "target_slot": 1,
-            "type": "IMAGE"
+            "target_id": 101,
+            "target_slot": 0,
+            "type": "*"
           },
           {
             "id": 4,
-            "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 103,
-            "target_slot": 1,
-            "type": "IMAGE"
-          },
-          {
-            "id": 5,
-            "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 104,
-            "target_slot": 3,
-            "type": "IMAGE"
-          },
-          {
-            "id": 6,
             "origin_id": 102,
-            "origin_slot": 1,
-            "target_id": -20,
-            "target_slot": 0,
-            "type": "STRING"
-          },
-          {
-            "id": 7,
-            "origin_id": 103,
-            "origin_slot": 1,
-            "target_id": -20,
-            "target_slot": 1,
-            "type": "STRING"
-          },
-          {
-            "id": 8,
-            "origin_id": 104,
             "origin_slot": 0,
             "target_id": -20,
-            "target_slot": 2,
+            "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Scores the draft against a clean and a distorted description, and lists defects."
+          "description": "Writes three editing ideas for the photo."
         },
         "category": "OpenRouter/Image",
-        "description": "Scores the draft against a clean and a distorted description, and lists defects."
+        "description": "Writes three editing ideas for the photo."
       }
     ]
   }

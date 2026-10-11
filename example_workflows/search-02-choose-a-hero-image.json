@@ -260,7 +260,7 @@
     },
     {
       "id": 7,
-      "type": "9dadd14e-c511-5712-8dce-3d3792969ad8",
+      "type": "7a1efdce-4ade-5de3-bb8d-f47a701de1da",
       "pos": [
         1270,
         288
@@ -332,7 +332,7 @@
         "hero/approved",
         "hero/review"
       ],
-      "title": "Check"
+      "title": "Approve"
     },
     {
       "id": 8,
@@ -448,7 +448,7 @@
     },
     {
       "id": 3,
-      "title": "Check",
+      "title": "Approve",
       "bounding": [
         860,
         178,
@@ -855,7 +855,7 @@
         }
       },
       {
-        "id": "9dadd14e-c511-5712-8dce-3d3792969ad8",
+        "id": "7a1efdce-4ade-5de3-bb8d-f47a701de1da",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -865,7 +865,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Check",
+        "name": "Approve",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -886,7 +886,7 @@
         },
         "inputs": [
           {
-            "id": "e0942f3d-c9e2-5c4b-9b69-8dcda08fd876",
+            "id": "138fd140-b142-5f0f-9d4a-3f8c31ea2189",
             "name": "brief",
             "type": "*",
             "linkIds": [
@@ -898,7 +898,7 @@
             ]
           },
           {
-            "id": "7ca9e255-adc3-5951-9016-80a308c216dd",
+            "id": "99edfc2c-b7d2-5324-8c0d-6c3952bff1aa",
             "name": "image",
             "type": "IMAGE",
             "linkIds": [
@@ -911,7 +911,7 @@
             ]
           },
           {
-            "id": "64fef493-75da-5ab0-a6f4-6d66e09d2121",
+            "id": "66c5e8ee-9e77-56bd-9174-691a41cd4692",
             "name": "scores",
             "type": "*",
             "linkIds": [
@@ -923,7 +923,7 @@
             ]
           },
           {
-            "id": "7da0be60-bbf0-528d-b7d8-fcac19bee212",
+            "id": "4390b4c9-a3aa-5bf3-9073-273ca791b1fc",
             "name": "questions",
             "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
@@ -935,7 +935,7 @@
             ]
           },
           {
-            "id": "007b00ee-e7ab-503f-8c9d-9711f6d51d1f",
+            "id": "8715d3e3-e0f6-5075-ae8a-1c57cbb9bcd4",
             "name": "approved",
             "type": "STRING",
             "linkIds": [
@@ -947,7 +947,7 @@
             ]
           },
           {
-            "id": "6b6699d2-ba85-5afc-9833-7dd5a83456ec",
+            "id": "8a7f3442-cda4-5d04-81e2-5fa4cdd845a6",
             "name": "review",
             "type": "STRING",
             "linkIds": [
@@ -961,7 +961,7 @@
         ],
         "outputs": [
           {
-            "id": "a6fb35a0-5cad-5868-a4d9-d18d00d6237c",
+            "id": "1ecddddb-3f28-5469-85c4-d492db21278f",
             "name": "summary",
             "type": "STRING",
             "linkIds": [

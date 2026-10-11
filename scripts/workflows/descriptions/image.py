@@ -206,7 +206,7 @@ INSPECT = Subgraph(
 )
 
 CHECK_DRAFT = Subgraph(
-    name=SHARED_TEXTS["check"],
+    name=SHARED_TEXTS["sort"],
     nodes=(
         Node(
             "situation",
@@ -294,7 +294,7 @@ REJECT_DISTORTED = Workflow(
         (Group(SHARED_TEXTS["input"], (("subject",),), note=DRAFT_TEXTS["input"]),),
         (Group(SHARED_TEXTS["draw"], (("draft",),), STAGE_COLOUR, DRAFT_TEXTS["draw"]),),
         (Group(SHARED_TEXTS["inspect"], (("inspect",),), STAGE_COLOUR, DRAFT_TEXTS["inspect"]),),
-        (Group(SHARED_TEXTS["check"], (("distorted",), ("check", "summary")), STAGE_COLOUR, DRAFT_TEXTS["check"]),),
+        (Group(SHARED_TEXTS["sort"], (("distorted",), ("check", "summary")), STAGE_COLOUR, DRAFT_TEXTS["check"]),),
     ),
     subgraphs=(INSPECT, CHECK_DRAFT),
 )

@@ -458,7 +458,7 @@
     },
     {
       "id": 9,
-      "type": "79a3c19e-f750-5769-8b9c-c3b163c6fc76",
+      "type": "d22901cc-7d67-58ca-808d-0246ef178603",
       "pos": [
         1700,
         288
@@ -540,7 +540,7 @@
         "drafts/approved",
         "drafts/rejected"
       ],
-      "title": "Check"
+      "title": "Sort"
     },
     {
       "id": 10,
@@ -701,7 +701,7 @@
     },
     {
       "id": 4,
-      "title": "Check",
+      "title": "Sort",
       "bounding": [
         1290,
         178,
@@ -1351,7 +1351,7 @@
         }
       },
       {
-        "id": "79a3c19e-f750-5769-8b9c-c3b163c6fc76",
+        "id": "d22901cc-7d67-58ca-808d-0246ef178603",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -1361,7 +1361,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Check",
+        "name": "Sort",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -1382,7 +1382,7 @@
         },
         "inputs": [
           {
-            "id": "0a379079-e5d8-5d1a-bd79-d3f3e15cdeba",
+            "id": "616fdff7-f664-5656-8ae2-876c7500a650",
             "name": "subject",
             "type": "*",
             "linkIds": [
@@ -1394,7 +1394,7 @@
             ]
           },
           {
-            "id": "4a29ab1a-aa10-59bd-9eb8-9e6eb9a6415e",
+            "id": "ebb95a62-6a28-5955-8910-86bf6f86ea0a",
             "name": "clean",
             "type": "*",
             "linkIds": [
@@ -1406,7 +1406,7 @@
             ]
           },
           {
-            "id": "d44b2c9e-c017-591c-bbe2-e98b00579cba",
+            "id": "032afc2e-f1d7-5429-bfd8-e6eddc4b31f7",
             "name": "distorted",
             "type": "*",
             "linkIds": [
@@ -1418,7 +1418,7 @@
             ]
           },
           {
-            "id": "16b3773c-52ce-5005-a3a5-c67d5f72e404",
+            "id": "365dd7cf-c2ec-57ab-943b-fd0f08062547",
             "name": "defects",
             "type": "*",
             "linkIds": [
@@ -1430,7 +1430,7 @@
             ]
           },
           {
-            "id": "0e7258b3-3729-5514-a0c5-baabcb81e7fc",
+            "id": "4cb46655-7643-54ec-a7f0-133d822540d0",
             "name": "image",
             "type": "IMAGE",
             "linkIds": [
@@ -1442,7 +1442,7 @@
             ]
           },
           {
-            "id": "00e620bd-f0e0-5384-8828-477c97802f4a",
+            "id": "0f5146f8-6efe-5baf-8427-8e514db149ea",
             "name": "questions",
             "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
@@ -1454,7 +1454,7 @@
             ]
           },
           {
-            "id": "075e5a66-9524-57b1-8aa2-6ce20319ddb2",
+            "id": "829485fe-8e10-5b1d-8ab2-12875f0cc5de",
             "name": "approved",
             "type": "STRING",
             "linkIds": [
@@ -1466,7 +1466,7 @@
             ]
           },
           {
-            "id": "78716b74-fff1-5134-ad2b-90a0546c45d5",
+            "id": "ae0ed981-e51f-51e6-b5ea-d4d0b2acc092",
             "name": "rejected",
             "type": "STRING",
             "linkIds": [
@@ -1480,7 +1480,7 @@
         ],
         "outputs": [
           {
-            "id": "5ea63e46-4594-5bae-86fd-8f9ede783d33",
+            "id": "6efb1cb5-781e-5ddc-a2db-02f1f36cdc47",
             "name": "summary",
             "type": "STRING",
             "linkIds": [

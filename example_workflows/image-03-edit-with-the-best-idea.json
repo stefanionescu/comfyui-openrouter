@@ -397,7 +397,7 @@
     },
     {
       "id": 10,
-      "type": "449b7034-0646-5783-aa7f-c91ed162c80a",
+      "type": "f4cd0a2e-ce76-5c64-922d-500acaccc40f",
       "pos": [
         1270,
         298
@@ -457,7 +457,7 @@
       "widgets_values": [
         ""
       ],
-      "title": "Choose"
+      "title": "Pick"
     },
     {
       "id": 11,
@@ -718,7 +718,7 @@
     },
     {
       "id": 3,
-      "title": "Choose",
+      "title": "Pick",
       "bounding": [
         860,
         188,
@@ -1131,7 +1131,7 @@
         }
       },
       {
-        "id": "449b7034-0646-5783-aa7f-c91ed162c80a",
+        "id": "f4cd0a2e-ce76-5c64-922d-500acaccc40f",
         "version": 1,
         "state": {
           "lastGroupId": 0,
@@ -1141,7 +1141,7 @@
         },
         "revision": 0,
         "config": {},
-        "name": "Choose",
+        "name": "Pick",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -1162,7 +1162,7 @@
         },
         "inputs": [
           {
-            "id": "e7e2a251-0ab0-5961-a6a0-679080dc18bf",
+            "id": "c00d6fb5-c1ef-5e31-82cb-95c39ecb3e5e",
             "name": "campaign",
             "type": "*",
             "linkIds": [
@@ -1174,7 +1174,7 @@
             ]
           },
           {
-            "id": "b2da0d0d-3fb4-530d-8d81-9b21ee63bcfe",
+            "id": "4c4d3cfc-1ecd-59df-8e35-7f9588518ac7",
             "name": "ideas",
             "type": "STRING",
             "linkIds": [
@@ -1187,7 +1187,7 @@
             ]
           },
           {
-            "id": "6fb2a749-38fd-5ac2-820e-4029dd4ac7b8",
+            "id": "9b29bc33-6e38-5b99-a4f6-b37f8d09328c",
             "name": "questions",
             "type": "OPENROUTER_DECISION_QUESTIONS",
             "linkIds": [
@@ -1201,7 +1201,7 @@
         ],
         "outputs": [
           {
-            "id": "799d33f8-b96a-5340-847f-4c88ffa5da8f",
+            "id": "e80da4c9-d151-5fbd-a713-3810b041942c",
             "name": "idea",
             "type": "STRING",
             "linkIds": [
@@ -1213,7 +1213,7 @@
             ]
           },
           {
-            "id": "ade5c675-0213-5da4-a683-cfd4cf0b4e8f",
+            "id": "674e1e4b-9f0d-5d1c-831d-bbf3335083c9",
             "name": "on_brief",
             "type": "BOOLEAN",
             "linkIds": [
@@ -1225,7 +1225,7 @@
             ]
           },
           {
-            "id": "46f0de65-c01c-5cee-8edb-2b51a24da38f",
+            "id": "56483072-5258-5e43-aea3-723f89b0aff6",
             "name": "summary",
             "type": "STRING",
             "linkIds": [

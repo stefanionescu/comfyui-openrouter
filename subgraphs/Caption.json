@@ -1,50 +1,40 @@
 {
-  "id": "a438a0a8-16c6-510f-991d-f9b0b092672b",
+  "id": "f1d90689-8611-57ac-8cf1-3fa074823b3d",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "c5d60db5-e243-5bb4-90d2-5fb8ee084ab0",
+      "type": "aa7e4fdd-667b-590f-9554-0f6262b892d2",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        46
+        26
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "notes",
-          "type": "*",
-          "link": null
-        },
-        {
-          "name": "question",
-          "type": "*",
+          "name": "images",
+          "type": "IMAGE",
           "link": null
         }
       ],
       "outputs": [
         {
-          "name": "answer",
-          "type": "STRING",
-          "links": []
-        },
-        {
-          "name": "prompt",
+          "name": "captions",
           "type": "STRING",
           "links": []
         }
       ],
       "properties": {},
       "widgets_values": [],
-      "title": "Answer"
+      "title": "Caption"
     }
   ],
   "links": [],
@@ -55,24 +45,24 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "c5d60db5-e243-5bb4-90d2-5fb8ee084ab0",
+        "id": "aa7e4fdd-667b-590f-9554-0f6262b892d2",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 102,
-          "lastLinkId": 5,
+          "lastLinkId": 3,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Answer",
+        "name": "Caption",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            40
+            20
           ]
         },
         "outputNode": {
@@ -81,14 +71,14 @@
             1010,
             140,
             120,
-            40
+            20
           ]
         },
         "inputs": [
           {
-            "id": "a466cfa2-d48f-588a-9868-e6a17db72bbf",
-            "name": "notes",
-            "type": "*",
+            "id": "e262d83c-13e0-537e-8cbc-8a6c24b20725",
+            "name": "images",
+            "type": "IMAGE",
             "linkIds": [
               2
             ],
@@ -96,43 +86,19 @@
               110,
               140
             ]
-          },
-          {
-            "id": "636064ad-4ebc-5f6e-80a9-bcd7fcc7189d",
-            "name": "question",
-            "type": "*",
-            "linkIds": [
-              3
-            ],
-            "pos": [
-              110,
-              160
-            ]
           }
         ],
         "outputs": [
           {
-            "id": "361264a9-7fcf-5f49-a4a0-ac721a2b54d0",
-            "name": "answer",
+            "id": "5908fc91-620c-590f-ada3-f43a57f71ea4",
+            "name": "captions",
             "type": "STRING",
             "linkIds": [
-              4
+              3
             ],
             "pos": [
               1010,
               140
-            ]
-          },
-          {
-            "id": "2507c2ca-94b0-531e-8b92-7e87de37d7c2",
-            "name": "prompt",
-            "type": "STRING",
-            "linkIds": [
-              5
-            ],
-            "pos": [
-              1010,
-              160
             ]
           }
         ],
@@ -140,71 +106,9 @@
         "nodes": [
           {
             "id": 101,
-            "type": "StringFormat",
-            "pos": [
-              200,
-              140
-            ],
-            "size": [
-              340,
-              148
-            ],
-            "flags": {},
-            "order": 100,
-            "mode": 0,
-            "inputs": [
-              {
-                "label": "a",
-                "name": "values.a",
-                "type": "*",
-                "link": 2,
-                "shape": 7
-              },
-              {
-                "label": "b",
-                "name": "values.b",
-                "type": "*",
-                "link": 3,
-                "shape": 7
-              },
-              {
-                "label": "c",
-                "name": "values.c",
-                "type": "*",
-                "link": null,
-                "shape": 7
-              },
-              {
-                "name": "f_string",
-                "type": "STRING",
-                "link": null,
-                "widget": {
-                  "name": "f_string"
-                }
-              }
-            ],
-            "outputs": [
-              {
-                "name": "STRING",
-                "type": "STRING",
-                "links": [
-                  1,
-                  5
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "StringFormat"
-            },
-            "widgets_values": [
-              "Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}"
-            ]
-          },
-          {
-            "id": 102,
             "type": "OpenRouterChatAsk",
             "pos": [
-              580,
+              200,
               140
             ],
             "size": [
@@ -212,7 +116,7 @@
               560
             ],
             "flags": {},
-            "order": 101,
+            "order": 100,
             "mode": 0,
             "inputs": [
               {
@@ -238,7 +142,7 @@
               {
                 "name": "images",
                 "type": "IMAGE",
-                "link": null,
+                "link": 2,
                 "shape": 7
               },
               {
@@ -342,7 +246,7 @@
               {
                 "name": "prompt",
                 "type": "STRING",
-                "link": 1,
+                "link": null,
                 "widget": {
                   "name": "prompt"
                 }
@@ -361,7 +265,8 @@
                 "name": "text",
                 "type": "STRING",
                 "links": [
-                  4
+                  1,
+                  3
                 ]
               },
               {
@@ -401,12 +306,64 @@
               42,
               "fixed",
               0,
-              "",
-              "",
+              "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"captions\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\n    \"captions\"\n  ],\n  \"additionalProperties\": false\n}",
+              "Write one training caption for each image, in the order given. Each caption is one sentence that names only what is visible: subject, setting, lighting, and style. No opinions.",
               ""
             ],
             "color": "#432",
             "bgcolor": "#653"
+          },
+          {
+            "id": 102,
+            "type": "SaveText",
+            "pos": [
+              580,
+              140
+            ],
+            "size": [
+              340,
+              170
+            ],
+            "flags": {},
+            "order": 101,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 1
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              },
+              {
+                "name": "format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "type": "STRING",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveText"
+            },
+            "widgets_values": [
+              "captions/captions",
+              "json"
+            ]
           }
         ],
         "groups": [],
@@ -416,7 +373,7 @@
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 17,
+            "target_slot": 0,
             "type": "STRING"
           },
           {
@@ -424,39 +381,23 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 0,
-            "type": "*"
+            "target_slot": 3,
+            "type": "IMAGE"
           },
           {
             "id": 3,
-            "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 101,
-            "target_slot": 1,
-            "type": "*"
-          },
-          {
-            "id": 4,
-            "origin_id": 102,
-            "origin_slot": 0,
-            "target_id": -20,
-            "target_slot": 0,
-            "type": "STRING"
-          },
-          {
-            "id": 5,
             "origin_id": 101,
             "origin_slot": 0,
             "target_id": -20,
-            "target_slot": 1,
+            "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Answers the question from the notes with a fast model."
+          "description": "Writes one caption per image in one request and saves them as one JSON file."
         },
-        "category": "OpenRouter/Decision",
-        "description": "Answers the question from the notes with a fast model."
+        "category": "OpenRouter/Chat",
+        "description": "Writes one caption per image in one request and saves them as one JSON file."
       }
     ]
   }

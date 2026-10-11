@@ -279,7 +279,7 @@ def encode_subgraph(subgraph: Subgraph, palette: Palette, position: int) -> Json
     }
 
 
-def encode_blueprint(subgraph: Subgraph, palette: Palette, name: str, category: str) -> Json:
+def encode_blueprint(subgraph: Subgraph, palette: Palette, category: str) -> Json:
     """Serialize one subgraph as a blueprint for ComfyUI's node library: one node that places it, and its definition.
 
     ComfyUI names the blueprint after its file and lists it under Subgraph Blueprints, in its category, with its
@@ -293,7 +293,7 @@ def encode_blueprint(subgraph: Subgraph, palette: Palette, name: str, category: 
         cast("Json", entry["properties"])["previewExposures"] = exposures
     definition = encode_subgraph(subgraph, palette, 1) | {"category": category, "description": subgraph.description}
     return {
-        "id": str(uuid.uuid5(NAMESPACE, f"blueprint.{name}")),
+        "id": str(uuid.uuid5(NAMESPACE, f"blueprint.{subgraph.name}")),
         "revision": 0,
         "last_node_id": 1,
         "last_link_id": 0,

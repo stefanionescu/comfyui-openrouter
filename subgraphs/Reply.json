@@ -1,12 +1,12 @@
 {
-  "id": "bbcb9817-005c-51d7-9f6a-630cb8e3fa12",
+  "id": "99f9a2ce-225c-5654-a699-7ec08364c067",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
+      "type": "09104698-f3b3-5651-9f46-c3cfc0d5c3be",
       "pos": [
         0,
         0
@@ -20,26 +20,28 @@
       "mode": 0,
       "inputs": [
         {
-          "name": "articles",
+          "name": "text",
           "type": "*",
           "link": null
         },
         {
-          "name": "question",
+          "name": "department",
           "type": "*",
           "link": null
         }
       ],
-      "outputs": [
-        {
-          "name": "answer",
-          "type": "STRING",
-          "links": []
-        }
-      ],
-      "properties": {},
+      "outputs": [],
+      "properties": {
+        "previewExposures": [
+          {
+            "name": "audioUI",
+            "sourceNodeId": "104",
+            "sourcePreviewName": "audioUI"
+          }
+        ]
+      },
       "widgets_values": [],
-      "title": "Answer"
+      "title": "Reply"
     }
   ],
   "links": [],
@@ -50,17 +52,17 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "f2975d65-e107-5d50-84e7-716fb3e6b17d",
+        "id": "09104698-f3b3-5651-9f46-c3cfc0d5c3be",
         "version": 1,
         "state": {
           "lastGroupId": 0,
-          "lastNodeId": 102,
-          "lastLinkId": 4,
+          "lastNodeId": 104,
+          "lastLinkId": 5,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "Answer",
+        "name": "Reply",
         "inputNode": {
           "id": -10,
           "bounding": [
@@ -73,7 +75,7 @@
         "outputNode": {
           "id": -20,
           "bounding": [
-            1010,
+            1390,
             140,
             120,
             20
@@ -81,11 +83,11 @@
         },
         "inputs": [
           {
-            "id": "5666985a-c6c6-5f85-b34b-cbba76f512ce",
-            "name": "articles",
+            "id": "0b00e7d6-22ba-57f5-aa88-9c5e40d2322d",
+            "name": "text",
             "type": "*",
             "linkIds": [
-              2
+              4
             ],
             "pos": [
               110,
@@ -93,11 +95,11 @@
             ]
           },
           {
-            "id": "1e5d0644-2b2d-511a-a993-4f3d80bf930e",
-            "name": "question",
+            "id": "6f89f8ed-78a6-5c22-b3e4-84bc3e4c259a",
+            "name": "department",
             "type": "*",
             "linkIds": [
-              3
+              5
             ],
             "pos": [
               110,
@@ -105,20 +107,7 @@
             ]
           }
         ],
-        "outputs": [
-          {
-            "id": "ba1b385d-dade-5574-ba39-4096929c21b9",
-            "name": "answer",
-            "type": "STRING",
-            "linkIds": [
-              4
-            ],
-            "pos": [
-              1010,
-              140
-            ]
-          }
-        ],
+        "outputs": [],
         "widgets": [],
         "nodes": [
           {
@@ -140,14 +129,14 @@
                 "label": "a",
                 "name": "values.a",
                 "type": "*",
-                "link": 2,
+                "link": 4,
                 "shape": 7
               },
               {
                 "label": "b",
                 "name": "values.b",
                 "type": "*",
-                "link": 3,
+                "link": 5,
                 "shape": 7
               },
               {
@@ -179,7 +168,7 @@
               "Node name for S&R": "StringFormat"
             },
             "widgets_values": [
-              "Answer the customer in three sentences or fewer, using only these help articles.\n\nArticles:\n{a}\n\nCustomer: {b}"
+              "You work in the {b} team. Write what you say when you call this customer back: under 60 words, friendly, and answering what they asked.\n\nTheir voicemail:\n{a}"
             ]
           },
           {
@@ -343,7 +332,7 @@
                 "name": "text",
                 "type": "STRING",
                 "links": [
-                  4
+                  2
                 ]
               },
               {
@@ -389,6 +378,166 @@
             ],
             "color": "#432",
             "bgcolor": "#653"
+          },
+          {
+            "id": 103,
+            "type": "OpenRouterAudioSpeak",
+            "pos": [
+              960,
+              140
+            ],
+            "size": [
+              340,
+              252
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "model",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "model"
+                }
+              },
+              {
+                "name": "voice",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "voice"
+                }
+              },
+              {
+                "name": "audio_format",
+                "type": "COMBO",
+                "link": null,
+                "widget": {
+                  "name": "audio_format"
+                }
+              },
+              {
+                "name": "speed",
+                "type": "FLOAT",
+                "link": null,
+                "widget": {
+                  "name": "speed"
+                }
+              },
+              {
+                "name": "voice_sample",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "sample_transcript",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "sample_transcript"
+                }
+              },
+              {
+                "name": "run_number",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "run_number"
+                }
+              },
+              {
+                "name": "options",
+                "type": "OPENROUTER_REQUEST_OPTIONS",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "text",
+                "type": "STRING",
+                "link": 2,
+                "widget": {
+                  "name": "text"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": [
+                  3
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "OpenRouterAudioSpeak"
+            },
+            "widgets_values": [
+              "google/gemini-3.8-flash-tts",
+              "Kore",
+              "pcm",
+              1.0,
+              "",
+              0,
+              ""
+            ],
+            "color": "#432",
+            "bgcolor": "#653"
+          },
+          {
+            "id": 104,
+            "type": "SaveAudioAdvanced",
+            "pos": [
+              960,
+              456
+            ],
+            "size": [
+              340,
+              136
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 3
+              },
+              {
+                "name": "filename_prefix",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "filename_prefix"
+                }
+              },
+              {
+                "name": "format",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "format"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "links": []
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "SaveAudioAdvanced"
+            },
+            "widgets_values": [
+              "voicemail/reply",
+              "flac"
+            ]
           }
         ],
         "groups": [],
@@ -403,6 +552,22 @@
           },
           {
             "id": 2,
+            "origin_id": 102,
+            "origin_slot": 0,
+            "target_id": 103,
+            "target_slot": 8,
+            "type": "STRING"
+          },
+          {
+            "id": 3,
+            "origin_id": 103,
+            "origin_slot": 0,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 4,
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
@@ -410,27 +575,19 @@
             "type": "*"
           },
           {
-            "id": 3,
+            "id": 5,
             "origin_id": -10,
             "origin_slot": 1,
             "target_id": 101,
             "target_slot": 1,
             "type": "*"
-          },
-          {
-            "id": 4,
-            "origin_id": 102,
-            "origin_slot": 0,
-            "target_id": -20,
-            "target_slot": 0,
-            "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Answers the customer from the ranked articles."
+          "description": "Writes the department's reply, speaks it, and saves it."
         },
-        "category": "OpenRouter/Search",
-        "description": "Answers the customer from the ranked articles."
+        "category": "OpenRouter/Audio",
+        "description": "Writes the department's reply, speaks it, and saves it."
       }
     ]
   }

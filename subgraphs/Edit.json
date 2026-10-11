@@ -1,38 +1,59 @@
 {
-  "id": "ca10cf31-4a76-5c17-9a93-13a7bb1424a6",
+  "id": "6559e4b9-1a9a-5224-b0ee-8778c0e7b1e0",
   "revision": 0,
   "last_node_id": 1,
   "last_link_id": 0,
   "nodes": [
     {
       "id": 1,
-      "type": "83cfbe62-41b1-5f90-9973-87a914ac8980",
+      "type": "ff75c7fa-8756-5e1e-8046-b12306b5c003",
       "pos": [
         0,
         0
       ],
       "size": [
         340,
-        112
+        160
       ],
       "flags": {},
       "order": 0,
       "mode": 0,
       "inputs": [
         {
-          "name": "prompt",
+          "name": "image",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "idea",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "prompt"
+            "name": "idea"
           }
         },
         {
-          "name": "model",
+          "name": "on_brief",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "on_brief"
+          }
+        },
+        {
+          "name": "approved",
           "type": "STRING",
           "link": null,
           "widget": {
-            "name": "model"
+            "name": "approved"
+          }
+        },
+        {
+          "name": "review",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "review"
           }
         }
       ],
@@ -41,16 +62,18 @@
         "previewExposures": [
           {
             "name": "$$canvas-image-preview",
-            "sourceNodeId": "103",
+            "sourceNodeId": "105",
             "sourcePreviewName": "$$canvas-image-preview"
           }
         ]
       },
       "widgets_values": [
         "",
-        "google/gemini-3.1-flash-image"
+        false,
+        "campaign/approved",
+        "campaign/review"
       ],
-      "title": "PNG"
+      "title": "Edit"
     }
   ],
   "links": [],
@@ -61,24 +84,24 @@
   "definitions": {
     "subgraphs": [
       {
-        "id": "83cfbe62-41b1-5f90-9973-87a914ac8980",
+        "id": "ff75c7fa-8756-5e1e-8046-b12306b5c003",
         "version": 1,
         "state": {
           "lastGroupId": 0,
           "lastNodeId": 105,
-          "lastLinkId": 7,
+          "lastLinkId": 9,
           "lastRerouteId": 0
         },
         "revision": 0,
         "config": {},
-        "name": "PNG",
+        "name": "Edit",
         "inputNode": {
           "id": -10,
           "bounding": [
             -10,
             140,
             120,
-            40
+            100
           ]
         },
         "outputNode": {
@@ -92,11 +115,11 @@
         },
         "inputs": [
           {
-            "id": "f8f08c8f-7c98-572e-9307-afbfef38f6b6",
-            "name": "prompt",
-            "type": "STRING",
+            "id": "d7a02330-f09d-5e88-9fd5-c6906a8039a1",
+            "name": "image",
+            "type": "IMAGE",
             "linkIds": [
-              6
+              5
             ],
             "pos": [
               110,
@@ -104,15 +127,51 @@
             ]
           },
           {
-            "id": "a121c930-c22d-52ff-b736-d27d0ebb9a57",
-            "name": "model",
+            "id": "c85e38a9-667f-5a12-8635-a72734c929d8",
+            "name": "idea",
             "type": "STRING",
+            "linkIds": [
+              6
+            ],
+            "pos": [
+              110,
+              160
+            ]
+          },
+          {
+            "id": "2aab545f-4c40-5356-970f-62d524ea0dd1",
+            "name": "on_brief",
+            "type": "BOOLEAN",
             "linkIds": [
               7
             ],
             "pos": [
               110,
-              160
+              180
+            ]
+          },
+          {
+            "id": "2e925853-2e82-5b8b-8f29-059a13384200",
+            "name": "approved",
+            "type": "STRING",
+            "linkIds": [
+              8
+            ],
+            "pos": [
+              110,
+              200
+            ]
+          },
+          {
+            "id": "1fa5ac49-2c48-5cc4-9bb5-0fbb81b9a4b0",
+            "name": "review",
+            "type": "STRING",
+            "linkIds": [
+              9
+            ],
+            "pos": [
+              110,
+              220
             ]
           }
         ],
@@ -137,7 +196,7 @@
               {
                 "name": "model",
                 "type": "STRING",
-                "link": 7,
+                "link": null,
                 "widget": {
                   "name": "model"
                 }
@@ -201,7 +260,7 @@
               {
                 "name": "references",
                 "type": "IMAGE",
-                "link": null,
+                "link": 5,
                 "shape": 7
               },
               {
@@ -241,17 +300,14 @@
                 "type": "IMAGE",
                 "shape": 6,
                 "links": [
-                  1
+                  4
                 ]
               },
               {
                 "name": "masks",
                 "type": "MASK",
                 "shape": 6,
-                "links": [
-                  2,
-                  4
-                ]
+                "links": []
               },
               {
                 "name": "svg",
@@ -263,11 +319,11 @@
               "Node name for S&R": "OpenRouterImageGenerate"
             },
             "widgets_values": [
-              "google/gemini-3.1-flash-image",
+              "openai/gpt-image-2.5-flare",
               "model default",
-              "1:1",
+              "model default",
               "medium",
-              "transparent",
+              "model default",
               "model default",
               90,
               1,
@@ -281,46 +337,140 @@
           },
           {
             "id": 102,
-            "type": "JoinImageWithAlpha",
+            "type": "PrimitiveString",
             "pos": [
               580,
               140
             ],
             "size": [
               340,
-              46
+              58
             ],
             "flags": {},
             "order": 101,
             "mode": 0,
             "inputs": [
               {
-                "name": "image",
-                "type": "IMAGE",
-                "link": 1
-              },
-              {
-                "name": "alpha",
-                "type": "MASK",
-                "link": 2
+                "name": "value",
+                "type": "STRING",
+                "link": 8,
+                "widget": {
+                  "name": "value"
+                }
               }
             ],
             "outputs": [
               {
-                "name": "IMAGE",
-                "type": "IMAGE",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  1
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "campaign/approved"
+            ],
+            "title": "Approved"
+          },
+          {
+            "id": 103,
+            "type": "PrimitiveString",
+            "pos": [
+              580,
+              262
+            ],
+            "size": [
+              340,
+              58
+            ],
+            "flags": {},
+            "order": 102,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "value",
+                "type": "STRING",
+                "link": 9,
+                "widget": {
+                  "name": "value"
+                }
+              }
+            ],
+            "outputs": [
+              {
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  2
+                ]
+              }
+            ],
+            "properties": {
+              "Node name for S&R": "PrimitiveString"
+            },
+            "widgets_values": [
+              "campaign/review"
+            ],
+            "title": "Review"
+          },
+          {
+            "id": 104,
+            "type": "ComfySwitchNode",
+            "pos": [
+              580,
+              384
+            ],
+            "size": [
+              340,
+              78
+            ],
+            "flags": {},
+            "order": 103,
+            "mode": 0,
+            "inputs": [
+              {
+                "name": "switch",
+                "type": "BOOLEAN",
+                "link": 7,
+                "widget": {
+                  "name": "switch"
+                }
+              },
+              {
+                "name": "on_false",
+                "type": "STRING",
+                "link": 2,
+                "shape": 7
+              },
+              {
+                "name": "on_true",
+                "type": "STRING",
+                "link": 1,
+                "shape": 7
+              }
+            ],
+            "outputs": [
+              {
+                "name": "output",
+                "type": "STRING",
                 "links": [
                   3
                 ]
               }
             ],
             "properties": {
-              "Node name for S&R": "JoinImageWithAlpha"
+              "Node name for S&R": "ComfySwitchNode"
             },
-            "widgets_values": []
+            "widgets_values": [
+              false
+            ]
           },
           {
-            "id": 103,
+            "id": 105,
             "type": "SaveImage",
             "pos": [
               960,
@@ -331,18 +481,18 @@
               290
             ],
             "flags": {},
-            "order": 102,
+            "order": 104,
             "mode": 0,
             "inputs": [
               {
                 "name": "images",
                 "type": "IMAGE",
-                "link": 3
+                "link": 4
               },
               {
                 "name": "filename_prefix",
                 "type": "STRING",
-                "link": null,
+                "link": 3,
                 "widget": {
                   "name": "filename_prefix"
                 }
@@ -359,125 +509,56 @@
               "Node name for S&R": "SaveImage"
             },
             "widgets_values": [
-              "logo/fernwood"
+              "ComfyUI"
             ]
-          },
-          {
-            "id": 104,
-            "type": "MaskToImage",
-            "pos": [
-              580,
-              250
-            ],
-            "size": [
-              340,
-              26
-            ],
-            "flags": {},
-            "order": 103,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "mask",
-                "type": "MASK",
-                "link": 4
-              }
-            ],
-            "outputs": [
-              {
-                "name": "IMAGE",
-                "type": "IMAGE",
-                "links": [
-                  5
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "MaskToImage"
-            },
-            "widgets_values": []
-          },
-          {
-            "id": 105,
-            "type": "PreviewImage",
-            "pos": [
-              960,
-              494
-            ],
-            "size": [
-              340,
-              290
-            ],
-            "flags": {},
-            "order": 104,
-            "mode": 0,
-            "inputs": [
-              {
-                "name": "images",
-                "type": "IMAGE",
-                "link": 5
-              }
-            ],
-            "outputs": [
-              {
-                "name": "images",
-                "type": "IMAGE",
-                "links": []
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "PreviewImage"
-            },
-            "widgets_values": [],
-            "title": "Mask"
           }
         ],
         "groups": [],
         "links": [
           {
             "id": 1,
-            "origin_id": 101,
+            "origin_id": 102,
             "origin_slot": 0,
-            "target_id": 102,
-            "target_slot": 0,
-            "type": "IMAGE"
+            "target_id": 104,
+            "target_slot": 2,
+            "type": "STRING"
           },
           {
             "id": 2,
-            "origin_id": 101,
-            "origin_slot": 1,
-            "target_id": 102,
+            "origin_id": 103,
+            "origin_slot": 0,
+            "target_id": 104,
             "target_slot": 1,
-            "type": "MASK"
+            "type": "STRING"
           },
           {
             "id": 3,
-            "origin_id": 102,
+            "origin_id": 104,
             "origin_slot": 0,
-            "target_id": 103,
-            "target_slot": 0,
-            "type": "IMAGE"
+            "target_id": 105,
+            "target_slot": 1,
+            "type": "STRING"
           },
           {
             "id": 4,
             "origin_id": 101,
-            "origin_slot": 1,
-            "target_id": 104,
-            "target_slot": 0,
-            "type": "MASK"
-          },
-          {
-            "id": 5,
-            "origin_id": 104,
             "origin_slot": 0,
             "target_id": 105,
             "target_slot": 0,
             "type": "IMAGE"
           },
           {
-            "id": 6,
+            "id": 5,
             "origin_id": -10,
             "origin_slot": 0,
+            "target_id": 101,
+            "target_slot": 8,
+            "type": "IMAGE"
+          },
+          {
+            "id": 6,
+            "origin_id": -10,
+            "origin_slot": 1,
             "target_id": 101,
             "target_slot": 12,
             "type": "STRING"
@@ -485,17 +566,33 @@
           {
             "id": 7,
             "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 101,
+            "origin_slot": 2,
+            "target_id": 104,
+            "target_slot": 0,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 8,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 102,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 9,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 103,
             "target_slot": 0,
             "type": "STRING"
           }
         ],
         "extra": {
-          "description": "Draws the logo on a transparent background and saves it as a PNG."
+          "description": "Edits the photo with the chosen idea and saves it in the approved or review folder."
         },
         "category": "OpenRouter/Image",
-        "description": "Draws the logo on a transparent background and saves it as a PNG."
+        "description": "Edits the photo with the chosen idea and saves it in the approved or review folder."
       }
     ]
   }
