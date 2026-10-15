@@ -80,7 +80,7 @@ def _read_range(value: Json) -> tuple[float, float] | None:
 
 
 def _build_video_limits(video: VideoModel, parameters: frozenset[str]) -> Limits:
-    """Keep the fields, choices, and ranges one video model lists.
+    """Keep the fields, choices, ranges, and provider options one video model lists.
 
     A flag the list leaves empty does not refuse anything: sound stays allowed, and the seed goes when the model's
     providers list it.
@@ -98,7 +98,7 @@ def _build_video_limits(video: VideoModel, parameters: frozenset[str]) -> Limits
         "seed": video.seed if video.seed is not None else "seed" in parameters,
     }
     fields = {*choices, *ranges, *(video.supported_frame_images or ()), *(name for name, on in flags.items() if on)}
-    return Limits(frozenset(fields), choices, ranges)
+    return Limits(frozenset(fields), choices, ranges, frozenset(video.allowed_passthrough_parameters))
 
 
 async def _read_efforts(model_id: str, settings: Settings) -> tuple[str, ...]:
@@ -158,7 +158,10 @@ async def validate_model(model_id: str, endpoint: Endpoint, settings: Settings, 
 
 
 async def read_image_limits(model_id: str, settings: Settings) -> Limits | None:
-    """Read what an image model's providers accept, or None when OpenRouter lists no image providers for it."""
+    """Read what an image model's providers accept, or None when OpenRouter lists no image providers for it.
+
+    The provider options are those any of its providers takes.
+    """
     if model_id not in _IMAGE_LIMITS:
         reply = await _read_listing(LISTING_URLS["IMAGE_MODEL"].format(model_id=model_id), ImageModelReply, settings)
         endpoints = reply.endpoints if reply else ()
@@ -172,7 +175,8 @@ async def read_image_limits(model_id: str, settings: Settings) -> Limits | None:
                 low, high = ranges.get(field, (parameter.min, parameter.max))
                 ranges[field] = (min(low, parameter.min), max(high, parameter.max))
         fields = frozenset(field for field, _parameter in parameters)
-        _IMAGE_LIMITS[model_id] = Limits(fields, choices, ranges) if fields else None
+        options = frozenset(option for endpoint in endpoints for option in endpoint.allowed_passthrough_parameters)
+        _IMAGE_LIMITS[model_id] = Limits(fields, choices, ranges, options) if fields else None
     return _IMAGE_LIMITS[model_id]
 
 

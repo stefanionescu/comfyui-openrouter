@@ -41,6 +41,7 @@ def _format_report(model_id: str, model: Model, limits: Limits | None) -> str:
         "voice_cloning": model.has_voice_cloning,
         "providers": list(model.providers),
         "fields": fields,
+        "options": sorted(limits.options if limits is not None else ()),
     }
     return json.dumps(report, ensure_ascii=False)
 

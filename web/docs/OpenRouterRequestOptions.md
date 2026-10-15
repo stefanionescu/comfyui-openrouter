@@ -5,18 +5,18 @@ nodes.
 
 ## Inputs
 
-| Input                  | What it takes                                                                                |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| `provider`             | The one provider to use, as a slug; empty lets OpenRouter choose.                            |
-| `only`                 | The only providers to use.                                                                   |
-| `ignore`               | Providers never to use.                                                                      |
-| `sort`                 | Prefer the cheapest (`price`), fastest (`throughput`), or quickest (`latency`) provider.     |
-| `data_collection`      | `deny` to use only providers that do not store or train on requests.                         |
-| `zdr`                  | Use only providers with zero data retention.                                                 |
-| `max_prompt_price`     | Skip providers that charge more per million prompt tokens, in US dollars; 0 is no limit.     |
-| `max_completion_price` | Skip providers that charge more per million completion tokens, in US dollars; 0 is no limit. |
-| `provider_options`     | A JSON object of fields for one provider, keyed by its slug.                                 |
-| `extra_fields`         | A JSON object of fields added to the request as written.                                     |
+| Input                  | What it takes                                                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `provider`             | The one provider to use, as a slug; empty lets OpenRouter choose.                                                                    |
+| `only`                 | The only providers to use.                                                                                                           |
+| `ignore`               | Providers never to use.                                                                                                              |
+| `sort`                 | Prefer the cheapest (`price`), fastest (`throughput`), or quickest (`latency`) provider.                                             |
+| `data_collection`      | `deny` to use only providers that do not store or train on requests.                                                                 |
+| `zdr`                  | Use only providers with zero data retention.                                                                                         |
+| `max_prompt_price`     | Skip providers that charge more per million prompt tokens, in US dollars; 0 is no limit.                                             |
+| `max_completion_price` | Skip providers that charge more per million completion tokens, in US dollars; 0 is no limit.                                         |
+| `provider_options`     | A JSON object of fields for one provider, keyed by its slug. **Model: Info** lists an image or video model's fields under `options`. |
+| `extra_fields`         | A JSON object of fields added to the request as written.                                                                             |
 
 ## Outputs
 

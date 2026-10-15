@@ -33,7 +33,7 @@ ROUTING_CHOICES = (
 JSON_FIELDS = (
     (
         "provider_options",
-        "A JSON object of fields for one provider, keyed by its slug. The model's page on OpenRouter lists them.",
+        "A JSON object of fields for one provider, keyed by its slug. Model: Info lists them as options.",
     ),
     ("extra_fields", "A JSON object of request fields, added to the body as they are written."),
 )

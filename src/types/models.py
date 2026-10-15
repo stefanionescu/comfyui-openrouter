@@ -84,10 +84,12 @@ class ImageEndpoint(Reply):
 
     Attributes:
         supported_parameters: The fields this provider accepts, keyed by field name.
+        allowed_passthrough_parameters: The provider's own options, which go under its slug in provider options.
 
     """
 
     supported_parameters: Mapping[str, ImageParameter] = Field(default_factory=dict)
+    allowed_passthrough_parameters: tuple[str, ...] = ()
 
 
 class ImageModelReply(Reply):
@@ -114,6 +116,7 @@ class VideoModel(Reply):
         creativity: The creativity range of an upscaling model, as an object or a pair.
         generate_audio: Whether it can make sound; None when the list does not say.
         seed: Whether it takes a seed; None when the list does not say.
+        allowed_passthrough_parameters: The provider's own options, which go under its slug in provider options.
 
     """
 
@@ -126,6 +129,7 @@ class VideoModel(Reply):
     creativity: Json = None
     generate_audio: bool | None = None
     seed: bool | None = None
+    allowed_passthrough_parameters: tuple[str, ...] = ()
 
 
 class VideoModelsReply(Reply):
@@ -208,12 +212,14 @@ class Limits:
         fields: Every request field at least one provider accepts.
         choices: The values of each field that takes a fixed set, in OpenRouter's order.
         ranges: The lowest and highest value of each numeric field.
+        options: The providers' own options, which Request Options sends as provider_options under a provider's slug.
 
     """
 
     fields: frozenset[str]
     choices: Mapping[str, tuple[str, ...]]
     ranges: Mapping[str, tuple[float, float]]
+    options: frozenset[str]
 
 
 __all__ = [
