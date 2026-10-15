@@ -336,7 +336,7 @@
       ],
       "size": [
         340,
-        392
+        440
       ],
       "flags": {},
       "order": 9,
@@ -396,6 +396,22 @@
           "link": null,
           "widget": {
             "name": "output_compression"
+          }
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height"
           }
         },
         {
@@ -477,6 +493,8 @@
         "model default",
         "model default",
         90,
+        0,
+        0,
         1,
         42,
         "fixed",
@@ -757,7 +775,7 @@
       6,
       0,
       10,
-      12,
+      14,
       "STRING"
     ],
     [
@@ -883,7 +901,7 @@
         810,
         186,
         780,
-        532
+        580
       ],
       "color": "#68688c",
       "font_size": 24,

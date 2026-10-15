@@ -9,6 +9,9 @@ COMPRESSION = {
 # The formats that take a compression.
 COMPRESSED_FORMATS = ("jpeg", "webp")
 
+# The largest width or height of an exact image size, in pixels.
+MAX_SIZE = 8192
+
 # The image fields in the order the node shows them, with every value OpenRouter's image models take.
 FIELD_VALUES = {
     "resolution": ("512", "1K", "2K", "4K"),
@@ -45,4 +48,5 @@ __all__ = [
     "COMPRESSED_FORMATS",
     "COMPRESSION",
     "FIELD_VALUES",
+    "MAX_SIZE",
 ]

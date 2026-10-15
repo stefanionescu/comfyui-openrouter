@@ -13,6 +13,7 @@ Generates or edits images with any image model on OpenRouter.
 | `background`         | `transparent`, `opaque`, or `auto`. A transparent background needs PNG or WebP.               |
 | `output_format`      | `png`, `jpeg`, `webp`, or `svg` for vector models.                                            |
 | `output_compression` | JPEG and WebP quality.                                                                        |
+| `width`, `height`    | An exact size in pixels, such as 1536 by 2752. Set both, or leave both at 0 to send no size.  |
 | `count`              | How many images to make.                                                                      |
 | `references`         | Images to edit or combine: one, a batch, or a list, each at its own size.                     |
 | `seed`               | Varies the output, for models that list a seed.                                               |
@@ -22,7 +23,8 @@ Generates or edits images with any image model on OpenRouter.
 
 `model default` sends nothing. Before anything is paid, the node refuses a
 value, `count`, or number of `references` the model's image listing does not
-include, naming what it does take.
+include, naming what it does take. An exact size sets the shape itself, so the
+node refuses it unless `resolution` and `aspect_ratio` are at `model default`.
 
 ## Outputs
 

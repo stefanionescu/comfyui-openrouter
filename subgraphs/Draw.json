@@ -137,7 +137,7 @@
             ],
             "size": [
               340,
-              392
+              440
             ],
             "flags": {},
             "order": 100,
@@ -197,6 +197,22 @@
                 "link": null,
                 "widget": {
                   "name": "output_compression"
+                }
+              },
+              {
+                "name": "width",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "width"
+                }
+              },
+              {
+                "name": "height",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "height"
                 }
               },
               {
@@ -276,6 +292,8 @@
               "model default",
               "model default",
               90,
+              0,
+              0,
               1,
               42,
               "fixed",
@@ -290,11 +308,11 @@
             "type": "OpenRouterImageGenerate",
             "pos": [
               200,
-              596
+              644
             ],
             "size": [
               340,
-              392
+              440
             ],
             "flags": {},
             "order": 101,
@@ -354,6 +372,22 @@
                 "link": null,
                 "widget": {
                   "name": "output_compression"
+                }
+              },
+              {
+                "name": "width",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "width"
+                }
+              },
+              {
+                "name": "height",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "height"
                 }
               },
               {
@@ -433,6 +467,8 @@
               "model default",
               "model default",
               90,
+              0,
+              0,
               1,
               42,
               "fixed",
@@ -447,11 +483,11 @@
             "type": "OpenRouterImageGenerate",
             "pos": [
               200,
-              1052
+              1148
             ],
             "size": [
               340,
-              392
+              440
             ],
             "flags": {},
             "order": 102,
@@ -511,6 +547,22 @@
                 "link": null,
                 "widget": {
                   "name": "output_compression"
+                }
+              },
+              {
+                "name": "width",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "width"
+                }
+              },
+              {
+                "name": "height",
+                "type": "INT",
+                "link": null,
+                "widget": {
+                  "name": "height"
                 }
               },
               {
@@ -590,6 +642,8 @@
               "model default",
               "model default",
               90,
+              0,
+              0,
               1,
               42,
               "fixed",
@@ -906,7 +960,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 101,
-            "target_slot": 12,
+            "target_slot": 14,
             "type": "STRING"
           },
           {
@@ -914,7 +968,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 102,
-            "target_slot": 12,
+            "target_slot": 14,
             "type": "STRING"
           },
           {
@@ -922,7 +976,7 @@
             "origin_id": -10,
             "origin_slot": 0,
             "target_id": 103,
-            "target_slot": 12,
+            "target_slot": 14,
             "type": "STRING"
           },
           {

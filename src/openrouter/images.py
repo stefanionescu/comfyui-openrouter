@@ -16,8 +16,8 @@ from ..types.images import ImageOutput, ImageResult
 from ..config.media import SVG_STARTS, SVG_MEDIA_TYPE
 from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
-from ..config.messages.inputs import PROMPT_EMPTY, TRANSPARENT_FORMAT
 from .models import validate_model, validate_limits, read_image_limits
+from ..config.messages.inputs import SIZE_PAIR, SIZE_SHAPE, PROMPT_EMPTY, TRANSPARENT_FORMAT
 
 if TYPE_CHECKING:
     from ..types import Json
@@ -34,10 +34,17 @@ class ImageOperation:
         self.request = request
 
     def validate(self, settings: Settings) -> None:
-        """Refuse an empty prompt, a transparent JPEG, and too much media."""
+        """Refuse an empty prompt, a lone width or height, a size with a shape, a transparent JPEG, and too much media.
+
+        OpenRouter refuses an exact size sent with a resolution or an aspect ratio, since the size sets both.
+        """
         request = self.request
         if not request.prompt.strip():
             raise OpenRouterError(ErrorCode.INVALID_INPUT, PROMPT_EMPTY)
+        if (request.width == 0) != (request.height == 0):
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, SIZE_PAIR)
+        if request.width and not {"resolution", "aspect_ratio"}.isdisjoint(request.fields):
+            raise OpenRouterError(ErrorCode.INVALID_INPUT, SIZE_SHAPE)
         if request.fields.get("background") == "transparent" and request.fields.get("output_format") == "jpeg":
             raise OpenRouterError(ErrorCode.INVALID_INPUT, TRANSPARENT_FORMAT)
         validate_upload_size(request.reference_urls, settings)
@@ -45,12 +52,15 @@ class ImageOperation:
     def build_fields(self, limits: Limits | None) -> dict[str, Json]:
         """Check the fields, count, and references against the model's image listing when it has one.
 
-        The compression, which always has a value, is left out for a model that does not take it.
+        The compression, which always has a value, is left out for a model that does not take it. The exact size goes
+        unchecked, since the listings do not list it.
         """
         request = self.request
         fields: dict[str, Json] = dict(request.fields)
         if request.count > 1:
             fields["n"] = request.count
+        if request.width:
+            fields["size"] = f"{request.width}x{request.height}"
         if limits is None:
             return fields
         if "output_compression" not in limits.fields:
@@ -59,7 +69,7 @@ class ImageOperation:
         maximum = int(limits.ranges["n"][1]) if "n" in limits.ranges else 1
         if request.count > maximum:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_COUNT.format(model=request.model_id, maximum=maximum))
-        checked = {field: value for field, value in fields.items() if field != "n"}
+        checked = {field: value for field, value in fields.items() if field not in {"n", "size"}}
         if request.reference_urls or "input_references" in limits.fields:
             checked["input_references"] = len(request.reference_urls)
         validate_limits(request.model_id, limits, checked)

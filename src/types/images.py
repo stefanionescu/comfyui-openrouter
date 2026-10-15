@@ -20,6 +20,8 @@ class ImageRequest:
         prompt: What to draw or change.
         reference_urls: PNG data URLs of the reference images.
         count: How many images to make; n is sent only above 1.
+        width: The exact width in pixels, sent with height as size; 0 sends no size.
+        height: The exact height in pixels, sent with width as size; 0 sends no size.
         seed: Seed sent when the model accepts one.
         fields: The chosen request fields under their wire names, only those other than the model's default.
         options: Provider routing and extra fields.
@@ -30,6 +32,8 @@ class ImageRequest:
     prompt: str
     reference_urls: tuple[str, ...]
     count: int
+    width: int
+    height: int
     seed: int
     fields: Mapping[str, Json]
     options: Options | None

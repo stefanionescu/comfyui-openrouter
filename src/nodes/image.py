@@ -17,7 +17,7 @@ from ..comfy.media import decode_image, encode_images
 from ..config.generation.models import DEFAULT_MODELS
 from ..comfy.execution import wait_for_thread, send_request, wait_for_task
 from ..config.generation.inputs import INPUT_NAMES, MODEL_DEFAULT, MODEL_TOOLTIP
-from ..config.generation.images import FIELD_VALUES, COMPRESSION, COMPRESSED_FORMATS
+from ..config.generation.images import MAX_SIZE, FIELD_VALUES, COMPRESSION, COMPRESSED_FORMATS
 
 if TYPE_CHECKING:
     import torch
@@ -26,8 +26,8 @@ if TYPE_CHECKING:
     from ..types.images import ImageResult
 
 
-# The image fields, compression, count, and references; a field left at model default sends nothing. The format,
-# the last field, has a tooltip that explains its name.
+# The image fields, compression, exact size, count, and references; a field left at model default sends nothing.
+# The format, the last field, has a tooltip that explains its name.
 FIELDS = (
     *(
         io.Combo.Input(field, options=[MODEL_DEFAULT, *values], default=MODEL_DEFAULT)
@@ -47,6 +47,18 @@ FIELDS = (
         max=COMPRESSION["MAX"],
         advanced=True,
         tooltip="The quality of JPEG and WebP images; higher keeps more detail.",
+    ),
+    *(
+        io.Int.Input(
+            side,
+            default=0,
+            min=0,
+            max=MAX_SIZE,
+            advanced=True,
+            tooltip=f"The exact image {side} in pixels, sent with {other}; 0 sends no size. "
+            "An exact size needs resolution and aspect_ratio at model default.",
+        )
+        for side, other in (("width", "height"), ("height", "width"))
     ),
     io.Int.Input("count", default=1, min=1, tooltip="How many images to make, within what the model lists."),
     io.Image.Input(
@@ -98,6 +110,8 @@ class ImageGenerate(PaidNode):
         background: str = MODEL_DEFAULT,
         output_format: str = MODEL_DEFAULT,
         output_compression: int = COMPRESSION["DEFAULT"],
+        width: int = 0,
+        height: int = 0,
         count: int = 1,
         references: list[torch.Tensor] | None = None,
         options: Options | None = None,
@@ -125,6 +139,8 @@ class ImageGenerate(PaidNode):
                 prompt=prompt,
                 reference_urls=urls,
                 count=count,
+                width=width,
+                height=height,
                 seed=seed,
                 fields=fields,
                 options=options,

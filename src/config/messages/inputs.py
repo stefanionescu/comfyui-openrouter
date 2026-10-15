@@ -52,6 +52,13 @@ SINGLE_VALUE = "Connect one value to {name}, not a list."
 
 SITUATION_EMPTY = "Describe the situation to decide on."
 
+SIZE_PAIR = "Set both width and height for an exact size, or leave both at 0."
+
+SIZE_SHAPE = (
+    "An exact size sets the shape itself. Leave resolution and aspect_ratio at model default, "
+    "or set width and height to 0."
+)
+
 SPEECH_TEXT_EMPTY = "Write the text to speak."
 
 TRANSPARENT_FORMAT = "A transparent background needs output_format set to png or webp."
@@ -83,6 +90,8 @@ __all__ = [
     "SEARCH_ITEMS_EMPTY",
     "SINGLE_VALUE",
     "SITUATION_EMPTY",
+    "SIZE_PAIR",
+    "SIZE_SHAPE",
     "SPEECH_TEXT_EMPTY",
     "TRANSPARENT_FORMAT",
     "YES_NO_CRITERIA",
