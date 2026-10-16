@@ -14,10 +14,10 @@ MODEL_TOOLTIP = "Any OpenRouter model ID. Copy one from openrouter.ai/models."
 # Every dropdown's choice that sends nothing and leaves the value to the model.
 MODEL_DEFAULT = "model default"
 
-# A seed fits every provider's seed type.
+# The seed's default, and its largest value: OpenRouter refuses a seed of 2**31 or more.
 SEED = {
     "DEFAULT": 42,
-    "MAX": 2**32 - 1,
+    "MAX": 2**31 - 1,
 }
 
 # The run number is the extension's own cache counter.
