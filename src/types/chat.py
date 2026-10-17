@@ -90,7 +90,7 @@ class ChatRequest:
         system_prompt: System instructions, sent when not blank.
         prompt: The question.
         conversation: Earlier turns sent before the question.
-        image_urls: PNG data URLs.
+        image_urls: Lossless WebP data URLs.
         video_urls: MP4 data URLs.
         audio_clips: Base64 WAV without a data: prefix, as the input_audio part takes it.
         documents: Attached files.

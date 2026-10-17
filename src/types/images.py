@@ -18,7 +18,7 @@ class ImageRequest:
     Attributes:
         model_id: The model ID sent to OpenRouter.
         prompt: What to draw or change.
-        reference_urls: PNG data URLs of the reference images.
+        reference_urls: Lossless WebP data URLs of the reference images.
         count: How many images to make; n is sent only above 1.
         width: The exact width in pixels, sent with height as size; 0 sends no size.
         height: The exact height in pixels, sent with width as size; 0 sends no size.

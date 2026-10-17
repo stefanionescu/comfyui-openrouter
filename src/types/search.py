@@ -16,7 +16,7 @@ class EmbeddingRequest:
     Attributes:
         model_id: The model ID sent to OpenRouter.
         texts: Text items.
-        image_urls: PNG data URLs of image items.
+        image_urls: Lossless WebP data URLs of image items.
         dimensions: Vector length, or 0 for the model's default.
         input_type: A hint such as search_query, or None.
         options: Provider routing and extra fields.
@@ -53,7 +53,7 @@ class RankRequest:
         model_id: The model ID sent to OpenRouter.
         query: What the documents are ranked against.
         texts: Text documents.
-        image_urls: PNG data URLs of image documents.
+        image_urls: Lossless WebP data URLs of image documents.
         top_n: How many to keep, or 0 for all.
         options: Provider routing and extra fields.
 

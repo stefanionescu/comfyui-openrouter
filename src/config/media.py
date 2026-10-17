@@ -7,6 +7,12 @@ IMAGE_TENSOR = {
     "RGBA_CHANNELS": 4,
 }
 
+# Images sent inline, as lossless WebP data URLs: the same pixels as a PNG in about a quarter to a third less, which
+# every OpenRouter model takes. Method 1 encodes in a fraction of the slowest setting's time within 2% of its size, and
+# exact keeps the colors under fully see-through pixels.
+WEBP_URL_PREFIX = "data:image/webp;base64,"
+WEBP = {"METHOD": 1, "QUALITY": 0}
+
 # An SVG file's media type.
 SVG_MEDIA_TYPE = "image/svg+xml"
 
@@ -37,4 +43,6 @@ __all__ = [
     "SVG_MEDIA_TYPE",
     "SVG_STARTS",
     "WAV",
+    "WEBP",
+    "WEBP_URL_PREFIX",
 ]

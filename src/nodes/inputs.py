@@ -44,8 +44,8 @@ def encode_media(
 ) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     """Encode every image, video, and audio clip that reached the list sockets, in order.
 
-    Every image of a batch becomes a PNG data URL and every clip of an audio batch a base64 WAV; videos are MP4 data
-    URLs.
+    Every image of a batch becomes a lossless WebP data URL and every clip of an audio batch a base64 WAV; videos are
+    MP4 data URLs.
     """
     clips = [
         Input.Audio(waveform=clip["waveform"][index : index + 1], sample_rate=clip["sample_rate"])

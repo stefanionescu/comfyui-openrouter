@@ -8,10 +8,11 @@ from __future__ import annotations
 import io
 import wave
 import torch
+import base64
 from comfy_api.latest import Types
 from typing import cast, TYPE_CHECKING
 from ..types.errors import ErrorCode, OpenRouterError
-from ..config.media import WAV, IMAGE_TENSOR, PCM_SAMPLE_BYTES
+from ..config.media import WAV, WEBP, IMAGE_TENSOR, WEBP_URL_PREFIX, PCM_SAMPLE_BYTES
 from ..config.messages.media import (
     AUDIO_BATCH,
     AUDIO_EMPTY,
@@ -23,7 +24,7 @@ from ..config.messages.media import (
     VIDEO_UNREADABLE,
 )
 from comfy_api_nodes.util.conversions import (
-    tensor_to_data_uri,
+    tensor_to_pil,
     audio_to_base64_string,
     video_to_base64_string,
     bytesio_to_image_tensor,
@@ -34,8 +35,17 @@ if TYPE_CHECKING:
     from comfy_api.latest import Input
 
 
+def _encode_webp(frame: torch.Tensor) -> str:
+    """Encode one image as a lossless WebP data URL, at its own pixels."""
+    buffer = io.BytesIO()
+    tensor_to_pil(frame, total_pixels=None).save(
+        buffer, format="WEBP", lossless=True, exact=True, method=WEBP["METHOD"], quality=WEBP["QUALITY"]
+    )
+    return WEBP_URL_PREFIX + base64.b64encode(buffer.getvalue()).decode("ascii")
+
+
 def encode_images(image: torch.Tensor) -> tuple[str, ...]:
-    """Send every image of a batch as a PNG data URL, never shrinking it; the upload limit refuses large images."""
+    """Send every image of a batch as a lossless WebP data URL, never shrunk; the upload limit refuses large images."""
     if image.ndim != IMAGE_TENSOR["DIMENSIONS"] or image.shape[-1] not in {
         IMAGE_TENSOR["RGB_CHANNELS"],
         IMAGE_TENSOR["RGBA_CHANNELS"],
@@ -44,7 +54,7 @@ def encode_images(image: torch.Tensor) -> tuple[str, ...]:
     if not bool(torch.isfinite(image).all()):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_PIXELS)
     try:
-        return tuple(tensor_to_data_uri(frame.clamp(0, 1), total_pixels=None) for frame in image)
+        return tuple(_encode_webp(frame.clamp(0, 1)) for frame in image)
     except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, IMAGE_SHAPE) from None
 
