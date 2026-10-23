@@ -299,7 +299,7 @@
             "widgets_values": [
               "google/gemini-embedding-2",
               0,
-              "model default",
+              "default",
               0,
               ""
             ],
@@ -395,7 +395,7 @@
             "widgets_values": [
               "google/gemini-embedding-2",
               0,
-              "model default",
+              "default",
               0,
               "A distorted AI image with warped hands, extra fingers, melted faces, broken objects, and garbled text"
             ],
@@ -594,13 +594,13 @@
             },
             "widgets_values": [
               "openai/gpt-6-luna",
-              "model default",
+              "default",
               0,
-              "model default",
+              "default",
               "text",
-              "model default",
+              "default",
               "alloy",
-              "model default",
+              "default",
               42,
               "fixed",
               0,

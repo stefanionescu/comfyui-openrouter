@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from ..types.images import ImageResult
 
 
-# The image fields, compression, exact size, count, and references; a field left at model default sends nothing.
+# The image fields, compression, exact size, count, and references; a field left at default sends nothing.
 # The format, the last field, has a tooltip that explains its name.
 FIELDS = (
     *(
@@ -56,7 +56,7 @@ FIELDS = (
             max=MAX_SIZE,
             advanced=True,
             tooltip=f"The exact image {side} in pixels, sent with {other}; 0 sends no size. "
-            "An exact size needs resolution and aspect_ratio at model default.",
+            "An exact size needs resolution and aspect_ratio at default.",
         )
         for side, other in (("width", "height"), ("height", "width"))
     ),

@@ -12,7 +12,7 @@ INPUT_NAMES = {
 MODEL_TOOLTIP = "Any OpenRouter model ID. Copy one from openrouter.ai/models."
 
 # Every dropdown's choice that sends nothing and leaves the value to the model.
-MODEL_DEFAULT = "model default"
+MODEL_DEFAULT = "default"
 
 # The seed's default, and its largest value: OpenRouter refuses a seed of 2**31 or more.
 SEED = {

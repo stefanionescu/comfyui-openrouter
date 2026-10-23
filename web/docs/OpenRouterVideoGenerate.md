@@ -24,7 +24,7 @@ frames, or reference media.
 | `last_frame`       | One image the video ends on; a batch or list is refused.                               |
 | `options`          | Settings from **Request Options**.                                                     |
 
-`model default` or `0` sends nothing. Before anything is paid, the node refuses
+`default` or `0` sends nothing. Before anything is paid, the node refuses
 a `duration`, `resolution`, `aspect_ratio`, `generate_audio`, `upscale_factor`,
 `creativity`, `first_frame`, or `last_frame` the model's video listing does not
 include, naming what it does take.

@@ -110,7 +110,7 @@ per ComfyUI session. **Model: Info** returns the same listing as JSON, for free.
 them, and with an `answer_schema` only providers that follow it answer. A
 `reasoning_effort` the model does not list steps down to the highest one it
 lists below it, or up to its lowest. Every other setting is sent only when
-changed from `model default` or `0`.
+changed from `default` or `0`.
 
 | Node              | Default model                         |
 | ----------------- | ------------------------------------- |

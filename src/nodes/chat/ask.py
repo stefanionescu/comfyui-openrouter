@@ -86,7 +86,7 @@ CONTROLS = (
                 ],
             ),
         ],
-        tooltip="How much the answer varies. Choose set to send a value to models that take a temperature.",
+        tooltip="How much the answer varies. Choose custom to send a value to models that take a temperature.",
         extra_dict={"advanced": True},
     ),
     io.Combo.Input(
@@ -117,7 +117,7 @@ CONTROLS = (
 
 
 def _read_temperature(choice: Mapping[str, object] | None) -> float | None:
-    """Read the set temperature; model default, or no choice from a node that calls this one, sends none."""
+    """Read the custom temperature; default, or no choice from a node that calls this one, sends none."""
     if choice is None or choice[TEMPERATURE_CHOICE["INPUT"]] != TEMPERATURE_CHOICE["SET"]:
         return None
     return float(cast("float", choice[TEMPERATURE_CHOICE["VALUE"]]))

@@ -280,11 +280,11 @@
             },
             "widgets_values": [
               "google/gemini-3.1-flash-image",
-              "model default",
+              "default",
               "1:1",
               "medium",
               "transparent",
-              "model default",
+              "default",
               90,
               0,
               0,

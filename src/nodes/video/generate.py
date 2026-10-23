@@ -54,7 +54,7 @@ MEDIA = (
 )
 
 
-# The duration, size, and sound, then the upscale settings of an upscaling model; 0 and model default send nothing.
+# The duration, size, and sound, then the upscale settings of an upscaling model; 0 and default send nothing.
 CONTROLS = (
     io.Int.Input(
         "duration",

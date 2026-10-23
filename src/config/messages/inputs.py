@@ -55,8 +55,7 @@ SITUATION_EMPTY = "Describe the situation to decide on."
 SIZE_PAIR = "Set both width and height for an exact size, or leave both at 0."
 
 SIZE_SHAPE = (
-    "An exact size sets the shape itself. Leave resolution and aspect_ratio at model default, "
-    "or set width and height to 0."
+    "An exact size sets the shape itself. Leave resolution and aspect_ratio at default, or set width and height to 0."
 )
 
 SPEECH_TEXT_EMPTY = "Write the text to speak."

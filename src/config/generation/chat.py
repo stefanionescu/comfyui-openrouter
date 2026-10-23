@@ -2,14 +2,14 @@
 
 from .inputs import MODEL_DEFAULT
 
-# The temperature dropdown's input and choice names: model default sends none, and set sends its value.
+# The temperature dropdown's input and choice names: default sends none, and custom sends its value.
 TEMPERATURE_CHOICE = {
     "INPUT": "temperature",
-    "SET": "set",
+    "SET": "custom",
     "VALUE": "value",
 }
 
-# A set temperature, in OpenRouter's documented range.
+# A custom temperature, in OpenRouter's documented range.
 TEMPERATURE = {
     "DEFAULT": 1.0,
     "MAX": 2.0,

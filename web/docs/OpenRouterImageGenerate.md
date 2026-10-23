@@ -21,10 +21,10 @@ Generates or edits images with any image model on OpenRouter.
 | `prompt`             | What to draw or change.                                                                       |
 | `options`            | Settings from **Request Options**.                                                            |
 
-`model default` sends nothing. Before anything is paid, the node refuses a
+`default` sends nothing. Before anything is paid, the node refuses a
 value, `count`, or number of `references` the model's image listing does not
 include, naming what it does take. An exact size sets the shape itself, so the
-node refuses it unless `resolution` and `aspect_ratio` are at `model default`.
+node refuses it unless `resolution` and `aspect_ratio` are at `default`.
 
 ## Outputs
 
