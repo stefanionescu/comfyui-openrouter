@@ -42,9 +42,12 @@
     },
     "overrides": {
         "braces": "github:FSDevelop/braces#d0d575e55e74a4e0218e5248fafb79efc3e54ebb",
+        "fast-uri": "3.1.9",
         "katex": "0.18.11",
         "js-yaml": "5.4.1",
-        "markdown-it": "14.3.1",
-        "smol-toml": "1.9.1"
+        "markdown-it": "14.3.3",
+        "smol-toml": "1.9.1",
+        "undici": "7.30.1",
+        "zod": "4.6.7"
     }
 }
