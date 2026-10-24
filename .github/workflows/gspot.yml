@@ -52,10 +52,8 @@ jobs:
           version: 2026.10.7
           cache: false
 
-      - name: Install project dependencies
-        run: |-
-          bun install --frozen-lockfile
-          mise exec uv@0.12.22 -- uv sync --locked
+      - name: Set up the project
+        run: mise run ci:setup
 
       - name: Install gspot tools
         env:

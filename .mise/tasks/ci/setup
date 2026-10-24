@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#
+# Install the ComfyUI release the checks read, then the locked dependencies, in the CI job that gspot writes.
+# Runtime: Bash 3.2+ on Linux, with RUNNER_TEMP set.
+#MISE description="Install the ComfyUI release the checks read, then the locked dependencies, for CI."
+set -euo pipefail
+
+# The ComfyUI release the checks read, by tag and by the commit the tag must name.
+readonly COMFYUI_REPOSITORY='https://github.com/Comfy-Org/ComfyUI.git'
+readonly COMFYUI_TAG='v0.37.2'
+readonly COMFYUI_COMMIT='830232b856045ca2892833212d7771078a13edd5'
+# The checks only import ComfyUI, so CI installs the CPU build of torch, which is far smaller than the default build.
+readonly TORCH_INDEX='https://download.pytorch.org/whl/cpu'
+
+# install_comfyui: Clones the ComfyUI release, and installs its requirements and the extension's into its environment.
+# Arguments:
+#   Target folder.
+install_comfyui() {
+    local target="$1"
+    local comfy_python="${target}/.venv/bin/python"
+    local commit project_python
+
+    git clone --quiet --depth 1 --branch "${COMFYUI_TAG}" "${COMFYUI_REPOSITORY}" "${target}" || return 1
+    commit="$(git -C "${target}" rev-parse HEAD)" || return 1
+    if [[ ${commit} != "${COMFYUI_COMMIT}" ]]; then
+        printf 'error: ComfyUI %s is commit %s, not %s\n' "${COMFYUI_TAG}" "${commit}" "${COMFYUI_COMMIT}" >&2
+        return 1
+    fi
+    project_python="$(mise which python)" || return 1
+    uv venv --quiet --python "${project_python}" "${target}/.venv" || return 1
+    uv pip install --quiet --python "${comfy_python}" --index-url "${TORCH_INDEX}" torch torchvision torchaudio || return 1
+    uv pip install --quiet --python "${comfy_python}" --requirement "${target}/requirements.txt" || return 1
+    if [[ -f requirements.txt ]]; then
+        uv pip install --quiet --python "${comfy_python}" --requirement requirements.txt || return 1
+    fi
+}
+
+# main: Installs ComfyUI under RUNNER_TEMP, points .mise.local.toml at it, and runs the deps task.
+main() {
+    local repo_root comfy_path
+
+    repo_root="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+    cd -- "${repo_root}" || exit 1
+    comfy_path="${RUNNER_TEMP:?run this task in CI, where RUNNER_TEMP is set}/ComfyUI"
+    install_comfyui "${comfy_path}"
+    printf '[env]\nCOMFYUI_PATH = "%s"\nCOMFYUI_PYTHON = "%s"\n' "${comfy_path}" "${comfy_path}/.venv/bin/python" \
+        >.mise.local.toml || exit 1
+    exec mise run deps
+}
+
+main "$@"

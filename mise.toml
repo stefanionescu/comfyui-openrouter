@@ -3,6 +3,9 @@ python = "3.12.13"
 uv = "0.11.21"
 node = "24.20.0"
 bun = "1.4.3"
+# gspot's CI installs its CLI through mise, whose npm installer refuses a package as new as @gspothq/cli unless it is
+# approved here. The version matches package.json.
+"npm:@gspothq/cli" = { version = "0.3.7", allow_low_downloads = true }
 "pipx:comfy-cli" = "1.20.0"
 
 # gspot checks a pushed commit in a scratch copy without a .venv. The type checker then reads the active environment,
