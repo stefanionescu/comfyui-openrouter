@@ -18,7 +18,7 @@ def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
     """Build the seed, run number, and options inputs that follow a paid node's own inputs."""
     seed = io.Int.Input(
         INPUT_NAMES["SEED"],
-        tooltip="Number used by the model to vary its output. Results can change after model updates.",
+        tooltip="Number the model uses to vary its output. Results can change after model updates.",
         default=SEED["DEFAULT"],
         min=0,
         max=SEED["MAX"],

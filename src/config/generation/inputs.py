@@ -14,6 +14,12 @@ MODEL_TOOLTIP = "Any OpenRouter model ID. Copy one from openrouter.ai/models."
 # Every dropdown's choice that sends nothing and leaves the value to the model.
 MODEL_DEFAULT = "default"
 
+# A default or custom dropdown's choice that shows a value, and the name of that value.
+VALUE_CHOICE = {
+    "SET": "custom",
+    "VALUE": "value",
+}
+
 # The seed's default, and its largest value: OpenRouter refuses a seed of 2**31 or more.
 SEED = {
     "DEFAULT": 42,
@@ -33,4 +39,5 @@ __all__ = [
     "MODEL_TOOLTIP",
     "RUN_NUMBER",
     "SEED",
+    "VALUE_CHOICE",
 ]

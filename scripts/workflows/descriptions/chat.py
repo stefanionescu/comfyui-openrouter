@@ -18,23 +18,31 @@ WRITER = "openai/gpt-6-sol"
 READER = "openai/gpt-6-luna"
 LISTING_SCHEMA = json.dumps(
     {
-        "type": "object",
-        "properties": {
-            "title": {"type": "string"},
-            "bullets": {"type": "array", "items": {"type": "string"}},
-            "price": {"type": "string"},
+        "name": "listing",
+        "strict": True,
+        "schema": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+                "bullets": {"type": "array", "items": {"type": "string"}},
+                "price": {"type": "string"},
+            },
+            "required": ["title", "bullets", "price"],
+            "additionalProperties": False,
         },
-        "required": ["title", "bullets", "price"],
-        "additionalProperties": False,
     },
     indent=2,
 )
 CAPTIONS_SCHEMA = json.dumps(
     {
-        "type": "object",
-        "properties": {"captions": {"type": "array", "items": {"type": "string"}}},
-        "required": ["captions"],
-        "additionalProperties": False,
+        "name": "captions",
+        "strict": True,
+        "schema": {
+            "type": "object",
+            "properties": {"captions": {"type": "array", "items": {"type": "string"}}},
+            "required": ["captions"],
+            "additionalProperties": False,
+        },
     },
     indent=2,
 )
@@ -50,7 +58,7 @@ WRITE = Subgraph(
             ASK,
             {
                 "model": WRITER,
-                "answer_schema": LISTING_SCHEMA,
+                "json_schema": LISTING_SCHEMA,
                 "prompt": (
                     "Write a marketplace listing for this product from the photos and the spec sheet. Use only "
                     "facts you can see or read. Keep the title under 80 characters and write five bullet points."
@@ -178,7 +186,7 @@ CAPTION = Subgraph(
             ASK,
             {
                 "model": READER,
-                "answer_schema": CAPTIONS_SCHEMA,
+                "json_schema": CAPTIONS_SCHEMA,
                 "prompt": (
                     "Write one training caption for each image, in the order given. Each caption is one sentence "
                     "that names only what is visible: subject, setting, lighting, and style. No opinions."

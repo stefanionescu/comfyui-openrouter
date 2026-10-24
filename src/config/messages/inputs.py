@@ -1,7 +1,5 @@
 """Messages for node inputs the extension refuses before sending anything."""
 
-ANSWER_SCHEMA_INVALID = "Write answer_schema as a JSON object that describes the answer."
-
 CHOICE_OPTIONS = "List at least one option, one per line, as key: description."
 
 CHOICE_OPTION_REPEATED = "Each option needs its own key; {key} is listed twice."
@@ -15,6 +13,8 @@ DOCUMENT_OUTSIDE = "Choose a document inside ComfyUI's input folder."
 DOCUMENT_SIZE = "The document is larger than the maximum upload size of {maximum} MiB in OpenRouter Settings."
 
 DOCUMENT_UNREADABLE = "The document could not be read as UTF-8 text. Save it as UTF-8 or as a PDF."
+
+JSON_SCHEMA_INVALID = "Write json_schema as a JSON object with a name and a schema."
 
 LANGUAGE_CODE = "Enter a two-letter language code such as en, or leave language empty."
 
@@ -65,7 +65,6 @@ TRANSPARENT_FORMAT = "A transparent background needs output_format set to png or
 YES_NO_CRITERIA = "Fill in both yes_means and no_means, or leave both empty."
 
 __all__ = [
-    "ANSWER_SCHEMA_INVALID",
     "CHOICE_OPTIONS",
     "CHOICE_OPTION_REPEATED",
     "DOCUMENT_KIND",
@@ -73,6 +72,7 @@ __all__ = [
     "DOCUMENT_OUTSIDE",
     "DOCUMENT_SIZE",
     "DOCUMENT_UNREADABLE",
+    "JSON_SCHEMA_INVALID",
     "LANGUAGE_CODE",
     "OPTIONS_JSON",
     "OPTION_RESERVED_FIELD",

@@ -16,7 +16,7 @@ MODEL_OUTPUT = "{model} does not make {kind}. Set outputs to text, or choose a m
 
 MODEL_RANGE = "{model} takes {field} from {minimum} to {maximum}."
 
-MODEL_SCHEMA = "{model} cannot follow an answer schema. Clear answer_schema, or choose a model that can."
+MODEL_SCHEMA = "{model} cannot follow a JSON schema. Clear json_schema, or choose a model that can."
 
 MODEL_TOKENS = "{model} answers with at most {maximum} tokens. Set max_tokens to {maximum} or less, or to 0."
 

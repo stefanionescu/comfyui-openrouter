@@ -1,4 +1,4 @@
-"""Share the cache key, the run-number input, and list inputs across the paid nodes."""
+"""Share the cache key, the run-number input, list inputs, and default or custom dropdowns across the paid nodes."""
 
 import asyncio
 from comfy_api.latest import io
@@ -6,8 +6,8 @@ from typing import cast, ClassVar
 from ..comfy.runtime import get_runtime
 from collections.abc import Callable, Awaitable
 from ..config.messages.inputs import SINGLE_VALUE
-from ..config.generation.inputs import INPUT_NAMES
 from ..types.errors import ErrorCode, OpenRouterError
+from ..config.generation.inputs import INPUT_NAMES, VALUE_CHOICE
 
 
 class PaidNode(io.ComfyNode):
@@ -17,11 +17,13 @@ class PaidNode(io.ComfyNode):
         send: Typed entry point that receives every saved input except the run number.
         list_inputs: The media inputs of a node that takes input lists; each reaches send as the whole list, and
             every other input as its one value.
+        choice_inputs: The default or custom dropdowns; each reaches send as its custom value, or None at default.
 
     """
 
     send: ClassVar[Callable[..., Awaitable[io.NodeOutput]]]
     list_inputs: ClassVar[frozenset[str]] = frozenset()
+    choice_inputs: ClassVar[frozenset[str]] = frozenset()
 
     @classmethod
     async def fingerprint_inputs(cls, **_inputs: object) -> str:
@@ -40,6 +42,9 @@ class PaidNode(io.ComfyNode):
             for name, value in inputs.items():
                 if name not in cls.list_inputs:
                     inputs[name] = _read_single(name, value)
+        for name in cls.choice_inputs & inputs.keys():
+            choice = cast("dict[str, object]", inputs[name])
+            inputs[name] = choice[VALUE_CHOICE["VALUE"]] if choice[name] == VALUE_CHOICE["SET"] else None
         return await cls.send(**inputs)
 
 

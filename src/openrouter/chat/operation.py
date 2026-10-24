@@ -17,8 +17,8 @@ from ...config.messages.inputs import PROMPT_EMPTY
 from ..failures import sanitize_reason, read_failure
 from ...types.errors import ErrorCode, OpenRouterError
 from ...types.replies import ChatReply, ErrorReply, ChatMessage
-from ...config.messages.models import MODEL_OUTPUT, MODEL_SCHEMA, MODEL_TOKENS
 from ...config.openrouter import ENDPOINT_URLS, MEDIA_LABELS, SCHEMA_PARAMETERS
+from ...config.messages.models import MODEL_FIELD, MODEL_OUTPUT, MODEL_SCHEMA, MODEL_TOKENS
 from ...config.messages.run import ANSWER_CUT, REPLY_EMPTY, MODEL_REFUSED, ANSWER_FILTERED, REPLY_UNREADABLE
 
 if TYPE_CHECKING:
@@ -71,13 +71,17 @@ class ChatOperation:
 
 
 def _validate_settings(request: ChatRequest, model: Model) -> None:
-    """Refuse outputs the model cannot make, a schema it cannot follow, and more tokens than any provider gives."""
+    """Refuse outputs the model cannot make, a field or schema it does not take, and more tokens than it gives."""
     settings = request.settings
     missing = sorted(settings.outputs - model.outputs)
     if missing:
         message = MODEL_OUTPUT.format(model=request.model_id, kind=MEDIA_LABELS[missing[0]])
         raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
-    if settings.answer_schema is not None and model.parameters.isdisjoint(SCHEMA_PARAMETERS):
+    fields = (*settings.sampling, *(("stop",) if settings.stop else ()))
+    unknown = next((field for field in fields if field not in model.parameters), None)
+    if unknown is not None:
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_FIELD.format(model=request.model_id, field=unknown))
+    if settings.json_schema is not None and model.parameters.isdisjoint(SCHEMA_PARAMETERS):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_SCHEMA.format(model=request.model_id))
     if model.max_completion_tokens is not None and settings.max_tokens > model.max_completion_tokens:
         message = MODEL_TOKENS.format(model=request.model_id, maximum=model.max_completion_tokens)

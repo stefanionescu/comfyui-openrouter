@@ -21,7 +21,7 @@ MOVE = Subgraph(
             f"{NODE_PREFIX}ChatAsk",
             {
                 "model": "openai/gpt-6-sol",
-                "answer_schema": build_numbered_schema("move", 3),
+                "json_schema": build_numbered_schema("move", 3),
                 "prompt": (
                     "This still is the first frame of a six-second product teaser. Write three different camera "
                     "moves for it. Each is one sentence a video model can follow, such as a slow push-in."

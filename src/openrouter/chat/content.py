@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from ..options import build_request_body
-from ...config.generation.chat import VOICE, EFFORTS, ANSWER_SCHEMA_NAME
+from ...config.generation.chat import VOICE, EFFORTS
 
 if TYPE_CHECKING:
     from ...types import Json
@@ -63,9 +63,10 @@ def _choose_effort(effort: str, efforts: tuple[str, ...]) -> str:
 
 
 def build_body(request: ChatRequest, model: Model) -> dict[str, Json]:
-    """Add each control that is set; the reasoning effort, temperature, and seed go only to a model that takes them.
+    """Add each control that is set; the reasoning effort and the seed go only to a model that takes them.
 
-    The reasoning effort steps to one the model lists. With an answer schema, only providers that follow it may answer.
+    The reasoning effort steps to one the model lists. With a sampling field, stop text, or a JSON schema, only
+    providers that take every field sent may answer.
     """
     settings = request.settings
     parameters = model.parameters
@@ -75,13 +76,14 @@ def build_body(request: ChatRequest, model: Model) -> dict[str, Json]:
     if settings.max_tokens > 0:
         field = "max_tokens" if "max_completion_tokens" not in parameters else "max_completion_tokens"
         body[field] = settings.max_tokens
-    if settings.temperature is not None and "temperature" in parameters:
-        body["temperature"] = settings.temperature
+    body.update(settings.sampling)
+    if settings.stop:
+        body["stop"] = list(settings.stop)
     if "seed" in parameters:
         body["seed"] = request.seed
-    if settings.answer_schema is not None:
-        schema: dict[str, Json] = {"name": ANSWER_SCHEMA_NAME, "schema": dict(settings.answer_schema), "strict": True}
-        body["response_format"] = {"type": "json_schema", "json_schema": schema}
+    if settings.json_schema is not None:
+        body["response_format"] = {"type": "json_schema", "json_schema": dict(settings.json_schema)}
+    if settings.sampling or settings.stop or settings.json_schema is not None:
         body["provider"] = {"require_parameters": True}
     if settings.pdf_engine is not None and any(document.file_url for document in request.documents):
         body["plugins"] = [{"id": "file-parser", "pdf": {"engine": settings.pdf_engine}}]

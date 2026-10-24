@@ -62,8 +62,9 @@ class ChatSettings:
     Attributes:
         effort: Reasoning effort, or None for the model's default.
         max_tokens: Largest answer in tokens, or 0 for the model's default.
-        temperature: Sampling temperature, sent when set and the model takes one; None leaves it to the model.
-        answer_schema: JSON schema the answer must follow, or None for free text.
+        sampling: The sampling fields set to custom, by OpenRouter's name; the model chooses every other one.
+        stop: Text that ends the answer, or none.
+        json_schema: The response_format.json_schema object, sent as written, or None for free text.
         outputs: Media to make besides text: image, audio.
         aspect_ratio: Aspect ratio of generated images, or None for the model's default.
         voice: Voice of spoken replies, or None when the voice box is blank.
@@ -73,8 +74,9 @@ class ChatSettings:
 
     effort: str | None
     max_tokens: int
-    temperature: float | None
-    answer_schema: Mapping[str, Json] | None
+    sampling: Mapping[str, float]
+    stop: tuple[str, ...]
+    json_schema: Mapping[str, Json] | None
     outputs: frozenset[str]
     aspect_ratio: str | None
     voice: str | None

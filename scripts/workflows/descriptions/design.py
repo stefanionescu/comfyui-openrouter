@@ -33,7 +33,7 @@ IDEAS = Subgraph(
                 )
             },
         ),
-        Node("ideas", ASK, {"model": WRITER, "answer_schema": build_numbered_schema("idea", 3)}, is_paid=True),
+        Node("ideas", ASK, {"model": WRITER, "json_schema": build_numbered_schema("idea", 3)}, is_paid=True),
     ),
     links=(("request.STRING", "ideas.prompt"),),
     columns=(("request",), ("ideas",)),
@@ -163,7 +163,7 @@ PROMPTS = Subgraph(
             ASK,
             {
                 "model": WRITER,
-                "answer_schema": build_numbered_schema("prompt", 3),
+                "json_schema": build_numbered_schema("prompt", 3),
                 "system_prompt": (
                     "Write three different prompts for a flat, two-colour logo mark for the brand the person "
                     "describes. Each prompt describes one simple symbol and its colours, with no text in the mark."

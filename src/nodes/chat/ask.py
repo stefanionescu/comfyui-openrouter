@@ -5,28 +5,31 @@ from __future__ import annotations
 import asyncio
 from ..base import PaidNode
 from comfy_api.latest import io
-from typing import cast, TYPE_CHECKING
+from dataclasses import replace
+from typing import TYPE_CHECKING
 from ...types.parsing import parse_json
 from comfy_execution.graph import ExecutionBlocker
 from ...config.generation.models import DEFAULT_MODELS
 from ...openrouter.chat.operation import ChatOperation
 from ...types.errors import ErrorCode, OpenRouterError
 from ..inputs import encode_media, build_request_inputs
-from ...config.messages.inputs import ANSWER_SCHEMA_INVALID
+from ...config.messages.inputs import JSON_SCHEMA_INVALID
 from ...config.namespace import MENUS, NODE_PREFIX, SOCKET_TYPES
 from ...comfy.media import decode_pcm, decode_audio, decode_image
 from ...types.chat import Turn, ChatRequest, ChatSettings, Conversation
 from ...comfy.execution import wait_for_thread, send_request, wait_for_task
-from ...config.generation.inputs import INPUT_NAMES, MODEL_DEFAULT, MODEL_TOOLTIP
+from ...config.generation.inputs import INPUT_NAMES, VALUE_CHOICE, MODEL_DEFAULT, MODEL_TOOLTIP
 from ...config.generation.chat import (
     VOICE,
     EFFORTS,
     OUTPUTS,
+    SAMPLING,
     PDF_ENGINES,
-    TEMPERATURE,
     VOICE_AUDIO,
-    TEMPERATURE_CHOICE,
+    SAMPLING_DECIMALS,
+    SAMPLING_TOOLTIPS,
     IMAGE_ASPECT_RATIOS,
+    SAMPLING_WHOLE_NUMBERS,
 )
 
 if TYPE_CHECKING:
@@ -36,6 +39,10 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
     from ...types.options import Options
     from ...types.chat import Document, ChatResult
+
+
+# The connected images, videos, and audio clips, as their sockets hold them.
+type _Media = tuple[list[torch.Tensor] | None, list[Input.Video] | None, list[Input.Audio] | None]
 
 
 # One socket for each kind of media; everything connected goes in one request, each item at its own size.
@@ -48,6 +55,24 @@ MEDIA = (
     io.Video.Input("videos", optional=True, tooltip="Videos for the model to read. Create List joins several."),
     io.Audio.Input("audio", optional=True, tooltip="Audio clips for the model to read. Create List joins several."),
 )
+
+
+def _build_sampling(name: str) -> io.DynamicCombo.Input:
+    """Build one sampling dropdown: default sends nothing, and custom shows the value at OpenRouter's own range."""
+    tooltip = SAMPLING_TOOLTIPS[name]
+    value: io.Input
+    if name in SAMPLING_WHOLE_NUMBERS:
+        start, minimum = SAMPLING_WHOLE_NUMBERS[name]
+        value = io.Int.Input(VALUE_CHOICE["VALUE"], default=start, min=minimum, advanced=True, tooltip=tooltip)
+    else:
+        start, minimum, maximum, step = SAMPLING_DECIMALS[name]
+        value = io.Float.Input(
+            VALUE_CHOICE["VALUE"], default=start, min=minimum, max=maximum, step=step, advanced=True, tooltip=tooltip
+        )
+    options = [io.DynamicCombo.Option(MODEL_DEFAULT, []), io.DynamicCombo.Option(VALUE_CHOICE["SET"], [value])]
+    return io.DynamicCombo.Input(
+        name, options=options, tooltip=f"{tooltip} Choose custom to send a value.", extra_dict={"advanced": True}
+    )
 
 
 # The controls a chat model may take, what it makes besides text, and how it reads PDFs; each left at its default
@@ -67,28 +92,7 @@ CONTROLS = (
         advanced=True,
         tooltip="The longest answer in tokens; 0 leaves it to the model.",
     ),
-    io.DynamicCombo.Input(
-        TEMPERATURE_CHOICE["INPUT"],
-        options=[
-            io.DynamicCombo.Option(MODEL_DEFAULT, []),
-            io.DynamicCombo.Option(
-                TEMPERATURE_CHOICE["SET"],
-                [
-                    io.Float.Input(
-                        TEMPERATURE_CHOICE["VALUE"],
-                        default=TEMPERATURE["DEFAULT"],
-                        min=0,
-                        max=TEMPERATURE["MAX"],
-                        step=TEMPERATURE["STEP"],
-                        advanced=True,
-                        tooltip="Higher values vary the answer more.",
-                    )
-                ],
-            ),
-        ],
-        tooltip="How much the answer varies. Choose custom to send a value to models that take a temperature.",
-        extra_dict={"advanced": True},
-    ),
+    *(_build_sampling(name) for name in SAMPLING),
     io.Combo.Input(
         "outputs",
         options=list(OUTPUTS),
@@ -116,20 +120,13 @@ CONTROLS = (
 )
 
 
-def _read_temperature(choice: Mapping[str, object] | None) -> float | None:
-    """Read the custom temperature; default, or no choice from a node that calls this one, sends none."""
-    if choice is None or choice[TEMPERATURE_CHOICE["INPUT"]] != TEMPERATURE_CHOICE["SET"]:
-        return None
-    return float(cast("float", choice[TEMPERATURE_CHOICE["VALUE"]]))
-
-
 def _read_schema(text: str) -> Mapping[str, Json] | None:
-    """Read the answer schema, which must be a JSON object; empty text means free text."""
+    """Read the response_format.json_schema object, which must be a JSON object; empty text means free text."""
     if not text.strip():
         return None
     schema = parse_json(text)
     if not isinstance(schema, dict):
-        raise OpenRouterError(ErrorCode.INVALID_INPUT, ANSWER_SCHEMA_INVALID)
+        raise OpenRouterError(ErrorCode.INVALID_INPUT, JSON_SCHEMA_INVALID)
     return schema
 
 
@@ -144,13 +141,24 @@ def _build_outputs(result: ChatResult, history: Conversation, prompt: str) -> io
             else decode_audio(result.audio)
         )
     turns = (*history.turns, Turn("user", prompt), Turn("assistant", result.text))
-    return io.NodeOutput(result.text, result.reasoning, pictures or ExecutionBlocker(None), sound, Conversation(turns))
+    reasoning: object = result.reasoning or ExecutionBlocker(None)
+    return io.NodeOutput(result.text, reasoning, pictures or ExecutionBlocker(None), sound, Conversation(turns))
+
+
+async def _send_media(request: ChatRequest, media: _Media, node_id: str) -> io.NodeOutput:
+    """Encode the connected media inside the owned task, then send the request and decode what the model made."""
+    image_urls, video_urls, clips = await wait_for_thread(lambda: encode_media(*media))
+    encoded = replace(request, image_urls=image_urls, video_urls=video_urls, audio_clips=clips)
+    return await send_request(
+        ChatOperation(encoded), lambda result: _build_outputs(result, request.conversation, request.prompt), node_id
+    )
 
 
 class ChatAsk(PaidNode):
     """Send one chat completion and return every output the model fills."""
 
     list_inputs = frozenset({"images", "videos", "audio"})
+    choice_inputs = frozenset(SAMPLING)
 
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -176,11 +184,21 @@ class ChatAsk(PaidNode):
                 *CONTROLS,
                 *build_request_inputs(has_seed=True),
                 io.String.Input(
-                    "answer_schema",
+                    "json_schema",
                     default="",
                     multiline=True,
                     advanced=True,
-                    tooltip="A JSON schema the answer must follow; leave empty for free text.",
+                    tooltip=(
+                        "Sent as response_format.json_schema: a JSON object with a name and a schema. Leave it empty "
+                        "for free text."
+                    ),
+                ),
+                io.String.Input(
+                    "stop",
+                    default="",
+                    multiline=True,
+                    advanced=True,
+                    tooltip="Text that ends the answer, one per line. Leave it empty to send none.",
                 ),
                 io.String.Input("prompt", multiline=True, default="", tooltip="The question or instruction."),
                 io.String.Input(
@@ -212,8 +230,16 @@ class ChatAsk(PaidNode):
         seed: int,
         reasoning_effort: str = MODEL_DEFAULT,
         max_tokens: int = 0,
-        temperature: Mapping[str, object] | None = None,
-        answer_schema: str = "",
+        temperature: float | None = None,
+        top_p: float | None = None,
+        top_k: int | None = None,
+        min_p: float | None = None,
+        top_a: float | None = None,
+        frequency_penalty: float | None = None,
+        presence_penalty: float | None = None,
+        repetition_penalty: float | None = None,
+        json_schema: str = "",
+        stop: str = "",
         outputs: str = "text",
         aspect_ratio: str = MODEL_DEFAULT,
         voice: str = VOICE["DEFAULT"],
@@ -226,40 +252,33 @@ class ChatAsk(PaidNode):
         audio: list[Input.Audio] | None = None,
         options: Options | None = None,
     ) -> io.NodeOutput:
-        """Encode the connected media inside the owned task, send, and decode what the model made."""
-        history = conversation or Conversation(())
-        settings = ChatSettings(
-            effort=reasoning_effort if reasoning_effort != MODEL_DEFAULT else None,
-            max_tokens=max_tokens,
-            temperature=_read_temperature(temperature),
-            answer_schema=_read_schema(answer_schema),
-            outputs=frozenset(OUTPUTS[outputs]),
-            aspect_ratio=aspect_ratio if aspect_ratio != MODEL_DEFAULT else None,
-            voice=voice.strip() or None,
-            pdf_engine=pdf_engine if pdf_engine != MODEL_DEFAULT else None,
+        """Build the request, then encode the connected media inside the owned task, send, and decode the answer."""
+        choices = (temperature, top_p, top_k, min_p, top_a, frequency_penalty, presence_penalty, repetition_penalty)
+        request = ChatRequest(
+            model_id=model.strip(),
+            system_prompt=system_prompt,
+            prompt=prompt,
+            conversation=conversation or Conversation(()),
+            image_urls=(),
+            video_urls=(),
+            audio_clips=(),
+            documents=documents or (),
+            seed=seed,
+            settings=ChatSettings(
+                effort=reasoning_effort if reasoning_effort != MODEL_DEFAULT else None,
+                max_tokens=max_tokens,
+                sampling={name: value for name, value in zip(SAMPLING, choices, strict=True) if value is not None},
+                stop=tuple(line for line in stop.splitlines() if line),
+                json_schema=_read_schema(json_schema),
+                outputs=frozenset(OUTPUTS[outputs]),
+                aspect_ratio=aspect_ratio if aspect_ratio != MODEL_DEFAULT else None,
+                voice=voice.strip() or None,
+                pdf_engine=pdf_engine if pdf_engine != MODEL_DEFAULT else None,
+            ),
+            options=options,
         )
-
-        async def send_encoded() -> io.NodeOutput:
-            """Encode the media inside the owned task, then send the request."""
-            image_urls, video_urls, clips = await wait_for_thread(lambda: encode_media(images, videos, audio))
-            request = ChatRequest(
-                model_id=model.strip(),
-                system_prompt=system_prompt,
-                prompt=prompt,
-                conversation=history,
-                image_urls=image_urls,
-                video_urls=video_urls,
-                audio_clips=clips,
-                documents=documents or (),
-                seed=seed,
-                settings=settings,
-                options=options,
-            )
-            return await send_request(
-                ChatOperation(request), lambda result: _build_outputs(result, history, prompt), cls.hidden.unique_id
-            )
-
-        return await wait_for_task(asyncio.create_task(send_encoded()))
+        media = _send_media(request, (images, videos, audio), cls.hidden.unique_id)
+        return await wait_for_task(asyncio.create_task(media))
 
 
 __all__ = ["ChatAsk"]

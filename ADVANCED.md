@@ -92,9 +92,9 @@ before anything is paid, when:
 - the model makes something the node does not return, such as a video model in
   **Image: Generate**;
 - connected images, video, or audio are media the model does not read;
-- **Chat: Ask** asks for images or audio the model does not make, an
-  `answer_schema` it cannot follow, or more `max_tokens` than its longest
-  answer;
+- **Chat: Ask** asks for images or audio the model does not make, a sampling
+  setting or `stop` the model does not take, a `json_schema` it cannot follow,
+  or more `max_tokens` than its longest answer;
 - **Audio: Speak** has `voice_sample` connected and the model cannot clone
   voices;
 - **Image: Generate** asks for a value, `count`, or number of `references` the
@@ -106,8 +106,9 @@ before anything is paid, when:
 The message names what the model does take. Each listing is read once per model
 per ComfyUI session. **Model: Info** returns the same listing as JSON, for free.
 
-`seed`, a set `temperature`, and `reasoning_effort` go only to models that list
-them, and with an `answer_schema` only providers that follow it answer. A
+`seed` and `reasoning_effort` go only to models that list them. With a sampling
+setting, `stop`, or a `json_schema`, only providers that take every one of them
+answer. A
 `reasoning_effort` the model does not list steps down to the highest one it
 lists below it, or up to its lowest. Every other setting is sent only when
 changed from `default` or `0`.
@@ -160,7 +161,7 @@ Paid nodes check these before sending, along with the [model checks](#models).
 
 - `prompt` is empty.
 - The media are over the upload limit.
-- `answer_schema` is not a JSON object.
+- `json_schema` is not a JSON object.
 - An input other than `images`, `videos`, or `audio` receives a list of several
   values. The same holds for the media nodes below.
 

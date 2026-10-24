@@ -721,7 +721,7 @@
             ],
             "size": [
               340,
-              560
+              782
             ],
             "flags": {},
             "order": 104,
@@ -790,6 +790,62 @@
                 }
               },
               {
+                "name": "top_p",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "top_p"
+                }
+              },
+              {
+                "name": "top_k",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "top_k"
+                }
+              },
+              {
+                "name": "min_p",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "min_p"
+                }
+              },
+              {
+                "name": "top_a",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "top_a"
+                }
+              },
+              {
+                "name": "frequency_penalty",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "frequency_penalty"
+                }
+              },
+              {
+                "name": "presence_penalty",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "presence_penalty"
+                }
+              },
+              {
+                "name": "repetition_penalty",
+                "type": "COMFY_DYNAMICCOMBO_V3",
+                "link": null,
+                "widget": {
+                  "name": "repetition_penalty"
+                }
+              },
+              {
                 "name": "outputs",
                 "type": "COMBO",
                 "link": null,
@@ -844,11 +900,19 @@
                 "shape": 7
               },
               {
-                "name": "answer_schema",
+                "name": "json_schema",
                 "type": "STRING",
                 "link": null,
                 "widget": {
-                  "name": "answer_schema"
+                  "name": "json_schema"
+                }
+              },
+              {
+                "name": "stop",
+                "type": "STRING",
+                "link": null,
+                "widget": {
+                  "name": "stop"
                 }
               },
               {
@@ -906,6 +970,13 @@
               "default",
               0,
               "default",
+              "default",
+              "default",
+              "default",
+              "default",
+              "default",
+              "default",
+              "default",
               "text",
               "default",
               "alloy",
@@ -913,6 +984,7 @@
               42,
               "fixed",
               0,
+              "",
               "",
               "Describe each image in two sentences, as candidate_1, candidate_2, and candidate_3 in the order given. Mention any visible flaw, such as warped shapes or stray lettering.",
               ""
