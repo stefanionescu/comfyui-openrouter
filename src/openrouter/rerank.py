@@ -1,5 +1,7 @@
 """Send one rank request and read the documents in order of relevance."""
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
@@ -9,15 +11,16 @@ from .operation import validate_upload_size
 from .transport import send_json, read_reply
 from .embeddings import validate_search_items
 from ..state.errors import ErrorCode, OpenRouterError
-from ..state.search import RankedItem, RankResult, RankRequest
+from ..state.search import RankedItem, RankResult
 from ..state.replies import RankReply
-from ..state.settings import Settings, Configuration
 from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.run import REPLY_UNREADABLE
 from ..config.messages.inputs import QUERY_EMPTY
 
 if TYPE_CHECKING:
     from ..state import Json
+    from ..state.search import RankRequest
+    from ..state.settings import Settings, Configuration
 
 
 @dataclass(frozen=True, slots=True)

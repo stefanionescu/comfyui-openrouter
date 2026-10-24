@@ -1,11 +1,16 @@
 """Chat documents, conversations, requests, and results."""
 
-from typing import Literal
-from dataclasses import dataclass
-from collections.abc import Mapping
+from __future__ import annotations
 
-from . import Json
-from .options import Options
+from typing import TYPE_CHECKING, Literal
+from dataclasses import dataclass
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from . import Json
+    from .options import Options
+
 
 # Who said one turn of a conversation.
 type Role = Literal['user', 'assistant']

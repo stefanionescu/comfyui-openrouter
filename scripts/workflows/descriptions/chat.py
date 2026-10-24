@@ -1,11 +1,22 @@
 """The chat workflows: write a product listing Jev fact-checks, and caption a training set Jev reviews."""
 
+from __future__ import annotations
+
 import json
 
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR, TEXT_PREVIEW
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import (
+    READER,
+    WRITER,
+    CHAT_ASK,
+    DECISION_ASK,
+    REQUEST_OPTIONS,
+    CHAT_ATTACH_DOCUMENT,
+    DECISION_READ_ANSWER,
+    DECISION_ADD_QUESTION,
+)
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 
@@ -48,9 +59,9 @@ WRITE = Subgraph(
         Node('photos', HostNode.CREATE_LIST),
         Node(
             'listing',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.WRITER,
+                'model': WRITER,
                 'json_schema': LISTING_SCHEMA,
                 'prompt': (
                     'Write a marketplace listing for this product from the photos and the spec sheet. Use only '
@@ -62,9 +73,9 @@ WRITE = Subgraph(
         ),
         Node(
             'facts',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.READER,
+                'model': READER,
                 'prompt': 'List every fact in this spec sheet, one short line each. Add nothing else.',
             },
             title=SHARED_TEXTS['facts'],
@@ -88,8 +99,8 @@ CHECK_LISTING = Subgraph(
     name=SHARED_TEXTS['check'],
     nodes=(
         Node('situation', HostNode.FORMAT, {'f_string': 'Spec facts:\n{a}\n\nListing:\n{b}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('read', ids.DECISION_READ_ANSWER, {'question': 'supported'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('read', DECISION_READ_ANSWER, {'question': 'supported'}),
         Node('approved', HostNode.TEXT, {'value': 'listings/approved'}, title=SHARED_TEXTS['approved']),
         Node('review', HostNode.TEXT, {'value': 'listings/review'}, title=SHARED_TEXTS['review']),
         Node('folder', HostNode.SWITCH),
@@ -122,12 +133,12 @@ WRITE_LISTING = Workflow(
     nodes=(
         Node('front', HostNode.IMAGE, {'image': ''}, title=SHARED_TEXTS['front']),
         Node('detail', HostNode.IMAGE, {'image': ''}, title=SHARED_TEXTS['detail']),
-        Node('spec', ids.CHAT_ATTACH_DOCUMENT, {'file': ''}),
-        Node('private', ids.REQUEST_OPTIONS, {'data_collection': 'deny'}),
+        Node('spec', CHAT_ATTACH_DOCUMENT, {'file': ''}),
+        Node('private', REQUEST_OPTIONS, {'data_collection': 'deny'}),
         Node('write', WRITE.name),
         Node(
             'supported',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'supported',
                 'instructions': 'Is every claim in the listing backed by the spec facts or plainly visible?',
@@ -137,7 +148,7 @@ WRITE_LISTING = Workflow(
         ),
         Node(
             'persuasive',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'persuasive',
                 'instructions': 'How persuasive is the listing for a shopper comparing similar products?',
@@ -179,9 +190,9 @@ CAPTION = Subgraph(
     nodes=(
         Node(
             'caption',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.READER,
+                'model': READER,
                 'json_schema': CAPTIONS_SCHEMA,
                 'prompt': (
                     'Write one training caption for each image, in the order given. Each caption is one sentence '
@@ -206,7 +217,7 @@ CAPTION_SET = Workflow(
         Node('caption', CAPTION.name),
         Node(
             'valid',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'valid',
                 'instructions': (
@@ -214,7 +225,7 @@ CAPTION_SET = Workflow(
                 ),
             },
         ),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
+        Node('decide', DECISION_ASK, is_paid=True),
         Node('summary', HostNode.PREVIEW, title=SHARED_TEXTS['summary']),
     ),
     links=(

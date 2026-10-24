@@ -1,11 +1,16 @@
 """Video requests and the job records kept while OpenRouter makes a video."""
 
-from typing import Literal
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal
 from dataclasses import dataclass
-from collections.abc import Mapping
 
 from . import Value
-from .options import Options
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from .options import Options
 
 
 @dataclass(frozen=True, slots=True)

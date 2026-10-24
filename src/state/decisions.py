@@ -1,14 +1,15 @@
 """Decision questions, answers, and requests; each question and answer kind is its own record."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from collections.abc import Mapping
 
-from . import Json
-from .options import Options
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
-# Each question kind, and the answer kind of the same name.
-type Question = ChoiceQuestion | YesNoQuestion | ScoreQuestion
-type Answer = ChoiceAnswer | YesNoAnswer | ScoreAnswer
+    from . import Json
+    from .options import Options
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,6 +60,9 @@ class ScoreQuestion:
     name: str
     instructions: str
     levels: tuple[str, ...]
+
+
+type Question = ChoiceQuestion | YesNoQuestion | ScoreQuestion
 
 
 @dataclass(frozen=True, slots=True)
@@ -125,6 +129,9 @@ class ScoreAnswer:
     confidence: float
     probabilities: Mapping[str, float]
     legend: Mapping[str, str]
+
+
+type Answer = ChoiceAnswer | YesNoAnswer | ScoreAnswer
 
 
 @dataclass(frozen=True, slots=True)

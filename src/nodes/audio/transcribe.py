@@ -6,9 +6,10 @@ import json
 from typing import TYPE_CHECKING, override
 from dataclasses import asdict, dataclass
 
-from comfy_api.latest import Input, io
+from comfy_api.latest import io
 
-from ..base import PaidNode, build_request_inputs
+from ..base import PaidNode
+from ..inputs import build_request_inputs
 from ...comfy.media import encode_audio
 from ...state.audio import TranscriptionRequest
 from ...comfy.execution import send_request, wait_for_task, wait_for_thread
@@ -19,6 +20,8 @@ from ...config.generation.models import DEFAULT_MODELS
 from ...openrouter.transcription import TranscriptionOperation, format_subtitles
 
 if TYPE_CHECKING:
+    from comfy_api.latest import Input
+
     from ...state.options import Options
 
 

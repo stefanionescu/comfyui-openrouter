@@ -1,9 +1,18 @@
 """The audio workflows: triage a voicemail with Jev and speak a reply, and dub a clip in the same voice."""
 
+from __future__ import annotations
+
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR, AUDIO_PREVIEW
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import (
+    CHAT_ASK,
+    AUDIO_SPEAK,
+    DECISION_ASK,
+    AUDIO_TRANSCRIBE,
+    DECISION_READ_ANSWER,
+    DECISION_ADD_QUESTION,
+)
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 
@@ -14,7 +23,7 @@ DUB_TEXTS = WORKFLOW_TEXTS['audio-02-dub-a-clip']
 TRANSCRIBE_VOICEMAIL = Subgraph(
     name=SHARED_TEXTS['transcribe'],
     nodes=(
-        Node('transcribe', ids.AUDIO_TRANSCRIBE, {'model': TRANSCRIBER}, is_paid=True),
+        Node('transcribe', AUDIO_TRANSCRIBE, {'model': TRANSCRIBER}, is_paid=True),
         Node('save', HostNode.SAVE_TEXT, {'filename_prefix': 'voicemail/transcript'}),
     ),
     links=(('transcribe.text', 'save.text'),),
@@ -27,8 +36,8 @@ TRANSCRIBE_VOICEMAIL = Subgraph(
 TRIAGE = Subgraph(
     name=SHARED_TEXTS['triage'],
     nodes=(
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('department', ids.DECISION_READ_ANSWER, {'question': 'department'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('department', DECISION_READ_ANSWER, {'question': 'department'}),
     ),
     links=(('decide.answers', 'department.answers'),),
     columns=(('decide',), ('department',)),
@@ -50,8 +59,8 @@ REPLY = Subgraph(
                 )
             },
         ),
-        Node('script', ids.CHAT_ASK, {'model': 'openai/gpt-6-luna'}, is_paid=True),
-        Node('speak', ids.AUDIO_SPEAK, {'model': 'google/gemini-3.8-flash-tts', 'voice': 'Kore'}, is_paid=True),
+        Node('script', CHAT_ASK, {'model': 'openai/gpt-6-luna'}, is_paid=True),
+        Node('speak', AUDIO_SPEAK, {'model': 'google/gemini-3.8-flash-tts', 'voice': 'Kore'}, is_paid=True),
         Node('save', HostNode.SAVE_AUDIO, {'filename_prefix': 'voicemail/reply'}),
     ),
     links=(
@@ -72,7 +81,7 @@ TRIAGE_VOICEMAIL = Workflow(
         Node('transcribe', TRANSCRIBE_VOICEMAIL.name),
         Node(
             'department',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'department',
                 'instructions': 'Which department should call back?',
@@ -86,12 +95,12 @@ TRIAGE_VOICEMAIL = Workflow(
         ),
         Node(
             'callback',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {'name': 'callback', 'instructions': 'Does the caller ask to be called back?'},
         ),
         Node(
             'urgency',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'urgency',
                 'instructions': 'How urgent is the call?',
@@ -132,7 +141,7 @@ TRIAGE_VOICEMAIL = Workflow(
 TRANSCRIBE_CLIP = Subgraph(
     name=SHARED_TEXTS['subtitle'],
     nodes=(
-        Node('transcribe', ids.AUDIO_TRANSCRIBE, {'model': TRANSCRIBER, 'timestamps': 'segments'}, is_paid=True),
+        Node('transcribe', AUDIO_TRANSCRIBE, {'model': TRANSCRIBER, 'timestamps': 'segments'}, is_paid=True),
         Node('save', HostNode.SAVE_TEXT, {'filename_prefix': 'dub/subtitles'}),
     ),
     links=(('transcribe.subtitles', 'save.text'),),
@@ -156,10 +165,10 @@ TRANSLATE = Subgraph(
                 )
             },
         ),
-        Node('translate', ids.CHAT_ASK, {'model': 'openai/gpt-6-sol'}, is_paid=True),
+        Node('translate', CHAT_ASK, {'model': 'openai/gpt-6-sol'}, is_paid=True),
         Node('situation', HostNode.FORMAT, {'f_string': 'Original:\n{a}\n\n{b} translation:\n{c}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('accurate', ids.DECISION_READ_ANSWER, {'question': 'accurate'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('accurate', DECISION_READ_ANSWER, {'question': 'accurate'}),
     ),
     links=(
         ('language.STRING', 'request.values.a'),
@@ -187,7 +196,7 @@ TRANSLATE = Subgraph(
 SPEAK_DUB = Subgraph(
     name=SHARED_TEXTS['speak'],
     nodes=(
-        Node('speak', ids.AUDIO_SPEAK, {'model': 'fish-audio/s2.1-pro', 'voice': ''}, is_paid=True),
+        Node('speak', AUDIO_SPEAK, {'model': 'fish-audio/s2.1-pro', 'voice': ''}, is_paid=True),
         Node('approved', HostNode.TEXT, {'value': 'dub/approved'}, title=SHARED_TEXTS['approved']),
         Node('review', HostNode.TEXT, {'value': 'dub/review'}, title=SHARED_TEXTS['review']),
         Node('folder', HostNode.SWITCH),
@@ -219,7 +228,7 @@ DUB_CLIP = Workflow(
         Node('transcribe', TRANSCRIBE_CLIP.name),
         Node(
             'accurate',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'accurate',
                 'instructions': 'Does the translation say the same as the original, with nothing added or left out?',

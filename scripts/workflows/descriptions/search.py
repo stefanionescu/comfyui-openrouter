@@ -1,9 +1,19 @@
 """The search workflows: answer from ranked help articles, and choose a hero image, each checked by Jev."""
 
+from __future__ import annotations
+
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import (
+    READER,
+    CHAT_ASK,
+    SEARCH_RANK,
+    DECISION_ASK,
+    IMAGE_GENERATE,
+    DECISION_READ_ANSWER,
+    DECISION_ADD_QUESTION,
+)
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 
@@ -33,7 +43,7 @@ ANSWER = Subgraph(
                 )
             },
         ),
-        Node('answer', ids.CHAT_ASK, {'model': ids.READER}, is_paid=True),
+        Node('answer', CHAT_ASK, {'model': READER}, is_paid=True),
     ),
     links=(('request.STRING', 'answer.prompt'),),
     columns=(('request',), ('answer',)),
@@ -46,8 +56,8 @@ CHECK_ANSWER = Subgraph(
     name=SHARED_TEXTS['review'],
     nodes=(
         Node('situation', HostNode.FORMAT, {'f_string': 'Articles:\n{a}\n\nCustomer: {b}\n\nAnswer: {c}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('read', ids.DECISION_READ_ANSWER, {'question': 'supported'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('read', DECISION_READ_ANSWER, {'question': 'supported'}),
         Node('escalation', HostNode.FORMAT, {'f_string': 'Pass this customer to a person. They asked: {a}'}),
         Node('pick', HostNode.SWITCH),
     ),
@@ -80,11 +90,11 @@ ANSWER_FROM_ARTICLES = Workflow(
             title=SHARED_TEXTS['question'],
         ),
         Node('articles', HostNode.TEXT_BLOCK, {'value': ARTICLES}, title=SHARED_TEXTS['articles']),
-        Node('rank', ids.SEARCH_RANK, {'model': 'cohere/rerank-4-pro', 'top_n': 3}, is_paid=True),
+        Node('rank', SEARCH_RANK, {'model': 'cohere/rerank-4-pro', 'top_n': 3}, is_paid=True),
         Node('answer', ANSWER.name),
         Node(
             'supported',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {'name': 'supported', 'instructions': 'Does every sentence of the answer come from the articles?'},
         ),
         Node('check', CHECK_ANSWER.name),
@@ -124,13 +134,11 @@ RANK_IMAGES = Subgraph(
     nodes=(
         Node(
             'candidates',
-            ids.IMAGE_GENERATE,
+            IMAGE_GENERATE,
             {'model': 'recraft/recraft-v4.1-flash', 'aspect_ratio': '16:9', 'count': 4},
             is_paid=True,
         ),
-        Node(
-            'rank', ids.SEARCH_RANK, {'model': 'nvidia/llama-nemotron-rerank-vl-1b-v2:free', 'top_n': 1}, is_paid=True
-        ),
+        Node('rank', SEARCH_RANK, {'model': 'nvidia/llama-nemotron-rerank-vl-1b-v2:free', 'top_n': 1}, is_paid=True),
     ),
     links=(('candidates.images', 'rank.images'),),
     columns=(('candidates',), ('rank',)),
@@ -144,9 +152,9 @@ CHECK_HERO = Subgraph(
     nodes=(
         Node(
             'describe',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.READER,
+                'model': READER,
                 'prompt': (
                     'Describe this image in three sentences: the subject, where the empty space is, and any visible '
                     'defect.'
@@ -155,8 +163,8 @@ CHECK_HERO = Subgraph(
             is_paid=True,
         ),
         Node('situation', HostNode.FORMAT, {'f_string': 'Brief:\n{a}\n\nWinning image:\n{b}\n\nRank scores: {c}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('read', ids.DECISION_READ_ANSWER, {'question': 'ready'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('read', DECISION_READ_ANSWER, {'question': 'ready'}),
         Node('approved', HostNode.TEXT, {'value': 'hero/approved'}, title=SHARED_TEXTS['approved']),
         Node('review', HostNode.TEXT, {'value': 'hero/review'}, title=SHARED_TEXTS['review']),
         Node('folder', HostNode.SWITCH),
@@ -203,7 +211,7 @@ CHOOSE_HERO_IMAGE = Workflow(
         Node('rank', RANK_IMAGES.name),
         Node(
             'ready',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'ready',
                 'instructions': (

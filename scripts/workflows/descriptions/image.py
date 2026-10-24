@@ -1,9 +1,20 @@
 """The image workflows: Jev picks the best image for an occasion and rejects distorted drafts."""
 
+from __future__ import annotations
+
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import (
+    READER,
+    CHAT_ASK,
+    GPT_IMAGE,
+    DECISION_ASK,
+    SEARCH_EMBED,
+    IMAGE_GENERATE,
+    DECISION_READ_ANSWER,
+    DECISION_ADD_QUESTION,
+)
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 
@@ -16,23 +27,23 @@ DRAW = Subgraph(
     nodes=(
         Node(
             'first',
-            ids.IMAGE_GENERATE,
-            {'model': ids.GPT_IMAGE, 'aspect_ratio': '1:1', 'quality': 'medium'},
+            IMAGE_GENERATE,
+            {'model': GPT_IMAGE, 'aspect_ratio': '1:1', 'quality': 'medium'},
             is_paid=True,
         ),
         Node(
             'second',
-            ids.IMAGE_GENERATE,
+            IMAGE_GENERATE,
             {'model': 'microsoft/mai-image-2.6-flash', 'aspect_ratio': '1:1'},
             is_paid=True,
         ),
-        Node('third', ids.IMAGE_GENERATE, {'model': 'recraft/recraft-v4.1-flash', 'aspect_ratio': '1:1'}, is_paid=True),
+        Node('third', IMAGE_GENERATE, {'model': 'recraft/recraft-v4.1-flash', 'aspect_ratio': '1:1'}, is_paid=True),
         Node('batch', HostNode.BATCH),
         Node(
             'describe',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.READER,
+                'model': READER,
                 'prompt': (
                     'Describe each image in two sentences, as candidate_1, candidate_2, and candidate_3 in the '
                     'order given. Mention any visible flaw, such as warped shapes or stray lettering.'
@@ -57,9 +68,9 @@ CHOOSE = Subgraph(
     name=SHARED_TEXTS['choose'],
     nodes=(
         Node('situation', HostNode.FORMAT, {'f_string': 'Brief:\n{a}\n\nCandidates:\n{b}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('best', ids.DECISION_READ_ANSWER, {'question': 'best'}),
-        Node('ready', ids.DECISION_READ_ANSWER, {'question': 'ready'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('best', DECISION_READ_ANSWER, {'question': 'best'}),
+        Node('ready', DECISION_READ_ANSWER, {'question': 'ready'}),
         Node('chosen', HostNode.FROM_BATCH),
         Node('approved', HostNode.TEXT, {'value': 'occasion/approved'}, title=SHARED_TEXTS['approved']),
         Node('review', HostNode.TEXT, {'value': 'occasion/review'}, title=SHARED_TEXTS['review']),
@@ -108,7 +119,7 @@ PICK_OCCASION_IMAGE = Workflow(
         Node('draw', DRAW.name),
         Node(
             'best',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'best',
                 'instructions': 'Which candidate suits the occasion best?',
@@ -118,7 +129,7 @@ PICK_OCCASION_IMAGE = Workflow(
         ),
         Node(
             'ready',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'ready',
                 'instructions': (
@@ -161,10 +172,10 @@ INSPECT = Subgraph(
             HostNode.FORMAT,
             {'f_string': 'A clean, sharp, undistorted photo of {a}, with natural hands, faces, and objects'},
         ),
-        Node('clean', ids.SEARCH_EMBED, {'model': EMBEDDER}, title=SHARED_TEXTS['clean'], is_paid=True),
+        Node('clean', SEARCH_EMBED, {'model': EMBEDDER}, title=SHARED_TEXTS['clean'], is_paid=True),
         Node(
             'distorted',
-            ids.SEARCH_EMBED,
+            SEARCH_EMBED,
             {
                 'model': EMBEDDER,
                 'texts': (
@@ -177,9 +188,9 @@ INSPECT = Subgraph(
         ),
         Node(
             'defects',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.READER,
+                'model': READER,
                 'prompt': (
                     'List every visible defect in this image: extra or missing fingers, warped faces or limbs, '
                     'broken objects, impossible geometry, or garbled text. Answer none if there are none.'
@@ -213,8 +224,8 @@ CHECK_DRAFT = Subgraph(
                 )
             },
         ),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('read', ids.DECISION_READ_ANSWER, {'question': 'distorted'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('read', DECISION_READ_ANSWER, {'question': 'distorted'}),
         Node('rejected', HostNode.TEXT, {'value': 'drafts/rejected'}, title=SHARED_TEXTS['rejected']),
         Node('approved', HostNode.TEXT, {'value': 'drafts/approved'}, title=SHARED_TEXTS['approved']),
         Node('folder', HostNode.SWITCH),
@@ -255,14 +266,14 @@ REJECT_DISTORTED = Workflow(
         ),
         Node(
             'draft',
-            ids.IMAGE_GENERATE,
+            IMAGE_GENERATE,
             {'model': 'microsoft/mai-image-2.6-flash', 'aspect_ratio': '4:3'},
             is_paid=True,
         ),
         Node('inspect', INSPECT.name),
         Node(
             'distorted',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'distorted',
                 'instructions': 'Is the draft distorted, with defects a viewer would notice?',

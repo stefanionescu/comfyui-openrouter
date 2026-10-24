@@ -1,9 +1,20 @@
 """The video workflows: animate a product shot with the camera move Jev picks, and recover a cancelled video."""
 
+from __future__ import annotations
+
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import (
+    CHAT_ASK,
+    MODEL_INFO,
+    DECISION_ASK,
+    IMAGE_GENERATE,
+    VIDEO_DOWNLOAD,
+    VIDEO_GENERATE,
+    DECISION_READ_ANSWER,
+    DECISION_ADD_QUESTION,
+)
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.schemas import build_numbered_schema
@@ -16,7 +27,7 @@ MOVE = Subgraph(
     nodes=(
         Node(
             'moves',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
                 'model': 'openai/gpt-6-sol',
                 'json_schema': build_numbered_schema('move', 3),
@@ -28,8 +39,8 @@ MOVE = Subgraph(
             is_paid=True,
         ),
         Node('situation', HostNode.FORMAT, {'f_string': 'Product shot:\n{a}\n\nCamera moves:\n{b}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('best', ids.DECISION_READ_ANSWER, {'question': 'best'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('best', DECISION_READ_ANSWER, {'question': 'best'}),
         Node('move', HostNode.FIELD),
     ),
     links=(
@@ -54,7 +65,7 @@ ANIMATE = Subgraph(
     nodes=(
         Node(
             'animate',
-            ids.VIDEO_GENERATE,
+            VIDEO_GENERATE,
             {
                 'duration': 6,
                 'resolution': '768p',
@@ -85,18 +96,18 @@ ANIMATE_PRODUCT = Workflow(
             title=SHARED_TEXTS['brief'],
         ),
         Node('model', HostNode.TEXT, {'value': 'minimax/hailuo-3-max'}, title=SHARED_TEXTS['model']),
-        Node('listing', ids.MODEL_INFO),
+        Node('listing', MODEL_INFO),
         Node('listed', HostNode.PREVIEW, title=SHARED_TEXTS['info']),
         Node(
             'draw',
-            ids.IMAGE_GENERATE,
+            IMAGE_GENERATE,
             {'model': 'microsoft/mai-image-2.6-flash', 'aspect_ratio': '16:9'},
             is_paid=True,
         ),
         Node('frame', HostNode.PREVIEW_IMAGE, title=SHARED_TEXTS['frame']),
         Node(
             'best',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'best',
                 'instructions': (
@@ -147,7 +158,7 @@ ANIMATE_PRODUCT = Workflow(
 RECOVER_VIDEO = Workflow(
     slug='video-02-recover-a-cancelled-video',
     nodes=(
-        Node('download', ids.VIDEO_DOWNLOAD, {'job': ''}),
+        Node('download', VIDEO_DOWNLOAD, {'job': ''}),
         Node('save', HostNode.SAVE_VIDEO, {'filename_prefix': 'video/openrouter/recovered'}),
     ),
     links=(('download.video', 'save.video'),),

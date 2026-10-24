@@ -7,7 +7,8 @@ from dataclasses import dataclass
 
 from comfy_api.latest import io
 
-from ..base import PaidNode, build_request_inputs
+from ..base import PaidNode
+from ..inputs import build_request_inputs
 from ...state.errors import ErrorCode, OpenRouterError
 from ...state.parsing import parse_json
 from ...comfy.execution import send_request, wait_for_task

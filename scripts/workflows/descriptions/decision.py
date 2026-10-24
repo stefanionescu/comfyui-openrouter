@@ -1,9 +1,11 @@
 """The decision workflow: answer with a quick model, and let Jev send doubtful answers to a stronger one."""
 
+from __future__ import annotations
+
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import CHAT_ASK, DECISION_ASK, DECISION_READ_ANSWER, DECISION_ADD_QUESTION
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 
@@ -22,7 +24,7 @@ ANSWER = Subgraph(
             HostNode.FORMAT,
             {'f_string': 'Answer the question using only these notes.\n\nNotes:\n{a}\n\nQuestion: {b}'},
         ),
-        Node('quick', ids.CHAT_ASK, {'model': 'openai/gpt-6-luna'}, is_paid=True),
+        Node('quick', CHAT_ASK, {'model': 'openai/gpt-6-luna'}, is_paid=True),
     ),
     links=(('request.STRING', 'quick.prompt'),),
     columns=(('request',), ('quick',)),
@@ -35,8 +37,8 @@ CHECK = Subgraph(
     name=SHARED_TEXTS['verify'],
     nodes=(
         Node('situation', HostNode.FORMAT, {'f_string': 'Notes:\n{a}\n\nQuestion: {b}\n\nAnswer: {c}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('read', ids.DECISION_READ_ANSWER, {'question': 'supported', 'threshold': 0.8}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('read', DECISION_READ_ANSWER, {'question': 'supported', 'threshold': 0.8}),
     ),
     links=(('situation.STRING', 'decide.situation'), ('decide.answers', 'read.answers')),
     columns=(('situation', 'decide'), ('read',)),
@@ -55,7 +57,7 @@ ESCALATE = Subgraph(
     nodes=(
         Node(
             'careful',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {'model': 'anthropic/claude-opus-5.5', 'reasoning_effort': 'medium'},
             is_paid=True,
         ),
@@ -81,7 +83,7 @@ VERIFY_ESCALATE = Workflow(
         Node('answer', ANSWER.name),
         Node(
             'supported',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'supported',
                 'instructions': 'Is every fact in the answer stated in the notes, and does it answer the question?',

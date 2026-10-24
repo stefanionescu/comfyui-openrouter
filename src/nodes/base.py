@@ -1,4 +1,4 @@
-"""Share the cache key, the request inputs, list inputs, and default or custom dropdowns across the paid nodes."""
+"""Share the cache key, the run-number input, list inputs, and default or custom dropdowns across the paid nodes."""
 
 from typing import ClassVar, cast, override
 import asyncio
@@ -8,9 +8,8 @@ from comfy_api.latest import io
 
 from ..state.errors import ErrorCode, OpenRouterError
 from ..comfy.runtime import get_runtime
-from ..config.namespace import SOCKET_TYPES
 from ..config.messages.inputs import SINGLE_VALUE
-from ..config.generation.inputs import SEED, RUN_NUMBER, INPUT_NAMES, VALUE_CHOICE
+from ..config.generation.inputs import INPUT_NAMES, VALUE_CHOICE
 
 
 class PaidNode(io.ComfyNode):
@@ -67,29 +66,4 @@ def _read_single(name: str, value: object) -> object:
     return values[0]
 
 
-def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
-    """Build the seed, run number, and options inputs that follow the specific inputs of a paid node."""
-    seed = io.Int.Input(
-        INPUT_NAMES['SEED'],
-        tooltip='Number the model uses to vary its output. Results can change after model updates.',
-        default=SEED['DEFAULT'],
-        min=0,
-        max=SEED['MAX'],
-        control_after_generate=True,
-    )
-    run_number = io.Int.Input(
-        INPUT_NAMES['RUN_NUMBER'],
-        tooltip='Change this number to send the same request again' + (' with the same seed.' if has_seed else '.'),
-        default=RUN_NUMBER['DEFAULT'],
-        min=RUN_NUMBER['MIN'],
-        max=RUN_NUMBER['MAX'],
-    )
-    options = io.Custom(SOCKET_TYPES['OPTIONS']).Input(
-        INPUT_NAMES['OPTIONS'],
-        optional=True,
-        tooltip='Connect Request Options to choose providers or pass extra fields.',
-    )
-    return [seed, run_number, options] if has_seed else [run_number, options]
-
-
-__all__ = ['PaidNode', 'build_request_inputs']
+__all__ = ['PaidNode']

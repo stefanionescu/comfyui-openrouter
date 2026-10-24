@@ -5,11 +5,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, override
 from dataclasses import replace, dataclass
 
-from comfy_api.latest import Input, io
+from comfy_api.latest import io
 from comfy_execution.graph import ExecutionBlocker
 
-from ..base import PaidNode, build_request_inputs
-from ..inputs import encode_media
+from ..base import PaidNode
+from ..inputs import encode_media, build_request_inputs
 from ...state.chat import Turn, ChatRequest, ChatSettings, Conversation
 from ...comfy.media import decode_pcm, decode_audio, decode_image
 from ...state.errors import ErrorCode, OpenRouterError
@@ -37,6 +37,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
     import torch
+    from comfy_api.latest import Input
 
     from ...state import Json
     from ...state.chat import Document, ChatResult

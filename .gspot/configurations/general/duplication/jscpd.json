@@ -47,6 +47,10 @@
         "**/.dev.vars.*",
         "**/bun.lock",
         "**/uv.lock",
-        "**/.env*"
+        "**/.env*",
+        "src/nodes/**",
+        "src/openrouter/**",
+        "src/state/**",
+        "scripts/workflows/descriptions/**"
     ]
 }

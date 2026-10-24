@@ -6,10 +6,10 @@ import io as memory
 from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 
-from comfy_api.latest import Input, InputImpl, io
+from comfy_api.latest import InputImpl, io
 
-from ..base import PaidNode, build_request_inputs
-from ..inputs import encode_media
+from ..base import PaidNode
+from ..inputs import encode_media, build_request_inputs
 from ...comfy.media import encode_images
 from ...config.media import WAV
 from ...state.errors import ErrorCode, OpenRouterError
@@ -27,6 +27,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
     import torch
+    from comfy_api.latest import Input
 
     from ...state.options import Options
 

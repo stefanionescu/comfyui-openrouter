@@ -281,7 +281,7 @@ descriptions, and that `requirements.txt` lists the runtime dependencies of
 
 The build writes the example workflows from `scripts/workflows/descriptions/`:
 one module per category, the group notes in `notes.py`, the titles in
-`texts.py`, and the shared node and model IDs in `ids.py`. The build reads the
+`texts.py`, and the shared node and model IDs in `nodes.py`. The build reads the
 node definitions through the Python of ComfyUI. It also writes every subgraph
 to `subgraphs/`, which ComfyUI lists under **Subgraph Blueprints** in its node
 library.

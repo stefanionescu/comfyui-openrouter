@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from io import BytesIO
+import io as memory
 from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 
 from comfy_api.latest import io
 from comfy_execution.graph import ExecutionBlocker
 
-from .base import PaidNode, build_request_inputs
+from .base import PaidNode
+from .inputs import build_request_inputs
 from ..comfy.media import decode_image, encode_images
 from ..config.media import SVG_MEDIA_TYPE
 from ..state.images import ImageRequest
@@ -162,7 +163,7 @@ class ImageGenerate(PaidNode):
             raster = [output.content for output in result.outputs if output.media_type != SVG_MEDIA_TYPE]
             vectors = [output.content for output in result.outputs if output.media_type == SVG_MEDIA_TYPE]
             decoded = [decode_image(content) for content in raster]
-            svg = io.SVG.Type([BytesIO(content) for content in vectors]) if vectors else ExecutionBlocker(None)
+            svg = io.SVG.Type([memory.BytesIO(content) for content in vectors]) if vectors else ExecutionBlocker(None)
             return io.NodeOutput(
                 [pixels for pixels, _mask in decoded] or ExecutionBlocker(None),
                 [mask for _pixels, mask in decoded] or ExecutionBlocker(None),

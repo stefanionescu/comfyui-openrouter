@@ -27,6 +27,9 @@ SRT = "SRT is the subtitle file format's name, which readers know."
 ISO = "ISO names the date and language code standards, ISO 8601 and ISO 639-1, which readers know."
 FLUX = "FLUX is the name of Black Forest Labs' image model family, which readers know."
 
+[python]
+externals = ["comfy", "comfy_api", "comfy_api_nodes", "comfy_execution", "folder_paths", "nodes", "server", "torch"]
+
 [tools.eslint]
 import_extension = "ts"
 
@@ -39,9 +42,6 @@ scopes = ["nodes", "frontend", "workflows", "docs", "hooks", "quality", "root", 
 
 [tools.knip]
 entry = ["web/scripts/extension.ts"]
-
-[python]
-externals = ["comfy", "comfy_api", "comfy_api_nodes", "comfy_execution", "folder_paths", "nodes", "server", "torch"]
 
 # The browser code in layers. Each rule lists exactly what its files may import, besides their own folder.
 [[import_rule]]
@@ -165,6 +165,11 @@ exit_codes = [1]
 output = { format = "regex", pattern = "^(?<message>.+)$" }
 
 [[ignore]]
+check = "duplication/jscpd"
+paths = ["src/nodes/**", "src/openrouter/**", "src/state/**", "scripts/workflows/descriptions/**"]
+reason = "Each node repeats the ComfyUI node shape (imports, define_schema, send), and each operation, request record, and workflow description repeats the shape of its siblings; jscpd's strict mode matches that shape with names and strings set aside."
+
+[[ignore]]
 check = "javascript/eslint"
 rule = "gspot/import-boundaries"
 paths = ["web/scripts/extension.ts", "web/scripts/http.ts", "web/scripts/text.ts"]
@@ -178,14 +183,14 @@ reason = "ComfyUI serves ../../scripts/app.js and ../../scripts/api.js at runtim
 
 [[ignore]]
 check = "naming/paths"
-rule = "banned-word"
-paths = ["ADVANCED.md"]
-reason = "ADVANCED.md is the advanced guide of every pack in the family, the name its readers and the README link know."
+paths = ["web/docs/**"]
+reason = "ComfyUI reads each node's help page from web/docs/<node id>.md, so the file name must equal the registered node ID."
 
 [[ignore]]
 check = "naming/paths"
-paths = ["web/docs/**"]
-reason = "ComfyUI reads each node's help page from web/docs/<node id>.md, so the file name must equal the registered node ID."
+rule = "banned-word"
+paths = ["ADVANCED.md"]
+reason = "ADVANCED.md is the advanced guide of every pack in the family, the name its readers and the README link know."
 
 [[ignore]]
 check = "prose/vale"

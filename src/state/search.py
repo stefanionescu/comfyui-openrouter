@@ -1,8 +1,12 @@
 """Embedding and rank requests and results; the numbering counts texts first, then images, in input order."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-from .options import Options
+if TYPE_CHECKING:
+    from .options import Options
 
 
 @dataclass(frozen=True, slots=True)

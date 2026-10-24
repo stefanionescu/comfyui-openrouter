@@ -5,9 +5,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 
-from comfy_api.latest import Input, io
+from comfy_api.latest import io
 
-from ..base import PaidNode, build_request_inputs
+from ..base import PaidNode
+from ..inputs import build_request_inputs
 from ...comfy.media import decode_pcm, decode_audio, encode_audio
 from ...state.audio import SpeechRequest
 from ...config.media import WAV
@@ -19,6 +20,8 @@ from ...config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
 from ...config.generation.models import DEFAULT_MODELS
 
 if TYPE_CHECKING:
+    from comfy_api.latest import Input
+
     from ...state.audio import SpeechResult
     from ...state.options import Options
 

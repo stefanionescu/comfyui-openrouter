@@ -1,17 +1,16 @@
 """Send one decision request and read each answer in question order."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-from ..state import Json
 from .models import validate_model
 from .options import build_request_body
 from .transport import send_json, read_reply
 from ..state.errors import ErrorCode, OpenRouterError
-from ..state.replies import AnswerReply, DecisionReply
-from ..state.settings import Configuration
+from ..state.replies import DecisionReply
 from ..state.decisions import (
-    Answer,
-    Question,
     AnswerSet,
     ScoreAnswer,
     YesNoAnswer,
@@ -19,10 +18,15 @@ from ..state.decisions import (
     ScoreQuestion,
     YesNoQuestion,
     ChoiceQuestion,
-    DecisionRequest,
 )
 from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.run import REPLY_UNREADABLE
+
+if TYPE_CHECKING:
+    from ..state import Json
+    from ..state.replies import AnswerReply
+    from ..state.settings import Configuration
+    from ..state.decisions import Answer, Question, DecisionRequest
 
 # The wire type of each question kind.
 WIRE_TYPES = {ChoiceQuestion: 'choice', YesNoQuestion: 'noul', ScoreQuestion: 'score'}

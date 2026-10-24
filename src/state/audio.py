@@ -1,8 +1,12 @@
 """Audio replies, speech and transcription requests, and their results."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-from .options import Options
+if TYPE_CHECKING:
+    from .options import Options
 
 
 @dataclass(frozen=True, slots=True)

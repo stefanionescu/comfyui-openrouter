@@ -1,18 +1,45 @@
-"""Encode the media lists that reach the paid nodes."""
+"""Build the inputs the paid nodes share, the seed, the run number, and the options, and encode their media lists."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from comfy_api.latest import Input
+from comfy_api.latest import Input, io
 
 from ..comfy.media import encode_audio, encode_video, encode_images
 from ..config.media import VIDEO_URL_PREFIX
+from ..config.namespace import SOCKET_TYPES
+from ..config.generation.inputs import SEED, RUN_NUMBER, INPUT_NAMES
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
     import torch
+
+
+def build_request_inputs(*, has_seed: bool) -> list[io.Input]:
+    """Build the seed, run number, and options inputs that follow the specific inputs of a paid node."""
+    seed = io.Int.Input(
+        INPUT_NAMES['SEED'],
+        tooltip='Number the model uses to vary its output. Results can change after model updates.',
+        default=SEED['DEFAULT'],
+        min=0,
+        max=SEED['MAX'],
+        control_after_generate=True,
+    )
+    run_number = io.Int.Input(
+        INPUT_NAMES['RUN_NUMBER'],
+        tooltip='Change this number to send the same request again' + (' with the same seed.' if has_seed else '.'),
+        default=RUN_NUMBER['DEFAULT'],
+        min=RUN_NUMBER['MIN'],
+        max=RUN_NUMBER['MAX'],
+    )
+    options = io.Custom(SOCKET_TYPES['OPTIONS']).Input(
+        INPUT_NAMES['OPTIONS'],
+        optional=True,
+        tooltip='Connect Request Options to choose providers or pass extra fields.',
+    )
+    return [seed, run_number, options] if has_seed else [run_number, options]
 
 
 def encode_media(
@@ -33,4 +60,4 @@ def encode_media(
     return image_urls, video_urls, tuple(encode_audio(clip) for clip in clips)
 
 
-__all__ = ['encode_media']
+__all__ = ['build_request_inputs', 'encode_media']

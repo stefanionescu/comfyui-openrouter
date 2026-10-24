@@ -1,9 +1,20 @@
 """The design workflows: Jev picks the edit idea or logo prompt a chat model writes, and an image model draws it."""
 
+from __future__ import annotations
+
 from scripts.nodes.host import HostNode
 from scripts.workflows.page.graph import Node, Group, Subgraph, Workflow
 from scripts.workflows.page.config import STAGE_COLOUR, IMAGE_PREVIEW
-from scripts.workflows.descriptions import ids
+from scripts.workflows.descriptions.nodes import (
+    WRITER,
+    CHAT_ASK,
+    GPT_IMAGE,
+    MODEL_INFO,
+    DECISION_ASK,
+    IMAGE_GENERATE,
+    DECISION_READ_ANSWER,
+    DECISION_ADD_QUESTION,
+)
 from scripts.workflows.descriptions.notes import WORKFLOW_TEXTS
 from scripts.workflows.descriptions.texts import SHARED_TEXTS
 from scripts.workflows.descriptions.schemas import build_numbered_schema
@@ -24,9 +35,7 @@ IDEAS = Subgraph(
                 )
             },
         ),
-        Node(
-            'ideas', ids.CHAT_ASK, {'model': ids.WRITER, 'json_schema': build_numbered_schema('idea', 3)}, is_paid=True
-        ),
+        Node('ideas', CHAT_ASK, {'model': WRITER, 'json_schema': build_numbered_schema('idea', 3)}, is_paid=True),
     ),
     links=(('request.STRING', 'ideas.prompt'),),
     columns=(('request',), ('ideas',)),
@@ -39,9 +48,9 @@ CHOOSE_IDEA = Subgraph(
     name=SHARED_TEXTS['pick'],
     nodes=(
         Node('situation', HostNode.FORMAT, {'f_string': 'Campaign:\n{a}\n\nIdeas:\n{b}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('best', ids.DECISION_READ_ANSWER, {'question': 'best'}),
-        Node('on_brief', ids.DECISION_READ_ANSWER, {'question': 'on_brief'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('best', DECISION_READ_ANSWER, {'question': 'best'}),
+        Node('on_brief', DECISION_READ_ANSWER, {'question': 'on_brief'}),
         Node('idea', HostNode.FIELD),
     ),
     links=(
@@ -64,7 +73,7 @@ CHOOSE_IDEA = Subgraph(
 EDIT = Subgraph(
     name=SHARED_TEXTS['edit'],
     nodes=(
-        Node('edit', ids.IMAGE_GENERATE, {'model': ids.GPT_IMAGE, 'quality': 'medium'}, is_paid=True),
+        Node('edit', IMAGE_GENERATE, {'model': GPT_IMAGE, 'quality': 'medium'}, is_paid=True),
         Node('approved', HostNode.TEXT, {'value': 'campaign/approved'}, title=SHARED_TEXTS['approved']),
         Node('review', HostNode.TEXT, {'value': 'campaign/review'}, title=SHARED_TEXTS['review']),
         Node('folder', HostNode.SWITCH),
@@ -101,7 +110,7 @@ EDIT_BEST_IDEA = Workflow(
         Node('ideas', IDEAS.name),
         Node(
             'best',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'best',
                 'instructions': 'Which editing idea fits the campaign best while keeping the product unchanged?',
@@ -111,7 +120,7 @@ EDIT_BEST_IDEA = Workflow(
         ),
         Node(
             'on_brief',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {'name': 'on_brief', 'instructions': 'Does the chosen idea suit the campaign?'},
         ),
         Node('choose', CHOOSE_IDEA.name),
@@ -153,9 +162,9 @@ PROMPTS = Subgraph(
     nodes=(
         Node(
             'prompts',
-            ids.CHAT_ASK,
+            CHAT_ASK,
             {
-                'model': ids.WRITER,
+                'model': WRITER,
                 'json_schema': build_numbered_schema('prompt', 3),
                 'system_prompt': (
                     'Write three different prompts for a flat, two-colour logo mark for the brand the person '
@@ -165,8 +174,8 @@ PROMPTS = Subgraph(
             is_paid=True,
         ),
         Node('situation', HostNode.FORMAT, {'f_string': 'Brand:\n{a}\n\nPrompts:\n{b}'}),
-        Node('decide', ids.DECISION_ASK, is_paid=True),
-        Node('best', ids.DECISION_READ_ANSWER, {'question': 'best'}),
+        Node('decide', DECISION_ASK, is_paid=True),
+        Node('best', DECISION_READ_ANSWER, {'question': 'best'}),
         Node('prompt', HostNode.FIELD),
     ),
     links=(
@@ -187,7 +196,7 @@ SVG = Subgraph(
     nodes=(
         Node(
             'svg',
-            ids.IMAGE_GENERATE,
+            IMAGE_GENERATE,
             {'model': 'recraft/recraft-v4.1-vector', 'aspect_ratio': '1:1'},
             is_paid=True,
         ),
@@ -204,7 +213,7 @@ PNG = Subgraph(
     nodes=(
         Node(
             'png',
-            ids.IMAGE_GENERATE,
+            IMAGE_GENERATE,
             {
                 'aspect_ratio': '1:1',
                 'background': 'transparent',
@@ -244,12 +253,12 @@ DESIGN_LOGO = Workflow(
             },
             title=SHARED_TEXTS['brand'],
         ),
-        Node('model', HostNode.TEXT, {'value': ids.GPT_IMAGE}, title=SHARED_TEXTS['model']),
-        Node('listing', ids.MODEL_INFO),
+        Node('model', HostNode.TEXT, {'value': GPT_IMAGE}, title=SHARED_TEXTS['model']),
+        Node('listing', MODEL_INFO),
         Node('listed', HostNode.PREVIEW, title=SHARED_TEXTS['info']),
         Node(
             'best',
-            ids.DECISION_ADD_QUESTION,
+            DECISION_ADD_QUESTION,
             {
                 'name': 'best',
                 'instructions': 'Which prompt will give the simplest, most memorable logo for this brand?',

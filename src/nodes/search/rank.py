@@ -9,8 +9,9 @@ from dataclasses import dataclass
 from comfy_api.latest import io
 from comfy_execution.graph import ExecutionBlocker
 
-from ..base import PaidNode, build_request_inputs
+from ..base import PaidNode
 from .embed import IMAGES
+from ..inputs import build_request_inputs
 from ...comfy.media import encode_images
 from ...state.search import RankRequest
 from ...comfy.execution import send_request, wait_for_task, wait_for_thread
