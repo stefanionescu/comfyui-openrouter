@@ -305,11 +305,11 @@
                 }
               },
               {
-                "name": "outputs",
+                "name": "modalities",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "outputs"
+                  "name": "modalities"
                 }
               },
               {
@@ -483,11 +483,11 @@
                 }
               },
               {
-                "name": "audio_format",
+                "name": "response_format",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "audio_format"
+                  "name": "response_format"
                 }
               },
               {

@@ -14,7 +14,7 @@ Generates or edits images with any image model on OpenRouter.
 | `output_format`      | `png`, `jpeg`, `webp`, or `svg` for vector models.                                            |
 | `output_compression` | JPEG and WebP quality.                                                                        |
 | `width`, `height`    | An exact size in pixels, such as 1536 by 2752. Set both, or leave both at 0 to send no size.  |
-| `count`              | How many images to make.                                                                      |
+| `n`                  | How many images to make.                                                                      |
 | `references`         | Images to edit or combine: one, a batch, or a list, each at its own size.                     |
 | `seed`               | Varies the output, for models that list a seed.                                               |
 | `run_number`         | Change it to send the same request again.                                                     |
@@ -22,7 +22,7 @@ Generates or edits images with any image model on OpenRouter.
 | `options`            | Settings from **Request Options**.                                                            |
 
 `default` sends nothing. Before you pay anything, the node refuses a
-value, `count`, or number of `references` the model's image listing does not
+value, `n`, or number of `references` the model's image listing does not
 include, naming what it does take. An exact size sets the shape itself, so the
 node refuses it unless `resolution` and `aspect_ratio` are at `default`.
 

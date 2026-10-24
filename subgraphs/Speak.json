@@ -231,11 +231,11 @@
                 }
               },
               {
-                "name": "audio_format",
+                "name": "response_format",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "audio_format"
+                  "name": "response_format"
                 }
               },
               {

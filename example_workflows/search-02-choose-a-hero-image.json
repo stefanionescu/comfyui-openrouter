@@ -634,11 +634,11 @@
                 }
               },
               {
-                "name": "count",
+                "name": "n",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "count"
+                  "name": "n"
                 }
               },
               {
@@ -1127,11 +1127,11 @@
                 }
               },
               {
-                "name": "outputs",
+                "name": "modalities",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "outputs"
+                  "name": "modalities"
                 }
               },
               {

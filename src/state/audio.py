@@ -45,7 +45,7 @@ class SpeechRequest:
         model_id: The model ID sent to OpenRouter.
         text: What to say.
         voice: The voice, or None for the provider's default voice.
-        audio_format: pcm or mp3, the format OpenRouter sends.
+        response_format: pcm or mp3, the format OpenRouter sends.
 
         speed: Speaking speed; some providers ignore it.
         sample: A voice sample to copy, as a WAV data URL, or None.
@@ -57,7 +57,7 @@ class SpeechRequest:
     model_id: str
     text: str
     voice: str | None
-    audio_format: str
+    response_format: str
     speed: float
     sample: str | None
     sample_transcript: str

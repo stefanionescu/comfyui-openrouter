@@ -70,7 +70,7 @@ class ChatSettings:
         sampling: The sampling fields set to custom, by OpenRouter's name; the model chooses every other one.
         stop: Text that ends the answer, or none.
         json_schema: The response_format.json_schema object, sent as written, or None for unstructured text.
-        outputs: Media to make besides text: image, audio.
+        modalities: Media to make besides text: image, audio.
         aspect_ratio: Aspect ratio of generated images, or None for the model's default.
         voice: Voice of spoken replies, or None when the voice box is blank.
         pdf_engine: How OpenRouter reads PDFs, or None for the model's default.
@@ -82,7 +82,7 @@ class ChatSettings:
     sampling: Mapping[str, float]
     stop: tuple[str, ...]
     json_schema: Mapping[str, Json] | None
-    outputs: frozenset[str]
+    modalities: frozenset[str]
     aspect_ratio: str | None
     voice: str | None
     pdf_engine: str | None

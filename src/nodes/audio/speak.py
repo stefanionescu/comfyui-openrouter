@@ -40,7 +40,7 @@ class AudioSpeakInputs:
     text: str
     model: str
     voice: str = SPEECH_DEFAULTS['VOICE']
-    audio_format: str = SPEECH_DEFAULTS['FORMAT']
+    response_format: str = SPEECH_DEFAULTS['FORMAT']
     speed: float = SPEED['DEFAULT']
     sample_transcript: str = ''
     voice_sample: Input.Audio | None = None
@@ -69,7 +69,7 @@ class AudioSpeak(PaidNode):
                     tooltip='The voice ID, such as Kore for Gemini or alloy for OpenAI. Blank sends none.',
                 ),
                 io.Combo.Input(
-                    'audio_format',
+                    'response_format',
                     options=list(SPEECH_FORMATS),
                     default=SPEECH_DEFAULTS['FORMAT'],
                     tooltip='The audio file format OpenRouter sends back. If the model refuses one, choose the other.',
@@ -116,7 +116,7 @@ class AudioSpeak(PaidNode):
                 model_id=speech.model.strip(),
                 text=speech.text,
                 voice=speech.voice.strip() or None,
-                audio_format=speech.audio_format,
+                response_format=speech.response_format,
                 speed=speech.speed,
                 sample=sample,
                 sample_transcript=speech.sample_transcript,

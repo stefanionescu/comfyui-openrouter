@@ -56,7 +56,7 @@ class ChatOperation:
         model = await validate_model(request.model_id, 'chat', configuration.settings, inputs)
         _validate_settings(request, model)
         body = build_body(request, model)
-        if 'audio' in request.settings.outputs:
+        if 'audio' in request.settings.modalities:
             result = await send_audio_chat(body, configuration)
             if not result.text and result.audio is None:
                 raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
@@ -78,7 +78,7 @@ class ChatOperation:
 def _validate_settings(request: ChatRequest, model: Model) -> None:
     """Refuse outputs the model cannot make, a field or schema it does not take, and more tokens than it gives."""
     settings = request.settings
-    missing = sorted(settings.outputs - model.outputs)
+    missing = sorted(settings.modalities - model.outputs)
     if missing:
         message = MODEL_OUTPUT.format(model=request.model_id, kind=MEDIA_LABELS[missing[0]])
         raise OpenRouterError(ErrorCode.INVALID_INPUT, message)

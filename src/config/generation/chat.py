@@ -47,8 +47,8 @@ SAMPLING_TOOLTIPS = {
 # How much a reasoning model thinks.
 EFFORTS = (MODEL_DEFAULT, 'none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max')
 
-# What each outputs choice asks the model to make besides text.
-OUTPUTS = {'text': (), 'image and text': ('image',), 'audio and text': ('audio',)}
+# What each modalities choice asks the model to make besides text.
+MODALITIES = {'text': (), 'image and text': ('image',), 'audio and text': ('audio',)}
 
 # The shape of the images a chat model makes.
 IMAGE_ASPECT_RATIOS = (MODEL_DEFAULT, '1:1', '2:3', '3:2', '3:4', '4:3', '4:5', '5:4', '9:16', '16:9', '21:9')
@@ -85,7 +85,7 @@ __all__ = [
     'DOCUMENT_TYPES',
     'EFFORTS',
     'IMAGE_ASPECT_RATIOS',
-    'OUTPUTS',
+    'MODALITIES',
     'PDF_ENGINES',
     'PDF_MEDIA_TYPE',
     'SAMPLING',

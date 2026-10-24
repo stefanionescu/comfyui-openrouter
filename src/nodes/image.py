@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from ..state.options import Options
 
 
-# The image fields, compression, exact size, count, and references; a field left at default sends nothing.
+# The image fields, compression, exact size, n, and references; a field left at default sends nothing.
 # The format, the last field, has a tooltip that explains its name.
 FIELDS = (
     *(
@@ -63,7 +63,7 @@ FIELDS = (
         )
         for side, other in (('width', 'height'), ('height', 'width'))
     ),
-    io.Int.Input('count', default=1, min=1, tooltip='How many images to make, within what the model lists.'),
+    io.Int.Input('n', default=1, min=1, tooltip='How many images to make, within what the model lists.'),
     io.Image.Input(
         'references',
         optional=True,
@@ -87,7 +87,7 @@ class ImageGenerateInputs:
     output_compression: int = COMPRESSION['DEFAULT']
     width: int = 0
     height: int = 0
-    count: int = 1
+    n: int = 1
     references: list[torch.Tensor] | None = None
     options: Options | None = None
 
@@ -148,7 +148,7 @@ class ImageGenerate(PaidNode):
                 model_id=image.model.strip(),
                 prompt=image.prompt,
                 reference_urls=urls,
-                count=image.count,
+                n=image.n,
                 width=image.width,
                 height=image.height,
                 seed=image.seed,

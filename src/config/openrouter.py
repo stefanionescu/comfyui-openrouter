@@ -82,7 +82,6 @@ MEDIA_LABELS = {'image': 'images', 'video': 'video', 'audio': 'audio'}
 # The node input behind each image field whose OpenRouter name differs, for messages; any other field has the
 # input's name.
 FIELD_LABELS = {
-    'n': 'count',
     'input_references': 'references',
 }
 

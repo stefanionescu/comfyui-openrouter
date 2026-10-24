@@ -57,24 +57,24 @@ class ImageOperation:
         validate_upload_size(request.reference_urls, settings)
 
     def build_fields(self, limits: Limits | None) -> dict[str, Json]:
-        """Check the fields, count, and references against the model's image listing when it has one.
+        """Check the fields, n, and references against the model's image listing when it has one.
 
         The request leaves out the compression, which always has a value, for a model that does not take it. The
         exact size goes unchecked, because the listings do not list it.
         """
         request = self.request
         fields: dict[str, Json] = dict(request.fields)
-        if request.count > 1:
-            fields['n'] = request.count
+        if request.n > 1:
+            fields['n'] = request.n
         if request.width:
             fields['size'] = f'{request.width}x{request.height}'
         if limits is None:
             return fields
         if 'output_compression' not in limits.fields:
             fields.pop('output_compression', None)
-        # A model that does not list a count makes one image per request.
+        # A model that does not list n makes one image per request.
         maximum = int(limits.ranges['n'][1]) if 'n' in limits.ranges else 1
-        if request.count > maximum:
+        if request.n > maximum:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_COUNT.format(model=request.model_id, maximum=maximum))
         checked = {field: value for field, value in fields.items() if field not in {'n', 'size'}}
         if request.reference_urls or 'input_references' in limits.fields:

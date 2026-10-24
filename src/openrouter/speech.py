@@ -71,7 +71,7 @@ class SpeechOperation:
         body: dict[str, Json] = {
             'model': request.model_id,
             'input': request.text,
-            'response_format': request.audio_format,
+            'response_format': request.response_format,
         }
         if request.voice:
             body['voice'] = request.voice

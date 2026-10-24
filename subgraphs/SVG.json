@@ -178,11 +178,11 @@
                 }
               },
               {
-                "name": "count",
+                "name": "n",
                 "type": "INT",
                 "link": null,
                 "widget": {
-                  "name": "count"
+                  "name": "n"
                 }
               },
               {

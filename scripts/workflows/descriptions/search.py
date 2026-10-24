@@ -135,7 +135,7 @@ RANK_IMAGES = Subgraph(
         Node(
             'candidates',
             IMAGE_GENERATE,
-            {'model': 'recraft/recraft-v4.1-flash', 'aspect_ratio': '16:9', 'count': 4},
+            {'model': 'recraft/recraft-v4.1-flash', 'aspect_ratio': '16:9', 'n': 4},
             is_paid=True,
         ),
         Node('rank', SEARCH_RANK, {'model': 'nvidia/llama-nemotron-rerank-vl-1b-v2:free', 'top_n': 1}, is_paid=True),

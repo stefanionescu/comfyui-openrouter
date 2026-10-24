@@ -39,11 +39,11 @@ def _build_messages(request: ChatRequest) -> list[Json]:
 def _build_output_fields(settings: ChatSettings) -> dict[str, Json]:
     """Ask for images or audio besides text; a music model gets no voice, and OpenRouter streams all audio."""
     fields: dict[str, Json] = {}
-    if 'image' in settings.outputs:
+    if 'image' in settings.modalities:
         fields['modalities'] = ['image', 'text']
         if settings.aspect_ratio is not None:
             fields['image_config'] = {'aspect_ratio': settings.aspect_ratio}
-    if 'audio' in settings.outputs:
+    if 'audio' in settings.modalities:
         fields['modalities'] = ['text', 'audio']
         fields['stream'] = True
         if settings.voice is not None:

@@ -23,7 +23,7 @@
   text. Earlier turns come from `conversation`.
 - **Chat: Ask** returns the text, the reasoning when the model shares it, and
   any images the model made. Speech comes back as 24 kHz mono PCM.
-- **Image: Generate** sends the prompt, the chosen settings, the count, and each
+- **Image: Generate** sends the prompt, the chosen settings, `n`, and each
   reference image as PNG. It returns images, their masks (white is
   transparent), and SVG files.
 - **Video: Generate** sends the prompt, the chosen settings, and the frames or
@@ -99,7 +99,7 @@ before you pay anything when:
   the model cannot follow, or more `max_tokens` than its longest answer;
 - **Audio: Speak** has `voice_sample` connected and the model cannot clone
   voices;
-- **Image: Generate** asks for a value, `count`, or number of `references` the
+- **Image: Generate** asks for a value, `n`, or number of `references` the
   model's entry in OpenRouter's image list does not take;
 - **Video: Generate** uses a `duration`, `resolution`, `aspect_ratio`,
   `generate_audio`, `upscale_factor`, `creativity`, `first_frame`, or

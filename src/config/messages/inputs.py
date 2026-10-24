@@ -27,7 +27,7 @@ OPTION_UNSUPPORTED = (
 )
 
 PCM_RATE_MISSING = (
-    'OpenRouter sent PCM audio without its sample rate and channels. Set audio_format to mp3 and run again.'
+    'OpenRouter sent PCM audio without its sample rate and channels. Set response_format to mp3 and run again.'
 )
 
 PROMPT_EMPTY = 'Write a prompt.'

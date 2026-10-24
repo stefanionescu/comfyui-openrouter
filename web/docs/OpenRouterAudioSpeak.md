@@ -9,7 +9,7 @@ a voice from a sample.
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `model`             | Any speech model ID from openrouter.ai/models; the default is `google/gemini-3.1-flash-tts-preview`.                                      |
 | `voice`             | The voice ID, such as `Kore` for Gemini or `alloy` for OpenAI. The default, `Kore`, suits the default model; leave it empty to send none. |
-| `audio_format`      | `pcm` or `mp3`. If the model refuses one, choose the other; MiniMax models send only `mp3`.                                               |
+| `response_format`   | `pcm` or `mp3`. If the model refuses one, choose the other; MiniMax models send only `mp3`.                                               |
 | `speed`             | Speaking speed. Some providers ignore it.                                                                                                 |
 | `sample_transcript` | The words spoken in `voice_sample`.                                                                                                       |
 | `run_number`        | Change it to send the same request again.                                                                                                 |

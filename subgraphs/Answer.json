@@ -334,11 +334,11 @@
                 }
               },
               {
-                "name": "outputs",
+                "name": "modalities",
                 "type": "COMBO",
                 "link": null,
                 "widget": {
-                  "name": "outputs"
+                  "name": "modalities"
                 }
               },
               {

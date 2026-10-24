@@ -19,8 +19,8 @@ from ...config.namespace import MENUS, NODE_PREFIX, SOCKET_TYPES
 from ...config.generation.chat import (
     VOICE,
     EFFORTS,
-    OUTPUTS,
     SAMPLING,
+    MODALITIES,
     PDF_ENGINES,
     VOICE_AUDIO,
     SAMPLING_DECIMALS,
@@ -97,8 +97,8 @@ CONTROLS = (
     ),
     *(_build_sampling(name) for name in SAMPLING),
     io.Combo.Input(
-        'outputs',
-        options=list(OUTPUTS),
+        'modalities',
+        options=list(MODALITIES),
         default='text',
         tooltip='What the model returns. Images and audio need a model that makes them.',
     ),
@@ -180,7 +180,7 @@ class ChatAskInputs:
     repetition_penalty: float | None = None
     json_schema: str = ''
     stop: str = ''
-    outputs: str = 'text'
+    modalities: str = 'text'
     aspect_ratio: str = MODEL_DEFAULT
     voice: str = VOICE['DEFAULT']
     pdf_engine: str = MODEL_DEFAULT
@@ -293,7 +293,7 @@ class ChatAsk(PaidNode):
                 sampling={name: value for name, value in zip(SAMPLING, choices, strict=True) if value is not None},
                 stop=tuple(line for line in chat.stop.splitlines() if line),
                 json_schema=_read_schema(chat.json_schema),
-                outputs=frozenset(OUTPUTS[chat.outputs]),
+                modalities=frozenset(MODALITIES[chat.modalities]),
                 aspect_ratio=chat.aspect_ratio if chat.aspect_ratio != MODEL_DEFAULT else None,
                 voice=chat.voice.strip() or None,
                 pdf_engine=chat.pdf_engine if chat.pdf_engine != MODEL_DEFAULT else None,

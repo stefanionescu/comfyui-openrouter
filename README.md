@@ -144,7 +144,7 @@ Each paid node takes any model ID from
 [openrouter.ai/models](https://openrouter.ai/models), with an optional variant
 suffix such as `:nitro`. **Model: Info** shows what any model takes.
 
-![Chat: Ask on the canvas: the conversation, documents, images, videos, audio, and options sockets; then model set to google/gemini-3.5-flash, reasoning_effort, max_tokens, temperature, outputs, aspect_ratio, voice, pdf_engine, seed, and run_number; and the answer_schema, prompt, and system_prompt boxes at the bottom.](docs/images/screenshots/chat-ask-node.png)
+![Chat: Ask on the canvas: the conversation, documents, images, videos, audio, and options sockets; then model set to google/gemini-3.5-flash, reasoning_effort, max_tokens, temperature, modalities, aspect_ratio, voice, pdf_engine, seed, and run_number; and the answer_schema, prompt, and system_prompt boxes at the bottom.](docs/images/screenshots/chat-ask-node.png)
 
 Before sending, the node checks the model against the public listings of
 OpenRouter. It stops if the ID is unknown, the model makes something else, or

@@ -21,7 +21,7 @@ model reads them. Returns text, and images or speech from models that make them.
 | `frequency_penalty`  | `default` sends none. `custom` sends a value from -2 to 2; above 0, a word repeats less the more often it has appeared.                                                                       |
 | `presence_penalty`   | `default` sends none. `custom` sends a value from -2 to 2; above 0, any word that has appeared repeats less.                                                                                  |
 | `repetition_penalty` | `default` sends none. `custom` sends a value from 0 to 2; above 1, words from the prompt and the answer repeat less.                                                                          |
-| `outputs`            | `text`, `image and text`, or `audio and text`. Images and audio need a model that makes them.                                                                                                 |
+| `modalities`         | `text`, `image and text`, or `audio and text`. Images and audio need a model that makes them.                                                                                                 |
 | `aspect_ratio`       | The shape of the images a model draws.                                                                                                                                                        |
 | `voice`              | The voice of a spoken answer, such as `alloy`. Music models need it empty.                                                                                                                    |
 | `pdf_engine`         | How OpenRouter reads PDFs: `native`, `cloudflare-ai`, or `mistral-ocr`. `default` uses the model's own file reading, or `mistral-ocr` when it has none.                                       |
@@ -60,7 +60,7 @@ or several **Load Image** nodes joined by **Create List**. Images keep their own
 sizes.
 
 Before you pay anything, the node refuses media the model does not read,
-`outputs` it does not make, and a sampling setting or `stop` it does not take.
+`modalities` it does not make, and a sampling setting or `stop` it does not take.
 It also refuses a `json_schema` the model cannot follow, and `max_tokens` above
 its longest answer. With
 a sampling setting, `stop`, or `json_schema`, only providers that take every one

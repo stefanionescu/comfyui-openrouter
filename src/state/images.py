@@ -21,7 +21,7 @@ class ImageRequest:
         prompt: What to draw or change.
         reference_urls: Lossless WebP data URLs of the reference images.
 
-        count: How many images to make; the request sends n only above 1.
+        n: How many images to make; the request sends it only above 1.
         width: The exact width in pixels, sent with height as size; 0 sends no size.
         height: The exact height in pixels, sent with width as size; 0 sends no size.
         seed: Seed sent when the model accepts one.
@@ -33,7 +33,7 @@ class ImageRequest:
     model_id: str
     prompt: str
     reference_urls: tuple[str, ...]
-    count: int
+    n: int
     width: int
     height: int
     seed: int
