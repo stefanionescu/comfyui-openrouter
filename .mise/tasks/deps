@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Runtime: Bash 3.2+ on macOS or Linux.
+#MISE description="Install locked development dependencies, and show the type checker the ComfyUI install."
+set -euo pipefail
+
+REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+cd "${REPO_ROOT}" || exit 1
+
+project_python="$(mise which python)"
+readonly project_python
+uv sync --python "${project_python}" --frozen --group dev
+bun install --frozen-lockfile --ignore-scripts
+
+# ComfyUI is not a package, so the type checker finds its modules through a path file in the project environment.
+# COMFYUI_PATH and COMFYUI_PYTHON come from .mise.local.toml.
+comfy_path="${COMFYUI_PATH:?set COMFYUI_PATH in .mise.local.toml to the ComfyUI folder that holds main.py}"
+comfy_python="${COMFYUI_PYTHON:?set COMFYUI_PYTHON in .mise.local.toml to the Python of that ComfyUI install}"
+comfy_venv="$(dirname "$(dirname "${comfy_python}")")"
+comfy_packages=("${comfy_venv}"/lib/python*/site-packages)
+project_packages=(.venv/lib/python*/site-packages)
+if [[ ! -d ${comfy_packages[0]} ]]; then
+    printf 'error: no site-packages folder under %s\n' "${comfy_venv}" >&2
+    exit 1
+fi
+printf '%s\n%s\n' "${comfy_path}" "${comfy_packages[0]}" >"${project_packages[0]}/comfyui.pth"

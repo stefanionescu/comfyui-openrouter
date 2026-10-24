@@ -7,12 +7,21 @@ from __future__ import annotations
 
 import io
 import wave
-import torch
 import base64
+from typing import TYPE_CHECKING, cast
+
+import torch
 from comfy_api.latest import Types
-from typing import cast, TYPE_CHECKING
-from ..types.errors import ErrorCode, OpenRouterError
+from comfy_api_nodes.util.conversions import (
+    tensor_to_pil,
+    audio_to_base64_string,
+    video_to_base64_string,
+    bytesio_to_image_tensor,
+    audio_bytes_to_audio_input,  # pyright: ignore[reportUnknownVariableType] # reason: ComfyUI annotates the result as a bare dict.
+)
+
 from ..config.media import WAV, WEBP, IMAGE_TENSOR, WEBP_URL_PREFIX, PCM_SAMPLE_BYTES
+from ..state.errors import ErrorCode, OpenRouterError
 from ..config.messages.media import (
     AUDIO_BATCH,
     AUDIO_EMPTY,
@@ -23,13 +32,6 @@ from ..config.messages.media import (
     IMAGE_UNREADABLE,
     VIDEO_UNREADABLE,
 )
-from comfy_api_nodes.util.conversions import (
-    tensor_to_pil,
-    audio_to_base64_string,
-    video_to_base64_string,
-    bytesio_to_image_tensor,
-    audio_bytes_to_audio_input,  # pyright: ignore[reportUnknownVariableType] -- reason: ComfyUI annotates the result as a bare dict.
-)
 
 if TYPE_CHECKING:
     from comfy_api.latest import Input
@@ -39,23 +41,23 @@ def _encode_webp(frame: torch.Tensor) -> str:
     """Encode one image as a lossless WebP data URL, at its own pixels."""
     buffer = io.BytesIO()
     tensor_to_pil(frame, total_pixels=None).save(
-        buffer, format="WEBP", lossless=True, exact=True, method=WEBP["METHOD"], quality=WEBP["QUALITY"]
+        buffer, format='WEBP', lossless=True, exact=True, method=WEBP['METHOD'], quality=WEBP['QUALITY']
     )
-    return WEBP_URL_PREFIX + base64.b64encode(buffer.getvalue()).decode("ascii")
+    return WEBP_URL_PREFIX + base64.b64encode(buffer.getvalue()).decode('ascii')
 
 
 def encode_images(image: torch.Tensor) -> tuple[str, ...]:
     """Send every image of a batch as a lossless WebP data URL, never shrunk; the upload limit refuses large images."""
-    if image.ndim != IMAGE_TENSOR["DIMENSIONS"] or image.shape[-1] not in {
-        IMAGE_TENSOR["RGB_CHANNELS"],
-        IMAGE_TENSOR["RGBA_CHANNELS"],
+    if image.ndim != IMAGE_TENSOR['DIMENSIONS'] or image.shape[-1] not in {
+        IMAGE_TENSOR['RGB_CHANNELS'],
+        IMAGE_TENSOR['RGBA_CHANNELS'],
     }:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_SHAPE)
     if not bool(torch.isfinite(image).all()):
         raise OpenRouterError(ErrorCode.INVALID_INPUT, IMAGE_PIXELS)
     try:
         return tuple(_encode_webp(frame.clamp(0, 1)) for frame in image)
-    except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
+    except Exception:  # noqa: BLE001 # reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, IMAGE_SHAPE) from None
 
 
@@ -63,31 +65,31 @@ def decode_image(content: bytes) -> tuple[torch.Tensor, torch.Tensor]:
     """Read one image as pixels [1, H, W, 3] and its mask [1, H, W], where the mask is 1 minus alpha."""
     try:
         pixels = bytesio_to_image_tensor(io.BytesIO(content))
-    except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
+    except Exception:  # noqa: BLE001 # reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, IMAGE_UNREADABLE) from None
-    if pixels.shape[-1] == IMAGE_TENSOR["RGBA_CHANNELS"]:
-        return pixels[..., : IMAGE_TENSOR["RGB_CHANNELS"]].contiguous(), 1.0 - pixels[..., IMAGE_TENSOR["RGB_CHANNELS"]]
+    if pixels.shape[-1] == IMAGE_TENSOR['RGBA_CHANNELS']:
+        return pixels[..., : IMAGE_TENSOR['RGB_CHANNELS']].contiguous(), 1.0 - pixels[..., IMAGE_TENSOR['RGB_CHANNELS']]
     return pixels, torch.zeros(pixels.shape[:3], dtype=pixels.dtype)
 
 
 def encode_audio(audio: Input.Audio) -> str:
     """Send one audio clip as base64 WAV without a data: prefix."""
-    waveform = audio["waveform"]
+    waveform = audio['waveform']
     if waveform.shape[0] != 1:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, AUDIO_BATCH)
     if waveform.shape[-1] == 0:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, AUDIO_EMPTY)
     try:
-        return audio_to_base64_string(audio, container_format=WAV["FORMAT"], codec_name=WAV["CODEC"])
-    except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
+        return audio_to_base64_string(audio, container_format=WAV['FORMAT'], codec_name=WAV['CODEC'])
+    except Exception:  # noqa: BLE001 # reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, AUDIO_UNWRITABLE) from None
 
 
 def decode_audio(content: bytes) -> dict[str, object]:
     """Read an encoded audio file, such as MP3 or WAV, as ComfyUI audio."""
     try:
-        return cast("dict[str, object]", audio_bytes_to_audio_input(content))
-    except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
+        return cast('dict[str, object]', audio_bytes_to_audio_input(content))
+    except Exception:  # noqa: BLE001 # reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, AUDIO_UNREADABLE) from None
 
 
@@ -97,7 +99,7 @@ def decode_pcm(content: bytes, sample_rate: int, channels: int) -> dict[str, obj
     if not content or len(content) % (PCM_SAMPLE_BYTES * channels):
         raise OpenRouterError(ErrorCode.MEDIA, AUDIO_UNREADABLE)
     container = io.BytesIO()
-    with wave.open(container, "wb") as stream:
+    with wave.open(container, 'wb') as stream:
         stream.setnchannels(channels)
         stream.setsampwidth(PCM_SAMPLE_BYTES)
         stream.setframerate(sample_rate)
@@ -109,8 +111,8 @@ def encode_video(video: Input.Video) -> str:
     """Send a ComfyUI video as base64 H.264 MP4."""
     try:
         return video_to_base64_string(video, Types.VideoContainer.MP4, Types.VideoCodec.H264)
-    except Exception:  # noqa: BLE001 -- reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
+    except Exception:  # noqa: BLE001 # reason: ComfyUI's helper raises unrelated exception types; one reviewed message replaces them.
         raise OpenRouterError(ErrorCode.MEDIA, VIDEO_UNREADABLE) from None
 
 
-__all__ = ["decode_audio", "decode_image", "decode_pcm", "encode_audio", "encode_images", "encode_video"]
+__all__ = ['decode_audio', 'decode_image', 'decode_pcm', 'encode_audio', 'encode_images', 'encode_video']

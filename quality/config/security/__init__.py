@@ -1,1 +1,0 @@
-"""Security tool policy package."""

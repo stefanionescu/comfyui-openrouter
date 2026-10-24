@@ -3,20 +3,22 @@
 from __future__ import annotations
 
 import json
+from typing import TYPE_CHECKING, override
 import asyncio
+
 from comfy_api.latest import io
+
 from ..comfy.runtime import get_runtime
 from ..settings.store import read_settings
-from typing import override, TYPE_CHECKING
 from ..comfy.execution import wait_for_task
-from ..config.namespace import NODE_PREFIX, MENUS
-from ..config.generation.models import DEFAULT_MODELS
-from ..config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
+from ..config.namespace import MENUS, NODE_PREFIX
 from ..openrouter.models import read_model, read_image_limits, read_video_limits
+from ..config.generation.inputs import INPUT_NAMES, MODEL_TOOLTIP
+from ..config.generation.models import DEFAULT_MODELS
 
 if TYPE_CHECKING:
-    from ..types import Json
-    from ..types.models import Model, Limits
+    from ..state import Json
+    from ..state.models import Model, Limits
 
 
 def _format_report(model_id: str, model: Model, limits: Limits | None) -> str:
@@ -24,24 +26,24 @@ def _format_report(model_id: str, model: Model, limits: Limits | None) -> str:
     fields: dict[str, Json] = {}
     for field in sorted(limits.fields if limits is not None else ()):
         if limits is not None and field in limits.choices:
-            fields[field] = {"values": list(limits.choices[field])}
+            fields[field] = {'values': list(limits.choices[field])}
         elif limits is not None and field in limits.ranges:
             low, high = (int(bound) if bound.is_integer() else bound for bound in limits.ranges[field])
-            fields[field] = {"min": low, "max": high}
+            fields[field] = {'min': low, 'max': high}
         else:
             fields[field] = {}
     report = {
-        "model": model_id,
-        "inputs": sorted(model.inputs),
-        "outputs": sorted(model.outputs),
-        "context_length": model.context_length,
-        "max_completion_tokens": model.max_completion_tokens,
-        "parameters": sorted(model.parameters),
-        "reasoning_efforts": list(model.efforts),
-        "voice_cloning": model.has_voice_cloning,
-        "providers": list(model.providers),
-        "fields": fields,
-        "options": sorted(limits.options if limits is not None else ()),
+        'model': model_id,
+        'inputs': sorted(model.inputs),
+        'outputs': sorted(model.outputs),
+        'context_length': model.context_length,
+        'max_completion_tokens': model.max_completion_tokens,
+        'parameters': sorted(model.parameters),
+        'reasoning_efforts': list(model.efforts),
+        'voice_cloning': model.has_voice_cloning,
+        'providers': list(model.providers),
+        'fields': fields,
+        'options': sorted(limits.options if limits is not None else ()),
     }
     return json.dumps(report, ensure_ascii=False)
 
@@ -51,9 +53,9 @@ async def _read_report(model_id: str) -> io.NodeOutput:
     settings = await asyncio.to_thread(read_settings, get_runtime().configuration.directory)
     model = await read_model(model_id, settings)
     limits = None
-    if "image" in model.outputs:
+    if 'image' in model.outputs:
         limits = await read_image_limits(model_id, settings)
-    elif "video" in model.outputs:
+    elif 'video' in model.outputs:
         limits = await read_video_limits(model_id, model.parameters, settings)
     return io.NodeOutput(_format_report(model_id, model, limits))
 
@@ -62,22 +64,23 @@ class ModelInfo(io.ComfyNode):
     """Report one model's listing; it reads only public listings, so it needs no key and costs nothing."""
 
     @classmethod
+    @override
     def define_schema(cls) -> io.Schema:
         """List the model ID and the JSON the node returns."""
         return io.Schema(
-            node_id=f"{NODE_PREFIX}{cls.__name__}",
-            display_name="Model: Info",
-            category=MENUS["SHARED"],
-            description="Show what any OpenRouter model reads, makes, and accepts, as JSON. Free, and needs no key.",
-            inputs=[io.String.Input(INPUT_NAMES["MODEL"], default=DEFAULT_MODELS["chat"], tooltip=MODEL_TOOLTIP)],
-            outputs=[io.String.Output("info", display_name="info")],
+            node_id=f'{NODE_PREFIX}{cls.__name__}',
+            display_name='Model: Info',
+            category=MENUS['SHARED'],
+            description='Show what any OpenRouter model reads, makes, and accepts, as JSON. Free, and needs no key.',
+            inputs=[io.String.Input(INPUT_NAMES['MODEL'], default=DEFAULT_MODELS['chat'], tooltip=MODEL_TOOLTIP)],
+            outputs=[io.String.Output('info', display_name='info')],
         )
 
     @classmethod
     @override
-    async def execute(cls, *, model: str) -> io.NodeOutput:  # pyright: ignore[reportIncompatibleMethodOverride] -- reason: ComfyUI calls by schema.
+    async def execute(cls, *, model: str) -> io.NodeOutput:  # pyright: ignore[reportIncompatibleMethodOverride] # reason: ComfyUI calls by schema.
         """Read the model's listings inside an owned task, so ComfyUI's cancel stops the wait."""
-        return await wait_for_task(asyncio.create_task(_read_report(model.strip())))
+        return await wait_for_task(_read_report(model.strip()))
 
 
-__all__ = ["ModelInfo"]
+__all__ = ['ModelInfo']

@@ -23,7 +23,7 @@ several of these nodes to attach several files.
 3. Connect `documents` to **Chat: Ask**.
 
 `pdf_engine` on **Chat: Ask** sets how OpenRouter reads a PDF. A text file must
-be UTF-8. An edited file is read again on the next run.
+be UTF-8. The next run reads an edited file again.
 Example: **chat-01-write-a-product-listing**.
 
 [OpenRouter PDF documentation](https://openrouter.ai/docs/guides/overview/multimodal/pdfs)

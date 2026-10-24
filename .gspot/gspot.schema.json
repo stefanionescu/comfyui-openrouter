@@ -1,0 +1,4969 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://generativespotting.com/gspot.schema.json",
+    "title": "gspot.toml",
+    "description": "The settings of gspot for one repository.",
+    "type": "object",
+    "properties": {
+        "level": {
+            "$ref": "#/$defs/__schema0"
+        },
+        "tool_timeout_seconds": {
+            "$ref": "#/$defs/__schema2"
+        },
+        "test_files": {
+            "$ref": "#/$defs/__schema4"
+        },
+        "configurations": {
+            "$ref": "#/$defs/__schema7"
+        },
+        "removed_configurations": {
+            "$ref": "#/$defs/__schema9"
+        },
+        "scope": {
+            "$ref": "#/$defs/__schema13",
+            "description": "Settings for one folder: its configurations and the tables that differ from the root."
+        },
+        "format": {
+            "$ref": "#/$defs/__schema235",
+            "description": "Indentation, line width, quotes, and line endings for every formatter, with overrides for some paths."
+        },
+        "limits": {
+            "$ref": "#/$defs/__schema42",
+            "description": "Size and complexity limits for files and functions, with values per language."
+        },
+        "naming": {
+            "$ref": "#/$defs/__schema248",
+            "description": "Banned words, case, and length for the names of files, folders, and identifiers, with values per language."
+        },
+        "cloudflare": {
+            "$ref": "#/$defs/__schema114",
+            "description": "The file that holds the generated Cloudflare binding types, and its interface name."
+        },
+        "coverage": {
+            "$ref": "#/$defs/__schema258",
+            "description": "The lowest test coverage that the test checks accept."
+        },
+        "dependencies": {
+            "$ref": "#/$defs/__schema126",
+            "description": "How many days a new release waits before an install picks it up, and the registries that lockfiles may use."
+        },
+        "docs": {
+            "$ref": "#/$defs/__schema261",
+            "description": "Headings that documentation may not use, and URLs that the link check accepts."
+        },
+        "drizzle": {
+            "$ref": "#/$defs/__schema134",
+            "description": "The names of Drizzle clients in your code."
+        },
+        "javascript": {
+            "$ref": "#/$defs/__schema135",
+            "description": "The script files, which may print to the console and exit, and the modules the runtime provides."
+        },
+        "python": {
+            "$ref": "#/$defs/__schema138",
+            "description": "The modules that the host application provides, and the folders basedpyright also searches."
+        },
+        "trpc": {
+            "$ref": "#/$defs/__schema141",
+            "description": "The files that declare tRPC procedures, and the server files that other files import only as types."
+        },
+        "zustand": {
+            "$ref": "#/$defs/__schema144",
+            "description": "The files that may create a Zustand store."
+        },
+        "licenses": {
+            "$ref": "#/$defs/__schema263",
+            "description": "The licenses that dependencies may have, and single packages accepted with a reason."
+        },
+        "openapi": {
+            "$ref": "#/$defs/__schema147",
+            "description": "The committed OpenAPI document, and the command that generates it."
+        },
+        "postgres": {
+            "$ref": "#/$defs/__schema150",
+            "description": "The migrations folder, the schemas that clients read, and the migrations that may not change."
+        },
+        "secrets": {
+            "$ref": "#/$defs/__schema151",
+            "description": "The env example files, and the functions in your code that read environment variables."
+        },
+        "site": {
+            "$ref": "#/$defs/__schema265",
+            "description": "How the site builds, where the built files go, and the size limits of its files."
+        },
+        "spelling": {
+            "$ref": "#/$defs/__schema158",
+            "description": "The language of the spelling check, such as en-us or en-gb."
+        },
+        "supabase": {
+            "$ref": "#/$defs/__schema161",
+            "description": "The folders of Supabase edge functions, the schemas, and the generated types file."
+        },
+        "translations": {
+            "$ref": "#/$defs/__schema162",
+            "description": "The base locale and the folder of message files."
+        },
+        "swift": {
+            "$ref": "#/$defs/__schema163",
+            "description": "The Xcode project, scheme, and destination that the Swift build uses."
+        },
+        "repository": {
+            "$ref": "#/$defs/__schema164",
+            "description": "The largest file that Git may track, in kilobytes."
+        },
+        "prose": {
+            "$ref": "#/$defs/__schema166",
+            "description": "The longest sentence, list item, and paragraph that the prose check accepts."
+        },
+        "duplication": {
+            "$ref": "#/$defs/__schema170",
+            "description": "The smallest copy, in lines and tokens, that the duplication check reports."
+        },
+        "xcode": {
+            "$ref": "#/$defs/__schema175",
+            "description": "The entitlements that an Xcode project may request."
+        },
+        "tools": {
+            "$ref": "#/$defs/__schema267",
+            "description": "Options for single tools, such as lint rule options. gspot writes them into the config files."
+        },
+        "import_rule": {
+            "$ref": "#/$defs/__schema271",
+            "description": "Groups of files in import order: code may import the files of its own rule and of every rule listed above it."
+        },
+        "ignore": {
+            "$ref": "#/$defs/__schema275",
+            "description": "Checks and lint rules turned off for some paths or everywhere, each with a reason."
+        },
+        "command_check": {
+            "$ref": "#/$defs/__schema287",
+            "description": "Your own commands, run as checks with a stage, a file list, and an output format."
+        },
+        "structure": {
+            "$ref": "#/$defs/__schema304",
+            "description": "Whether files may re-export the exports of other files, and which files may read environment variables."
+        },
+        "hooks": {
+            "$ref": "#/$defs/__schema307",
+            "description": "Whether gspot install turns on the Git hooks."
+        },
+        "ci": {
+            "$ref": "#/$defs/__schema309",
+            "description": "Whether gspot writes a CI workflow, for which provider, and on which systems it runs."
+        },
+        "rules": {
+            "$ref": "#/$defs/__schema321",
+            "description": "Whether gspot writes rules for coding agents, and which rule files it leaves out."
+        }
+    },
+    "additionalProperties": false,
+    "examples": [
+        {
+            "level": "recommended"
+        },
+        {
+            "configurations": [
+                "typescript",
+                "nextjs",
+                "markdown"
+            ]
+        },
+        {
+            "test_files": [
+                "tests/**/*.test.ts"
+            ]
+        },
+        {
+            "scope": [
+                {
+                    "path": "services/api",
+                    "configurations": [
+                        "python",
+                        "fastapi"
+                    ]
+                }
+            ]
+        },
+        {
+            "configurations": [
+                "typescript",
+                "python"
+            ],
+            "limits": {
+                "function_lines": 60,
+                "python": {
+                    "file_lines": 300
+                }
+            }
+        },
+        {
+            "configurations": [
+                "naming"
+            ],
+            "naming": {
+                "override": [
+                    {
+                        "paths": [
+                            "migrations/**"
+                        ],
+                        "cases": [
+                            "timestamp-snake"
+                        ],
+                        "reason": "Migration filenames begin with their version."
+                    }
+                ]
+            }
+        },
+        {
+            "structure": {
+                "environment_readers": [
+                    "src/environment.ts"
+                ]
+            }
+        },
+        {
+            "structure": {
+                "reexports": {
+                    "value": "index-only",
+                    "reason": "The library uses index files to publish its public API."
+                }
+            }
+        },
+        {
+            "configurations": [
+                "javascript"
+            ],
+            "tools": {
+                "eslint": {
+                    "rules": {
+                        "no-console": [
+                            {
+                                "allow": [
+                                    "warn"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "format": {
+                "indent_width": 4,
+                "print_width": 100
+            }
+        },
+        {
+            "dependencies": {
+                "min_release_age_days": 7
+            }
+        },
+        {
+            "spelling": {
+                "allowed_words": {
+                    "Acme": "The project uses this product name."
+                }
+            }
+        },
+        {
+            "licenses": {
+                "allowed": [
+                    "MIT",
+                    "Apache-2.0"
+                ]
+            }
+        },
+        {
+            "ignore": [
+                {
+                    "check": "javascript/eslint",
+                    "rule": "no-console",
+                    "paths": [
+                        "scripts/**"
+                    ],
+                    "reason": "Scripts print their results."
+                }
+            ]
+        },
+        {
+            "command_check": [
+                {
+                    "id": "project/notes",
+                    "command": [
+                        "node",
+                        "scripts/check-notes.mjs",
+                        "{files}"
+                    ],
+                    "paths": [
+                        "notes/**"
+                    ],
+                    "stage": "commit",
+                    "summary": "Check project notes"
+                }
+            ]
+        },
+        {
+            "hooks": {
+                "enabled": true
+            }
+        },
+        {
+            "ci": {
+                "enabled": true,
+                "provider": "github",
+                "operating_systems": [
+                    "linux"
+                ]
+            }
+        },
+        {
+            "rules": {
+                "enabled": true
+            }
+        },
+        {
+            "tool_timeout_seconds": 300
+        },
+        {
+            "import_rule": [
+                {
+                    "name": "core",
+                    "paths": [
+                        "src/core/**"
+                    ]
+                }
+            ]
+        }
+    ],
+    "$defs": {
+        "__schema0": {
+            "default": "recommended",
+            "description": "Correctness, security, accessibility, type safety, routine formatting, and the project's own declared checks apply at both levels. Level `all` adds checks and rules for word choice, architecture, naming, doc comments, declaration order, duplication, API style, and complexity. No level turns on experimental or preview lint rules.",
+            "$ref": "#/$defs/__schema1"
+        },
+        "__schema1": {
+            "type": "string",
+            "enum": [
+                "recommended",
+                "all"
+            ]
+        },
+        "__schema2": {
+            "default": 600,
+            "description": "The time limit in seconds for every tool command, including installation and version reads. Root only.",
+            "$ref": "#/$defs/__schema3"
+        },
+        "__schema3": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema4": {
+            "default": [
+                "**/test/**",
+                "**/tests/**",
+                "**/__tests__/**",
+                "**/*.test.*",
+                "**/*.spec.*",
+                "**/test_*.py",
+                "**/*_test.py",
+                "**/conftest.py",
+                "**/Tests/**",
+                "**/*Tests.swift"
+            ],
+            "description": "Test files. Linters apply their test rules to these files.",
+            "$ref": "#/$defs/__schema5"
+        },
+        "__schema5": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema6": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!!?\\/)(?![\\s\\S]*(?:^!?|\\/)\\.\\.(?:\\/|$))(?:[^\\\\:\\p{Cc}]|\\\\[()[\\]{}*?!+@,])+$"
+        },
+        "__schema7": {
+            "default": [],
+            "description": "The configurations this repository uses besides the always-selected ones. `gspot init` writes the detected ones here; `gspot add` and `gspot remove` change the list.",
+            "$ref": "#/$defs/__schema8"
+        },
+        "__schema8": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema9": {
+            "description": "Configurations you removed, which detection does not add back; only `gspot add` and `gspot remove` write this list.",
+            "$ref": "#/$defs/__schema10",
+            "default": []
+        },
+        "__schema10": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema11"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Configurations you removed, which detection does not add back; only `gspot add` and `gspot remove` write this list.",
+                            "$ref": "#/$defs/__schema11",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema11": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema12"
+            }
+        },
+        "__schema12": {
+            "type": "string"
+        },
+        "__schema13": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "description": "The folder of the scope; no two records may name the same folder.",
+                        "$ref": "#/$defs/__schema6"
+                    },
+                    "configurations": {
+                        "default": [],
+                        "description": "Configurations for this folder, on top of the root ones; `gspot add --scope` writes this list.",
+                        "$ref": "#/$defs/__schema14"
+                    },
+                    "removed_configurations": {
+                        "description": "Configurations removed in this folder; only `gspot add` and `gspot remove` write this list.",
+                        "$ref": "#/$defs/__schema15",
+                        "default": []
+                    },
+                    "test_files": {
+                        "description": "More test files for this folder, added to the root list.",
+                        "$ref": "#/$defs/__schema18"
+                    },
+                    "format": {
+                        "type": "object",
+                        "properties": {
+                            "indent_style": {
+                                "$ref": "#/$defs/__schema19"
+                            },
+                            "indent_width": {
+                                "$ref": "#/$defs/__schema22"
+                            },
+                            "print_width": {
+                                "$ref": "#/$defs/__schema25"
+                            },
+                            "line_ending": {
+                                "$ref": "#/$defs/__schema28"
+                            },
+                            "final_newline": {
+                                "$ref": "#/$defs/__schema31"
+                            },
+                            "quotes": {
+                                "$ref": "#/$defs/__schema34"
+                            },
+                            "trailing_commas": {
+                                "$ref": "#/$defs/__schema36"
+                            },
+                            "semicolons": {
+                                "$ref": "#/$defs/__schema39"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "limits": {
+                        "$ref": "#/$defs/__schema42"
+                    },
+                    "naming": {
+                        "type": "object",
+                        "properties": {
+                            "max_characters": {
+                                "$ref": "#/$defs/__schema87"
+                            },
+                            "max_words": {
+                                "$ref": "#/$defs/__schema90"
+                            },
+                            "cases": {
+                                "$ref": "#/$defs/__schema93"
+                            },
+                            "banned_words": {
+                                "$ref": "#/$defs/__schema97"
+                            },
+                            "typescript": {
+                                "$ref": "#/$defs/__schema99"
+                            },
+                            "javascript": {
+                                "$ref": "#/$defs/__schema107"
+                            },
+                            "python": {
+                                "$ref": "#/$defs/__schema108"
+                            },
+                            "swift": {
+                                "$ref": "#/$defs/__schema109"
+                            },
+                            "bash": {
+                                "$ref": "#/$defs/__schema110"
+                            },
+                            "sql": {
+                                "$ref": "#/$defs/__schema111"
+                            },
+                            "css": {
+                                "$ref": "#/$defs/__schema112"
+                            },
+                            "html": {
+                                "$ref": "#/$defs/__schema113"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "cloudflare": {
+                        "$ref": "#/$defs/__schema114"
+                    },
+                    "coverage": {
+                        "type": "object",
+                        "properties": {
+                            "lines": {
+                                "$ref": "#/$defs/__schema117"
+                            },
+                            "branches": {
+                                "$ref": "#/$defs/__schema120"
+                            },
+                            "functions": {
+                                "$ref": "#/$defs/__schema122"
+                            },
+                            "statements": {
+                                "$ref": "#/$defs/__schema124"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "dependencies": {
+                        "$ref": "#/$defs/__schema126"
+                    },
+                    "docs": {
+                        "type": "object",
+                        "properties": {
+                            "allowed_urls": {
+                                "$ref": "#/$defs/__schema130"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "drizzle": {
+                        "$ref": "#/$defs/__schema134"
+                    },
+                    "javascript": {
+                        "$ref": "#/$defs/__schema135"
+                    },
+                    "python": {
+                        "$ref": "#/$defs/__schema138"
+                    },
+                    "trpc": {
+                        "$ref": "#/$defs/__schema141"
+                    },
+                    "zustand": {
+                        "$ref": "#/$defs/__schema144"
+                    },
+                    "licenses": {
+                        "type": "object",
+                        "properties": {
+                            "allowed": {
+                                "$ref": "#/$defs/__schema146"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "openapi": {
+                        "$ref": "#/$defs/__schema147"
+                    },
+                    "postgres": {
+                        "$ref": "#/$defs/__schema150"
+                    },
+                    "secrets": {
+                        "$ref": "#/$defs/__schema151"
+                    },
+                    "site": {
+                        "type": "object",
+                        "properties": {
+                            "build_command": {
+                                "$ref": "#/$defs/__schema152"
+                            },
+                            "build_folder": {
+                                "$ref": "#/$defs/__schema153"
+                            },
+                            "allowed_unlisted_pages": {
+                                "$ref": "#/$defs/__schema154"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "spelling": {
+                        "$ref": "#/$defs/__schema158"
+                    },
+                    "supabase": {
+                        "$ref": "#/$defs/__schema161"
+                    },
+                    "translations": {
+                        "$ref": "#/$defs/__schema162"
+                    },
+                    "swift": {
+                        "$ref": "#/$defs/__schema163"
+                    },
+                    "repository": {
+                        "$ref": "#/$defs/__schema164"
+                    },
+                    "prose": {
+                        "$ref": "#/$defs/__schema166"
+                    },
+                    "duplication": {
+                        "$ref": "#/$defs/__schema170"
+                    },
+                    "xcode": {
+                        "$ref": "#/$defs/__schema175"
+                    },
+                    "tools": {
+                        "type": "object",
+                        "properties": {
+                            "hadolint": {
+                                "$ref": "#/$defs/__schema177"
+                            },
+                            "nginx": {
+                                "$ref": "#/$defs/__schema179"
+                            },
+                            "ruff": {
+                                "$ref": "#/$defs/__schema180"
+                            },
+                            "semgrep": {
+                                "$ref": "#/$defs/__schema182"
+                            },
+                            "sqlfluff": {
+                                "$ref": "#/$defs/__schema185"
+                            },
+                            "swiftlint": {
+                                "$ref": "#/$defs/__schema187"
+                            },
+                            "trivy": {
+                                "$ref": "#/$defs/__schema189"
+                            },
+                            "eslint": {
+                                "type": "object",
+                                "properties": {
+                                    "import_extension": {
+                                        "$ref": "#/$defs/__schema191"
+                                    },
+                                    "restricted_imports": {
+                                        "$ref": "#/$defs/__schema193"
+                                    },
+                                    "rules": {
+                                        "$ref": "#/$defs/__schema195"
+                                    },
+                                    "plugins": {
+                                        "$ref": "#/$defs/__schema202"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "commitlint": {
+                                "$ref": "#/$defs/__schema204"
+                            },
+                            "yamllint": {
+                                "$ref": "#/$defs/__schema207"
+                            },
+                            "markdownlint": {
+                                "$ref": "#/$defs/__schema215"
+                            },
+                            "stylelint": {
+                                "$ref": "#/$defs/__schema218"
+                            },
+                            "squawk": {
+                                "$ref": "#/$defs/__schema224"
+                            },
+                            "knip": {
+                                "$ref": "#/$defs/__schema226"
+                            },
+                            "purgecss": {
+                                "$ref": "#/$defs/__schema231"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "structure": {
+                        "type": "object",
+                        "properties": {
+                            "environment_readers": {
+                                "$ref": "#/$defs/__schema233"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "required": [
+                    "path"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema14": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema15": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema16"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Configurations removed in this folder; only `gspot add` and `gspot remove` write this list.",
+                            "$ref": "#/$defs/__schema16",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema16": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema17"
+            }
+        },
+        "__schema17": {
+            "type": "string"
+        },
+        "__schema18": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema19": {
+            "default": "space",
+            "description": "The character of one indent level: space or tab.",
+            "$ref": "#/$defs/__schema20"
+        },
+        "__schema20": {
+            "$ref": "#/$defs/__schema21"
+        },
+        "__schema21": {
+            "type": "string",
+            "enum": [
+                "space",
+                "tab"
+            ]
+        },
+        "__schema22": {
+            "default": 4,
+            "description": "Spaces per indent level.",
+            "$ref": "#/$defs/__schema23"
+        },
+        "__schema23": {
+            "$ref": "#/$defs/__schema24"
+        },
+        "__schema24": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8
+        },
+        "__schema25": {
+            "default": 120,
+            "description": "The line width formatters wrap at.",
+            "$ref": "#/$defs/__schema26"
+        },
+        "__schema26": {
+            "$ref": "#/$defs/__schema27"
+        },
+        "__schema27": {
+            "type": "integer",
+            "minimum": 40,
+            "maximum": 400
+        },
+        "__schema28": {
+            "default": "lf",
+            "description": "The line ending every file uses: lf or crlf.",
+            "$ref": "#/$defs/__schema29"
+        },
+        "__schema29": {
+            "$ref": "#/$defs/__schema30"
+        },
+        "__schema30": {
+            "type": "string",
+            "enum": [
+                "lf",
+                "crlf"
+            ]
+        },
+        "__schema31": {
+            "default": true,
+            "description": "Whether every file ends with a newline.",
+            "$ref": "#/$defs/__schema32"
+        },
+        "__schema32": {
+            "$ref": "#/$defs/__schema33"
+        },
+        "__schema33": {
+            "type": "boolean"
+        },
+        "__schema34": {
+            "description": "Single or double, for the languages where a formatter chooses. Unset, Python gets double quotes and the other languages single.",
+            "$ref": "#/$defs/__schema35"
+        },
+        "__schema35": {
+            "type": "string",
+            "enum": [
+                "single",
+                "double"
+            ]
+        },
+        "__schema36": {
+            "default": "all",
+            "description": "Where trailing commas go: all, es5, or none.",
+            "$ref": "#/$defs/__schema37"
+        },
+        "__schema37": {
+            "$ref": "#/$defs/__schema38"
+        },
+        "__schema38": {
+            "type": "string",
+            "enum": [
+                "all",
+                "es5",
+                "none"
+            ]
+        },
+        "__schema39": {
+            "default": true,
+            "description": "Whether JavaScript and TypeScript statements end with semicolons.",
+            "$ref": "#/$defs/__schema40"
+        },
+        "__schema40": {
+            "$ref": "#/$defs/__schema41"
+        },
+        "__schema41": {
+            "type": "boolean"
+        },
+        "__schema42": {
+            "$ref": "#/$defs/limits"
+        },
+        "limits": {
+            "type": "object",
+            "properties": {
+                "file_lines": {
+                    "$ref": "#/$defs/__schema43"
+                },
+                "function_lines": {
+                    "$ref": "#/$defs/__schema46"
+                },
+                "function_parameters": {
+                    "$ref": "#/$defs/__schema48"
+                },
+                "function_statements": {
+                    "$ref": "#/$defs/__schema50"
+                },
+                "block_nesting": {
+                    "$ref": "#/$defs/__schema52"
+                },
+                "callback_nesting": {
+                    "$ref": "#/$defs/__schema54"
+                },
+                "cognitive_complexity": {
+                    "$ref": "#/$defs/__schema56"
+                },
+                "cyclomatic_complexity": {
+                    "$ref": "#/$defs/__schema58"
+                },
+                "function_branches": {
+                    "$ref": "#/$defs/__schema60"
+                },
+                "function_returns": {
+                    "$ref": "#/$defs/__schema62"
+                },
+                "function_assignments": {
+                    "$ref": "#/$defs/__schema64"
+                },
+                "closure_lines": {
+                    "$ref": "#/$defs/__schema66"
+                },
+                "type_lines": {
+                    "$ref": "#/$defs/__schema68"
+                },
+                "index_exports": {
+                    "$ref": "#/$defs/__schema70"
+                },
+                "trivial_function_statements": {
+                    "$ref": "#/$defs/__schema72"
+                },
+                "shared_prefix_files": {
+                    "description": "The number of siblings sharing a name prefix that makes a finding.",
+                    "$ref": "#/$defs/__schema75",
+                    "default": 2
+                },
+                "typescript": {
+                    "type": "object",
+                    "properties": {
+                        "file_lines": {
+                            "$ref": "#/$defs/__schema76"
+                        },
+                        "function_lines": {
+                            "$ref": "#/$defs/__schema77"
+                        },
+                        "function_parameters": {
+                            "$ref": "#/$defs/__schema78"
+                        },
+                        "function_statements": {
+                            "$ref": "#/$defs/__schema79"
+                        },
+                        "block_nesting": {
+                            "$ref": "#/$defs/__schema80"
+                        },
+                        "callback_nesting": {
+                            "$ref": "#/$defs/__schema81"
+                        },
+                        "cognitive_complexity": {
+                            "$ref": "#/$defs/__schema82"
+                        },
+                        "cyclomatic_complexity": {
+                            "$ref": "#/$defs/__schema83"
+                        },
+                        "index_exports": {
+                            "$ref": "#/$defs/__schema84"
+                        },
+                        "trivial_function_statements": {
+                            "$ref": "#/$defs/__schema85"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "javascript": {
+                    "type": "object",
+                    "properties": {
+                        "file_lines": {
+                            "$ref": "#/$defs/__schema76"
+                        },
+                        "function_lines": {
+                            "$ref": "#/$defs/__schema77"
+                        },
+                        "function_parameters": {
+                            "$ref": "#/$defs/__schema78"
+                        },
+                        "function_statements": {
+                            "$ref": "#/$defs/__schema79"
+                        },
+                        "block_nesting": {
+                            "$ref": "#/$defs/__schema80"
+                        },
+                        "callback_nesting": {
+                            "$ref": "#/$defs/__schema81"
+                        },
+                        "cognitive_complexity": {
+                            "$ref": "#/$defs/__schema82"
+                        },
+                        "cyclomatic_complexity": {
+                            "$ref": "#/$defs/__schema83"
+                        },
+                        "index_exports": {
+                            "$ref": "#/$defs/__schema84"
+                        },
+                        "trivial_function_statements": {
+                            "$ref": "#/$defs/__schema85"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "python": {
+                    "type": "object",
+                    "properties": {
+                        "file_lines": {
+                            "$ref": "#/$defs/__schema76"
+                        },
+                        "function_lines": {
+                            "$ref": "#/$defs/__schema77"
+                        },
+                        "function_parameters": {
+                            "$ref": "#/$defs/__schema78"
+                        },
+                        "function_statements": {
+                            "$ref": "#/$defs/__schema79"
+                        },
+                        "cyclomatic_complexity": {
+                            "$ref": "#/$defs/__schema83"
+                        },
+                        "function_branches": {
+                            "$ref": "#/$defs/__schema86"
+                        },
+                        "function_returns": {
+                            "$ref": "#/$defs/__schema62"
+                        },
+                        "trivial_function_statements": {
+                            "$ref": "#/$defs/__schema85"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "bash": {
+                    "type": "object",
+                    "properties": {
+                        "file_lines": {
+                            "$ref": "#/$defs/__schema76"
+                        },
+                        "function_lines": {
+                            "$ref": "#/$defs/__schema77"
+                        },
+                        "block_nesting": {
+                            "$ref": "#/$defs/__schema80"
+                        },
+                        "function_branches": {
+                            "$ref": "#/$defs/__schema86"
+                        },
+                        "function_assignments": {
+                            "$ref": "#/$defs/__schema64"
+                        },
+                        "trivial_function_statements": {
+                            "$ref": "#/$defs/__schema85"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "swift": {
+                    "type": "object",
+                    "properties": {
+                        "file_lines": {
+                            "$ref": "#/$defs/__schema76"
+                        },
+                        "function_lines": {
+                            "$ref": "#/$defs/__schema77"
+                        },
+                        "function_parameters": {
+                            "$ref": "#/$defs/__schema78"
+                        },
+                        "cyclomatic_complexity": {
+                            "$ref": "#/$defs/__schema83"
+                        },
+                        "closure_lines": {
+                            "$ref": "#/$defs/__schema66"
+                        },
+                        "type_lines": {
+                            "$ref": "#/$defs/__schema68"
+                        },
+                        "trivial_function_statements": {
+                            "$ref": "#/$defs/__schema85"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "sql": {
+                    "type": "object",
+                    "properties": {
+                        "file_lines": {
+                            "$ref": "#/$defs/__schema76"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema43": {
+            "description": "The most lines one file may have, not counting blank lines and comment-only lines.",
+            "$ref": "#/$defs/__schema44",
+            "default": 300
+        },
+        "__schema44": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most lines one file may have, not counting blank lines and comment-only lines.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema45": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema46": {
+            "description": "The most lines one function may have.",
+            "$ref": "#/$defs/__schema47",
+            "default": 60
+        },
+        "__schema47": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most lines one function may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema48": {
+            "description": "The most parameters one function may take.",
+            "$ref": "#/$defs/__schema49",
+            "default": 7
+        },
+        "__schema49": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most parameters one function may take.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema50": {
+            "description": "The most statements one function may have.",
+            "$ref": "#/$defs/__schema51",
+            "default": 30
+        },
+        "__schema51": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most statements one function may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema52": {
+            "description": "How deep blocks may nest inside one function.",
+            "$ref": "#/$defs/__schema53",
+            "default": 3
+        },
+        "__schema53": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "How deep blocks may nest inside one function.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema54": {
+            "description": "How deep callbacks may nest.",
+            "$ref": "#/$defs/__schema55",
+            "default": 3
+        },
+        "__schema55": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "How deep callbacks may nest.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema56": {
+            "description": "The highest sonarjs cognitive score one function may have; the score grows as the function gets harder to follow.",
+            "$ref": "#/$defs/__schema57",
+            "default": 8
+        },
+        "__schema57": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The highest sonarjs cognitive score one function may have; the score grows as the function gets harder to follow.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema58": {
+            "description": "The most paths that may run through one function.",
+            "$ref": "#/$defs/__schema59",
+            "default": 8
+        },
+        "__schema59": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most paths that may run through one function.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema60": {
+            "description": "The most branches one function may have.",
+            "$ref": "#/$defs/__schema61",
+            "default": 8
+        },
+        "__schema61": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most branches one function may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema62": {
+            "description": "The most return statements one function may have.",
+            "$ref": "#/$defs/__schema63",
+            "default": 4
+        },
+        "__schema63": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most return statements one function may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema64": {
+            "description": "The most variable assignments one shell function may make.",
+            "$ref": "#/$defs/__schema65",
+            "default": 8
+        },
+        "__schema65": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most variable assignments one shell function may make.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema66": {
+            "description": "The most lines one Swift closure may have.",
+            "$ref": "#/$defs/__schema67",
+            "default": 60
+        },
+        "__schema67": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most lines one Swift closure may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema68": {
+            "description": "The most lines one Swift type body may have.",
+            "$ref": "#/$defs/__schema69",
+            "default": 300
+        },
+        "__schema69": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most lines one Swift type body may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema70": {
+            "description": "The most re-exports one index file may hold.",
+            "$ref": "#/$defs/__schema71",
+            "default": 20
+        },
+        "__schema71": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most re-exports one index file may hold.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema72": {
+            "description": "Report functions with this many statements or fewer, including the statements of nested functions and callbacks in every language; any whole number from 1 up works, a higher number reports more functions, and limits.`<language>` sets it for one language.",
+            "$ref": "#/$defs/__schema73",
+            "default": 2
+        },
+        "__schema73": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema74"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Report functions with this many statements or fewer, including the statements of nested functions and callbacks in every language; any whole number from 1 up works, a higher number reports more functions, and limits.`<language>` sets it for one language.",
+                            "$ref": "#/$defs/__schema74"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs less than the default; required when you lower the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema74": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema75": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The number of siblings sharing a name prefix that makes a finding.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema76": {
+            "$ref": "#/$defs/__schema43"
+        },
+        "__schema77": {
+            "$ref": "#/$defs/__schema46"
+        },
+        "__schema78": {
+            "$ref": "#/$defs/__schema48"
+        },
+        "__schema79": {
+            "$ref": "#/$defs/__schema50"
+        },
+        "__schema80": {
+            "$ref": "#/$defs/__schema52"
+        },
+        "__schema81": {
+            "$ref": "#/$defs/__schema54"
+        },
+        "__schema82": {
+            "$ref": "#/$defs/__schema56"
+        },
+        "__schema83": {
+            "$ref": "#/$defs/__schema58"
+        },
+        "__schema84": {
+            "$ref": "#/$defs/__schema70"
+        },
+        "__schema85": {
+            "$ref": "#/$defs/__schema72"
+        },
+        "__schema86": {
+            "$ref": "#/$defs/__schema60"
+        },
+        "__schema87": {
+            "description": "The most characters one identifier may have.",
+            "$ref": "#/$defs/__schema88",
+            "default": 35
+        },
+        "__schema88": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema89"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most characters one identifier may have.",
+                            "$ref": "#/$defs/__schema89"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema89": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema90": {
+            "description": "The most words one identifier may have.",
+            "$ref": "#/$defs/__schema91",
+            "default": 4
+        },
+        "__schema91": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema92"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most words one identifier may have.",
+                            "$ref": "#/$defs/__schema92"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema92": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema93": {
+            "description": "The case patterns that one identifier category accepts: camel, pascal, kebab, snake, upper-snake, pascal-extension (String+Format.swift), or timestamp-snake (20260103120000_create_users.sql). Ruff checks the case of Python classes, functions, and parameters, and SwiftLint checks Swift types, variables, parameters, and enum cases; this setting covers the rest.",
+            "$ref": "#/$defs/__schema94",
+            "default": []
+        },
+        "__schema94": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema95"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The case patterns that one identifier category accepts: camel, pascal, kebab, snake, upper-snake, pascal-extension (String+Format.swift), or timestamp-snake (20260103120000_create_users.sql). Ruff checks the case of Python classes, functions, and parameters, and SwiftLint checks Swift types, variables, parameters, and enum cases; this setting covers the rest.",
+                            "$ref": "#/$defs/__schema95",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema95": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema96"
+            }
+        },
+        "__schema96": {
+            "type": "string",
+            "enum": [
+                "camel",
+                "pascal",
+                "pascal-extension",
+                "kebab",
+                "snake",
+                "upper-snake",
+                "timestamp-snake"
+            ]
+        },
+        "__schema97": {
+            "default": [],
+            "description": "Words this repository bans in identifiers, beyond the shipped groups.",
+            "$ref": "#/$defs/__schema98"
+        },
+        "__schema98": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema99": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                },
+                "types": {
+                    "$ref": "#/$defs/__schema102"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema103"
+                },
+                "parameters": {
+                    "$ref": "#/$defs/__schema104"
+                },
+                "variables": {
+                    "$ref": "#/$defs/__schema105"
+                },
+                "properties": {
+                    "$ref": "#/$defs/__schema106"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema100": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "namingCategory": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema101": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "__schema102": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "__schema103": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "__schema104": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "__schema105": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "__schema106": {
+            "$ref": "#/$defs/namingCategory"
+        },
+        "__schema107": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                },
+                "types": {
+                    "$ref": "#/$defs/__schema102"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema103"
+                },
+                "parameters": {
+                    "$ref": "#/$defs/__schema104"
+                },
+                "variables": {
+                    "$ref": "#/$defs/__schema105"
+                },
+                "properties": {
+                    "$ref": "#/$defs/__schema106"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema108": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                },
+                "types": {
+                    "$ref": "#/$defs/__schema102"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema103"
+                },
+                "parameters": {
+                    "$ref": "#/$defs/__schema104"
+                },
+                "variables": {
+                    "$ref": "#/$defs/__schema105"
+                },
+                "properties": {
+                    "$ref": "#/$defs/__schema106"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema109": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                },
+                "types": {
+                    "$ref": "#/$defs/__schema102"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema103"
+                },
+                "parameters": {
+                    "$ref": "#/$defs/__schema104"
+                },
+                "variables": {
+                    "$ref": "#/$defs/__schema105"
+                },
+                "properties": {
+                    "$ref": "#/$defs/__schema106"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema110": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema103"
+                },
+                "variables": {
+                    "$ref": "#/$defs/__schema105"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema111": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema103"
+                },
+                "parameters": {
+                    "$ref": "#/$defs/__schema104"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema112": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema113": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "files": {
+                    "$ref": "#/$defs/__schema100"
+                },
+                "folders": {
+                    "$ref": "#/$defs/__schema101"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema114": {
+            "type": "object",
+            "properties": {
+                "types_file": {
+                    "default": "worker-configuration.d.ts",
+                    "description": "Tracked Worker types file from the repository root; OpenNext defaults to cloudflare-env.d.ts.",
+                    "$ref": "#/$defs/__schema115"
+                },
+                "types_interface": {
+                    "default": "Env",
+                    "description": "Environment interface name passed to wrangler types; OpenNext defaults to CloudflareEnv.",
+                    "$ref": "#/$defs/__schema116"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema115": {
+            "$ref": "#/$defs/__schema6"
+        },
+        "__schema116": {
+            "type": "string",
+            "minLength": 1
+        },
+        "__schema117": {
+            "description": "The minimum percentage of source lines covered by tests.",
+            "$ref": "#/$defs/__schema118",
+            "default": 0
+        },
+        "__schema118": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema119"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The minimum percentage of source lines covered by tests.",
+                            "$ref": "#/$defs/__schema119"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs less than the default; required when you lower the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema119": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+        },
+        "__schema120": {
+            "description": "The minimum percentage of source branches covered by tests.",
+            "$ref": "#/$defs/__schema121",
+            "default": 0
+        },
+        "__schema121": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema119"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The minimum percentage of source branches covered by tests.",
+                            "$ref": "#/$defs/__schema119"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs less than the default; required when you lower the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema122": {
+            "description": "The minimum percentage of source functions covered by tests.",
+            "$ref": "#/$defs/__schema123",
+            "default": 0
+        },
+        "__schema123": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema119"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The minimum percentage of source functions covered by tests.",
+                            "$ref": "#/$defs/__schema119"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs less than the default; required when you lower the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema124": {
+            "description": "The minimum percentage of source statements covered by tests.",
+            "$ref": "#/$defs/__schema125",
+            "default": 0
+        },
+        "__schema125": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema119"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The minimum percentage of source statements covered by tests.",
+                            "$ref": "#/$defs/__schema119"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs less than the default; required when you lower the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema126": {
+            "type": "object",
+            "properties": {
+                "min_release_age_days": {
+                    "description": "How many days a new release waits before gspot installs it as one of its tools in .gspot.",
+                    "$ref": "#/$defs/__schema127",
+                    "default": 7
+                },
+                "allowed_registries": {
+                    "description": "The hosts a lockfile may resolve packages from.",
+                    "$ref": "#/$defs/__schema128",
+                    "default": [
+                        "registry.npmjs.org",
+                        "registry.yarnpkg.com"
+                    ]
+                },
+                "bun_scanner": {
+                    "description": "The npm package that Bun runs as its install security scanner. Without it, Bun runs no scanner.",
+                    "$ref": "#/$defs/__schema116"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema127": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "How many days a new release waits before gspot installs it as one of its tools in .gspot.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs less than the default; required when you lower the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema128": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema129"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The hosts a lockfile may resolve packages from.",
+                            "$ref": "#/$defs/__schema129",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema129": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema116"
+            }
+        },
+        "__schema130": {
+            "description": "Allowed URL patterns; additions need a reason for the whole list.",
+            "$ref": "#/$defs/__schema131",
+            "default": []
+        },
+        "__schema131": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema132"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Allowed URL patterns; additions need a reason for the whole list.",
+                            "$ref": "#/$defs/__schema132",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema132": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema133"
+            }
+        },
+        "__schema133": {
+            "type": "string"
+        },
+        "__schema134": {
+            "type": "object",
+            "properties": {
+                "client_names": {
+                    "default": [
+                        "db"
+                    ],
+                    "description": "The Drizzle client identifiers checked for update and delete operations without a where clause.",
+                    "$ref": "#/$defs/__schema129"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema135": {
+            "type": "object",
+            "properties": {
+                "script_files": {
+                    "default": [
+                        "scripts/**",
+                        "**/*.config.{js,mjs,cjs,ts}"
+                    ],
+                    "description": "Script files, which may print to the console and call process.exit.",
+                    "$ref": "#/$defs/__schema136"
+                },
+                "externals": {
+                    "default": [],
+                    "description": "Import specifiers that the runtime provides, such as ../../scripts/app.js in a host application. Globs match several.",
+                    "$ref": "#/$defs/__schema137"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema136": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema137": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "__schema138": {
+            "type": "object",
+            "properties": {
+                "externals": {
+                    "default": [],
+                    "description": "Modules that the host application provides at run time, such as folder_paths. A name covers its submodules.",
+                    "$ref": "#/$defs/__schema139"
+                },
+                "extra_paths": {
+                    "default": [],
+                    "description": "Folders, relative to the scope, where basedpyright also looks for imports.",
+                    "$ref": "#/$defs/__schema140"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema139": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 1
+            }
+        },
+        "__schema140": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema141": {
+            "type": "object",
+            "properties": {
+                "router_files": {
+                    "default": [
+                        "**/routers/**",
+                        "**/*router*.ts",
+                        "**/trpc/**"
+                    ],
+                    "description": "The files that declare tRPC procedures.",
+                    "$ref": "#/$defs/__schema142"
+                },
+                "server_files": {
+                    "default": [],
+                    "description": "The server files that other files of a tRPC scope may import only as types; empty turns the rule off.",
+                    "$ref": "#/$defs/__schema143"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema142": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema143": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema144": {
+            "type": "object",
+            "properties": {
+                "store_files": {
+                    "default": [
+                        "**/store.*",
+                        "**/stores/*",
+                        "**/store/*",
+                        "**/*.store.*"
+                    ],
+                    "description": "The files that may create a store.",
+                    "$ref": "#/$defs/__schema145"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema145": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema146": {
+            "default": [],
+            "description": "The SPDX license IDs a dependency may report.",
+            "$ref": "#/$defs/__schema129"
+        },
+        "__schema147": {
+            "type": "object",
+            "properties": {
+                "document": {
+                    "description": "The committed OpenAPI document, relative to the repository root, which init fills in when it finds one; without it, the OpenAPI checks do not run.",
+                    "$ref": "#/$defs/__schema6"
+                },
+                "generate_command": {
+                    "description": "The command that writes the OpenAPI document from the code, run in the project scope folder.",
+                    "$ref": "#/$defs/__schema148"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema148": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema149"
+            },
+            "prefixItems": [
+                {
+                    "type": "string",
+                    "minLength": 1
+                }
+            ]
+        },
+        "__schema149": {
+            "type": "string"
+        },
+        "__schema150": {
+            "type": "object",
+            "properties": {
+                "client_schemas": {
+                    "default": [],
+                    "description": "The schemas clients reach, where every table needs row level security.",
+                    "$ref": "#/$defs/__schema129"
+                },
+                "frozen_through": {
+                    "default": "none",
+                    "description": "The last migration version that has run everywhere (none, all, or a version); Squawk skips those migrations, and they may not change.",
+                    "$ref": "#/$defs/__schema116"
+                },
+                "migrations_folder": {
+                    "description": "The migrations folder, relative to the repository root; without it, the checks use the migration files of this configuration.",
+                    "$ref": "#/$defs/__schema6"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema151": {
+            "type": "object",
+            "properties": {
+                "env_examples": {
+                    "default": [
+                        ".env.example",
+                        ".env.template",
+                        ".env.sample",
+                        ".dev.vars.example"
+                    ],
+                    "description": "The example environment files to search for environment keys; a key may appear in any one of them.",
+                    "$ref": "#/$defs/__schema129"
+                },
+                "environment_functions": {
+                    "default": [],
+                    "description": "Functions of this project that read environment variables, such as read_env. secrets/env-examples reads the keys they take.",
+                    "$ref": "#/$defs/__schema129"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema152": {
+            "default": [
+                "npm",
+                "run",
+                "build"
+            ],
+            "description": "The command that builds the site. Without it, gspot runs the build script of the package manager.",
+            "$ref": "#/$defs/__schema148"
+        },
+        "__schema153": {
+            "default": "dist",
+            "description": "The folder the build writes.",
+            "$ref": "#/$defs/__schema115"
+        },
+        "__schema154": {
+            "description": "Built pages the sitemap leaves out on purpose.",
+            "$ref": "#/$defs/__schema155",
+            "default": [
+                "404.html"
+            ]
+        },
+        "__schema155": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema156"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Built pages the sitemap leaves out on purpose.",
+                            "$ref": "#/$defs/__schema156",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema156": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema157"
+            }
+        },
+        "__schema157": {
+            "$ref": "#/$defs/__schema6"
+        },
+        "__schema158": {
+            "type": "object",
+            "properties": {
+                "locale": {
+                    "default": "en",
+                    "description": "The English locale typos checks against: en accepts every dialect; en-us, en-gb, en-ca, and en-au report the spellings of the other dialects. The fixer never changes a dialect spelling.",
+                    "$ref": "#/$defs/__schema159"
+                },
+                "allowed_words": {
+                    "default": {},
+                    "description": "Words the spelling checks accept beyond the shipped spelling list, each with the reason it is a real word. A scope adds its words to the root words.",
+                    "$ref": "#/$defs/__schema160"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema159": {
+            "type": "string",
+            "enum": [
+                "en",
+                "en-us",
+                "en-gb",
+                "en-au",
+                "en-ca"
+            ]
+        },
+        "__schema160": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string",
+                "pattern": "^[\\p{L}\\p{N}][\\p{L}\\p{M}\\p{N}_]*(?:[-'\\u2019][\\p{L}\\p{M}\\p{N}_]+)*$"
+            },
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "__schema161": {
+            "type": "object",
+            "properties": {
+                "functions_folder": {
+                    "default": "supabase/functions",
+                    "description": "The folder, relative to the repository root, with one folder for each edge function; the default starts from the project scope.",
+                    "$ref": "#/$defs/__schema6"
+                },
+                "schemas": {
+                    "default": [
+                        "public"
+                    ],
+                    "description": "The database schemas to include in generated types.",
+                    "$ref": "#/$defs/__schema129"
+                },
+                "types_file": {
+                    "description": "The committed database types file, relative to the repository root; without it, no type comparison runs.",
+                    "$ref": "#/$defs/__schema115"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema162": {
+            "type": "object",
+            "properties": {
+                "base_locale": {
+                    "default": "en",
+                    "description": "The locale whose message keys every other locale must contain.",
+                    "$ref": "#/$defs/__schema116"
+                },
+                "messages_folder": {
+                    "description": "The folder of the `<locale>.json` message files, relative to the repository root.",
+                    "$ref": "#/$defs/__schema6"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema163": {
+            "type": "object",
+            "properties": {
+                "xcode_project": {
+                    "description": "The Xcode project or workspace, relative to the repository root, which init fills in when it finds one; without it, the checks use the Swift package.",
+                    "$ref": "#/$defs/__schema6"
+                },
+                "xcode_scheme": {
+                    "description": "The shared scheme the build, the analyzer, and Periphery use.",
+                    "$ref": "#/$defs/__schema116"
+                },
+                "xcode_destination": {
+                    "default": "generic/platform=iOS Simulator",
+                    "description": "The xcodebuild destination.",
+                    "$ref": "#/$defs/__schema116"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema164": {
+            "type": "object",
+            "properties": {
+                "max_file_kilobytes": {
+                    "description": "The largest file, in kilobytes, that Git may track without Git LFS or a linguist-generated or linguist-vendored mark in .gitattributes.",
+                    "$ref": "#/$defs/__schema165",
+                    "default": 1024
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema165": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The largest file, in kilobytes, that Git may track without Git LFS or a linguist-generated or linguist-vendored mark in .gitattributes.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema166": {
+            "type": "object",
+            "properties": {
+                "max_sentence_words": {
+                    "description": "The most words one sentence of documentation may have.",
+                    "$ref": "#/$defs/__schema167",
+                    "default": 30
+                },
+                "max_list_item_words": {
+                    "description": "The most words one list item may have.",
+                    "$ref": "#/$defs/__schema168",
+                    "default": 45
+                },
+                "max_paragraph_sentences": {
+                    "description": "The most sentences one paragraph may have.",
+                    "$ref": "#/$defs/__schema169",
+                    "default": 6
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema167": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most words one sentence of documentation may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema168": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most words one list item may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema169": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema45"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The most sentences one paragraph may have.",
+                            "$ref": "#/$defs/__schema45"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema170": {
+            "type": "object",
+            "properties": {
+                "min_lines": {
+                    "description": "The fewest lines a copied block has before it counts.",
+                    "$ref": "#/$defs/__schema171",
+                    "default": 8
+                },
+                "min_tokens": {
+                    "description": "The fewest tokens a copied block has before it counts.",
+                    "$ref": "#/$defs/__schema173",
+                    "default": 40
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema171": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema172"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The fewest lines a copied block has before it counts.",
+                            "$ref": "#/$defs/__schema172"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema172": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema173": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema174"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "The fewest tokens a copied block has before it counts.",
+                            "$ref": "#/$defs/__schema174"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why this code needs more than the default; required when you raise the value."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema174": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+        },
+        "__schema175": {
+            "type": "object",
+            "properties": {
+                "allowed_entitlements": {
+                    "default": [],
+                    "description": "The entitlements the app may hold; empty turns the check off.",
+                    "$ref": "#/$defs/__schema176"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema176": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema177": {
+            "type": "object",
+            "properties": {
+                "trusted_registries": {
+                    "default": [],
+                    "description": "The registries a base image may come from; empty allows any.",
+                    "$ref": "#/$defs/__schema178"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema178": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema179": {
+            "type": "object",
+            "properties": {
+                "image": {
+                    "default": "nginx:1.29.3-alpine",
+                    "description": "The image nginx -t runs in; name the one the deployment uses.",
+                    "$ref": "#/$defs/__schema116"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema180": {
+            "type": "object",
+            "properties": {
+                "docstring_convention": {
+                    "description": "The docstring style that Ruff and pydoclint check: google, numpy, or pep257.",
+                    "$ref": "#/$defs/__schema181"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema181": {
+            "type": "string",
+            "enum": [
+                "google",
+                "numpy",
+                "pep257"
+            ]
+        },
+        "__schema182": {
+            "type": "object",
+            "properties": {
+                "registry_packs": {
+                    "default": [
+                        "p/owasp-top-ten"
+                    ],
+                    "description": "The registry packs the manual registry check runs.",
+                    "$ref": "#/$defs/__schema183"
+                },
+                "rule_files": {
+                    "default": [],
+                    "description": "Rule files or folders of the repository that Semgrep runs beside the shipped packs.",
+                    "$ref": "#/$defs/__schema184"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema183": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema184": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema185": {
+            "type": "object",
+            "properties": {
+                "dialect": {
+                    "default": "ansi",
+                    "description": "The SQL dialect that SQLFluff parses, such as postgres. The postgres configuration sets it.",
+                    "$ref": "#/$defs/__schema186"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema186": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "__schema187": {
+            "type": "object",
+            "properties": {
+                "always_keep_imports": {
+                    "default": [],
+                    "description": "Imports the analyzer keeps although it sees no use of them.",
+                    "$ref": "#/$defs/__schema188"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema188": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema189": {
+            "type": "object",
+            "properties": {
+                "severity": {
+                    "default": [
+                        "HIGH",
+                        "CRITICAL"
+                    ],
+                    "description": "The severities Trivy reports.",
+                    "$ref": "#/$defs/__schema190"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema190": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema191": {
+            "default": "js",
+            "description": "The import suffix in this scope: js for compiled ESM, ts for Deno and Bun, or extensionless for code that a bundler builds.",
+            "$ref": "#/$defs/__schema192"
+        },
+        "__schema192": {
+            "type": "string",
+            "enum": [
+                "js",
+                "ts",
+                "extensionless"
+            ]
+        },
+        "__schema193": {
+            "default": [],
+            "description": "Imports that this repository refuses, each with a name and a message.",
+            "$ref": "#/$defs/__schema194"
+        },
+        "__schema194": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The import to refuse."
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "What to import instead."
+                    }
+                },
+                "required": [
+                    "name",
+                    "message"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema195": {
+            "description": "Option arrays by ESLint rule ID, without a severity, for rules that the level runs; gspot refuses options for any other rule. Accept a finding with gspot ignore javascript/eslint --rule `<rule>` --reason `<why>`.",
+            "$ref": "#/$defs/__schema196"
+        },
+        "__schema196": {
+            "$ref": "#/$defs/__schema197"
+        },
+        "__schema197": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string"
+            },
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "maxItems": 0,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/$defs/__schema198"
+                        }
+                    },
+                    {
+                        "type": "array",
+                        "prefixItems": [
+                            {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "pattern": "^(?!(?:off|warn|error)$)[\\s\\S]*$"
+                                    },
+                                    {
+                                        "type": "number"
+                                    },
+                                    {
+                                        "type": "boolean"
+                                    },
+                                    {
+                                        "type": "null"
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/$defs/__schema199"
+                                        }
+                                    },
+                                    {
+                                        "type": "object",
+                                        "propertyNames": {
+                                            "type": "string"
+                                        },
+                                        "additionalProperties": {
+                                            "$ref": "#/$defs/__schema200"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "items": {
+                            "$ref": "#/$defs/__schema201"
+                        },
+                        "minItems": 1
+                    }
+                ]
+            }
+        },
+        "__schema198": {
+            "not": {}
+        },
+        "__schema199": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema199"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema199"
+                    }
+                }
+            ]
+        },
+        "__schema200": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema200"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema200"
+                    }
+                }
+            ]
+        },
+        "__schema201": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema201"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema201"
+                    }
+                }
+            ]
+        },
+        "__schema202": {
+            "description": "Your own ESLint plugins: a rule prefix as name, a tracked .js or .mjs module as path, and the rules that turn on as errors.",
+            "$ref": "#/$defs/__schema203"
+        },
+        "__schema203": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+                        "description": "The rule prefix, such as local in local/no-legacy-api."
+                    },
+                    "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "allOf": [
+                            {
+                                "pattern": "^(?!!?\\/)(?![\\s\\S]*(?:^!?|\\/)\\.\\.(?:\\/|$))(?:[^\\\\:\\p{Cc}]|\\\\[()[\\]{}*?!+@,])+$"
+                            },
+                            {
+                                "pattern": "\\.m?js$"
+                            }
+                        ],
+                        "description": "The plugin module, relative to the repository root.",
+                        "$ref": "#/$defs/__schema6"
+                    },
+                    "rules": {
+                        "description": "The rules of the plugin to turn on, with their options.",
+                        "$ref": "#/$defs/__schema196"
+                    }
+                },
+                "required": [
+                    "name",
+                    "path",
+                    "rules"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema204": {
+            "type": "object",
+            "properties": {
+                "types": {
+                    "default": [
+                        "feat",
+                        "fix",
+                        "refactor",
+                        "perf",
+                        "docs",
+                        "test",
+                        "build",
+                        "ci",
+                        "chore",
+                        "style",
+                        "revert"
+                    ],
+                    "description": "The commit types the type-enum rule allows.",
+                    "$ref": "#/$defs/__schema129"
+                },
+                "scopes": {
+                    "default": [],
+                    "description": "Commit scopes that the scope-enum rule accepts, and a message may leave out its scope. When empty, gspot uses the last segment of each project scope path, or no list without project scopes.",
+                    "$ref": "#/$defs/__schema129"
+                },
+                "rules": {
+                    "description": "Options for active commitlint rules, by rule name: an always/never condition and an optional value, without a severity; the level decides which rules run. Accept a finding with gspot ignore commits/commitlint --rule `<rule>` --reason `<why>`.",
+                    "$ref": "#/$defs/__schema205"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema205": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string"
+            },
+            "additionalProperties": {
+                "type": "array",
+                "prefixItems": [
+                    {
+                        "type": "string",
+                        "enum": [
+                            "always",
+                            "never"
+                        ]
+                    },
+                    {
+                        "$ref": "#/$defs/__schema206"
+                    }
+                ],
+                "items": false,
+                "minItems": 1,
+                "maxItems": 2
+            }
+        },
+        "__schema206": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema206"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema206"
+                    }
+                }
+            ]
+        },
+        "__schema207": {
+            "type": "object",
+            "properties": {
+                "rules": {
+                    "description": "Option tables for active YAML rules; the level decides which rules run, and [format] sets the width. Accept a finding with gspot ignore data-files/yamllint --rule `<rule>` --reason `<why>`.",
+                    "$ref": "#/$defs/__schema208"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema208": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/__schema209"
+                },
+                {
+                    "$ref": "#/$defs/__schema214"
+                }
+            ],
+            "type": "object"
+        },
+        "__schema209": {
+            "type": "object",
+            "properties": {
+                "indentation": {
+                    "type": "object",
+                    "properties": {
+                        "level": {
+                            "$ref": "#/$defs/__schema210"
+                        },
+                        "ignore": {
+                            "$ref": "#/$defs/__schema211"
+                        },
+                        "ignore-from-file": {
+                            "$ref": "#/$defs/__schema212"
+                        },
+                        "spaces": {
+                            "type": "string",
+                            "const": "consistent"
+                        }
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema213"
+                    }
+                }
+            },
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "level": {
+                        "$ref": "#/$defs/__schema210"
+                    },
+                    "ignore": {
+                        "$ref": "#/$defs/__schema211"
+                    },
+                    "ignore-from-file": {
+                        "$ref": "#/$defs/__schema212"
+                    }
+                },
+                "additionalProperties": {
+                    "$ref": "#/$defs/__schema213"
+                }
+            }
+        },
+        "__schema210": {
+            "type": "string",
+            "const": "error"
+        },
+        "__schema211": {
+            "not": {}
+        },
+        "__schema212": {
+            "not": {}
+        },
+        "__schema213": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema213"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema213"
+                    }
+                }
+            ]
+        },
+        "__schema214": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string"
+            },
+            "additionalProperties": {}
+        },
+        "__schema215": {
+            "type": "object",
+            "properties": {
+                "rules": {
+                    "description": "Option tables by Markdown rule ID, such as MD024; the level decides which rules run. Accept a finding with gspot ignore markdown/markdownlint --rule `<rule>` --reason `<why>`.",
+                    "$ref": "#/$defs/__schema216"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema216": {
+            "type": "object",
+            "propertyNames": {
+                "type": "string",
+                "pattern": "^MD\\d{3}$"
+            },
+            "additionalProperties": {
+                "type": "object",
+                "propertyNames": {
+                    "type": "string"
+                },
+                "additionalProperties": {
+                    "$ref": "#/$defs/__schema217"
+                }
+            }
+        },
+        "__schema217": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema217"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema217"
+                    }
+                }
+            ]
+        },
+        "__schema218": {
+            "type": "object",
+            "properties": {
+                "rules": {
+                    "description": "Options for the Stylelint rules that run at the level, which stay errors; gspot refuses options for any other rule. Accept a finding with gspot ignore css/stylelint --rule `<rule>` --reason `<why>`.",
+                    "$ref": "#/$defs/__schema219"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema219": {
+            "type": "object",
+            "propertyNames": {
+                "$ref": "#/$defs/__schema116"
+            },
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "$ref": "#/$defs/__schema220"
+                    },
+                    {
+                        "type": "array",
+                        "prefixItems": [
+                            {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/$defs/__schema220"
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/$defs/__schema223"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "$ref": "#/$defs/__schema221"
+                            }
+                        ],
+                        "items": false,
+                        "minItems": 1,
+                        "maxItems": 2
+                    }
+                ]
+            }
+        },
+        "__schema220": {
+            "anyOf": [
+                {
+                    "type": "boolean",
+                    "const": true
+                },
+                {
+                    "$ref": "#/$defs/__schema116"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "$ref": "#/$defs/__schema221"
+                }
+            ]
+        },
+        "__schema221": {
+            "type": "object",
+            "properties": {
+                "severity": {
+                    "type": "string",
+                    "const": "error"
+                }
+            },
+            "additionalProperties": {
+                "$ref": "#/$defs/__schema222"
+            }
+        },
+        "__schema222": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema222"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema222"
+                    }
+                }
+            ]
+        },
+        "__schema223": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/__schema223"
+                    }
+                },
+                {
+                    "type": "object",
+                    "propertyNames": {
+                        "type": "string"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/$defs/__schema223"
+                    }
+                }
+            ]
+        },
+        "__schema224": {
+            "type": "object",
+            "properties": {
+                "assume_in_transaction": {
+                    "default": false,
+                    "description": "Whether the migration runner wraps every migration in a transaction; the supabase configuration turns it on.",
+                    "$ref": "#/$defs/__schema225"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema225": {
+            "type": "boolean"
+        },
+        "__schema226": {
+            "type": "object",
+            "properties": {
+                "entry": {
+                    "default": [],
+                    "description": "Entry points knip starts from beyond the ones the framework configuration declares.",
+                    "$ref": "#/$defs/__schema227"
+                },
+                "ignore_dependencies": {
+                    "description": "Exact package names that knip does not report as unused; new names need a reason, and a scope list applies to that project only.",
+                    "$ref": "#/$defs/__schema228",
+                    "default": []
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema227": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema228": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema229"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Exact package names that knip does not report as unused; new names need a reason, and a scope list applies to that project only.",
+                            "$ref": "#/$defs/__schema229",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema229": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema230"
+            }
+        },
+        "__schema230": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^*+\\\\(|{^$\\s]+$"
+        },
+        "__schema231": {
+            "type": "object",
+            "properties": {
+                "safelist": {
+                    "description": "Class names a script adds at run time: the names and the reason.",
+                    "$ref": "#/$defs/__schema232",
+                    "default": []
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema232": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema129"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Class names a script adds at run time: the names and the reason.",
+                            "$ref": "#/$defs/__schema129",
+                            "type": "array"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema233": {
+            "default": [],
+            "description": "The files that may read environment variables; other files get the values passed in.",
+            "$ref": "#/$defs/__schema234"
+        },
+        "__schema234": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema235": {
+            "type": "object",
+            "properties": {
+                "indent_style": {
+                    "$ref": "#/$defs/__schema19"
+                },
+                "indent_width": {
+                    "$ref": "#/$defs/__schema22"
+                },
+                "print_width": {
+                    "$ref": "#/$defs/__schema25"
+                },
+                "line_ending": {
+                    "$ref": "#/$defs/__schema28"
+                },
+                "final_newline": {
+                    "$ref": "#/$defs/__schema31"
+                },
+                "quotes": {
+                    "$ref": "#/$defs/__schema34"
+                },
+                "trailing_commas": {
+                    "$ref": "#/$defs/__schema36"
+                },
+                "semicolons": {
+                    "$ref": "#/$defs/__schema39"
+                },
+                "override": {
+                    "default": [],
+                    "description": "Formatting options for repository-relative paths, in order.",
+                    "$ref": "#/$defs/__schema236"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema236": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "paths": {
+                        "$ref": "#/$defs/__schema237"
+                    },
+                    "indent_style": {
+                        "$ref": "#/$defs/__schema240"
+                    },
+                    "indent_width": {
+                        "$ref": "#/$defs/__schema241"
+                    },
+                    "print_width": {
+                        "$ref": "#/$defs/__schema242"
+                    },
+                    "line_ending": {
+                        "$ref": "#/$defs/__schema243"
+                    },
+                    "final_newline": {
+                        "$ref": "#/$defs/__schema244"
+                    },
+                    "quotes": {
+                        "$ref": "#/$defs/__schema245"
+                    },
+                    "trailing_commas": {
+                        "$ref": "#/$defs/__schema246"
+                    },
+                    "semicolons": {
+                        "$ref": "#/$defs/__schema247"
+                    }
+                },
+                "required": [
+                    "paths"
+                ],
+                "additionalProperties": false,
+                "minProperties": 2
+            }
+        },
+        "__schema237": {
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            },
+            "description": "The files these formatting values apply to.",
+            "$ref": "#/$defs/__schema238",
+            "type": "array"
+        },
+        "__schema238": {
+            "minItems": 1,
+            "$ref": "#/$defs/__schema239",
+            "type": "array"
+        },
+        "__schema239": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema6"
+            }
+        },
+        "__schema240": {
+            "description": "The character of one indent level: space or tab.",
+            "$ref": "#/$defs/__schema20"
+        },
+        "__schema241": {
+            "description": "Spaces per indent level.",
+            "$ref": "#/$defs/__schema23"
+        },
+        "__schema242": {
+            "description": "The line width formatters wrap at.",
+            "$ref": "#/$defs/__schema26"
+        },
+        "__schema243": {
+            "description": "The line ending every file uses: lf or crlf.",
+            "$ref": "#/$defs/__schema29"
+        },
+        "__schema244": {
+            "description": "Whether every file ends with a newline.",
+            "$ref": "#/$defs/__schema32"
+        },
+        "__schema245": {
+            "$ref": "#/$defs/__schema34"
+        },
+        "__schema246": {
+            "description": "Where trailing commas go: all, es5, or none.",
+            "$ref": "#/$defs/__schema37"
+        },
+        "__schema247": {
+            "description": "Whether JavaScript and TypeScript statements end with semicolons.",
+            "$ref": "#/$defs/__schema40"
+        },
+        "__schema248": {
+            "type": "object",
+            "properties": {
+                "max_characters": {
+                    "$ref": "#/$defs/__schema87"
+                },
+                "max_words": {
+                    "$ref": "#/$defs/__schema90"
+                },
+                "cases": {
+                    "$ref": "#/$defs/__schema93"
+                },
+                "banned_words": {
+                    "$ref": "#/$defs/__schema97"
+                },
+                "override": {
+                    "default": [],
+                    "description": "Naming rules for repository-relative paths, in order; each record has its reason.",
+                    "$ref": "#/$defs/__schema249"
+                },
+                "typescript": {
+                    "$ref": "#/$defs/__schema99"
+                },
+                "javascript": {
+                    "$ref": "#/$defs/__schema107"
+                },
+                "python": {
+                    "$ref": "#/$defs/__schema108"
+                },
+                "swift": {
+                    "$ref": "#/$defs/__schema109"
+                },
+                "bash": {
+                    "$ref": "#/$defs/__schema110"
+                },
+                "sql": {
+                    "$ref": "#/$defs/__schema111"
+                },
+                "css": {
+                    "$ref": "#/$defs/__schema112"
+                },
+                "html": {
+                    "$ref": "#/$defs/__schema113"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema249": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "paths": {
+                        "default": [
+                            "**"
+                        ],
+                        "description": "Where the override applies.",
+                        "$ref": "#/$defs/__schema238"
+                    },
+                    "languages": {
+                        "description": "The languages it applies to.",
+                        "$ref": "#/$defs/__schema250"
+                    },
+                    "categories": {
+                        "description": "The kinds of name it applies to. Unknown kinds are refused.",
+                        "$ref": "#/$defs/__schema251"
+                    },
+                    "ignored_prefix": {
+                        "description": "A prefix not counted as a word, such as ^test_.",
+                        "$ref": "#/$defs/__schema252"
+                    },
+                    "ignored_names_pattern": {
+                        "description": "A regular expression for names that skip the naming rules, such as ^__[a-z][a-z0-9_]*__$.",
+                        "$ref": "#/$defs/__schema253"
+                    },
+                    "allow_digits": {
+                        "default": false,
+                        "description": "Accept digits in names.",
+                        "$ref": "#/$defs/__schema254"
+                    },
+                    "allow_repeated_words": {
+                        "default": false,
+                        "description": "Accept a word twice in one name.",
+                        "$ref": "#/$defs/__schema255"
+                    },
+                    "allowed_names": {
+                        "description": "Names accepted despite the naming rules.",
+                        "$ref": "#/$defs/__schema256"
+                    },
+                    "cases": {
+                        "description": "The cases accepted here.",
+                        "$ref": "#/$defs/__schema257"
+                    },
+                    "reason": {
+                        "type": "string",
+                        "description": "Why these names may break the rules."
+                    }
+                },
+                "required": [
+                    "reason"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema250": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "typescript",
+                    "javascript",
+                    "python",
+                    "bash",
+                    "swift",
+                    "sql",
+                    "css",
+                    "html"
+                ]
+            }
+        },
+        "__schema251": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "schemas",
+                    "tables",
+                    "columns",
+                    "indexes",
+                    "triggers",
+                    "policies",
+                    "functions",
+                    "parameters",
+                    "classes",
+                    "exceptions",
+                    "methods",
+                    "variables",
+                    "constants",
+                    "attributes",
+                    "type_aliases",
+                    "types",
+                    "properties",
+                    "enum_cases",
+                    "files",
+                    "folders",
+                    "modules",
+                    "packages",
+                    "path_parameters"
+                ]
+            }
+        },
+        "__schema252": {
+            "type": "string"
+        },
+        "__schema253": {
+            "type": "string"
+        },
+        "__schema254": {
+            "type": "boolean"
+        },
+        "__schema255": {
+            "type": "boolean"
+        },
+        "__schema256": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema257": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "camel",
+                    "pascal",
+                    "pascal-extension",
+                    "kebab",
+                    "snake",
+                    "upper-snake",
+                    "timestamp-snake"
+                ]
+            }
+        },
+        "__schema258": {
+            "type": "object",
+            "properties": {
+                "lines": {
+                    "$ref": "#/$defs/__schema117"
+                },
+                "branches": {
+                    "$ref": "#/$defs/__schema120"
+                },
+                "functions": {
+                    "$ref": "#/$defs/__schema122"
+                },
+                "statements": {
+                    "$ref": "#/$defs/__schema124"
+                },
+                "swift_target": {
+                    "default": [],
+                    "description": "Line coverage minimums for named Swift targets.",
+                    "$ref": "#/$defs/__schema259"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema259": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "A Swift target named in the coverage report.",
+                        "$ref": "#/$defs/__schema116"
+                    },
+                    "lines": {
+                        "description": "The least share of lines that the target must cover, in place of `coverage.lines`.",
+                        "$ref": "#/$defs/__schema119"
+                    },
+                    "reason": {
+                        "description": "Why this target may cover less.",
+                        "$ref": "#/$defs/__schema260"
+                    }
+                },
+                "required": [
+                    "name",
+                    "lines"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema260": {
+            "type": "string"
+        },
+        "__schema261": {
+            "type": "object",
+            "properties": {
+                "banned_headings": {
+                    "default": [],
+                    "description": "Headings this repository bans beyond the shipped list.",
+                    "$ref": "#/$defs/__schema262"
+                },
+                "allowed_urls": {
+                    "$ref": "#/$defs/__schema130"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema262": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema263": {
+            "type": "object",
+            "properties": {
+                "allowed": {
+                    "$ref": "#/$defs/__schema146"
+                },
+                "allowed_package": {
+                    "default": [],
+                    "description": "Packages accepted under a license outside the list: name, exact version, and reason.",
+                    "$ref": "#/$defs/__schema264"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema264": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "The package name, such as `lightningcss`, or a glob that covers one package built for each platform, such as `@img/sharp-libvips-*`.",
+                        "$ref": "#/$defs/__schema116"
+                    },
+                    "version": {
+                        "type": "string",
+                        "pattern": "^(?:\\*|\\d[^\\s@<>=~^*|,]*|[\\d.xX*^~<>=|\\s-]+)$",
+                        "description": "An exact version, a version range such as `^1.2.0`, or `*`; gspot reports a record that matches no locked package."
+                    },
+                    "reason": {
+                        "type": "string",
+                        "description": "Why you accept its license; name the license here."
+                    }
+                },
+                "required": [
+                    "name",
+                    "version",
+                    "reason"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema265": {
+            "type": "object",
+            "properties": {
+                "build_command": {
+                    "$ref": "#/$defs/__schema152"
+                },
+                "build_folder": {
+                    "$ref": "#/$defs/__schema153"
+                },
+                "allowed_unlisted_pages": {
+                    "$ref": "#/$defs/__schema154"
+                },
+                "size_limit": {
+                    "default": [],
+                    "description": "Size limits: the built paths, and the most kilobytes they may weigh compressed.",
+                    "$ref": "#/$defs/__schema266"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema266": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "paths": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/$defs/__schema115"
+                        },
+                        "description": "Built files, such as `docs/dist/_astro/*.js`; the size check runs only when a record exists."
+                    },
+                    "kilobytes": {
+                        "description": "The most they may weigh together, compressed.",
+                        "$ref": "#/$defs/__schema45"
+                    }
+                },
+                "required": [
+                    "paths",
+                    "kilobytes"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema267": {
+            "type": "object",
+            "properties": {
+                "hadolint": {
+                    "$ref": "#/$defs/__schema177"
+                },
+                "nginx": {
+                    "$ref": "#/$defs/__schema179"
+                },
+                "ruff": {
+                    "$ref": "#/$defs/__schema180"
+                },
+                "semgrep": {
+                    "$ref": "#/$defs/__schema182"
+                },
+                "sqlfluff": {
+                    "$ref": "#/$defs/__schema185"
+                },
+                "swiftlint": {
+                    "$ref": "#/$defs/__schema187"
+                },
+                "trivy": {
+                    "$ref": "#/$defs/__schema189"
+                },
+                "eslint": {
+                    "type": "object",
+                    "properties": {
+                        "import_extension": {
+                            "$ref": "#/$defs/__schema191"
+                        },
+                        "restricted_imports": {
+                            "$ref": "#/$defs/__schema193"
+                        },
+                        "rules": {
+                            "$ref": "#/$defs/__schema195"
+                        },
+                        "override": {
+                            "description": "Lint rule options for repository-relative paths, in order, with ignores applied last.",
+                            "$ref": "#/$defs/__schema268"
+                        },
+                        "plugins": {
+                            "$ref": "#/$defs/__schema202"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "commitlint": {
+                    "$ref": "#/$defs/__schema204"
+                },
+                "yamllint": {
+                    "$ref": "#/$defs/__schema207"
+                },
+                "markdownlint": {
+                    "$ref": "#/$defs/__schema215"
+                },
+                "stylelint": {
+                    "$ref": "#/$defs/__schema218"
+                },
+                "squawk": {
+                    "$ref": "#/$defs/__schema224"
+                },
+                "knip": {
+                    "$ref": "#/$defs/__schema226"
+                },
+                "purgecss": {
+                    "$ref": "#/$defs/__schema231"
+                },
+                "v8r": {
+                    "type": "object",
+                    "properties": {
+                        "schema": {
+                            "default": [],
+                            "description": "File patterns mapped to schema URLs, for files that the SchemaStore catalog does not know.",
+                            "$ref": "#/$defs/__schema270"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema268": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "paths": {
+                        "items": {
+                            "$ref": "#/$defs/__schema6"
+                        },
+                        "description": "The files that these lint rule options apply to.",
+                        "$ref": "#/$defs/__schema238",
+                        "type": "array"
+                    },
+                    "rules": {
+                        "description": "Lint rule options for these files.",
+                        "$ref": "#/$defs/__schema196"
+                    },
+                    "runtime": {
+                        "description": "The runtime of these files, such as `serviceworker` (the name the `globals` package uses).",
+                        "$ref": "#/$defs/__schema269"
+                    }
+                },
+                "required": [
+                    "paths"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema269": {
+            "type": "string",
+            "enum": [
+                "amd",
+                "applescript",
+                "astro",
+                "atomtest",
+                "audioWorklet",
+                "browser",
+                "builtin",
+                "bunBuiltin",
+                "chai",
+                "commonjs",
+                "couch",
+                "denoBuiltin",
+                "devtools",
+                "embertest",
+                "es2015",
+                "es2016",
+                "es2017",
+                "es2018",
+                "es2019",
+                "es2020",
+                "es2021",
+                "es2022",
+                "es2023",
+                "es2024",
+                "es2025",
+                "es2026",
+                "es2027",
+                "es3",
+                "es5",
+                "greasemonkey",
+                "jasmine",
+                "jest",
+                "jquery",
+                "meteor",
+                "mocha",
+                "mongo",
+                "nashorn",
+                "node",
+                "nodeBuiltin",
+                "paintWorklet",
+                "phantomjs",
+                "prototypejs",
+                "protractor",
+                "qunit",
+                "react-native",
+                "rhino",
+                "rspack",
+                "serviceworker",
+                "shared-node-browser",
+                "sharedWorker",
+                "shelljs",
+                "svelte",
+                "vitest",
+                "vue",
+                "webextensions",
+                "webpack",
+                "worker",
+                "wsh",
+                "yui"
+            ]
+        },
+        "__schema270": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "paths": {
+                        "items": {
+                            "$ref": "#/$defs/__schema6"
+                        },
+                        "description": "Files SchemaStore does not know.",
+                        "$ref": "#/$defs/__schema238",
+                        "type": "array"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "The JSON Schema for them."
+                    }
+                },
+                "required": [
+                    "paths",
+                    "url"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema271": {
+            "default": [],
+            "description": "Code may import its own files and the files of every import rule listed above it, never below. can_import replaces the rules above with an exact list. When import rules exist, every code file belongs to one, apart from tests, tool settings files, scripts, and generated files.",
+            "$ref": "#/$defs/__schema272"
+        },
+        "__schema272": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema273"
+            }
+        },
+        "__schema273": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "The name that other import rules use in can_import."
+                },
+                "paths": {
+                    "items": {
+                        "$ref": "#/$defs/__schema6"
+                    },
+                    "description": "The files of the import rule.",
+                    "$ref": "#/$defs/__schema238",
+                    "type": "array"
+                },
+                "can_import": {
+                    "description": "Exactly the import rules whose files this rule may import, besides its own. Replaces the rules listed above it.",
+                    "$ref": "#/$defs/__schema274"
+                }
+            },
+            "required": [
+                "name",
+                "paths"
+            ],
+            "additionalProperties": false
+        },
+        "__schema274": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "__schema275": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "check": {
+                        "$ref": "#/$defs/__schema276"
+                    },
+                    "rule": {
+                        "$ref": "#/$defs/__schema278"
+                    },
+                    "names": {
+                        "$ref": "#/$defs/__schema280"
+                    },
+                    "paths": {
+                        "$ref": "#/$defs/__schema283"
+                    },
+                    "reason": {
+                        "$ref": "#/$defs/__schema284"
+                    },
+                    "until": {
+                        "$ref": "#/$defs/__schema285"
+                    }
+                },
+                "required": [
+                    "reason"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema276": {
+            "description": "The check whose findings you accept: a shipped check or a command check. Leave it out to keep the paths out of every check.",
+            "$ref": "#/$defs/__schema277"
+        },
+        "__schema277": {
+            "type": "string"
+        },
+        "__schema278": {
+            "description": "One lint rule of that check.",
+            "$ref": "#/$defs/__schema279"
+        },
+        "__schema279": {
+            "type": "string"
+        },
+        "__schema280": {
+            "description": "The function names that the ignore covers, such as a hook that a framework calls.",
+            "$ref": "#/$defs/__schema281"
+        },
+        "__schema281": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema282"
+            }
+        },
+        "__schema282": {
+            "type": "string",
+            "minLength": 1
+        },
+        "__schema283": {
+            "description": "Where the ignore applies.",
+            "$ref": "#/$defs/__schema239"
+        },
+        "__schema284": {
+            "type": "string",
+            "description": "Why you accept the findings."
+        },
+        "__schema285": {
+            "description": "Report this ignore as expired from this date, in YYYY-MM-DD format (UTC).",
+            "$ref": "#/$defs/__schema286"
+        },
+        "__schema286": {
+            "description": "An unquoted TOML date in YYYY-MM-DD form, such as 2026-11-08."
+        },
+        "__schema287": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "The check ID that `--only` and `[[ignore]] check` use, which may not match a shipped check."
+                    },
+                    "command": {
+                        "description": "The executable and arguments to run on selected files.",
+                        "$ref": "#/$defs/__schema148",
+                        "type": "array"
+                    },
+                    "paths": {
+                        "items": {
+                            "$ref": "#/$defs/__schema6"
+                        },
+                        "description": "The files the check reads, as repository-relative globs.",
+                        "$ref": "#/$defs/__schema238",
+                        "type": "array"
+                    },
+                    "outputs": {
+                        "description": "The files that the command writes. With outputs, the check runs the command in a copy and reports each output that differs from the committed file.",
+                        "$ref": "#/$defs/__schema239"
+                    },
+                    "stage": {
+                        "type": "string",
+                        "enum": [
+                            "commit",
+                            "push",
+                            "manual"
+                        ],
+                        "description": "The earliest stage that runs this check."
+                    },
+                    "summary": {
+                        "description": "A short description shown in check listings.",
+                        "$ref": "#/$defs/__schema288"
+                    },
+                    "help": {
+                        "description": "Instructions for resolving findings.",
+                        "$ref": "#/$defs/__schema289"
+                    },
+                    "fix": {
+                        "description": "The executable and arguments that correct findings.",
+                        "$ref": "#/$defs/__schema148"
+                    },
+                    "exit_codes": {
+                        "description": "Nonzero statuses that mean findings from command and fix. Other nonzero statuses mean execution failure.",
+                        "$ref": "#/$defs/__schema290"
+                    },
+                    "output": {
+                        "description": "The parser and location patterns used to read findings.",
+                        "$ref": "#/$defs/__schema291"
+                    }
+                },
+                "required": [
+                    "id",
+                    "command",
+                    "paths",
+                    "stage"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "__schema288": {
+            "type": "string"
+        },
+        "__schema289": {
+            "type": "string"
+        },
+        "__schema290": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 255
+            }
+        },
+        "__schema291": {
+            "type": "object",
+            "properties": {
+                "format": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/__schema292"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema293"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema294"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema295"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema296"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema297"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema298"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema299"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema300"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema301"
+                        }
+                    ],
+                    "description": "How gspot reads the output: json, regex, grouped, lines, none, or the format of a named tool."
+                },
+                "list": {
+                    "type": "string",
+                    "description": "For json: the path to the list of findings."
+                },
+                "children": {
+                    "type": "string",
+                    "description": "For json: the field of each item that holds its findings."
+                },
+                "line_base": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/__schema302"
+                        },
+                        {
+                            "$ref": "#/$defs/__schema303"
+                        }
+                    ],
+                    "description": "Whether the tool counts lines from 0 or 1."
+                },
+                "fields": {
+                    "type": "object",
+                    "properties": {
+                        "file": {
+                            "type": "string",
+                            "description": "For json: the field that holds the file."
+                        },
+                        "line": {
+                            "type": "string",
+                            "description": "For json: the field that holds the line."
+                        },
+                        "column": {
+                            "type": "string",
+                            "description": "For json: the field that holds the column."
+                        },
+                        "rule": {
+                            "type": "string",
+                            "description": "For json: the field that holds the lint rule."
+                        },
+                        "message": {
+                            "type": "string",
+                            "description": "For json: the field that holds the message."
+                        },
+                        "fixable": {
+                            "type": "string",
+                            "description": "For json: the field that is set when the tool can fix the finding."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "For regex: the pattern for one finding, with named groups file, line, column, rule, and message."
+                },
+                "file_pattern": {
+                    "type": "string",
+                    "description": "For grouped: the pattern for a line that names the file of the findings below it."
+                },
+                "fixable": {
+                    "type": "string",
+                    "description": "For regex: the pattern that marks a fixable finding."
+                },
+                "message": {
+                    "type": "string",
+                    "description": "For regex: the message of every finding whose pattern has no message group."
+                }
+            },
+            "required": [
+                "format"
+            ],
+            "additionalProperties": false
+        },
+        "__schema292": {
+            "type": "string",
+            "const": "regex",
+            "description": "Read findings from lines matched by pattern and its named file, line, column, rule, and message groups."
+        },
+        "__schema293": {
+            "type": "string",
+            "const": "grouped",
+            "description": "Read a file heading matched by file_pattern, followed by findings matched by pattern."
+        },
+        "__schema294": {
+            "type": "string",
+            "const": "sarif",
+            "description": "Read SARIF results with their rule IDs and source locations."
+        },
+        "__schema295": {
+            "type": "string",
+            "const": "knip",
+            "description": "Read Knip JSON issue categories and source positions."
+        },
+        "__schema296": {
+            "type": "string",
+            "const": "semgrep",
+            "description": "Read Semgrep JSON results and source parse errors, with locations and rule IDs."
+        },
+        "__schema297": {
+            "type": "string",
+            "const": "typos",
+            "description": "Read typos JSON and convert byte offsets to character columns."
+        },
+        "__schema298": {
+            "type": "string",
+            "const": "markdownlint",
+            "description": "Read markdownlint result objects and their rule and source locations."
+        },
+        "__schema299": {
+            "type": "string",
+            "const": "json",
+            "description": "Read JSON findings using list, children, and fields to select report entries."
+        },
+        "__schema300": {
+            "type": "string",
+            "const": "lines",
+            "description": "Report each nonempty output line as a finding without a source location."
+        },
+        "__schema301": {
+            "type": "string",
+            "const": "none",
+            "description": "Use the exit status without parsing output into findings."
+        },
+        "__schema302": {
+            "type": "number",
+            "const": 0
+        },
+        "__schema303": {
+            "type": "number",
+            "const": 1
+        },
+        "__schema304": {
+            "type": "object",
+            "properties": {
+                "reexports": {
+                    "description": "Where re-exports may go: none, or an index file that re-exports other files.",
+                    "$ref": "#/$defs/__schema305",
+                    "default": "none"
+                },
+                "environment_readers": {
+                    "$ref": "#/$defs/__schema233"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema305": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/__schema306"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "description": "Where re-exports may go: none, or an index file that re-exports other files.",
+                            "$ref": "#/$defs/__schema306"
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Why these entries belong; required when you add an entry."
+                        }
+                    },
+                    "required": [
+                        "value",
+                        "reason"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "__schema306": {
+            "type": "string",
+            "enum": [
+                "none",
+                "index-only"
+            ]
+        },
+        "__schema307": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "default": false,
+                    "description": "Install and run the configured Git hooks.",
+                    "$ref": "#/$defs/__schema308"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema308": {
+            "type": "boolean"
+        },
+        "__schema309": {
+            "allOf": [
+                {
+                    "if": {
+                        "type": "object",
+                        "properties": {
+                            "provider": {
+                                "const": "gitlab"
+                            }
+                        },
+                        "required": [
+                            "provider"
+                        ]
+                    },
+                    "then": {
+                        "type": "object",
+                        "properties": {
+                            "operating_systems": false,
+                            "linux_runner": false
+                        }
+                    }
+                }
+            ],
+            "$ref": "#/$defs/__schema310"
+        },
+        "__schema310": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "$ref": "#/$defs/__schema311"
+                },
+                "provider": {
+                    "$ref": "#/$defs/__schema313"
+                },
+                "setup_command": {
+                    "$ref": "#/$defs/__schema315"
+                },
+                "operating_systems": {
+                    "$ref": "#/$defs/__schema316"
+                },
+                "linux_runner": {
+                    "$ref": "#/$defs/__schema319"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema311": {
+            "default": false,
+            "description": "Whether gspot writes a CI workflow; set it at the root only.",
+            "$ref": "#/$defs/__schema312"
+        },
+        "__schema312": {
+            "type": "boolean"
+        },
+        "__schema313": {
+            "default": "github",
+            "description": "Which CI service gets the workflow; set it at the root only.",
+            "$ref": "#/$defs/__schema314"
+        },
+        "__schema314": {
+            "type": "string",
+            "enum": [
+                "github",
+                "gitlab"
+            ]
+        },
+        "__schema315": {
+            "description": "A command CI runs before `gspot install`, in place of the frozen install of each lockfile.",
+            "$ref": "#/$defs/__schema148"
+        },
+        "__schema316": {
+            "description": "The operating systems of the CI jobs. GitHub only; refused with provider = \"gitlab\".",
+            "default": [
+                "linux"
+            ],
+            "$ref": "#/$defs/__schema317"
+        },
+        "__schema317": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/__schema318"
+            }
+        },
+        "__schema318": {
+            "type": "string",
+            "enum": [
+                "macos",
+                "linux",
+                "windows"
+            ]
+        },
+        "__schema319": {
+            "description": "The GitHub runner label of the Linux job, such as a larger or self-hosted runner. GitHub only; refused with provider = \"gitlab\".",
+            "default": "ubuntu-24.04",
+            "$ref": "#/$defs/__schema320"
+        },
+        "__schema320": {
+            "type": "string",
+            "minLength": 1
+        },
+        "__schema321": {
+            "default": {},
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "default": true,
+                    "description": "Write the rules and the AGENTS.md block.",
+                    "$ref": "#/$defs/__schema322"
+                },
+                "exclude": {
+                    "default": [],
+                    "description": "Rule files or folders under .gspot/configurations/ to leave out, such as .gspot/configurations/general/engineering/rules/PLANNING.md.",
+                    "$ref": "#/$defs/__schema323"
+                }
+            },
+            "additionalProperties": false
+        },
+        "__schema322": {
+            "type": "boolean"
+        },
+        "__schema323": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}

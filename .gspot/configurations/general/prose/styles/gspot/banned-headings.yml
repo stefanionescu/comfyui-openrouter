@@ -1,0 +1,16 @@
+extends: existence
+message: Heading '%s' lists files and folders. Describe behavior and ownership instead.
+level: error
+ignorecase: true
+scope: heading
+nonword: true
+tokens:
+  - (?:\b|^)project structure(?:\b|$)
+  - (?:\b|^)project layout(?:\b|$)
+  - (?:\b|^)repository layout(?:\b|$)
+  - (?:\b|^)repository structure(?:\b|$)
+  - (?:\b|^)directory structure(?:\b|$)
+  - (?:\b|^)folder structure(?:\b|$)
+  - (?:\b|^)file map(?:\b|$)
+  - (?:\b|^)codebase map(?:\b|$)
+  - (?:\b|^)source tree(?:\b|$)

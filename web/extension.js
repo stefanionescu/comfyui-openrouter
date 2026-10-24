@@ -47,9 +47,6 @@ function message(key) {
   }
   return String(value);
 }
-function setText(target, content) {
-  target.replaceChildren(document.createTextNode(content));
-}
 function selectedLocale() {
   const value = app.extensionManager.setting.get("Comfy.Locale");
   try {
@@ -91,7 +88,7 @@ var dynamicControlInputs = /* @__PURE__ */ new Map([
 // web/scripts/dom.ts
 function element(tag, text) {
   const node = document.createElement(tag);
-  if (text !== void 0) node.appendChild(document.createTextNode(text));
+  if (text !== void 0) node.append(document.createTextNode(text));
   return node;
 }
 function button(text, type = "button") {
@@ -565,9 +562,7 @@ function safeParse(schema, input, config$1) {
 
 // web/scripts/schema.ts
 var publicErrorSchema = object({
-  error: optional(
-    pipe(string(), minLength(1), maxLength(browserLimits.maxErrorCharacters))
-  )
+  error: optional(pipe(string(), minLength(1), maxLength(browserLimits.maxErrorCharacters)))
 });
 function parsePublicError(value) {
   const result = safeParse(publicErrorSchema, value);
@@ -617,12 +612,7 @@ function parseConfiguration(value) {
   const settings = new Map(Object.entries(document2.settings));
   for (const [name, definition] of Object.entries(definitions)) {
     const setting = safeParse(
-      pipe(
-        number(),
-        safeInteger(),
-        minValue(definition.minimum),
-        maxValue(definition.maximum)
-      ),
+      pipe(number(), safeInteger(), minValue(definition.minimum), maxValue(definition.maximum)),
       settings.get(name)
     );
     if (!setting.success) throw new Error(message("settings.invalidLimit"));
@@ -638,15 +628,28 @@ function parseConfiguration(value) {
 }
 
 // web/scripts/settings/api.ts
+var failureMessages = /* @__PURE__ */ new Map([
+  ["GET", "settings.readFailed"],
+  ["DELETE", "settings.removeFailed"]
+]);
+async function readReply(response, method) {
+  let document2;
+  try {
+    document2 = await response.json();
+  } catch {
+    throw new Error(message("settings.unreadableResponse"));
+  }
+  if (!response.ok) {
+    throw new Error(parsePublicError(document2) ?? message(failureMessages.get(method) ?? "settings.saveFailed"));
+  }
+  return parseConfiguration(document2);
+}
 async function requestConfiguration(fetcher, signal, route = browserRoutes.settings.status, method = "GET", body) {
   const options = {
     method,
     cache: "no-store",
     credentials: "same-origin",
-    signal: AbortSignal.any([
-      signal,
-      AbortSignal.timeout(browserLimits.requestTimeoutMilliseconds)
-    ]),
+    signal: AbortSignal.any([signal, AbortSignal.timeout(browserLimits.requestTimeoutMilliseconds)]),
     headers: { "Content-Type": "application/json", "X-OpenRouter-Comfy": "1" }
   };
   if (body !== void 0) options.body = JSON.stringify(body);
@@ -656,22 +659,7 @@ async function requestConfiguration(fetcher, signal, route = browserRoutes.setti
   } catch {
     throw new Error(message("settings.unreachable"));
   }
-  let document2;
-  try {
-    document2 = await response.json();
-  } catch {
-    throw new Error(message("settings.unreadableResponse"));
-  }
-  if (!response.ok) {
-    const failures = /* @__PURE__ */ new Map([
-      ["GET", "settings.readFailed"],
-      ["DELETE", "settings.removeFailed"]
-    ]);
-    throw new Error(
-      parsePublicError(document2) ?? message(failures.get(method) ?? "settings.saveFailed")
-    );
-  }
-  return parseConfiguration(document2);
+  return readReply(response, method);
 }
 
 // web/scripts/settings/dialog.ts
@@ -679,6 +667,7 @@ var current;
 var SettingsDialog = class {
   /**
    * Build settings forms without contacting OpenRouter.
+   *
    * @param fetcher - ComfyUI's local API client.
    */
   constructor(fetcher) {
@@ -694,7 +683,9 @@ var SettingsDialog = class {
     header.append(heading, close);
     this.status.setAttribute("role", "status");
     this.status.setAttribute("aria-live", "polite");
-    this.reload.addEventListener("click", () => this.updateSettings(message("settings.reread")));
+    this.reload.addEventListener("click", () => {
+      this.updateSettings(message("settings.reread"));
+    });
     const footer = element("footer");
     footer.append(this.status, this.reload);
     this.dialog.append(
@@ -717,8 +708,10 @@ var SettingsDialog = class {
   limitFields = element("fieldset");
   inputs = /* @__PURE__ */ new Map();
   configuration;
+  pending = Promise.resolve();
   /**
    * Build the private key form.
+   *
    * @returns The form for saving or clearing the server's key.
    */
   credentials() {
@@ -731,14 +724,9 @@ var SettingsDialog = class {
     this.key.required = true;
     label.append(this.key);
     const clear = button(message("settings.clearKey"));
-    clear.addEventListener(
-      "click",
-      () => this.updateSettings(
-        message("settings.keyCleared"),
-        browserRoutes.settings.credential,
-        "DELETE"
-      )
-    );
+    clear.addEventListener("click", () => {
+      this.updateSettings(message("settings.keyCleared"), browserRoutes.settings.credential, "DELETE");
+    });
     const actions = element("div");
     actions.className = "openrouter-actions";
     actions.append(button(message("settings.saveKey"), "submit"), clear);
@@ -756,6 +744,7 @@ var SettingsDialog = class {
   }
   /**
    * Build duration, timeout, and media size inputs.
+   *
    * @returns The form for execution limits.
    */
   limits() {
@@ -772,6 +761,7 @@ var SettingsDialog = class {
   }
   /**
    * Build fields from the backend's setting definitions.
+   *
    * @param configuration - The validated limits.
    */
   populateLimits(configuration) {
@@ -791,7 +781,8 @@ var SettingsDialog = class {
     this.limitFields.append(button(message("settings.saveLimits"), "submit"));
   }
   /**
-   * Save only limits changed since the last successful read.
+   * Save only the limits that changed after the last successful read.
+   *
    * @param configuration - The settings and revision currently shown.
    */
   saveLimits(configuration) {
@@ -801,7 +792,7 @@ var SettingsDialog = class {
       if (input.valueAsNumber !== settings.get(name)) changes.set(name, input.valueAsNumber);
     }
     if (changes.size === 0) {
-      setText(this.status, message("settings.noLimitChanges"));
+      this.status.textContent = message("settings.noLimitChanges");
       return;
     }
     this.updateSettings(message("settings.limitsSaved"), browserRoutes.settings.values, "PATCH", {
@@ -811,6 +802,7 @@ var SettingsDialog = class {
   }
   /**
    * Show validated settings and apply the server's editing policy.
+   *
    * @param configuration - The last successful server response.
    */
   display(configuration) {
@@ -830,10 +822,11 @@ var SettingsDialog = class {
       input.max = String(definition.maximum);
       input.value = String(settings.get(name));
     }
-    if (!configuration.mutationAllowed) setText(this.status, message("settings.readOnly"));
+    if (!configuration.mutationAllowed) this.status.textContent = message("settings.readOnly");
   }
   /**
    * Keep settings requests serial and show the server's response.
+   *
    * @param success - The success message.
    * @param route - The local settings route.
    * @param method - The HTTP method.
@@ -843,38 +836,30 @@ var SettingsDialog = class {
     if (route === browserRoutes.settings.credential) this.key.value = "";
     this.keyFields.disabled = this.limitFields.disabled = true;
     this.reload.disabled = true;
-    setText(this.status, message("working"));
-    void this.requestSettings(success, route, method, body);
+    this.status.textContent = message("working");
+    this.pending = this.pending.then(() => this.requestSettings(success, route, method, body));
   }
   /**
    * Apply the server response and restore editing after a settings request.
+   *
    * @param success - The success message.
    * @param route - The local settings route.
    * @param method - The HTTP method.
    * @param body - The settings change, if any.
-   * @returns When the response or error is displayed.
+   * @returns A promise that settles after the dialog shows the response or the error.
    */
   async requestSettings(success, route, method, body) {
     try {
-      const value = await requestConfiguration(
-        this.fetcher,
-        this.controller.signal,
-        route,
-        method,
-        body
-      );
+      const value = await requestConfiguration(this.fetcher, this.controller.signal, route, method, body);
       if (this.controller.signal.aborted) return;
-      setText(this.status, success);
+      this.status.textContent = success;
       this.display(value);
     } catch (error) {
       if (!this.controller.signal.aborted)
-        setText(
-          this.status,
-          error instanceof Error ? error.message : message("settings.updateFailed")
-        );
+        this.status.textContent = error instanceof Error ? error.message : message("settings.updateFailed");
     } finally {
       if (!this.controller.signal.aborted) {
-        this.keyFields.disabled = this.limitFields.disabled = !this.configuration?.mutationAllowed;
+        this.keyFields.disabled = this.limitFields.disabled = this.configuration?.mutationAllowed !== true;
         this.reload.disabled = false;
       }
     }
@@ -891,12 +876,11 @@ var SettingsDialog = class {
     this.controller.abort();
     this.dialog.remove();
     if (current === this) current = void 0;
-    if (this.previousFocus instanceof HTMLElement && this.previousFocus.isConnected)
-      this.previousFocus.focus();
+    if (this.previousFocus instanceof HTMLElement && this.previousFocus.isConnected) this.previousFocus.focus();
   }
 };
 function openSettings(fetcher) {
-  if (current?.dialog.open) {
+  if (current?.dialog.open === true) {
     current.dialog.focus();
     return;
   }
@@ -904,36 +888,38 @@ function openSettings(fetcher) {
   current.show();
 }
 
-// web/scripts/widgets.ts
-function findWidget(canvasNode, name) {
-  return canvasNode.widgets?.find((widget) => widget.name === name);
-}
-function chainCallback(widget, after) {
-  const previous = widget.callback?.bind(widget);
-  widget.callback = function(...args) {
-    previous?.apply(this, args);
-    after();
-  };
-}
-
 // web/scripts/extension.ts
 var controlRestorers = /* @__PURE__ */ new WeakMap();
 function addNodeControls(canvasNode) {
   const restorers = [];
   for (const name of dynamicControlInputs.get(canvasNode.comfyClass ?? "") ?? []) {
-    const widget = findWidget(canvasNode, name);
+    const widget = canvasNode.widgets?.find((candidate) => candidate.name === name);
     if (widget) restorers.push(watchControl(canvasNode, widget));
   }
   controlRestorers.set(canvasNode, restorers);
 }
 function watchControl(canvasNode, widget) {
   const restoreValues = preserveControlValues(canvasNode, widget);
-  chainCallback(widget, () => {
+  const previous = widget.callback?.bind(widget);
+  widget.callback = (...args) => {
+    previous?.(...args);
     restoreValues(true);
     const canvas = app2.canvas;
     canvas.onSelectionChange?.(canvas.selected_nodes);
-  });
+  };
   return restoreValues;
+}
+function keepChildValue(canvasNode, child, key, restore) {
+  const saved = canvasNode.properties.conditionalValues;
+  if (restore && saved && Object.hasOwn(saved, key)) child.value = saved[key];
+  const removed = child.onRemove?.bind(child);
+  child.onRemove = () => {
+    if (!app2.configuringGraph) {
+      canvasNode.properties.conditionalValues ??= {};
+      canvasNode.properties.conditionalValues[key] = child.value;
+    }
+    removed?.();
+  };
 }
 function preserveControlValues(canvasNode, widget) {
   const restoredWidgets = /* @__PURE__ */ new WeakSet();
@@ -942,18 +928,7 @@ function preserveControlValues(canvasNode, widget) {
     for (const child of canvasNode.widgets ?? []) {
       if (!child.name.startsWith(`${widget.name}.`) || restoredWidgets.has(child)) continue;
       restoredWidgets.add(child);
-      const key = `${selected}/${child.name}`;
-      const saved = canvasNode.properties.conditionalValues;
-      if (restore && saved && Object.hasOwn(saved, key))
-        child.value = saved[key];
-      const removed = child.onRemove;
-      child.onRemove = function() {
-        if (!app2.configuringGraph) {
-          canvasNode.properties.conditionalValues ??= {};
-          canvasNode.properties.conditionalValues[key] = child.value;
-        }
-        removed?.call(this);
-      };
+      keepChildValue(canvasNode, child, `${selected}/${child.name}`, restore);
     }
   };
   restoreValues();
@@ -969,7 +944,7 @@ app2.registerExtension({
   setup: () => {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("./extension.css", import.meta.url).href;
+    stylesheet.href = new URL("extension.css", import.meta.url).href;
     const stylesheets = /* @__PURE__ */ new Set();
     for (const link of document.querySelectorAll("link[rel=stylesheet]")) {
       stylesheets.add(link.getAttribute("href"));

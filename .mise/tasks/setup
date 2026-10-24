@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Runtime: Bash 3.2+ on macOS or Linux.
+#MISE description="Install development tools, the locked dependencies, the gspot tools, and the Git hooks."
+set -euo pipefail
+
+REPO_ROOT="${MISE_PROJECT_ROOT:-$(git rev-parse --show-toplevel)}"
+cd "${REPO_ROOT}" || exit 1
+
+mise install
+mise run deps
+bun run gspot install

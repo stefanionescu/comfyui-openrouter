@@ -1,16 +1,14 @@
 # Browser source; the built bundle ships
 /web/scripts/
-/web/styles/
 
-# Development tools and instructions
+# Development tools, plans, and instructions
 /scripts/
-/quality/
 /.mise/
-/.githooks/
-/rules/
+/.gspot/
+/.github/
+/gspot.toml
 /plans/
 /AGENTS.md
-/CLAUDE.md
 
 # Development dependencies and configuration
 /package.json
@@ -22,12 +20,16 @@
 /mise.toml
 /.gitignore
 /.gitattributes
-/.prettierignore
-/.prettierrc*
-/.markdownlint*
-/.stylelintrc*
-/.typos.toml
 /.comfyignore
+
+# Tool files that gspot writes from gspot.toml
+/.editorconfig
+/.markdownlint.jsonc
+/.prettierignore
+/.stylelintrc.json
+/eslint.config.mjs
+/prettier.config.mjs
+/ruff.toml
 
 # Local dependencies and generated artifacts
 /.git/

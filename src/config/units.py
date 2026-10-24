@@ -1,4 +1,4 @@
-"""Units the size and time limits are written in."""
+"""Units that the size and time limits use."""
 
 BYTES_PER_MEBIBYTE = 1_048_576
 
@@ -9,8 +9,8 @@ MINUTES_PER_HOUR = 60
 MILLISECONDS_PER_SECOND = 1000
 
 __all__ = [
-    "BYTES_PER_MEBIBYTE",
-    "MILLISECONDS_PER_SECOND",
-    "MINUTES_PER_HOUR",
-    "SECONDS_PER_MINUTE",
+    'BYTES_PER_MEBIBYTE',
+    'MILLISECONDS_PER_SECOND',
+    'MINUTES_PER_HOUR',
+    'SECONDS_PER_MINUTE',
 ]

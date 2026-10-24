@@ -1,18 +1,21 @@
-"""Describe a workflow as nodes, links, groups and the subgraphs it places."""
+"""Describe a workflow as nodes, links, groups, and the subgraphs it places."""
 
 from __future__ import annotations
+
 import uuid
+from types import MappingProxyType
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from types import MappingProxyType
+
 from scripts.workflows.page.config import INPUT_COLOUR
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+
     from scripts.types import WidgetValue
 
 NO_VALUES: Mapping[str, WidgetValue] = MappingProxyType({})
-NAMESPACE = uuid.UUID("6f1c0c7e-3b2a-4f7e-9d3a-2f0b4e6a8c10")
+NAMESPACE = uuid.UUID('6f1c0c7e-3b2a-4f7e-9d3a-2f0b4e6a8c10')
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,7 +25,7 @@ class Node:
     key: str
     kind: str
     values: Mapping[str, WidgetValue] = NO_VALUES
-    title: str = ""
+    title: str = ''
     is_paid: bool = False
     is_bypassed: bool = False
 
@@ -34,7 +37,7 @@ class Group:
     title: str
     columns: tuple[tuple[str, ...], ...]
     colour: str = INPUT_COLOUR
-    note: str = ""
+    note: str = ''
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,7 +50,7 @@ class Subgraph:
     columns: tuple[tuple[str, ...], ...] = ()
     inputs: tuple[tuple[str, str], ...] = ()
     outputs: tuple[tuple[str, str], ...] = ()
-    description: str = ""
+    description: str = ''
     stacks: tuple[tuple[Group, ...], ...] = ()
     # The previews shown on the placed node, as `node key` and preview name.
     previews: tuple[tuple[str, str], ...] = ()
@@ -64,4 +67,4 @@ class Workflow:
     subgraphs: tuple[Subgraph, ...] = ()
 
 
-__all__ = ["NAMESPACE", "NO_VALUES", "Group", "Node", "Subgraph", "Workflow"]
+__all__ = ['NAMESPACE', 'NO_VALUES', 'Group', 'Node', 'Subgraph', 'Workflow']

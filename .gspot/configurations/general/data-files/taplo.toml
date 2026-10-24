@@ -1,0 +1,10 @@
+[schema]
+enabled = false
+
+[formatting]
+indent_string = "    "
+column_width = 120
+align_entries = false
+reorder_keys = false
+array_auto_expand = false
+array_auto_collapse = false

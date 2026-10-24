@@ -1,0 +1,60 @@
+rules:
+  - id: gspot.javascript.dom-html-sink
+    pattern-either:
+      - pattern: $ELEMENT.innerHTML = $VALUE
+      - pattern: $ELEMENT.outerHTML = $VALUE
+      - pattern: $ELEMENT.insertAdjacentHTML($POSITION, $VALUE)
+      - pattern: document.write($VALUE)
+    message: Writing HTML into the page allows XSS. Set textContent, create the
+      nodes, or write fixed markup.
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+  - id: gspot.javascript.ssrf-web-request-user-input
+    patterns:
+      - pattern-either:
+          - pattern: fetch(req.$PART.$VALUE, ...)
+          - pattern: fetch($URL.searchParams.get(...), ...)
+    message: fetch() takes its URL from the request, which allows server-side
+      request forgery. Allow only known hosts.
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    metadata:
+      cwe:
+        - CWE-918
+      category: security
+  - id: gspot.javascript.secret-in-log
+    patterns:
+      - pattern-either:
+          - pattern: $LOGGER.$LEVEL(process.env.$VAR)
+          - pattern: $LOGGER.$LEVEL(Deno.env.get($VAR))
+      - metavariable-regex:
+          metavariable: $LEVEL
+          regex: ^(log|trace|debug|info|warn|error|fatal)$
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: .*(KEY|SECRET|PASSWORD|TOKEN|CREDENTIAL).*
+    message: The log writes a secret from the environment. Remove the value, or mask it.
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    metadata:
+      cwe:
+        - CWE-532
+      category: security
+  - id: gspot.javascript.interpolated-exec
+    pattern: execSync(`...${$VAR}...`)
+    message: Template literal interpolation in execSync() is a command injection
+      vector. Use execFileSync() with an argument array instead.
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    metadata:
+      cwe:
+        - CWE-78
+      category: security

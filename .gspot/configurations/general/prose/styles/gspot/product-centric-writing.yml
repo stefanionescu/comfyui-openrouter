@@ -1,0 +1,8 @@
+# Adapted from RedHat.ProductCentricWriting; see ../LICENSES.md.
+extends: existence
+ignorecase: true
+level: suggestion
+link: https://redhat-documentation.github.io/vale-at-red-hat/reference-guide.html#product-centric-writing
+message: "Use a person or a role as the subject, not '%s'."
+tokens:
+    - (allows?|enables?|lets?|permits?)\s(you|customers|the customer|the user|users)

@@ -1,22 +1,22 @@
-"""Validate private limits before any request is sent."""
+"""Validate private limits before the extension sends any request."""
 
-from ..types import Json
 from dataclasses import fields
-from ..types.settings import Settings
+
+from ..state import Json
+from ..state.errors import ErrorCode, OpenRouterError
+from ..state.settings import Settings
 from ..config.settings import SETTING_RANGES
-from ..types.errors import ErrorCode, OpenRouterError
 from ..config.messages.settings import SETTINGS_RANGE, SETTING_UNKNOWN, SETTINGS_WHOLE_NUMBERS
 
-
 # The configured default for every setting.
-DEFAULT_SETTINGS = Settings(**{name: definition["default"] for name, definition in SETTING_RANGES.items()})
+DEFAULT_SETTINGS = Settings(**{name: definition['default'] for name, definition in SETTING_RANGES.items()})
 
 
 def _validate_settings(settings: Settings) -> None:
     """Keep every limit in its range."""
     for name, definition in SETTING_RANGES.items():
         value: int = getattr(settings, name)
-        if not definition["minimum"] <= value <= definition["maximum"]:
+        if not definition['minimum'] <= value <= definition['maximum']:
             raise OpenRouterError(ErrorCode.CONFIGURATION, SETTINGS_RANGE)
 
 
@@ -36,4 +36,4 @@ def parse_settings(document: dict[str, Json]) -> Settings:
     return settings
 
 
-__all__ = ["DEFAULT_SETTINGS", "parse_settings"]
+__all__ = ['DEFAULT_SETTINGS', 'parse_settings']

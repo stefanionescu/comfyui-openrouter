@@ -1,33 +1,35 @@
 """Send one rank request and read the documents in order of relevance."""
 
-from __future__ import annotations
-
-from .transport import send_json
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
+
 from .models import validate_model
-from pydantic import ValidationError
-from ..types.replies import RankReply
 from .options import build_request_body
 from .operation import validate_upload_size
-from ..config.openrouter import ENDPOINT_URLS
+from .transport import send_json, read_reply
 from .embeddings import validate_search_items
-from ..config.messages.inputs import QUERY_EMPTY
-from ..types.search import RankResult, RankedItem
+from ..state.errors import ErrorCode, OpenRouterError
+from ..state.search import RankedItem, RankResult, RankRequest
+from ..state.replies import RankReply
+from ..state.settings import Settings, Configuration
+from ..config.openrouter import ENDPOINT_URLS
 from ..config.messages.run import REPLY_UNREADABLE
-from ..types.errors import ErrorCode, OpenRouterError
+from ..config.messages.inputs import QUERY_EMPTY
 
 if TYPE_CHECKING:
-    from ..types import Json
-    from ..types.search import RankRequest
-    from ..types.settings import Settings, Configuration
+    from ..state import Json
 
 
+@dataclass(frozen=True, slots=True)
 class RankOperation:
-    """One rank request."""
+    """One rank request.
 
-    def __init__(self, request: RankRequest) -> None:
-        """Keep the request to validate and send."""
-        self.request = request
+    Attributes:
+        request: The request to validate and send.
+
+    """
+
+    request: RankRequest
 
     def validate(self, settings: Settings) -> None:
         """Refuse an empty query, no documents, and media over the upload limit."""
@@ -40,22 +42,19 @@ class RankOperation:
     async def send(self, configuration: Configuration) -> RankResult:
         """Check the model and send the query and documents; the reply lists them highest relevance first."""
         request = self.request
-        inputs = ["image"] if request.image_urls else []
-        await validate_model(request.model_id, "rerank", configuration.settings, inputs)
-        documents: list[Json] = [*request.texts, *({"image": url} for url in request.image_urls)]
-        body: dict[str, Json] = {"model": request.model_id, "query": request.query, "documents": documents}
+        inputs = ['image'] if request.image_urls else []
+        await validate_model(request.model_id, 'rerank', configuration.settings, inputs)
+        documents: list[Json] = [*request.texts, *({'image': url} for url in request.image_urls)]
+        body: dict[str, Json] = {'model': request.model_id, 'query': request.query, 'documents': documents}
         if request.top_n > 0:
-            body["top_n"] = request.top_n
+            body['top_n'] = request.top_n
         document = await send_json(
-            ENDPOINT_URLS["rerank"], build_request_body(body, request.options, "rerank"), configuration
+            ENDPOINT_URLS['rerank'], build_request_body(body, request.options, 'rerank'), configuration
         )
-        try:
-            reply = RankReply.model_validate(document)
-        except ValidationError:
-            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        reply = read_reply(RankReply, document)
         if any(not 0 <= item.index < len(documents) for item in reply.results):
             raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
         return RankResult(tuple(RankedItem(item.index, item.relevance_score) for item in reply.results))
 
 
-__all__ = ["RankOperation"]
+__all__ = ['RankOperation']

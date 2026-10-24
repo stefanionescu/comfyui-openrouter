@@ -1,13 +1,15 @@
 """Turn OpenRouter's error replies into reviewed messages that carry its cleaned reason where it helps."""
 
 import re
+from http import HTTPStatus
 import json
 from typing import cast
-from http import HTTPStatus
+
 from pydantic import ValidationError
-from ..types.replies import ErrorReply
+
+from ..state.errors import ErrorCode, OpenRouterError
+from ..state.replies import ErrorReply
 from ..config.patterns import REASON_PATTERNS
-from ..types.errors import ErrorCode, OpenRouterError
 from ..config.openrouter import REASON_ENDINGS, MAX_REASON_CHARACTERS
 from ..config.messages.run import (
     NO_REASON,
@@ -26,10 +28,10 @@ from ..config.messages.run import (
     PROVIDER_OVERLOADED,
 )
 
-KEY = re.compile(REASON_PATTERNS["KEY"])
-URL = re.compile(REASON_PATTERNS["URL"])
-OPENROUTER_URL = re.compile(REASON_PATTERNS["OPENROUTER_URL"])
-# Statuses whose reason tells the person what to change, such as the durations a video model accepts, the tokens
+KEY = re.compile(REASON_PATTERNS['KEY'])
+URL = re.compile(REASON_PATTERNS['URL'])
+OPENROUTER_URL = re.compile(REASON_PATTERNS['OPENROUTER_URL'])
+# Statuses whose reason names what the person can change, such as the durations a video model accepts, the tokens
 # the credit covers, or the data policy no provider meets. Any other 4xx or 5xx status also carries its reason.
 EXPLAINED_FAILURES: dict[int, tuple[ErrorCode, str]] = {
     400: (ErrorCode.INVALID_INPUT, REQUEST_REJECTED),
@@ -52,20 +54,20 @@ FIXED_FAILURES: dict[int, tuple[ErrorCode, str]] = {
 def _read_reason(reply: ErrorReply) -> str:
     """Choose the text that names the problem.
 
-    When the provider rejects a request, OpenRouter's message is only "Provider returned error", and the
+    When the provider rejects a request, OpenRouter's message is only `Provider returned error`, and the
     provider's own reason is a JSON string in the error's metadata.
     """
     raw = reply.error.metadata.raw if reply.error.metadata else None
     if raw is None:
         return reply.error.message
     try:
-        inner = cast("object", json.loads(raw))
+        inner = cast('object', json.loads(raw))
     except ValueError:
         inner = None
-    document = cast("dict[str, object]", inner) if isinstance(inner, dict) else {}
-    nested = document.get("error")
-    candidates = (cast("dict[str, object]", nested).get("message") if isinstance(nested, dict) else None,)
-    return next((text for text in (*candidates, document.get("message")) if isinstance(text, str)), raw)
+    document = cast('dict[str, object]', inner) if isinstance(inner, dict) else {}
+    nested = document.get('error')
+    candidates = (cast('dict[str, object]', nested).get('message') if isinstance(nested, dict) else None,)
+    return next((text for text in (*candidates, document.get('message')) if isinstance(text, str)), raw)
 
 
 def _choose_failure(status: int) -> tuple[ErrorCode, str]:
@@ -91,15 +93,15 @@ def read_failure(status: int, body: bytes) -> OpenRouterError:
 def sanitize_reason(message: str) -> str:
     """Remove the only private details a provider's reason can carry, keys and addresses, then shorten it.
 
-    OpenRouter's own addresses stay, without the scheme. The reason ends as a sentence, since a message may add its
+    OpenRouter's own addresses stay, without the scheme. The reason ends as a sentence, because a message may add its
     next step after it.
     """
-    text = " ".join(KEY.sub("", URL.sub("", OPENROUTER_URL.sub(r"\1", message))).split())
+    text = ' '.join(KEY.sub('', URL.sub('', OPENROUTER_URL.sub(r'\1', message))).split())
     if len(text) > MAX_REASON_CHARACTERS:
-        text = text[: MAX_REASON_CHARACTERS - 1].rstrip() + "…"
+        text = text[: MAX_REASON_CHARACTERS - 1].rstrip() + '…'
     if text and not text.endswith(REASON_ENDINGS):
-        text += "."
+        text += '.'
     return text or NO_REASON
 
 
-__all__ = ["read_failure", "sanitize_reason"]
+__all__ = ['read_failure', 'sanitize_reason']

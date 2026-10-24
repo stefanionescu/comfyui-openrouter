@@ -4,15 +4,15 @@ Ranks lines of text and images by how well they match a query, best first.
 
 ## Inputs
 
-| Input        | What it takes                                                                     |
-| ------------ | --------------------------------------------------------------------------------- |
-| `model`      | Any rank model ID from openrouter.ai/models; the default is `cohere/rerank-v3.5`. |
-| `images`     | Images, for models that read them. Each image in a list or batch is one document. |
-| `top_n`      | How many results to keep; 0 keeps all.                                            |
-| `run_number` | Change it to send the same request again.                                         |
-| `query`      | What to rank against.                                                             |
-| `documents`  | One document per line. Blank lines are skipped.                                   |
-| `options`    | Settings from **Request Options**.                                                |
+| Input        | What it takes                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| `model`      | Any rank model ID from openrouter.ai/models; the default is at openrouter.ai/cohere/rerank-v3.5. |
+| `images`     | Images, for models that read them. Each image in a list or batch is one document.                |
+| `top_n`      | How many results to keep; 0 keeps all.                                                           |
+| `run_number` | Change it to send the same request again.                                                        |
+| `query`      | What to rank against.                                                                            |
+| `documents`  | One document per line. Blank lines are skipped.                                                  |
+| `options`    | Settings from **Request Options**.                                                               |
 
 ## Outputs
 

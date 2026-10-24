@@ -1,0 +1,7 @@
+extends: existence
+message: "Ambiguous date '%s'. Write ISO dates (2026-09-17) or the month name."
+level: error
+nonword: true
+tokens:
+    - "\\b\\d{1,2}/\\d{1,2}/\\d{2,4}\\b"
+    - "\\b\\d{1,2}\\.\\d{1,2}\\.\\d{4}\\b"

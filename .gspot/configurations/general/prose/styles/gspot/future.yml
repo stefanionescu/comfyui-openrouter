@@ -1,0 +1,17 @@
+extends: existence
+message: "Future promise '%s'. Document what exists."
+level: error
+ignorecase: true
+tokens:
+    - will be added
+    - will be supported
+    - coming soon
+    - in the future
+    - is planned
+    - are planned
+    - planned for
+    - planned to
+    - roadmap
+    - eventually
+    - for now
+    - later on

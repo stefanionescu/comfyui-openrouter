@@ -1,0 +1,15 @@
+extends: existence
+message: "Self-referential opening '%s'. Start with the subject."
+level: error
+ignorecase: true
+tokens:
+    - this document describes
+    - this guide explains
+    - this file describes
+    - in this document
+    - in this guide
+    - the purpose of this
+    - this topic
+    - this chapter
+    - this section
+    - this subsection

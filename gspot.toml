@@ -1,0 +1,223 @@
+#:schema ./.gspot/gspot.schema.json
+# gspot settings for this repository. Change them with gspot set, unset, add, remove, ignore, and unignore.
+
+level = "all"
+configurations = ["bash", "css", "javascript", "licenses", "markdown", "python", "typescript"]
+
+[hooks]
+enabled = true
+
+[ci]
+enabled = true
+
+[format]
+quotes = "single"
+
+[[naming.override]]
+allowed_names = ["ModelInfo", "MODEL_INFO"]
+reason = "The node class, and the workflow constant that holds its ID, are named after its display name, Model: Info, as in the KIE, BytePlus, fal, and Dreamina packs; its node ID OpenRouterModelInfo comes from the class name and is fixed once released."
+
+[spelling.allowed_words]
+PCM = "PCM is the raw audio format's name, which readers know."
+PDF = "PDF is the document file format's name, which readers know."
+WAV = "WAV is the audio file format's name, which readers know."
+PNG = "PNG is the image file format's name, which readers know."
+JPEG = "JPEG is the image file format's name, which readers know."
+SRT = "SRT is the subtitle file format's name, which readers know."
+ISO = "ISO names the date and language code standards, ISO 8601 and ISO 639-1, which readers know."
+FLUX = "FLUX is the name of Black Forest Labs' image model family, which readers know."
+
+[tools.eslint]
+import_extension = "ts"
+
+[[tools.eslint.override]]
+paths = ["web/scripts/**"]
+runtime = "browser"
+
+[tools.commitlint]
+scopes = ["nodes", "frontend", "workflows", "docs", "hooks", "quality", "root", "deps"]
+
+[tools.knip]
+entry = ["web/scripts/extension.ts"]
+
+[python]
+externals = ["comfy", "comfy_api", "comfy_api_nodes", "comfy_execution", "folder_paths", "nodes", "server", "torch"]
+
+# The browser code in layers. Each rule lists exactly what its files may import, besides their own folder.
+[[import_rule]]
+name = "page"
+paths = ["web/scripts/browser.ts", "web/scripts/contracts.ts", "web/scripts/dom.ts", "web/scripts/host.d.ts", "web/scripts/http.ts", "web/scripts/nodes.ts", "web/scripts/routes.ts", "web/scripts/schema.ts", "web/scripts/text.ts"]
+can_import = []
+
+[[import_rule]]
+name = "settings-dialog"
+paths = ["web/scripts/settings/**"]
+can_import = ["page"]
+
+[[import_rule]]
+name = "extension"
+paths = ["web/scripts/extension.ts"]
+can_import = ["page", "settings-dialog"]
+
+# The Python packages in layers, the same way. config holds fixed values and imports nothing; state holds the records;
+# storage holds the private files; openrouter talks to OpenRouter and settings serves the settings routes, and neither
+# imports the other; comfy is the boundary with ComfyUI; nodes are the nodes; entry is the package's own __init__.py
+# files; scripts are the build and check scripts, which nothing in the package imports.
+[[import_rule]]
+name = "config"
+paths = ["src/config/**"]
+can_import = []
+
+[[import_rule]]
+name = "state"
+paths = ["src/state/**"]
+can_import = ["config"]
+
+[[import_rule]]
+name = "storage"
+paths = ["src/storage/**"]
+can_import = ["config", "state"]
+
+[[import_rule]]
+name = "openrouter"
+paths = ["src/openrouter/**"]
+can_import = ["config", "state", "storage"]
+
+[[import_rule]]
+name = "settings"
+paths = ["src/settings/**"]
+can_import = ["config", "state", "storage"]
+
+[[import_rule]]
+name = "comfy"
+paths = ["src/comfy/**"]
+can_import = ["config", "state", "storage", "openrouter", "settings"]
+
+[[import_rule]]
+name = "nodes"
+paths = ["src/nodes/**"]
+can_import = ["config", "state", "openrouter", "settings", "comfy"]
+
+[[import_rule]]
+name = "entry"
+paths = ["__init__.py", "src/__init__.py"]
+can_import = ["comfy", "nodes"]
+
+[[import_rule]]
+name = "scripts"
+paths = ["scripts/**"]
+can_import = ["config", "comfy", "nodes"]
+
+# Import rules skip modules that the host provides, so import-linter checks the one rule they cannot hold: only the
+# ComfyUI boundary and the nodes import ComfyUI's modules. The contract is in pyproject.toml.
+[[command_check]]
+id = "comfy-boundary"
+command = ["uv", "run", "--no-sync", "lint-imports"]
+paths = ["src/**", "pyproject.toml"]
+stage = "commit"
+summary = "Checks that only src/comfy and src/nodes import ComfyUI's modules."
+help = "Move the import into src/comfy or src/nodes, and pass the value it gives to the other package."
+exit_codes = [1]
+output = { format = "regex", pattern = "^-\\s+(?<message>\\S+ -> \\S+) \\(l\\.(?<line>\\d+)\\)$" }
+
+# The browser bundle is built output that ComfyUI serves, so the shipped files must equal a fresh esbuild run.
+[[command_check]]
+id = "frontend-bundle"
+command = ["uv", "run", "--no-sync", "python", "-m", "scripts.frontend", "--check"]
+paths = ["web/scripts/**", "web/extension.js", "web/extension.css", "scripts/frontend.py", "package.json", "bun.lock"]
+stage = "commit"
+summary = "Checks that web/extension.js and web/extension.css equal a fresh build of web/scripts."
+help = "Run mise run comfy:frontend:build, and commit both built files."
+exit_codes = [1]
+output = { format = "regex", pattern = "^(?<message>Rebuild \\S+ with .+)$" }
+
+[[command_check]]
+id = "example-workflows"
+command = ["uv", "run", "--no-sync", "python", "-m", "scripts.workflows.build", "--check"]
+paths = ["__init__.py", "src/**", "scripts/**", "README.md", "example_workflows/**", "subgraphs/**"]
+stage = "push"
+summary = "Checks that the example workflows and subgraph blueprints match their descriptions and the nodes."
+help = "Run mise run comfy:workflows:build, and commit the rebuilt files."
+exit_codes = [1]
+output = { format = "regex", pattern = "^(?<message>.+)$" }
+
+# The schema export runs the nodes in ComfyUI's own Python, and refuses a paid node whose record of inputs differs from
+# its schema.
+[[command_check]]
+id = "help-pages"
+command = ["uv", "run", "--no-sync", "python", "-m", "scripts.nodes.check"]
+paths = ["__init__.py", "src/**", "scripts/**", "web/docs/**"]
+stage = "push"
+summary = "Checks that every node has a help page that names only real inputs and outputs, and sits in an OpenRouter menu."
+help = "Add or fix the help page in web/docs/<node ID>.md, or the menu, that the message names."
+exit_codes = [1]
+output = { format = "regex", pattern = "^(?<message>.+)$" }
+
+# ComfyUI installers read requirements.txt, so it must list the runtime dependencies of pyproject.toml.
+[[command_check]]
+id = "runtime-requirements"
+command = ["uv", "run", "--no-sync", "python", "-m", "scripts.dependencies", "--check"]
+paths = ["pyproject.toml", "requirements.txt", "scripts/dependencies.py"]
+stage = "push"
+summary = "Checks that requirements.txt lists the runtime dependencies of pyproject.toml."
+help = "Run uv run --no-sync python -m scripts.dependencies, and commit requirements.txt."
+exit_codes = [1]
+output = { format = "regex", pattern = "^(?<message>.+)$" }
+
+[[ignore]]
+check = "javascript/eslint"
+rule = "gspot/import-boundaries"
+paths = ["web/scripts/extension.ts", "web/scripts/http.ts", "web/scripts/text.ts"]
+reason = "ComfyUI serves ../../scripts/app.js and ../../scripts/api.js at runtime; esbuild leaves them external."
+
+[[ignore]]
+check = "javascript/knip"
+rule = "unresolved"
+paths = ["web/scripts/extension.ts", "web/scripts/http.ts", "web/scripts/text.ts"]
+reason = "ComfyUI serves ../../scripts/app.js and ../../scripts/api.js at runtime; esbuild leaves them external."
+
+[[ignore]]
+check = "naming/paths"
+rule = "banned-word"
+paths = ["ADVANCED.md"]
+reason = "ADVANCED.md is the advanced guide of every pack in the family, the name its readers and the README link know."
+
+[[ignore]]
+check = "naming/paths"
+paths = ["web/docs/**"]
+reason = "ComfyUI reads each node's help page from web/docs/<node id>.md, so the file name must equal the registered node ID."
+
+[[ignore]]
+check = "prose/vale"
+rule = "write-good.E-Prime"
+reason = "E-Prime bans every form of 'to be'; rewriting every such sentence makes the docs harder to read, not plainer."
+
+[[ignore]]
+check = "python/vulture"
+names = ["on_load", "get_node_list", "comfy_entrypoint"]
+paths = ["__init__.py"]
+reason = "ComfyUI calls the extension's on_load, get_node_list, and comfy_entrypoint by name."
+
+[[ignore]]
+check = "python/vulture"
+names = ["define_schema", "execute", "validate_inputs", "fingerprint_inputs"]
+paths = ["src/nodes/**"]
+reason = "ComfyUI calls each node's define_schema, execute, validate_inputs, and fingerprint_inputs by name."
+
+[[ignore]]
+check = "structure/trivial-functions"
+names = ["on_load", "get_node_list", "comfy_entrypoint"]
+paths = ["__init__.py"]
+reason = "ComfyUI calls the extension's on_load, get_node_list, and comfy_entrypoint by name, so they cannot be inlined."
+
+[[ignore]]
+check = "structure/trivial-functions"
+names = ["define_schema", "execute", "validate_inputs", "fingerprint_inputs"]
+paths = ["src/nodes/**"]
+reason = "ComfyUI calls each node's define_schema, execute, validate_inputs, and fingerprint_inputs by name, so they cannot be inlined."
+
+[[ignore]]
+check = "structure/trivial-functions"
+names = ["__init__"]
+paths = ["src/state/errors.py"]
+reason = "OpenRouterError's constructor keeps the category beside the message that RuntimeError stores; every raise calls it."

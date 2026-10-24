@@ -1,0 +1,72 @@
+[default]
+locale = "en"
+extend-ignore-re = ["\\b[0-9a-f]{7,40}\\b", "\\b[A-Za-z0-9+/]{40,}={0,2}\\b"]
+
+[default.extend-words]
+PCM = "PCM"
+PDF = "PDF"
+WAV = "WAV"
+PNG = "PNG"
+JPEG = "JPEG"
+SRT = "SRT"
+ISO = "ISO"
+FLUX = "FLUX"
+
+[files]
+extend-exclude = [
+  # Build output
+  "**/build/**",
+  # Files that Git ignores
+  "plans/**",
+  "**/.venv/**",
+  "**/node_modules/**",
+  "**/__pycache__/**",
+  "**/*.py[cod]",
+  "**/.ruff_cache/**",
+  "dist/**",
+  ".cache/**",
+  "**/.artifacts/**",
+  "**/.import_linter_cache/**",
+  "**/node.zip",
+  "**/.env",
+  "**/.env.*",
+  "**/.mise.local.toml",
+  "**/*.log",
+  "**/.DS_Store",
+  # Files that gspot generates
+  ".gspot/**",
+  ".stylelintrc.json",
+  "eslint.config.mjs",
+  ".markdownlint.jsonc",
+  "ruff.toml",
+  "pyrightconfig.json",
+  ".editorconfig",
+  "prettier.config.mjs",
+  ".prettierignore",
+  # Generator outputs
+  "web/extension.js",
+  "web/extension.css",
+  "example_workflows/*.json",
+  "subgraphs/*.json",
+  "**/requirements.txt",
+  "**/*.pbxproj",
+  "**/*.xcstrings",
+  "**/*.svg",
+  "**/*.min.js",
+  "**/*.min.css",
+  # Paths that configurations leave out, such as installed dependencies and local secrets
+  "**/bower_components/**",
+  "**/venv/**",
+  "**/.dev.vars",
+  "**/.dev.vars.*",
+  # Lockfiles
+  "**/*.lock",
+  "**/bun.lockb",
+  "**/pnpm-lock.yaml",
+  "**/package-lock.json",
+  "**/npm-shrinkwrap.json",
+  "**/go.sum",
+  "**/Package.resolved",
+  # Local environment files
+  "**/.env*",
+]

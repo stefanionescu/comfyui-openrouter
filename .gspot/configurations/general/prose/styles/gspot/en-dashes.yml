@@ -1,0 +1,6 @@
+extends: existence
+message: "En dash '%s'. Write 'to' for a range, or use a hyphen in a compound."
+level: error
+nonword: true
+tokens:
+    - '–'

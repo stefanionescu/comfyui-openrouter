@@ -1,0 +1,6 @@
+extends: existence
+message: "Possessive on a product or code name: '%s'. Rephrase with 'of' or 'the'."
+level: error
+nonword: true
+tokens:
+  - \b(?:shellcheck|shfmt|zsh|Bash|ShellCheck|stylelint|stylelint\-config\-standard|postcss\-html|CSS|eslint|@eslint\/js|@gspothq\/eslint\-plugin|eslint\-plugin\-sonarjs|eslint\-plugin\-unicorn|eslint\-plugin\-security|eslint\-plugin\-barrel\-files|eslint\-plugin\-perfectionist|eslint\-plugin\-n|eslint\-plugin\-jsdoc|eslint\-plugin\-regexp|eslint\-plugin\-import\-x|picomatch|eslint\-import\-resolver\-typescript|eslint\-plugin\-boundaries|eslint\-plugin\-package\-json|eslint\-config\-prettier|globals|knip|tsc|JavaScript|ESLint|license\-checker\-rseidelsohn|pip\-licenses|markdownlint\-cli2|Markdown|uv|ruff|basedpyright|pydoclint|deptry|vulture|Python|Ruff|typescript\-eslint|TypeScript|commitlint|taplo|yamllint|v8r|ajv|xmllint|JSON|TOML|YAML|osv\-scanner|syncpack|lychee|jscpd|Bun|Node|npm|pnpm|mise|CI|macOS|Linux|Windows|prettier|editorconfig\-checker|Prettier|node|gspot|vale|Vale|DOM|DTO|RPC|gitleaks|dotenv\-linter|semgrep|Semgrep|CSRF|typos)'s\b

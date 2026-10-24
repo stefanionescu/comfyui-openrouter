@@ -1,0 +1,7 @@
+extends: existence
+scope: raw
+level: error
+nonword: true
+message: A file tree inventories the layout and goes stale with each move. Document behavior and ownership instead.
+tokens:
+    - '[├└]──[^\n]*(?:\n[^\n]*[├└│][^\n]*)*'

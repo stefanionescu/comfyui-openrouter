@@ -19,10 +19,10 @@
 ## What each node sends
 
 - **Chat: Ask** sends the prompt and the media: images as PNG, videos as MP4,
-  and audio as WAV. PDFs go to OpenRouter's PDF engine; text files go as text.
-  Earlier turns come from `conversation`. It returns the text, the reasoning
-  when the model shares it, and any images the model made. Speech comes back
-  as 24 kHz mono PCM.
+  and audio as WAV. PDFs go to the PDF engine of OpenRouter; text files go as
+  text. Earlier turns come from `conversation`.
+- **Chat: Ask** returns the text, the reasoning when the model shares it, and
+  any images the model made. Speech comes back as 24 kHz mono PCM.
 - **Image: Generate** sends the prompt, the chosen settings, the count, and each
   reference image as PNG. It returns images, their masks (white is
   transparent), and SVG files.
@@ -31,9 +31,9 @@
   every 30 seconds, and downloads the MP4 when it is ready.
 - **Video: Download** checks one recorded job and downloads its video. Status
   checks and downloads are free.
-- **Audio: Speak** sends the text, the voice, the speed, and `voice_sample` as
-  WAV when it is connected. It returns the audio as PCM or MP3.
-- **Audio: Transcribe** sends the clip as WAV, with the language and the
+- **Audio: Speak** sends the text, the voice, the speed, and a connected
+  `voice_sample` as WAV. It returns the audio as PCM or MP3.
+- **Audio: Transcribe** sends the clip as WAV, and the language and the
   timestamps you ask for. It returns the text, the segments, SRT subtitles, and
   the timed words.
 - **Search: Embed** sends every text line and image in one request. It compares
@@ -42,7 +42,8 @@
   It returns them in order, with their scores.
 - **Decision: Ask** sends the situation and the questions to OpenRouter's alpha
   decisions API. **Decision: Read Answer** reads one answer locally.
-- **Request Options** adds its settings to each connected paid node's request.
+- **Request Options** adds its settings to the request of each paid node it
+  connects to.
 - **Model: Info** reads a model's public listings, without the key, and returns
   them as JSON.
 
@@ -51,12 +52,13 @@ Every request goes out once. Requests that take provider routing send
 
 ## Keys and access
 
-Save the key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
-Settings**. It is stored in the private folder and checked by the first request
-that uses it. `OPENROUTER_API_KEY`, set where ComfyUI starts, takes precedence.
+Save the key in **OpenRouter Settings**: in the ComfyUI menu, open
+**Extensions**, then **OpenRouter**, then **OpenRouter Settings**. The extension
+keeps it in the private folder, and the first request that uses it checks it.
+`OPENROUTER_API_KEY`, set where ComfyUI starts, takes precedence.
 
-The key and settings can be changed only over a direct local connection to the
-ComfyUI server. For remote access, a reverse proxy, or multi-user mode, set
+Only a direct local connection to the ComfyUI server can change the key and
+the settings. For remote access, a reverse proxy, or multi-user mode, set
 `OPENROUTER_API_KEY` instead.
 
 The private folder is:
@@ -68,14 +70,14 @@ The private folder is:
 | Windows | `%LOCALAPPDATA%\OpenRouterComfyUI`                   |
 
 To use another folder, set `OPENROUTER_COMFY_STATE_DIRECTORY` to an absolute
-path outside the extension and ComfyUI's folders. Files are unencrypted, with
-owner-only permissions.
+path outside the extension and the folders of ComfyUI. The extension writes the
+files unencrypted, with owner-only permissions.
 
 ## Settings
 
 Change these in **OpenRouter Settings**. New requests use the saved values.
 
-![The OpenRouter Settings dialog: the OpenRouter API key field with Save Key and Clear Saved Key, and Request timeout (seconds), Maximum upload size (MiB), and Maximum download size (MiB).](docs/images/screenshots/settings-dialog.png)
+![The OpenRouter Settings dialog: the OpenRouter API key field with Save Key and Clear Saved Key, then the request timeout in seconds, and the maximum upload and download sizes in MiB.](docs/images/screenshots/settings-dialog.png)
 
 | Setting                     | Default | Range      | What it limits                                          |
 | --------------------------- | ------- | ---------- | ------------------------------------------------------- |
@@ -85,16 +87,16 @@ Change these in **OpenRouter Settings**. New requests use the saved values.
 
 ## Models
 
-Before it sends, a paid node reads OpenRouter's public listings and stops,
-before anything is paid, when:
+Before it sends, a paid node reads the public listings of OpenRouter. It stops
+before you pay anything when:
 
 - the model ID is empty or unknown;
 - the model makes something the node does not return, such as a video model in
   **Image: Generate**;
 - connected images, video, or audio are media the model does not read;
-- **Chat: Ask** asks for images or audio the model does not make, a sampling
-  setting or `stop` the model does not take, a `json_schema` it cannot follow,
-  or more `max_tokens` than its longest answer;
+- **Chat: Ask** asks for images or audio the model does not make, or a sampling
+  setting or `stop` the model does not take. It also stops for a `json_schema`
+  the model cannot follow, or more `max_tokens` than its longest answer;
 - **Audio: Speak** has `voice_sample` connected and the model cannot clone
   voices;
 - **Image: Generate** asks for a value, `count`, or number of `references` the
@@ -103,28 +105,30 @@ before anything is paid, when:
   `generate_audio`, `upscale_factor`, `creativity`, `first_frame`, or
   `last_frame` the model's entry in OpenRouter's video list does not take.
 
-The message names what the model does take. Each listing is read once per model
-per ComfyUI session. **Model: Info** returns the same listing as JSON, for free.
+The message names what the model does take. A node reads each listing once per
+model per ComfyUI session. **Model: Info** returns the same listing as JSON, and
+costs nothing.
 
 `seed` and `reasoning_effort` go only to models that list them. With a sampling
 setting, `stop`, or a `json_schema`, only providers that take every one of them
 answer. A
 `reasoning_effort` the model does not list steps down to the highest one it
-lists below it, or up to its lowest. Every other setting is sent only when
-changed from `default` or `0`.
+lists below it, or up to its lowest. A node sends every other setting only when
+you change it from `default` or `0`.
 
-| Node              | Default model                         |
-| ----------------- | ------------------------------------- |
-| Chat: Ask         | `google/gemini-3.5-flash`             |
-| Image: Generate   | `google/gemini-3.1-flash-image`       |
-| Video: Generate   | `google/veo-3.1-fast`                 |
-| Audio: Speak      | `google/gemini-3.1-flash-tts-preview` |
-| Audio: Transcribe | `openai/whisper-large-v3-turbo`       |
-| Search: Embed     | `openai/text-embedding-3-small`       |
-| Search: Rank      | `cohere/rerank-v3.5`                  |
-| Decision: Ask     | `typesafe/jev-1.13`                   |
+| Node              | Default model, by its page on OpenRouter            |
+| ----------------- | --------------------------------------------------- |
+| Chat: Ask         | `openrouter.ai/google/gemini-3.5-flash`             |
+| Image: Generate   | `openrouter.ai/google/gemini-3.1-flash-image`       |
+| Video: Generate   | `openrouter.ai/google/veo-3.1-fast`                 |
+| Audio: Speak      | `openrouter.ai/google/gemini-3.1-flash-tts-preview` |
+| Audio: Transcribe | `openrouter.ai/openai/whisper-large-v3-turbo`       |
+| Search: Embed     | `openrouter.ai/openai/text-embedding-3-small`       |
+| Search: Rank      | `openrouter.ai/cohere/rerank-v3.5`                  |
+| Decision: Ask     | `openrouter.ai/typesafe/jev-1.13`                   |
 
-**Audio: Speak** starts with `voice` set to `Kore`, which its default model
+Each model ID is the path after `openrouter.ai/`. **Audio: Speak** starts with
+`voice` set to `Kore`, which its default model
 needs.
 
 ## Caching and reruns
@@ -134,7 +138,7 @@ needs.
   new request. The examples use `fixed`.
 - Saving a different key invalidates the cached results; changing settings does
   not.
-- Every request is sent once.
+- A node sends every request once.
 - Cancelling stops the wait only: a chat model still bills the tokens it
   produced, and a video job keeps running.
 
@@ -142,9 +146,9 @@ needs.
 
 **Video: Generate** records each job as soon as OpenRouter accepts it. The job
 runs to completion even when you cancel, ComfyUI restarts, or the request
-timeout passes. Collect it with **Video: Download** (press R to list new
-jobs). A job leaves the list once its video is downloaded, or when it fails, is
-cancelled, or expires.
+timeout passes. Collect it with **Video: Download**; press R to list new
+jobs. A job leaves the list once the node downloads its video, or when
+OpenRouter reports the job as failed, cancelled, or expired.
 
 ## Limits
 
@@ -167,7 +171,7 @@ Paid nodes check these before sending, along with the [model checks](#models).
 
 **Chat: Attach Document** stops when:
 
-- No file is chosen, or the file is outside the input folder.
+- `file` names no file, or a file outside the input folder.
 - The file is not a PDF or text file, is over the upload limit, or is not UTF-8
   text.
 
@@ -196,7 +200,7 @@ Rank** also stops when `query` is empty.
 situation longer than the model reads. **Decision: Read Answer** stops when no
 question has the name in `question`.
 
-**Request Options** stops when a provider list or a JSON field cannot be read.
+**Request Options** stops when it cannot read a provider list or a JSON field.
 A paid node stops when the options include a setting its request does not
 accept.
 
@@ -213,16 +217,17 @@ listing = json.loads(output.args[0])
 ```
 
 - Call a node by its ID on a class clone with an empty hidden holder, as above.
-  A called node leaves the calling node's progress bar alone.
+  A called node leaves the progress bar of the calling node alone.
 - A node that takes input lists, such as **Chat: Ask**, takes every input as a
   one-item list; only its media inputs hold several items.
-- Read a dropdown's choices from the node's schema, such as
+- Read the choices of a dropdown from the schema of the node, such as
   `/object_info/OpenRouterChatAsk`, instead of copying them.
 - Read a model's limits with **Model: Info**.
 - A failed request raises an error whose `code` names its kind, such as
   `rate_limited`, `timeout`, or `uncertain`. Check `code`, not the message
   text, which can change.
-- Do not send a failed paid request again: it may have run and been billed.
+- Do not send a failed paid request again: it may have run, and OpenRouter may
+  have billed it.
 
 ## Update or remove
 
@@ -236,9 +241,8 @@ settings, and job records.
 
 ## Development
 
-### Setup
-
-Point the checks at ComfyUI in `.mise.local.toml`, which Git ignores:
+Development needs mise. `.mise.local.toml`, which Git ignores, names the
+ComfyUI install that the type checker and the schema export read:
 
 ```toml
 [env]
@@ -246,105 +250,41 @@ COMFYUI_PATH = "/path/to/ComfyUI"
 COMFYUI_PYTHON = "/path/to/ComfyUI/.venv/bin/python"
 ```
 
-Then install the tools, dependencies, Semgrep rules, and Git hooks:
+`mise run setup` installs the tools, the locked dependencies, the gspot tools,
+and the Git hooks, and `mise run deps` puts the ComfyUI install on the path of
+the project environment.
+
+gspot runs every check, and the Git hooks run it on each commit and push:
 
 ```shell
-mise trust && mise run repo:setup
+bun run --no-install gspot check
+bun run --no-install gspot check --fix
 ```
+
+`AGENTS.md` lists the rules gspot installs. Change the settings in
+`gspot.toml` only with `gspot set`, `add`, `remove`, `ignore`, and `unignore`.
+
+| Change                                    | Then run                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------- |
+| Python code                               | Restart ComfyUI.                                                          |
+| `web/scripts/`                            | `mise run comfy:frontend:build`, and commit both outputs.                 |
+| A node or a workflow description          | `mise run comfy:workflows:build`, and commit the files it writes.         |
+| The runtime dependencies of the extension | `uv run --no-sync python -m scripts.dependencies`, and commit the output. |
+
+The hooks check that the built browser files match `web/scripts/`, and that
+every node has a help page naming its real inputs and sits in an OpenRouter
+menu. They also check that the examples and subgraphs match their
+descriptions, and that `requirements.txt` lists the runtime dependencies of
+`pyproject.toml`.
 
 ### Generated files
 
-```shell
-mise run repo:deps:export          # Regenerate requirements.txt from pyproject.toml
-mise run comfy:frontend:build      # Build the browser files
-mise run comfy:workflows:build     # Build the 13 example workflows
-```
-
-The example workflows are generated from `scripts/workflows/descriptions/`:
-one module per category, the group notes in `notes.py`, and the titles in
-`texts.py`. The build reads the node definitions through ComfyUI's Python. It
-also writes every subgraph to `subgraphs/`, which ComfyUI lists under
-**Subgraph Blueprints** in its node library.
-
-### Full check
-
-```shell
-mise run repo:check                # Run every check below
-```
-
-This runs `repo:deps:verify`, `repo:format:check`, `repo:lint`, `repo:type`,
-`comfy:frontend:check`, `comfy:nodes:check`, `comfy:workflows:check`,
-`repo:security`, `repo:licenses`, and `repo:links:external`.
-
-### Format
-
-```shell
-mise run repo:format               # Format Python, pyproject.toml, web, and Markdown files
-mise run repo:format:check         # List files that need formatting
-```
-
-This uses Ruff for Python, pyproject-fmt for `pyproject.toml`, and Prettier for
-web and Markdown files.
-
-### Lint
-
-```shell
-mise run repo:lint                 # Run every linter
-```
-
-- `repo:lint:policy`: repository structure, naming, and function rules.
-- `repo:lint:python`: Ruff, the custom Python rules, import-linter, pydoclint,
-  interrogate, deptry, and vulture.
-- `repo:lint:frontend`: ESLint, naming, stylelint, knip, madge, and jscpd.
-- `repo:lint:shell`, `repo:lint:hooks`, and `repo:lint:mise`: shell syntax,
-  ShellCheck, shfmt, and the shell rules.
-- `repo:lint:docs`: markdownlint, typos, and local links.
-- `repo:lint:quality`: the quality tools and their configuration.
-
-### Types
-
-```shell
-mise run repo:type                 # Check Python and TypeScript types
-```
-
-This runs basedpyright in strict mode against your ComfyUI installation, and
-`tsc` for the browser code.
-
-### Generated-file checks
-
-```shell
-mise run comfy:frontend:check      # The browser files match their source
-mise run comfy:nodes:check         # The help pages and menus match the nodes
-mise run comfy:workflows:check     # The workflows match their descriptions, and the README links each one
-```
-
-The workflow check also requires every node to appear in at least one
-workflow.
-
-### Security and licenses
-
-```shell
-mise run repo:security             # Run the secret, code, and dependency scanners
-mise run repo:licenses             # Check dependency licenses
-```
-
-`repo:security` runs Gitleaks, Bearer, Bandit, the Python and Bun advisory
-audits, Semgrep with the pinned rules, and CodeQL for Python and the browser
-code.
-
-### Git hooks
-
-`mise run repo:setup` installs the hooks:
-
-- **pre-commit** checks for private files and staged secrets, then runs the
-  source, formatting, type, and browser-file checks.
-- **commit-msg** checks the [conventional
-  commit](https://www.conventionalcommits.org/) format, `type(scope): subject`.
-- **pre-push** runs the full check.
-
-To skip a run, set `SKIP_HOOKS=1`. To skip only part of it, set `SKIP_LINT=1`
-(the pre-commit checks), `SKIP_ENV_CHECK=1` (the private-file check), or
-`SKIP_COMMITLINT=1` (the commit message check).
+The build writes the example workflows from `scripts/workflows/descriptions/`:
+one module per category, the group notes in `notes.py`, the titles in
+`texts.py`, and the shared node and model IDs in `ids.py`. The build reads the
+node definitions through the Python of ComfyUI. It also writes every subgraph
+to `subgraphs/`, which ComfyUI lists under **Subgraph Blueprints** in its node
+library.
 
 ### Test a change
 
@@ -354,8 +294,8 @@ workflows with inexpensive models.
 
 ### Code layout
 
-`src/` holds only packages. The package's `__init__.py` holds the `Extension`
-class ComfyUI loads, and imports the nodes and routes when ComfyUI calls it.
+`src/` holds only packages. The `__init__.py` of the extension holds the
+`Extension` class that ComfyUI loads.
 
 | Package      | Holds                                                                               |
 | ------------ | ----------------------------------------------------------------------------------- |
@@ -364,7 +304,7 @@ class ComfyUI loads, and imports the nodes and routes when ComfyUI calls it.
 | `openrouter` | Every request to OpenRouter, the model check, and the one module that sends the key |
 | `settings`   | The private settings, their local routes, and the checks that keep them local       |
 | `storage`    | The private files: settings, the saved key, and video job records                   |
-| `types`      | Records, type aliases, JSON parsing, and the `OpenRouterError` every message uses   |
+| `state`      | Records, type aliases, JSON parsing, and the `OpenRouterError` every message uses   |
 | `config`     | Constants and messages, with no code                                                |
 
 The build scripts keep their paths in `scripts/paths.py`, the ComfyUI nodes the
@@ -373,54 +313,48 @@ workflows use in `scripts/nodes/host.py`, and their type aliases in
 
 ### Import rules
 
-Each package imports only the packages below it:
+The import rules in `gspot.toml` keep the packages in layers. Each package
+imports only the packages before it:
 
 ```text
-src.nodes
-src.comfy
-src.openrouter | src.settings
-src.storage
-src.types
 src.config
+src.state
+src.storage
+src.openrouter | src.settings
+src.comfy
+src.nodes
 ```
 
-- ComfyUI is imported only in `src/nodes/`, `src/comfy/`, and the package's
-  `__init__.py`.
+- Only `src/nodes/`, `src/comfy/`, and the `__init__.py` of the extension
+  import ComfyUI. The contract in `pyproject.toml` checks this rule.
 - All OpenRouter code is in `src/openrouter/`, and
   `src/openrouter/transport.py` is the one place that sends the key.
-- The import contracts in `pyproject.toml` enforce these rules.
-- Node names, descriptions, and tooltips are in each node's `io.Schema` call.
+- Node names, descriptions, and tooltips are in the `io.Schema` call of each
+  node.
 - Every other message is a constant in `src/config/messages/`, or in
   `web/scripts/text.ts` for the dialogs. Every other fixed value, such as a
   limit, a step, a file name, or a route, is a constant in `src/config/`.
 
-### Function names
-
-Every function in `src/`, `scripts/`, and `__init__.py` starts with a verb from
-the table in `rules/NAMING.md`, or is an `is_` or `has_` predicate. In each
-module and class, private functions come first, `__all__` lists no private
-name, and a function only its own module uses is private. `repo:lint:policy`
-checks all four.
-
 ### Images
 
-The README's and this guide's images are in `docs/images/`:
+The images of the README and of this guide are in `docs/images/`:
 
-- `brand/banner.svg`, `diagrams/node-map.svg`, and the four `badges/*.svg`
-  files are SVG files; edit them as text. They use two palettes: ComfyUI's ink
-  `#211927`, panels `#312C34`, edges `#413B45`, text `#C2BFB9`, and yellow
-  `#F0FF41`, and OpenRouter's indigo `#6366F1`.
+- `docs/images/brand/banner.svg`, `docs/images/diagrams/node-map.svg`, and the
+  four badges in `docs/images/badges/` are SVG files; edit them as text. They
+  use two palettes: the ComfyUI ink `#211927`, panels `#312C34`, edges
+  `#413B45`, text `#C2BFB9`, and yellow `#F0FF41`, and the OpenRouter indigo
+  `#6366F1`.
 - In the node map, a paid node has an indigo bar and a free one a grey bar. An
   arrow is a solid yellow line from an output to the input it feeds; nodes that
   share no link have no arrow.
 - The badges under the banner name the ComfyUI, frontend, and Python versions
   and the license, on ink and grey; update them when those change.
-- `screenshots/image-01-choose-group.png` is the **Choose** group of image-01
-  and its note, at 100% zoom, with link midpoint markers off.
-- `screenshots/chat-ask-node.png` is a new **Chat: Ask** node, 420 pixels
-  wide, at 100% zoom.
-- `screenshots/settings-dialog.png` is the **OpenRouter Settings** dialog with
-  default settings and a saved key.
+- `docs/images/screenshots/image-01-choose-group.png` is the **Choose** group
+  of image-01 and its note, at 100% zoom, with link midpoint markers off.
+- `docs/images/screenshots/chat-ask-node.png` is a new **Chat: Ask** node, 420
+  pixels wide, at 100% zoom.
+- `docs/images/screenshots/settings-dialog.png` is the **OpenRouter Settings**
+  dialog with default settings and a saved key.
 
 Keep each image under 100 KB, and give it alt text.
 
@@ -428,19 +362,19 @@ Keep each image under 100 KB, and give it alt text.
 
 - **A message:** edit its constant in `src/config/messages/`, and its entry
   under [troubleshooting](#troubleshooting) if it has one.
-- **A node's labels or tooltips:** edit its `io.Schema` call in `src/nodes/`,
+- **The labels or tooltips of a node:** edit its `io.Schema` call in `src/nodes/`,
   then its help page in `web/docs/`.
 - **The dialogs:** edit `web/scripts/text.ts`, then rebuild the browser files.
 - **A workflow's notes:** edit `scripts/workflows/descriptions/notes.py`; for
   titles, `texts.py`; for nodes, models, or prompts, the workflow's module. Then
   rebuild the workflows.
-- **A node's default model:** edit `src/config/generation/models.py`, then the
-  table under [models](#models) and the node's help page.
+- **The default model of a node:** edit `src/config/generation/models.py`,
+  then the table under [models](#models) and the help page of the node.
 
 ## Package and publish
 
-The Comfy Registry package is made with
-[comfy-cli](https://github.com/Comfy-Org/comfy-cli). These steps use version
+[comfy-cli](https://github.com/Comfy-Org/comfy-cli) makes the Comfy Registry
+package. These steps use version
 1.20.0.
 
 1. Create a publisher and a publishing key in the
@@ -451,7 +385,7 @@ The Comfy Registry package is made with
 3. Rebuild the generated files:
 
     ```sh
-    mise run repo:deps:export
+    uv run --no-sync python -m scripts.dependencies
     mise run comfy:frontend:build
     mise run comfy:workflows:build
     ```
@@ -464,8 +398,8 @@ The Comfy Registry package is made with
     mise run comfy:release:package
     ```
 
-    This runs the full check, builds `node.zip` with `comfy node pack`, lists
-    its contents, and scans it for secrets.
+    This runs `bun run --no-install gspot check`, builds `node.zip` with
+    `comfy node pack`, lists its contents, and scans it for secrets.
 
 6. Publish:
 
@@ -485,46 +419,46 @@ you packaged.
 
 Most messages say what to do. These need more.
 
-### Set your OpenRouter API key in OpenRouter Settings
+### `Set your OpenRouter API key in OpenRouter Settings`
 
 Save the key in **OpenRouter Settings**, or set `OPENROUTER_API_KEY` where
 ComfyUI starts and restart.
 
-### OpenRouter did not accept the API key
+### `OpenRouter did not accept the API key`
 
 `OPENROUTER_API_KEY` takes precedence over the saved key; check both.
 
-### OpenRouter blocked this request
+### `OpenRouter blocked this request`
 
 Moderation, a guardrail on your account or key, or the key's permissions
 blocked it; the message says which.
 
-### OpenRouter could not serve this model
+### `OpenRouter could not serve this model`
 
 The model is down, or the key is not allowed to use it.
 
-### No provider can take this request
+### `No provider can take this request`
 
-If **Request Options** is connected, loosen its provider lists, `zdr`, or
+If you connect **Request Options**, loosen its provider lists, `zdr`, or
 `max_prompt_price` and `max_completion_price`.
 
-### The model's provider failed to answer
+### `The model's provider failed to answer`
 
 A failed image request is not billed.
 
-### OpenRouter is limiting requests
+### `OpenRouter is limiting requests`
 
-Wait a moment and run again, or run fewer paid nodes at once. Nothing is sent
-again for you.
+Wait a moment and run again, or run fewer paid nodes at once. The extension
+sends nothing again for you.
 
-### That OpenRouter setting cannot be changed here
+### `That OpenRouter setting cannot be changed here`
 
 Reload the window.
 
-### OpenRouter's settings file has an unknown setting
+### `OpenRouter's settings file has an unknown setting`
 
 Delete the settings file to return to the defaults.
 
-### An OpenRouter state file is larger than expected
+### `An OpenRouter state file is larger than expected`
 
 Delete it; a video job record can go once you have its video.

@@ -1,0 +1,9 @@
+[project]
+name = "tools"
+version = "0.0.0"
+requires-python = "==3.13.16"
+dependencies = ["deptry==0.25.1", "pydoclint==0.9.1", "ruff==0.16.8", "semgrep==1.178.0", "vulture==2.16"]
+
+[tool.uv]
+package = false
+exclude-newer = "7 days"

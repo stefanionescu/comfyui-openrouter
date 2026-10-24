@@ -1,0 +1,15 @@
+{
+    "versionGroups": [
+        {
+            "label": "A workspace package is versioned by its own release, and a private root has no version.",
+            "dependencyTypes": ["local"],
+            "isIgnored": true
+        },
+        {
+            "label": "Every dependency resolves to one version across the workspace.",
+            "packages": ["**"],
+            "dependencies": ["**"],
+            "policy": "sameRange"
+        }
+    ]
+}

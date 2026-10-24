@@ -1,0 +1,19 @@
+# The other selected tools check files without a known schema.
+ignoreErrors: true
+customCatalog:
+  schemas:
+    - name: mise
+      description: The mise settings file
+      fileMatch:
+        - mise.toml
+        - .mise.toml
+        - .mise/conf.d/*.toml
+        - .config/mise/config.toml
+        - .config/mise/conf.d/*.toml
+        - .gspot/mise.toml
+      location: https://mise.jdx.dev/schema/mise.json
+    - name: gspot
+      description: The gspot settings file
+      fileMatch:
+        - gspot.toml
+      location: .gspot/gspot.schema.json

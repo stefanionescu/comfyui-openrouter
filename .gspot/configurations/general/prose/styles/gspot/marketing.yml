@@ -1,0 +1,26 @@
+extends: existence
+message: "Marketing word '%s'. Say what it does."
+level: error
+ignorecase: true
+tokens:
+    - robust
+    - seamless
+    - seamlessly
+    - powerful
+    - easily
+    - simply
+    - elegant
+    - blazing
+    - cutting-edge
+    - state-of-the-art
+    - world-class
+    - best-in-class
+    - enhanced
+    - comprehensive
+    - leverage
+    - leverages
+    - leveraging
+    - streamline
+    - streamlined
+    - effortless
+    - effortlessly

@@ -1,0 +1,8 @@
+# Adapted from Microsoft.Percentages; see ../LICENSES.md.
+extends: existence
+message: Use a numeral plus the units.
+link: https://learn.microsoft.com/en-us/style-guide/numbers
+nonword: true
+level: error
+tokens:
+    - \b[a-zA-Z]+\spercent\b

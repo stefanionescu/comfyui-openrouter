@@ -1,0 +1,6 @@
+extends: occurrence
+scope: list
+token: \b\w+\b
+message: A list item longer than 45 words. Split it or make it a paragraph.
+level: error
+max: 45

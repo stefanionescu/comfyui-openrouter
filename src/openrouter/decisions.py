@@ -1,17 +1,17 @@
 """Send one decision request and read each answer in question order."""
 
-from __future__ import annotations
+from dataclasses import dataclass
 
-from .transport import send_json
-from typing import TYPE_CHECKING
+from ..state import Json
 from .models import validate_model
-from pydantic import ValidationError
 from .options import build_request_body
-from ..types.replies import DecisionReply
-from ..config.openrouter import ENDPOINT_URLS
-from ..config.messages.run import REPLY_UNREADABLE
-from ..types.errors import ErrorCode, OpenRouterError
-from ..types.decisions import (
+from .transport import send_json, read_reply
+from ..state.errors import ErrorCode, OpenRouterError
+from ..state.replies import AnswerReply, DecisionReply
+from ..state.settings import Configuration
+from ..state.decisions import (
+    Answer,
+    Question,
     AnswerSet,
     ScoreAnswer,
     YesNoAnswer,
@@ -19,27 +19,24 @@ from ..types.decisions import (
     ScoreQuestion,
     YesNoQuestion,
     ChoiceQuestion,
+    DecisionRequest,
 )
-
-if TYPE_CHECKING:
-    from ..types import Json
-    from ..types.replies import AnswerReply
-    from ..types.settings import Settings, Configuration
-    from ..types.decisions import Answer, Question, DecisionRequest
+from ..config.openrouter import ENDPOINT_URLS
+from ..config.messages.run import REPLY_UNREADABLE
 
 # The wire type of each question kind.
-WIRE_TYPES = {ChoiceQuestion: "choice", YesNoQuestion: "noul", ScoreQuestion: "score"}
+WIRE_TYPES = {ChoiceQuestion: 'choice', YesNoQuestion: 'noul', ScoreQuestion: 'score'}
 
 
 def _describe_question(question: Question) -> dict[str, Json]:
     """Write one question as Jev reads it; a choice option without a description sends null."""
-    described: dict[str, Json] = {"type": WIRE_TYPES[type(question)], "instructions": question.instructions}
+    described: dict[str, Json] = {'type': WIRE_TYPES[type(question)], 'instructions': question.instructions}
     if isinstance(question, ChoiceQuestion):
-        described["criteria"] = {key: description or None for key, description in question.options}
+        described['criteria'] = {key: description or None for key, description in question.options}
     elif isinstance(question, ScoreQuestion):
-        described["criteria"] = list(question.levels)
+        described['criteria'] = list(question.levels)
     elif question.yes_means or question.no_means:
-        described["criteria"] = {"true": question.yes_means, "false": question.no_means}
+        described['criteria'] = {'true': question.yes_means, 'false': question.no_means}
     return described
 
 
@@ -59,34 +56,32 @@ def _read_answer(question: Question, reply: AnswerReply | None) -> Answer:
     raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE)
 
 
+@dataclass(frozen=True, slots=True)
 class DecisionOperation:
-    """One decision request; its questions and situation were checked when they were built."""
+    """One decision request; Decision: Add Question checks each question and Decision: Ask the situation.
 
-    def __init__(self, request: DecisionRequest) -> None:
-        """Keep the request to send."""
-        self.request = request
+    Attributes:
+        request: The request to send.
 
-    def validate(self, settings: Settings) -> None:
-        """Accept the request: Decision: Add Question checks each question and Decision: Ask the situation."""
+    """
+
+    request: DecisionRequest
 
     async def send(self, configuration: Configuration) -> AnswerSet:
         """Check the model, send the situation and questions, and read the answers in question order."""
         request = self.request
-        await validate_model(request.model_id, "decisions", configuration.settings)
+        await validate_model(request.model_id, 'decisions', configuration.settings)
         questions: dict[str, Json] = {
             question.name: _describe_question(question) for question in request.questions.questions
         }
-        body: dict[str, Json] = {"model": request.model_id, "state": request.state, "questions": questions}
+        body: dict[str, Json] = {'model': request.model_id, 'state': request.state, 'questions': questions}
         document = await send_json(
-            ENDPOINT_URLS["decisions"], build_request_body(body, request.options, "decisions"), configuration
+            ENDPOINT_URLS['decisions'], build_request_body(body, request.options, 'decisions'), configuration
         )
-        try:
-            reply = DecisionReply.model_validate(document)
-        except ValidationError:
-            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        reply = read_reply(DecisionReply, document)
         return AnswerSet(
             tuple(_read_answer(question, reply.answers.get(question.name)) for question in request.questions.questions)
         )
 
 
-__all__ = ["DecisionOperation"]
+__all__ = ['DecisionOperation']

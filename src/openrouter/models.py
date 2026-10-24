@@ -1,16 +1,17 @@
-"""Check a model against OpenRouter's public listings before a request is sent; nothing here needs the key."""
+"""Check a model against OpenRouter's public listings before a node sends a request; nothing here needs the key."""
 
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING, cast
 import asyncio
 import weakref
-from typing import cast, TYPE_CHECKING
+
 from .transport import download_listing
+from ..state.errors import ErrorCode, OpenRouterError
+from ..state.models import Model, Limits, ModelReply, ImageModelReply, VideoModelsReply, ReasoningModelsReply
 from ..config.patterns import MODEL_ID_PATTERN
-from ..types.errors import ErrorCode, OpenRouterError
-from ..config.openrouter import LISTING_URLS, FIELD_LABELS, MEDIA_LABELS, MODEL_OUTPUTS, ENDPOINT_LABELS
-from ..types.models import Model, Limits, ModelReply, ImageModelReply, VideoModelsReply, ReasoningModelsReply
+from ..config.openrouter import FIELD_LABELS, LISTING_URLS, MEDIA_LABELS, MODEL_OUTPUTS, ENDPOINT_LABELS
 from ..config.messages.models import (
     MODEL_KIND,
     MODEL_EMPTY,
@@ -22,13 +23,15 @@ from ..config.messages.models import (
 )
 
 if TYPE_CHECKING:
-    from ..types.models import VideoModel
-    from ..types.settings import Settings
-    from ..types import Json, Reply, Endpoint
     from collections.abc import Mapping, Iterable
 
+    from ..state import Json, Reply, Endpoint
+    from ..state.models import VideoModel
+    from ..state.settings import Settings
+
 MODEL_ID = re.compile(MODEL_ID_PATTERN)
-# Each listing is read once per ComfyUI session; an unknown ID is looked up again, since it may be fixed.
+# The module reads each listing once per ComfyUI session. It looks up an unknown ID again, because a person may
+# correct the ID, or OpenRouter may list it later.
 _MODELS: dict[str, Model] = {}
 _IMAGE_LIMITS: dict[str, Limits | None] = {}
 _VIDEO_MODELS: dict[str, VideoModel] = {}
@@ -53,24 +56,24 @@ def _delete_read(reads: dict[str, asyncio.Task[Reply | None]], url: str, read: a
 async def _read_listing[T: Reply](url: str, reply: type[T], settings: Settings) -> T | None:
     """Read one public listing, sharing the read with every caller that asks for it at the same time.
 
-    A task belongs to its event loop, and ComfyUI runs each prompt on a new one, so the reads in flight are kept
-    per loop. A caller's cancel leaves the read running for the others.
+    A task belongs to its event loop, and ComfyUI runs each prompt on a new one, so the module keeps the reads in
+    flight per loop. A caller's cancel leaves the read running for the others.
     """
     reads = _READS.setdefault(asyncio.get_running_loop(), {})
     task = reads.get(url)
     if task is None:
         task = reads[url] = cast(
-            "asyncio.Task[Reply | None]", asyncio.create_task(download_listing(url, reply, settings))
+            'asyncio.Task[Reply | None]', asyncio.create_task(download_listing(url, reply, settings))
         )
         task.add_done_callback(lambda done: _delete_read(reads, url, done))
-    return cast("T | None", await asyncio.shield(task))
+    return cast('T | None', await asyncio.shield(task))
 
 
 def _read_range(value: Json) -> tuple[float, float] | None:
-    """Read a range OpenRouter lists as {"min", "max"} or as a pair."""
+    """Read a range OpenRouter lists as an object with `min` and `max`, or as a pair."""
     if isinstance(value, dict):
-        low, high = value.get("min"), value.get("max")
-    elif isinstance(value, list) and len(value) == len(("min", "max")):
+        low, high = value.get('min'), value.get('max')
+    elif isinstance(value, list) and len(value) == len(('min', 'max')):
         low, high = value
     else:
         return None
@@ -86,54 +89,54 @@ def _build_video_limits(video: VideoModel, parameters: frozenset[str]) -> Limits
     providers list it.
     """
     lists = {
-        "resolution": video.supported_resolutions,
-        "aspect_ratio": video.supported_aspect_ratios,
-        "duration": tuple(str(duration) for duration in video.supported_durations or ()) or None,
+        'resolution': video.resolutions,
+        'aspect_ratio': video.aspect_ratios,
+        'duration': tuple(str(duration) for duration in video.durations or ()) or None,
     }
     choices = {field: values for field, values in lists.items() if values is not None}
-    numbers = {"upscale_factor": _read_range(video.upscale_factor), "creativity": _read_range(video.creativity)}
+    numbers = {'upscale_factor': _read_range(video.upscale_factor), 'creativity': _read_range(video.creativity)}
     ranges = {field: bounds for field, bounds in numbers.items() if bounds is not None}
     flags = {
-        "generate_audio": video.generate_audio is not False,
-        "seed": video.seed if video.seed is not None else "seed" in parameters,
+        'generate_audio': video.generate_audio is not False,
+        'seed': video.seed if video.seed is not None else 'seed' in parameters,
     }
-    fields = {*choices, *ranges, *(video.supported_frame_images or ()), *(name for name, on in flags.items() if on)}
+    fields = {*choices, *ranges, *(video.frame_images or ()), *(name for name, on in flags.items() if on)}
     return Limits(frozenset(fields), choices, ranges, frozenset(video.allowed_passthrough_parameters))
 
 
 async def _read_efforts(model_id: str, settings: Settings) -> tuple[str, ...]:
     """Read the reasoning efforts one model takes from OpenRouter's list of reasoning models; empty when unlisted."""
     if not _EFFORTS:
-        reply = await _read_listing(LISTING_URLS["REASONING_MODELS"], ReasoningModelsReply, settings)
+        reply = await _read_listing(LISTING_URLS['REASONING_MODELS'], ReasoningModelsReply, settings)
         models = reply.models if reply else ()
-        _EFFORTS.update({item.id: item.reasoning.supported_efforts or () for item in models if item.reasoning})
+        _EFFORTS.update({item.id: item.reasoning.efforts or () for item in models if item.reasoning})
     return _EFFORTS.get(model_id, ())
 
 
 async def read_model(model_id: str, settings: Settings) -> Model:
     """Read what OpenRouter lists for one model, refusing an empty ID and one OpenRouter does not list.
 
-    A length OpenRouter lists as 0 or leaves out is not stated, so it reads as None. The reasoning efforts are read
-    only for a model whose providers take reasoning.
+    A length OpenRouter lists as 0 or leaves out is not stated, so it reads as None. The function reads the reasoning
+    efforts only for a model whose providers take reasoning.
     """
     if not model_id:
         raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_EMPTY)
     if model_id not in _MODELS and MODEL_ID.match(model_id):
-        reply = await _read_listing(LISTING_URLS["MODEL"].format(model_id=model_id), ModelReply, settings)
+        reply = await _read_listing(LISTING_URLS['MODEL'].format(model_id=model_id), ModelReply, settings)
         if reply is not None:
             listing = reply.model
             endpoints = listing.endpoints
-            parameters = frozenset(parameter for item in endpoints for parameter in item.supported_parameters)
+            parameters = frozenset(parameter for item in endpoints for parameter in item.parameters)
             _MODELS[model_id] = Model(
                 inputs=frozenset(listing.architecture.input_modalities),
                 outputs=frozenset(listing.architecture.output_modalities),
                 parameters=parameters,
-                efforts=await _read_efforts(model_id, settings) if "reasoning" in parameters else (),
+                efforts=await _read_efforts(model_id, settings) if 'reasoning' in parameters else (),
                 context_length=max((item.context_length for item in endpoints if item.context_length), default=None),
                 max_completion_tokens=max(
                     (item.max_completion_tokens for item in endpoints if item.max_completion_tokens), default=None
                 ),
-                has_voice_cloning=any(item.supports_voice_cloning for item in endpoints),
+                has_voice_cloning=any(item.has_voice_cloning for item in endpoints),
                 providers=tuple(dict.fromkeys(item.tag for item in endpoints if item.tag)),
             )
     model = _MODELS.get(model_id)
@@ -163,15 +166,15 @@ async def read_image_limits(model_id: str, settings: Settings) -> Limits | None:
     The provider options are those any of its providers takes.
     """
     if model_id not in _IMAGE_LIMITS:
-        reply = await _read_listing(LISTING_URLS["IMAGE_MODEL"].format(model_id=model_id), ImageModelReply, settings)
+        reply = await _read_listing(LISTING_URLS['IMAGE_MODEL'].format(model_id=model_id), ImageModelReply, settings)
         endpoints = reply.endpoints if reply else ()
-        parameters = [item for endpoint in endpoints for item in endpoint.supported_parameters.items()]
+        parameters = [item for endpoint in endpoints for item in endpoint.parameters.items()]
         choices: dict[str, tuple[str, ...]] = {}
         ranges: dict[str, tuple[float, float]] = {}
         for field, parameter in parameters:
-            if parameter.type == "enum":
+            if parameter.type == 'enum':
                 choices[field] = tuple(dict.fromkeys((*choices.get(field, ()), *parameter.values)))
-            elif parameter.type == "range" and parameter.min is not None and parameter.max is not None:
+            elif parameter.type == 'range' and parameter.min is not None and parameter.max is not None:
                 low, high = ranges.get(field, (parameter.min, parameter.max))
                 ranges[field] = (min(low, parameter.min), max(high, parameter.max))
         fields = frozenset(field for field, _parameter in parameters)
@@ -186,7 +189,7 @@ async def read_video_limits(model_id: str, parameters: frozenset[str], settings:
     The parameters are the request fields the model's providers list, which settle what the video list leaves empty.
     """
     if not _VIDEO_MODELS:
-        reply = await _read_listing(LISTING_URLS["VIDEO_MODELS"], VideoModelsReply, settings)
+        reply = await _read_listing(LISTING_URLS['VIDEO_MODELS'], VideoModelsReply, settings)
         _VIDEO_MODELS.update({video.id: video for video in (reply.models if reply else ())})
     video = _VIDEO_MODELS.get(model_id)
     return _build_video_limits(video, parameters) if video is not None else None
@@ -200,13 +203,13 @@ def validate_limits(model_id: str, limits: Limits, values: Mapping[str, Json]) -
             raise OpenRouterError(ErrorCode.INVALID_INPUT, MODEL_FIELD.format(model=model_id, field=name))
         choices = limits.choices.get(field)
         if choices is not None and str(value) not in choices:
-            message = MODEL_VALUE.format(model=model_id, field=name, values=", ".join(choices))
+            message = MODEL_VALUE.format(model=model_id, field=name, values=', '.join(choices))
             raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
         bounds = limits.ranges.get(field)
         if bounds is not None and isinstance(value, int | float) and not bounds[0] <= value <= bounds[1]:
-            low, high = (f"{bound:g}" for bound in bounds)
+            low, high = (f'{bound:g}' for bound in bounds)
             message = MODEL_RANGE.format(model=model_id, field=name, minimum=low, maximum=high)
             raise OpenRouterError(ErrorCode.INVALID_INPUT, message)
 
 
-__all__ = ["read_image_limits", "read_model", "read_video_limits", "validate_limits", "validate_model"]
+__all__ = ['read_image_limits', 'read_model', 'read_video_limits', 'validate_limits', 'validate_model']

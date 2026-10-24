@@ -1,0 +1,30 @@
+rules:
+  - id: gspot.bash.curl-pipe-shell
+    languages:
+      - bash
+    severity: ERROR
+    message: A script is downloaded and run in one step; nobody can read what runs.
+      Download it to a file, check it, then run it.
+    pattern-either:
+      - pattern: curl ... | sh ...
+      - pattern: curl ... | sudo sh ...
+      - pattern: sh <(curl ...)
+      - pattern: sh -c "$(curl ...)"
+      - pattern: curl ... | bash ...
+      - pattern: curl ... | sudo bash ...
+      - pattern: bash <(curl ...)
+      - pattern: bash -c "$(curl ...)"
+      - pattern: wget ... | sh ...
+      - pattern: wget ... | sudo sh ...
+      - pattern: sh <(wget ...)
+      - pattern: sh -c "$(wget ...)"
+      - pattern: wget ... | bash ...
+      - pattern: wget ... | sudo bash ...
+      - pattern: bash <(wget ...)
+      - pattern: bash -c "$(wget ...)"
+  - id: gspot.bash.eval
+    languages:
+      - bash
+    severity: ERROR
+    message: eval runs a string as code; build the command as an array instead.
+    pattern: eval ...

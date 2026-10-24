@@ -3,30 +3,32 @@
 from __future__ import annotations
 
 import re
-from .transport import send_json
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
+
 from .models import validate_model
-from pydantic import ValidationError
 from .options import build_request_body
 from .operation import validate_upload_size
-from ..config.openrouter import ENDPOINT_URLS
-from ..config.patterns import LANGUAGE_PATTERN
-from ..types.replies import TranscriptionReply
-from ..config.messages.inputs import LANGUAGE_CODE
-from ..types.errors import ErrorCode, OpenRouterError
-from ..types.audio import Segment, TranscriptionResult
-from ..config.messages.run import REPLY_EMPTY, REPLY_UNREADABLE
+from .transport import send_json, read_reply
+from ..state.audio import Segment, TranscriptionResult
 from ..config.units import MINUTES_PER_HOUR, SECONDS_PER_MINUTE, MILLISECONDS_PER_SECOND
+from ..state.errors import ErrorCode, OpenRouterError
+from ..state.replies import TranscriptionReply
+from ..config.patterns import LANGUAGE_PATTERN
+from ..config.openrouter import ENDPOINT_URLS
+from ..config.messages.run import REPLY_EMPTY
+from ..config.messages.inputs import LANGUAGE_CODE
 
 if TYPE_CHECKING:
-    from ..types import Json
     from collections.abc import Sequence
-    from ..types.audio import TranscriptionRequest
-    from ..types.settings import Settings, Configuration
+
+    from ..state import Json
+    from ..state.audio import TranscriptionRequest
+    from ..state.settings import Settings, Configuration
 
 LANGUAGE = re.compile(LANGUAGE_PATTERN)
 MILLISECONDS_PER_MINUTE = SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND
-GRANULARITIES = {"segments": ["segment"], "words and segments": ["segment", "word"]}
+GRANULARITIES = {'segments': ['segment'], 'words and segments': ['segment', 'word']}
 
 
 def format_subtitles(segments: Sequence[Segment]) -> str:
@@ -38,18 +40,22 @@ def format_subtitles(segments: Sequence[Segment]) -> str:
             minutes, milliseconds = divmod(round(seconds * MILLISECONDS_PER_SECOND), MILLISECONDS_PER_MINUTE)
             hours, minutes = divmod(minutes, MINUTES_PER_HOUR)
             whole_seconds, rest = divmod(milliseconds, MILLISECONDS_PER_SECOND)
-            times.append(f"{hours:02}:{minutes:02}:{whole_seconds:02},{rest:03}")
-        text = f"[{segment.speaker}] {segment.text}" if segment.speaker else segment.text
-        blocks.append(f"{number}\n{times[0]} --> {times[1]}\n{text}\n")
-    return "\n".join(blocks)
+            times.append(f'{hours:02}:{minutes:02}:{whole_seconds:02},{rest:03}')
+        text = f'[{segment.speaker}] {segment.text}' if segment.speaker else segment.text
+        blocks.append(f'{number}\n{times[0]} --> {times[1]}\n{text}\n')
+    return '\n'.join(blocks)
 
 
+@dataclass(frozen=True, slots=True)
 class TranscriptionOperation:
-    """One transcription request, refused before sending when its language code or clip is out of bounds."""
+    """One transcription request, refused before sending when its language code or clip is out of bounds.
 
-    def __init__(self, request: TranscriptionRequest) -> None:
-        """Keep the request to validate and send."""
-        self.request = request
+    Attributes:
+        request: The request to validate and send.
+
+    """
+
+    request: TranscriptionRequest
 
     def validate(self, settings: Settings) -> None:
         """Refuse a clip above the upload limit and a language that is not a two-letter code."""
@@ -59,24 +65,21 @@ class TranscriptionOperation:
             raise OpenRouterError(ErrorCode.INVALID_INPUT, LANGUAGE_CODE)
 
     async def send(self, configuration: Configuration) -> TranscriptionResult:
-        """Check the model and send the clip; Whisper starts its text and segments with a space, so all is stripped."""
+        """Check the model and send the clip, then strip the space Whisper puts before its text and each segment."""
         request = self.request
-        await validate_model(request.model_id, "transcription", configuration.settings)
-        body: dict[str, Json] = {"model": request.model_id, "input_audio": {"data": request.clip, "format": "wav"}}
+        await validate_model(request.model_id, 'transcription', configuration.settings)
+        body: dict[str, Json] = {'model': request.model_id, 'input_audio': {'data': request.clip, 'format': 'wav'}}
         if request.language:
-            body["language"] = request.language
+            body['language'] = request.language
         if request.temperature > 0:
-            body["temperature"] = request.temperature
+            body['temperature'] = request.temperature
         if request.timestamps in GRANULARITIES:
-            body["response_format"] = "verbose_json"
-            body["timestamp_granularities"] = list(GRANULARITIES[request.timestamps])
+            body['response_format'] = 'verbose_json'
+            body['timestamp_granularities'] = list(GRANULARITIES[request.timestamps])
         document = await send_json(
-            ENDPOINT_URLS["transcription"], build_request_body(body, request.options, "transcription"), configuration
+            ENDPOINT_URLS['transcription'], build_request_body(body, request.options, 'transcription'), configuration
         )
-        try:
-            reply = TranscriptionReply.model_validate(document)
-        except ValidationError:
-            raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_UNREADABLE) from None
+        reply = read_reply(TranscriptionReply, document)
         if not reply.text.strip():
             raise OpenRouterError(ErrorCode.TRANSPORT, REPLY_EMPTY)
         segments = tuple(
@@ -86,4 +89,4 @@ class TranscriptionOperation:
         return TranscriptionResult(reply.text.strip(), segments, words)
 
 
-__all__ = ["TranscriptionOperation", "format_subtitles"]
+__all__ = ['TranscriptionOperation', 'format_subtitles']

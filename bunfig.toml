@@ -1,6 +1,2 @@
 [install]
 auto = "disable"
-
-[run]
-bun = true
-shell = "bun"

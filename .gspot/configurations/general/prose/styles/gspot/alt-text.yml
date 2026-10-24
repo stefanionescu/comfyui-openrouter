@@ -1,0 +1,8 @@
+extends: existence
+message: An image needs an alt attribute; decorative images can use an empty value.
+level: error
+scope: raw
+nonword: true
+tokens:
+  - <img\b(?![^>]*\balt\s*=)[^>]*>
+  - "!\\[(?:Image|Graphic|Picture) of"

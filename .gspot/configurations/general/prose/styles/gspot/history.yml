@@ -1,0 +1,16 @@
+extends: existence
+message: "History in prose: '%s'. Describe the present state."
+level: error
+ignorecase: true
+tokens:
+    - previously
+    - formerly
+    - used to
+    - no longer
+    - refactored from
+    - renamed from
+    - moved from
+    - legacy
+    - was removed
+    - was replaced
+    - migrated from

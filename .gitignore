@@ -25,3 +25,11 @@ node.zip
 # Logs and operating system files
 *.log
 .DS_Store
+
+# >>> gspot managed >>>
+.gspot/node_modules/
+.gspot/.venv/
+.gspot/vale/
+.gspot/state/
+.gspot/.yarnrc-install.yml
+# <<< gspot managed <<<

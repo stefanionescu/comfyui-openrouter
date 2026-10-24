@@ -1,0 +1,8 @@
+extends: existence
+message: "Version range '%s'. Pin the version the rule applies to, or drop it."
+level: error
+nonword: true
+tokens:
+    - "\\bv?\\d+\\.x\\b"
+    - "\\d+\\+ or (later|newer)"
+    - "(?<!\\bv?\\d+(?:\\.\\d+)*(?:-[\\w.-]+)?(?:\\+[\\w.-]+)?\\s+)\\bor (later|newer|higher)(?![-\\w])"

@@ -1,1 +1,0 @@
-"""Naming quality configuration."""

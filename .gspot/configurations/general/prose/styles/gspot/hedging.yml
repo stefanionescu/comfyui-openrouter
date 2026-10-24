@@ -1,0 +1,22 @@
+extends: existence
+message: "Hedge '%s'. Say when, or drop it."
+level: error
+ignorecase: true
+tokens:
+    - probably
+    - usually
+    - generally
+    - typically
+    - where practical
+    - when practical
+    - where possible
+    - when possible
+    - if needed
+    - as needed
+    - if possible
+    - in most cases
+    - for the most part
+    - somewhat
+    - fairly
+    - quite
+    - very

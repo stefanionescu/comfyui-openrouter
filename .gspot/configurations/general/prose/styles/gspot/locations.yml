@@ -1,0 +1,14 @@
+extends: existence
+message: "Relative location '%s'. Name the thing, not where it sits."
+level: error
+ignorecase: true
+tokens:
+    - see above
+    - see below
+    - as mentioned above
+    - as noted above
+    - as described below
+    - the following section
+    - the previous section
+    - later in this document
+    - earlier in this document

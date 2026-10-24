@@ -1,1 +1,1 @@
-"""The records a workflow is described with, their placement on the page and the saved JSON."""
+"""The records that describe a workflow, their placement on the page, and the saved JSON."""

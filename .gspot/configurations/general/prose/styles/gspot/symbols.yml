@@ -1,0 +1,8 @@
+extends: existence
+message: "Decorative symbol or emoji '%s'. Use words."
+level: error
+nonword: true
+tokens:
+    - "[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]"
+    - "\\s(?:\\u2192|\\u2190|\\u21D2)\\s"
+    - "\\u2705|\\u274C|\\u26A0"

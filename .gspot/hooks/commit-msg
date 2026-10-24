@@ -1,0 +1,6 @@
+#!/bin/sh
+case "$1" in /*|[A-Za-z]:*) message=$1 ;; *) message="$PWD/$1" ;; esac
+if command -v cygpath >/dev/null 2>&1; then message=$(cygpath -w "$message"); fi
+set -- "$message"
+command -v bun >/dev/null 2>&1 || { echo 'bun is not installed. Install Bun, then run: bun install. Install gspot with: bun add --dev --exact @gspothq/cli@0.3.7' >&2; exit 2; }
+exec bun run --no-install gspot check --hook commit-msg -- "$1"

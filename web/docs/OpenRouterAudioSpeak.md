@@ -26,7 +26,7 @@ a voice from a sample.
 ## Use
 
 1. Write the text, and type the model ID and voice.
-2. Connect `audio` to **Save Audio (Advanced)** or **Preview Audio**.
+2. Connect `audio` to `Save Audio (Advanced)` or **Preview Audio**.
 3. Select **Run**.
 
 Examples: **audio-01-triage-a-voicemail** and **audio-02-dub-a-clip**. Gemini

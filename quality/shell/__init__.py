@@ -1,1 +1,0 @@
-"""Shell quality rules."""

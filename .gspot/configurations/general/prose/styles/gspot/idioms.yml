@@ -1,0 +1,21 @@
+extends: existence
+message: "Idiom '%s'. Say the plain thing."
+level: error
+ignorecase: true
+tokens:
+    - belt and suspenders
+    - belt and braces
+    - sanity check
+    - sanity-check
+    - low-hanging fruit
+    - under the hood
+    - out of the box
+    - load-bearing
+    - load bearing
+    - rule of thumb
+    - silver bullet
+    - moving parts
+    - at the end of the day
+    - in a nutshell
+    - touch base
+    - deep dive

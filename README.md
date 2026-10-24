@@ -23,7 +23,7 @@ Run any OpenRouter model in ComfyUI with your own API key.
 ## Requirements
 
 - Python 3.12 or later.
-- ComfyUI 0.34.6 or later, with frontend 1.49.6 or later in the 1.x series.
+- ComfyUI 0.34.6 or later, with frontend 1.49.6 or a later release before 2.0.
 - An OpenRouter API key.
 
 ## Install
@@ -39,7 +39,7 @@ Put the extension in `ComfyUI/custom_nodes/openrouter`, install its
    that holds `main.py`, and put the extension in its `custom_nodes` folder.
 3. Select **Terminal** in the same panel and run:
 
-```sh
+```sh title="Comfy Desktop terminal"
 pip install -r custom_nodes/openrouter/requirements.txt
 ```
 
@@ -47,13 +47,13 @@ pip install -r custom_nodes/openrouter/requirements.txt
 
 From the ComfyUI folder:
 
-```sh
+```sh title="From the ComfyUI folder"
 .venv/bin/python -m pip install -r custom_nodes/openrouter/requirements.txt
 ```
 
 With uv:
 
-```sh
+```sh title="From the ComfyUI folder, with uv"
 uv pip install --python .venv/bin/python -r custom_nodes/openrouter/requirements.txt
 ```
 
@@ -67,7 +67,7 @@ From the ComfyUI folder, in PowerShell:
 
 ### Windows portable
 
-From the folder that holds `ComfyUI` and `python_embeded`, in PowerShell:
+From the folder that holds `ComfyUI` and `python_embedded`, in PowerShell:
 
 ```powershell
 .\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\openrouter\requirements.txt
@@ -78,10 +78,10 @@ To update or remove the extension, see the
 
 ## First run
 
-1. Save your API key in **ComfyUI menu → Extensions → OpenRouter → OpenRouter
-   Settings**.
-2. Open **Browse Templates → openrouter →
-   decision-01-verify-then-escalate** and select **Run**.
+1. Save your API key in **OpenRouter Settings**: in the ComfyUI menu, open
+   **Extensions**, then **OpenRouter**, then **OpenRouter Settings**.
+2. Open **Browse Templates**, choose **openrouter**, then
+   **decision-01-verify-then-escalate**, and select **Run**.
 3. Read the answer in **Answer**, and Jev's check in **Summary**.
 
 To send the same request again, change `run_number`.
@@ -104,7 +104,7 @@ To send the same request again, change `run_number`.
 | [Search: Choose a Hero Image](example_workflows/search-02-choose-a-hero-image.json)                               | A brief                             |
 | [Decision: Verify a Quick Answer, Then Escalate](example_workflows/decision-01-verify-then-escalate.json)         | Notes and a question                |
 
-They are in **Browse Templates → openrouter**. Start with each
+They are in **Browse Templates**, under **openrouter**. Start with each
 workflow's **Start Here** note; each step is a subgraph. Media inputs start
 empty.
 
@@ -135,8 +135,8 @@ The nodes are under **OpenRouter** in the node menu, and each has a help page.
 | [Request Options](web/docs/OpenRouterRequestOptions.md)             | Sets providers, price limits, and extra request fields for paid nodes. | No   |
 | [Model: Info](web/docs/OpenRouterModelInfo.md)                      | Shows what a model reads, makes, and accepts, as JSON.                 | No   |
 
-The decision nodes use OpenRouter's alpha decisions API
-(`/api/alpha/decisions`), which OpenRouter may still change.
+The decision nodes use the alpha decisions API of OpenRouter,
+`/api/alpha/decisions`, which OpenRouter may still change.
 
 ## Models
 
@@ -146,11 +146,11 @@ suffix such as `:nitro`. **Model: Info** shows what any model takes.
 
 ![Chat: Ask on the canvas: the conversation, documents, images, videos, audio, and options sockets; then model set to google/gemini-3.5-flash, reasoning_effort, max_tokens, temperature, outputs, aspect_ratio, voice, pdf_engine, seed, and run_number; and the answer_schema, prompt, and system_prompt boxes at the bottom.](docs/images/screenshots/chat-ask-node.png)
 
-Before sending, the node checks the model against OpenRouter's public listings
-and stops if the ID is unknown, the model makes something else, or it does not
-take what you connected or chose. The error names what the model does take. The
-[advanced guide](ADVANCED.md#models) lists every check and each node's default
-model.
+Before sending, the node checks the model against the public listings of
+OpenRouter. It stops if the ID is unknown, the model makes something else, or
+it does not take what you connected or chose. The error names what the model
+does take. The [advanced guide](ADVANCED.md#models) lists every check and the
+default model of each node.
 
 Each media socket, such as `images`, takes one item, a batch, or a list, and
 everything connected goes in one request, each image at its own size. Join
@@ -158,12 +158,11 @@ several **Load Image** nodes with **Create List**.
 
 ## How a run works
 
-1. The node checks its inputs and the model, and stops before anything is
-   paid.
-2. It sends one request with your key, to one provider. Nothing is sent twice.
-   A video job is recorded, checked until ready, and downloaded.
-3. Nodes connected to an empty output, such as `images` from a text-only model,
-   are skipped.
+1. The node checks its inputs and the model, and stops before you pay anything.
+2. It sends one request with your key, to one provider, and never sends it
+   twice. It records a video job, checks it until it is ready, and downloads it.
+3. ComfyUI skips the nodes connected to an empty output, such as `images` from
+   a text-only model.
 
 The [advanced guide](ADVANCED.md#what-each-node-sends) lists what each node
 sends and returns.
@@ -178,18 +177,19 @@ COMFYUI_PATH = "/path/to/ComfyUI"
 COMFYUI_PYTHON = "/path/to/ComfyUI/.venv/bin/python"
 ```
 
-Install the tools, dependencies, and Git hooks, and run the full check:
+Install the tools, the dependencies, and the Git hooks, then run every check:
 
 ```shell
 mise trust
-mise run repo:setup
-mise run repo:check
+mise run setup
+bun run --no-install gspot check
 ```
 
-Restart ComfyUI after changing Python. After changing the browser code, run
-`mise run comfy:frontend:build`; after changing a workflow description, run
+The hooks run the same checks on each commit and push. Restart ComfyUI after a
+change in Python. After a change in the browser code, run
+`mise run comfy:frontend:build`; after a change in a workflow description, run
 `mise run comfy:workflows:build`. The [advanced guide](ADVANCED.md#development)
-lists every task.
+says more.
 
 ## Common problems
 

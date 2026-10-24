@@ -2,11 +2,12 @@
 
 import os
 from pathlib import Path
+
 from .files import read_file
-from ..types.credentials import Credential
-from ..types.errors import ErrorCode, OpenRouterError
+from ..state.errors import ErrorCode, OpenRouterError
+from ..config.storage import FILE_NAMES, ENVIRONMENT_VARIABLES
 from ..config.security import MAX_CREDENTIAL_CHARACTERS
-from ..config.storage import ENVIRONMENT_VARIABLES, FILE_NAMES
+from ..state.credentials import Credential
 from ..config.messages.settings import KEY_EMPTY, KEY_REQUIRED, KEY_UNREADABLE, KEY_WHITESPACE
 
 
@@ -21,12 +22,12 @@ def parse_credential(value: str) -> Credential:
 
 def read_credential(directory: Path) -> Credential:
     """Prefer the server environment over the private saved key."""
-    if ENVIRONMENT_VARIABLES["KEY"] in os.environ:
-        return parse_credential(os.environ[ENVIRONMENT_VARIABLES["KEY"]])
-    path = directory / FILE_NAMES["CREDENTIAL"]
+    if ENVIRONMENT_VARIABLES['KEY'] in os.environ:
+        return parse_credential(os.environ[ENVIRONMENT_VARIABLES['KEY']])
+    path = directory / FILE_NAMES['CREDENTIAL']
     if path.exists():
         try:
-            return parse_credential(read_file(path, max_bytes=MAX_CREDENTIAL_CHARACTERS).decode("utf-8"))
+            return parse_credential(read_file(path, max_bytes=MAX_CREDENTIAL_CHARACTERS).decode('utf-8'))
         except (OSError, UnicodeError):
             raise OpenRouterError(ErrorCode.CONFIGURATION, KEY_UNREADABLE) from None
     raise OpenRouterError(ErrorCode.AUTHENTICATION, KEY_REQUIRED)
@@ -34,9 +35,9 @@ def read_credential(directory: Path) -> Credential:
 
 def read_credential_source(directory: Path) -> str:
     """Report presence and source without reading or returning the secret."""
-    if ENVIRONMENT_VARIABLES["KEY"] in os.environ:
-        return "environment"
-    return "saved" if (directory / FILE_NAMES["CREDENTIAL"]).is_file() else "missing"
+    if ENVIRONMENT_VARIABLES['KEY'] in os.environ:
+        return 'environment'
+    return 'saved' if (directory / FILE_NAMES['CREDENTIAL']).is_file() else 'missing'
 
 
-__all__ = ["parse_credential", "read_credential", "read_credential_source"]
+__all__ = ['parse_credential', 'read_credential', 'read_credential_source']

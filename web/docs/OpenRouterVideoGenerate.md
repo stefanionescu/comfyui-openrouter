@@ -1,7 +1,7 @@
 # Video: Generate
 
-Makes a video with any video model on OpenRouter, from a prompt, first and last
-frames, or reference media.
+Makes a video with any video model on OpenRouter. It starts from a prompt, from
+first and last frames, or from reference media.
 
 ## Inputs
 
@@ -24,7 +24,7 @@ frames, or reference media.
 | `last_frame`       | One image the video ends on; a batch or list is refused.                               |
 | `options`          | Settings from **Request Options**.                                                     |
 
-`default` or `0` sends nothing. Before anything is paid, the node refuses
+`default` or `0` sends nothing. Before you pay anything, the node refuses
 a `duration`, `resolution`, `aspect_ratio`, `generate_audio`, `upscale_factor`,
 `creativity`, `first_frame`, or `last_frame` the model's video listing does not
 include, naming what it does take.

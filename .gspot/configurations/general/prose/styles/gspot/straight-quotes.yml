@@ -1,0 +1,11 @@
+# Adapted from RedHat.SmartQuotes; see ../LICENSES.md.
+extends: substitution
+message: Do not use smart quotation marks. Use %s rather than %s.
+level: warning
+nonword: true
+scope: raw
+action:
+    name: replace
+swap:
+    ‘|’: "'"
+    “|”: '"'

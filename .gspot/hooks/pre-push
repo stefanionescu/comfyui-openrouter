@@ -1,0 +1,3 @@
+#!/bin/sh
+command -v bun >/dev/null 2>&1 || { echo 'bun is not installed. Install Bun, then run: bun install. Install gspot with: bun add --dev --exact @gspothq/cli@0.3.7' >&2; exit 2; }
+exec bun run --no-install gspot check --hook pre-push -- "$@"

@@ -2,34 +2,26 @@
 
 from __future__ import annotations
 
+from types import MappingProxyType
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from types import MappingProxyType
+
 from scripts.workflows.page.config import GUTTER, NODE_GAP, GROUP_TOP, STACK_GAP, TITLE_HEIGHT, CANVAS_ORIGIN
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
+
     from scripts.workflows.page.graph import Group
 
 
 @dataclass(frozen=True, slots=True)
 class Box:
-    """A node's place on the page."""
+    """The place of a node on the page."""
 
     x: int
     y: int
     width: int
     height: int
-
-    @property
-    def bottom(self) -> int:
-        """The row just below the box."""
-        return self.y + self.height
-
-    @property
-    def right(self) -> int:
-        """The column just right of the box."""
-        return self.x + self.width
 
 
 def _place_group(
@@ -43,10 +35,10 @@ def _place_group(
     top = origin[1]
     if note is not None:
         boxes[note] = Box(origin[0], top + TITLE_HEIGHT, *sizes[note])
-        top = boxes[note].bottom + GUTTER
+        top = boxes[note].y + boxes[note].height + GUTTER
     placed = place_columns(group.columns, sizes, (origin[0] + GUTTER, top + GROUP_TOP))
-    right = max(box.right for box in placed.values()) + GUTTER
-    bottom = max(box.bottom for box in placed.values()) + GUTTER
+    right = max(box.x + box.width for box in placed.values()) + GUTTER
+    bottom = max(box.y + box.height for box in placed.values()) + GUTTER
     return boxes | placed, Box(origin[0], top, right - origin[0], bottom - top)
 
 
@@ -61,7 +53,7 @@ def place_columns(
         width = max(sizes[key][0] for key in column)
         for key in column:
             boxes[key] = Box(x, y, *sizes[key])
-            y = boxes[key].bottom + STACK_GAP
+            y = boxes[key].y + boxes[key].height + STACK_GAP
         x += width + NODE_GAP
     return boxes
 
@@ -87,18 +79,18 @@ def place_stacks(
             boxes |= placed
             frames.append(
                 {
-                    "id": len(frames) + 1,
-                    "title": group.title,
-                    "bounding": [frame.x, frame.y, frame.width, frame.height],
-                    "color": group.colour,
-                    "font_size": 24,
-                    "flags": {},
+                    'id': len(frames) + 1,
+                    'title': group.title,
+                    'bounding': [frame.x, frame.y, frame.width, frame.height],
+                    'color': group.colour,
+                    'font_size': 24,
+                    'flags': {},
                 }
             )
             width = max(width, frame.width)
-            y = frame.bottom + GUTTER
+            y = frame.y + frame.height + GUTTER
         x += width + GUTTER
     return boxes, frames
 
 
-__all__ = ["place_columns", "place_stacks"]
+__all__ = ['place_columns', 'place_stacks']

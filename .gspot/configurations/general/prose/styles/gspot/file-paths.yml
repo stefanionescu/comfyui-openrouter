@@ -1,0 +1,7 @@
+extends: existence
+message: "A file path in prose goes stale: '%s'. Name the concept, or put the path in code formatting only where the reader must open it."
+level: error
+scope: paragraph
+nonword: true
+tokens:
+    - "(?<!`)\\b[a-z0-9_-]+/[a-z0-9_./-]+\\.[a-z]{1,5}\\b(?!`)"

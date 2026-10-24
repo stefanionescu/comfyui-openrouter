@@ -55,13 +55,14 @@ Examples: **chat-01-write-a-product-listing** and
 **chat-02-caption-a-training-set**.
 
 Everything connected to `images`, `videos`, and `audio` goes in one
-request: one item, a batch, a list such as **Load Image (from Folder)** makes,
+request: one item, a batch, a list such as `Load Image (from Folder)` makes,
 or several **Load Image** nodes joined by **Create List**. Images keep their own
 sizes.
 
-Before anything is paid, the node refuses media the model does not read,
-`outputs` it does not make, a sampling setting or `stop` it does not take, a
-`json_schema` it cannot follow, and `max_tokens` above its longest answer. With
+Before you pay anything, the node refuses media the model does not read,
+`outputs` it does not make, and a sampling setting or `stop` it does not take.
+It also refuses a `json_schema` the model cannot follow, and `max_tokens` above
+its longest answer. With
 a sampling setting, `stop`, or `json_schema`, only providers that take every one
 of them answer.
 

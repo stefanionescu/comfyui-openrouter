@@ -1,1 +1,0 @@
-"""Python quality checks."""

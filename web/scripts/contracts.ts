@@ -5,12 +5,12 @@ type HostWidget = NonNullable<HostNode['widgets']>[number];
 
 /** ComfyUI's widgets, with the removal hook the published types do not describe. */
 export type Widget = HostWidget & {
-  onRemove?: () => void;
+    onRemove?: () => void;
 };
 
 export type CanvasNode = {
-  widgets?: Widget[];
-  properties: HostNode['properties'] & {
-    conditionalValues?: Record<string, Widget['value']>;
-  };
+    widgets?: Widget[];
+    properties: HostNode['properties'] & {
+        conditionalValues?: Record<string, Widget['value']>;
+    };
 } & HostNode;

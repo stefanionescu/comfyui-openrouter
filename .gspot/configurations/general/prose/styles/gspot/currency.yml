@@ -1,0 +1,8 @@
+extends: existence
+message: "Ambiguous currency '%s'. Write the ISO code (USD 5)."
+level: error
+scope: paragraph
+nonword: true
+tokens:
+    - "(?<![A-Z])\\$(?:\\d{2,}(?:\\.\\d+)?|\\d\\.\\d+)\\b"
+    - "\\d\\s?(?:dollars|euros|pounds)\\b"

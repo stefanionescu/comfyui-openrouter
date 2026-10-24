@@ -1,0 +1,8 @@
+extends: existence
+message: "Link text '%s' says nothing. Name the destination."
+level: error
+ignorecase: true
+scope: link
+nonword: true
+tokens:
+    - '^(?:here|this|this page|read more|more|click here|link|documentation|docs)$'

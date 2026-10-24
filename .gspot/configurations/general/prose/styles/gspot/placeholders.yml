@@ -1,0 +1,7 @@
+extends: existence
+message: "Placeholder style '%s'. Use <kebab-case> in angle brackets."
+level: error
+nonword: true
+tokens:
+    - "\\bYOUR_[A-Z_]+\\b"
+    - "\\{\\{?[a-z_]+\\}\\}?"

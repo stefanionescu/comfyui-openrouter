@@ -1,0 +1,94 @@
+{
+    "parserPreset": {
+        "parserOpts": {
+            "headerPattern": "^(\\w*)(?:\\((.*)\\))?!?: (.*)$",
+            "breakingHeaderPattern": "^(\\w*)(?:\\((.*)\\))?!: (.*)$",
+            "headerCorrespondence": [
+                "type",
+                "scope",
+                "subject"
+            ]
+        }
+    },
+    "rules": {
+        "type-enum": [
+            2,
+            "always",
+            [
+                "feat",
+                "fix",
+                "refactor",
+                "perf",
+                "docs",
+                "test",
+                "build",
+                "ci",
+                "chore",
+                "style",
+                "revert"
+            ]
+        ],
+        "type-case": [
+            2,
+            "always",
+            "lower-case"
+        ],
+        "type-empty": [
+            2,
+            "never"
+        ],
+        "scope-case": [
+            0
+        ],
+        "subject-empty": [
+            2,
+            "never"
+        ],
+        "subject-full-stop": [
+            2,
+            "never",
+            "."
+        ],
+        "subject-case": [
+            2,
+            "never",
+            [
+                "start-case",
+                "pascal-case",
+                "upper-case"
+            ]
+        ],
+        "header-max-length": [
+            2,
+            "always",
+            72
+        ],
+        "body-leading-blank": [
+            2,
+            "always"
+        ],
+        "body-max-line-length": [
+            2,
+            "always",
+            72
+        ],
+        "footer-leading-blank": [
+            2,
+            "always"
+        ],
+        "scope-enum": [
+            2,
+            "always",
+            [
+                "nodes",
+                "frontend",
+                "workflows",
+                "docs",
+                "hooks",
+                "quality",
+                "root",
+                "deps"
+            ]
+        ]
+    }
+}
