@@ -340,23 +340,35 @@ src.nodes
 The images of the README and of this guide are in `docs/images/`:
 
 - `docs/images/brand/banner.svg`, `docs/images/diagrams/node-map.svg`, and the
-  four badges in `docs/images/badges/` are SVG files; edit them as text. They
-  use two palettes: the ComfyUI ink `#211927`, panels `#312C34`, edges
-  `#413B45`, text `#C2BFB9`, and yellow `#F0FF41`, and the OpenRouter indigo
-  `#6366F1`.
-- In the node map, a paid node has an indigo bar and a free one a grey bar. An
-  arrow is a solid yellow line from an output to the input it feeds; nodes that
-  share no link have no arrow.
-- The badges under the banner name the ComfyUI, frontend, and Python versions
-  and the license, on ink and grey; update them when those change.
-- `docs/images/screenshots/image-01-choose-group.png` is the **Choose** group
-  of image-01 and its note, at 100% zoom, with link midpoint markers off.
+  four badges in `docs/images/badges/` are SVG files; edit them as text. The
+  badges name the ComfyUI, frontend, and Python versions and the license;
+  update them when those change.
+- The SVG files use near-black `#0B0A13`, surfaces `#16141F`, hairlines
+  `#2A2636`, light text `#F1F0FA`, muted text `#958FA8`, and light indigo
+  `#A5A8FF`. The gradient runs from `#E0E1FF` to `#8E91FA` to `#6366F1`.
+  Yellow `#F0FF41` marks the socket of the mark and one chevron in each rail.
+- Headings in the SVG files use Helvetica Neue with tight spacing; labels use
+  a monospace font in wide-spaced capitals.
+- `docs/images/brand/logo.png` is the extension's mark, at 400 × 400 pixels on
+  a transparent background: a wire that splits into three routes. The bright
+  middle route ends in a yellow socket, and the two other routes are darker.
+- The banner draws the same mark between two rails of small chevrons, and
+  `pyproject.toml` names `docs/images/brand/logo.png` as the Registry icon.
+- To render the logo again, copy the gradients, mask, and drawing of the mark
+  from the banner into a 200 × 200 SVG. Render it at 400 × 400 pixels with
+  `rsvg-convert`, and compress it with `oxipng`.
+- The node map has one card for each kind of node. An indigo square marks a
+  node that sends a paid request, a hollow square one that bills nothing, and
+  an arrow an output that feeds the next node.
+- `docs/images/screenshots/image-01-workflow.png` is image-01 at 100% zoom,
+  with link midpoint markers off, in 256 colors.
 - `docs/images/screenshots/chat-ask-node.png` is a new **Chat: Ask** node, 420
-  pixels wide, at 100% zoom.
+  pixels wide, at 100% zoom, with a prompt typed in.
 - `docs/images/screenshots/settings-dialog.png` is the **OpenRouter Settings**
   dialog with default settings and a saved key.
 
-Keep each image under 100 KB, and give it alt text.
+The mark is this extension's own drawing, not OpenRouter's logo. Keep each
+image under 100 KB, and give it alt text.
 
 ### Change text
 

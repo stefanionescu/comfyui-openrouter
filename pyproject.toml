@@ -41,6 +41,7 @@ known_first_party = ["scripts", "src"]
 
 [tool.comfy]
 DisplayName = "OpenRouter"
+Icon = "https://raw.githubusercontent.com/stefanionescu/comfyui-openrouter/main/docs/images/brand/logo.png"
 requires-comfyui = ">=0.34.6"
 
 [tool.importlinter]

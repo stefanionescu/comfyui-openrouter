@@ -1,1 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="210" viewBox="0 0 1200 210" role="img" aria-label="comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model"><title>comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model</title><defs><clipPath id="card"><rect width="1200" height="210" rx="18"/></clipPath></defs><g clip-path="url(#card)"><rect width="1200" height="210" fill="#211927"/><rect y="202" width="600" height="8" fill="#F0FF41"/><rect x="600" y="202" width="600" height="8" fill="#6366F1"/></g><text x="64" y="108" font-family="Verdana, 'DejaVu Sans', Arial, sans-serif" font-size="72" font-weight="bold"><tspan fill="#F0FF41">comfyui-</tspan><tspan fill="#6366F1">openrouter</tspan></text><text x="64" y="160" font-family="Verdana, 'DejaVu Sans', Arial, sans-serif" font-size="26" fill="#C2BFB9">A <tspan fill="#F0FF41" font-weight="bold">ComfyUI</tspan> extension that runs any OpenRouter model</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-label="comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model">
+<title>comfyui-openrouter: a ComfyUI extension that runs any OpenRouter model</title>
+<defs>
+<linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E0E1FF"/><stop offset="0.5" stop-color="#8E91FA"/><stop offset="1" stop-color="#6366F1"/></linearGradient>
+<linearGradient id="route" gradientUnits="userSpaceOnUse" x1="24" y1="40" x2="176" y2="164"><stop offset="0" stop-color="#E0E1FF"/><stop offset="0.45" stop-color="#8E91FA"/><stop offset="1" stop-color="#4F46E5"/></linearGradient>
+<linearGradient id="branch" gradientUnits="userSpaceOnUse" x1="24" y1="40" x2="176" y2="164"><stop offset="0" stop-color="#8E91FA"/><stop offset="1" stop-color="#3A33B8"/></linearGradient>
+<mask id="cut"><rect width="200" height="200" fill="#fff"/><circle cx="164" cy="100" r="22.5" fill="#000"/></mask>
+<radialGradient id="glow" cx="1010" cy="130" r="330" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#6366F1" stop-opacity="0.44"/><stop offset="1" stop-color="#6366F1" stop-opacity="0"/></radialGradient>
+<clipPath id="frame"><rect width="1200" height="260" rx="24"/></clipPath>
+</defs>
+<g clip-path="url(#frame)">
+<rect width="1200" height="260" fill="#0B0A13"/>
+<rect width="1200" height="260" fill="url(#glow)"/>
+<path d="M656.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.06"/>
+<path d="M656.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.06"/>
+<path d="M690.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.086"/>
+<path d="M690.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.086"/>
+<path d="M724.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.112"/>
+<path d="M724.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.112"/>
+<path d="M758.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.138"/>
+<path d="M758.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.138"/>
+<path d="M792.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.164"/>
+<path d="M792.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.164"/>
+<path d="M826.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.19"/>
+<path d="M826.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.19"/>
+<path d="M860.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.216"/>
+<path d="M860.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.216"/>
+<path d="M894.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.242"/>
+<path d="M894.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.242"/>
+<path d="M928.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.268"/>
+<path d="M928.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.268"/>
+<path d="M962.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.294"/>
+<path d="M962.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.294"/>
+<path d="M996.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.32"/>
+<path d="M996.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.32"/>
+<path d="M1030.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.346"/>
+<path d="M1030.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.346"/>
+<path d="M1064.5 16h3l5 5l-5 5h-3l5 -5z" fill="#F0FF41" opacity="0.7"/>
+<path d="M1064.5 234h3l5 5l-5 5h-3l5 -5z" fill="#F0FF41" opacity="0.7"/>
+<path d="M1098.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.398"/>
+<path d="M1098.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.398"/>
+<path d="M1132.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.424"/>
+<path d="M1132.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.424"/>
+<path d="M1166.5 16h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.45"/>
+<path d="M1166.5 234h3l5 5l-5 5h-3l5 -5z" fill="url(#accent)" opacity="0.45"/>
+<rect x="640" y="40" width="560" height="1" fill="url(#accent)" opacity="0.25"/>
+<rect x="640" y="219" width="560" height="1" fill="url(#accent)" opacity="0.25"/>
+<g transform="translate(915 32) scale(0.98)">
+<g mask="url(#cut)" fill="none" stroke-linecap="round">
+<path d="M74 100C110 100 112 39 152 39H169" stroke="url(#branch)" stroke-width="24"/>
+<path d="M74 100C110 100 112 161 152 161H169" stroke="url(#branch)" stroke-width="24"/>
+<path d="M30 100H164" stroke="url(#route)" stroke-width="28"/>
+</g>
+<circle cx="164" cy="100" r="13.5" fill="#F0FF41"/>
+</g>
+</g>
+<rect x="0.5" y="0.5" width="1199" height="259" rx="24" fill="none" stroke="#2A2636"/>
+<text x="64" y="78" font-family="'SF Mono', SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13" font-weight="normal" letter-spacing="2.34" fill="#A5A8FF" text-anchor="start">COMFYUI EXTENSION · COMFYUI-OPENROUTER</text>
+<rect x="64" y="94" width="40" height="2" fill="url(#accent)"/>
+<text x="62" y="158" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="64" font-weight="bold" letter-spacing="-1.6" fill="url(#accent)" text-anchor="start">OpenRouter</text>
+<text x="64" y="200" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="21" font-weight="normal" letter-spacing="0.1" fill="#958FA8" text-anchor="start">Any OpenRouter model, inside ComfyUI.</text>
+</svg>
