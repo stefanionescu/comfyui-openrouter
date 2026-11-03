@@ -137,4 +137,6 @@ Decision nodes use OpenRouter's alpha decisions API, which may change.
 
 See the [advanced guide](ADVANCED.md#troubleshooting) for request errors and recovery.
 
-[Advanced guide](ADVANCED.md) · [MIT license](LICENSE.md)
+## License
+
+[MIT](LICENSE.md).
