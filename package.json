@@ -20,6 +20,7 @@
         "#web/*": "./web/scripts/*"
     },
     "overrides": {
+        "glob": "14.0.3",
         "zod": "4.6.7"
     }
 }
